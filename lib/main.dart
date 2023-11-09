@@ -96,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
      return const SleepPage();
    }));
 },
-          child: const Text('Next'),
+          child: const Text('Sleep Tracking'),
         ),
       ),
          

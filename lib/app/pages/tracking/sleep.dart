@@ -1,7 +1,29 @@
 import 'package:flutter/material.dart';
+import 'dart:core';
 
-class SleepPage extends StatelessWidget {
+class SleepPage extends StatefulWidget {
   const SleepPage({super.key});
+
+  @override
+  State<SleepPage> createState() => _SleepPageState();
+}
+
+class _SleepPageState extends State<SleepPage> {
+  //final stopWatch = Stopwatch();
+  String timerData = "0:00";
+  String buttonText = "Start Nap";
+  bool buttonToggled = false; 
+
+  void napClicked() {
+    setState(() {
+      // timerData = stopWatch.elapsedMilliseconds;
+      // print(stopWatch.elapsedMilliseconds); // 0
+      // stopWatch.start();
+      buttonToggled = true; 
+      timerData = "0:01";
+      buttonText = "Stop Nap";
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -11,24 +33,19 @@ class SleepPage extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Sleep Page'),
         ),
-        body:  Center(
-        child: Column(
-          children: <Widget>[
-          const Text('Sleep'),
-          const FilledCard(),
-          const Text('0:00'),
-         FilledButton(
-                   onPressed: () {
-                    const Text("0:01");
-                  } ,
-                  child: const Text('Start Nap'),
-                ),
-          
-        ]),
-      ),
+        body: Center(
+          child: Column(children: <Widget>[
+            const Text('Sleep'),
+            const FilledCard(),
+            Text("$timerData"),
+            FilledButton(
+              onPressed: napClicked,
+              child: Text("$buttonText"),
+            ),
+          ]),
+        ),
       ),
     );
-
   }
 }
 
@@ -37,8 +54,7 @@ class FilledCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return 
-    SizedBox(
+    return SizedBox(
       height: 180,
       child: Card(
         elevation: 0,
@@ -47,30 +63,23 @@ class FilledCard extends StatelessWidget {
           width: 300,
           height: 100,
           child: Column(children: <Widget>[
-           ListTile(
-            title: Text('Time Since Last Nap: 1:28'),
-           // tileColor: ,
-    ),
-     Divider(height: 0),
-      ListTile(
-            title: Text('Last Nap Length: 0:55'),
-           // tileColor: ,
-    ),
-      Divider(height: 0),
-      ListTile(
-            title: Text('Notes'),
-           // tileColor: ,
-    ),
+            ListTile(
+              title: Text('Time Since Last Nap: 1:28'),
+              // tileColor: ,
+            ),
+            Divider(height: 0),
+            ListTile(
+              title: Text('Last Nap Length: 0:55'),
+              // tileColor: ,
+            ),
+            Divider(height: 0),
+            ListTile(
+              title: Text('Notes'),
+              // tileColor: ,
+            ),
           ]),
         ),
       ),
-  
     );
   }
 }
-
-
- void napClicked() {
-   const Text("0:01");
-           
-  }
