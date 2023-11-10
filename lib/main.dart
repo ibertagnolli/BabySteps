@@ -1,5 +1,5 @@
 import 'package:babysteps/app/pages/tracking/sleep.dart';
-//import 'package:babysteps/app/pages/tracking/diaper.dart';
+import 'package:babysteps/app/pages/tracking/diaper.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
 
@@ -93,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
           child: Column(children: [
-        const Padding(
+        Padding(
           padding: EdgeInsets.symmetric(vertical: 32),
           child: Text("Tracking Metrics",
               style: TextStyle(fontSize: 36, color: Color(0xFFFFFAF1))),
@@ -124,14 +124,14 @@ class _MyHomePageState extends State<MyHomePage> {
           'Diaper Change',
           '3 hours ago',
           () {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) {
-            //       return const DiaperPage();
-            //     },
-            //   ),
-            // );
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return const DiaperPage();
+                },
+              ),
+            );
           },
         ),
         TrackingCard(Icon(Icons.scale, size: 40), "Weight", "2 months ago", () {
