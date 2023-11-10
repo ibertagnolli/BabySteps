@@ -1,5 +1,7 @@
 import 'package:babysteps/app/pages/tracking/sleep.dart';
+//import 'package:babysteps/app/pages/tracking/diaper.dart';
 import 'package:flutter/material.dart';
+import 'package:babysteps/app/widgets/widgets.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,6 +32,7 @@ class MyApp extends StatelessWidget {
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        scaffoldBackgroundColor: const Color(0xffb3beb6),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
@@ -82,29 +85,77 @@ class _MyHomePageState extends State<MyHomePage> {
         // TRY THIS: Try changing the color here to a specific color (to
         // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
         // change color while the other colors stay the same.
-        
-        backgroundColor:  Theme.of(context).navigationRailTheme.backgroundColor,
+
+        backgroundColor: Theme.of(context).navigationRailTheme.backgroundColor,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-     
-        body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-   Navigator.push(context, MaterialPageRoute(builder: (context) {
-     return const SleepPage();
-   }));
-},
-          child: const Text('Sleep Tracking'),
+      body: Center(
+          child: Column(children: [
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 32),
+          child: Text("Tracking Metrics",
+              style: TextStyle(fontSize: 36, color: Color(0xFFFFFAF1))),
         ),
-      ),
-         
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+        TrackingCard(
+            Icon(Icons.local_drink, size: 40), "Feeding", "15 mintues ago", () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return const SleepPage();
+              },
+            ),
+          );
+        }),
+        TrackingCard(Icon(Icons.crib, size: 40), "Sleep", "2 hours ago", () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return const SleepPage();
+              },
+            ),
+          );
+        }),
+        TrackingCard(
+          Icon(Icons.baby_changing_station, size: 40),
+          'Diaper Change',
+          '3 hours ago',
+          () {
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) {
+            //       return const DiaperPage();
+            //     },
+            //   ),
+            // );
+          },
+        ),
+        TrackingCard(Icon(Icons.scale, size: 40), "Weight", "2 months ago", () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return const SleepPage();
+              },
+            ),
+          );
+        }),
+        TrackingCard(
+            Icon(Icons.thermostat, size: 40), "Temperature", "3 weeks ago", () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return const SleepPage();
+              },
+            ),
+          );
+        }),
+      ])),
     );
   }
 }
