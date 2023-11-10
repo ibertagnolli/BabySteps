@@ -12,14 +12,14 @@ class _SleepPageState extends State<SleepPage> {
   //final stopWatch = Stopwatch();
   String timerData = "0:00";
   String buttonText = "Start Nap";
-  bool buttonToggled = false; 
+  bool buttonToggled = false;
 
   void napClicked() {
     setState(() {
       // timerData = stopWatch.elapsedMilliseconds;
       // print(stopWatch.elapsedMilliseconds); // 0
       // stopWatch.start();
-      buttonToggled = true; 
+      buttonToggled = true;
       timerData = "0:01";
       buttonText = "Stop Nap";
     });
