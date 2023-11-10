@@ -30,17 +30,21 @@ class _SleepPageState extends State<SleepPage> {
     return MaterialApp(
       title: 'Sleep',
       home: Scaffold(
+      backgroundColor: const Color(0xffb3beb6),
         appBar: AppBar(
-          title: const Text('Sleep Page'),
+          title: const Text('Tracking', style: TextStyle(fontSize: 36, color: Colors.black45)),
+           backgroundColor: Color(0xFFFFFAF1),
         ),
         body: Center(
           child: Column(children: <Widget>[
-            const Text('Sleep'),
+            const Text('Sleep', style: TextStyle(fontSize: 36, color: Color(0xFFFFFAF1))),
             const FilledCard(),
-            Text("$timerData"),
+            Text("$timerData", style: const TextStyle(fontSize: 20, color: Color(0xFFFFFAF1))),
             FilledButton(
+               style: FilledButton.styleFrom( backgroundColor:const Color.fromARGB(255, 13, 60, 70), // Background color
+  ),
               onPressed: napClicked,
-              child: Text("$buttonText"),
+              child: Text("$buttonText",  style: const TextStyle(fontSize: 20, color: Color(0xFFFFFAF1)))
             ),
           ]),
         ),
@@ -54,12 +58,12 @@ class FilledCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return const SizedBox(
       height: 180,
       child: Card(
         elevation: 0,
-        color: Theme.of(context).colorScheme.primary,
-        child: const SizedBox(
+        color: Color(0xFFFFFAF1),
+        child:  SizedBox(
           width: 300,
           height: 100,
           child: Column(children: <Widget>[
