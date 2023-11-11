@@ -20,7 +20,7 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
         ),
         body: Center(
           child: Column(children: <Widget>[
-            const FilledCard(),
+            //const FilledCard(),
           ]),
         ),
       ),
@@ -28,42 +28,3 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
   }
 }
 
-class FilledCard extends StatelessWidget {
-  const FilledCard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 180,
-      child: Card(
-        elevation: 0,
-        color: Theme.of(context).colorScheme.primary,
-        child: const SizedBox(
-          width: 300,
-          height: 100,
-          child: Column(children: <Widget>[
-            ListTile(
-              title: Text('Time since last fed: 1:28'),
-              // tileColor: ,
-            ),
-            Divider(height: 0),
-            ListTile(
-              title: Text('Last Type: Breast fed'),
-              // tileColor: ,
-            ),
-            Divider(height: 0),
-            ListTile(
-              title: Text('Last side: right'),
-              // tileColor: ,
-            ),
-            Divider(height: 0),
-            ListTile(
-              title: Text('Notes'),
-              // tileColor: ,
-            ),
-          ]),
-        ),
-      ),
-    );
-  }
-}

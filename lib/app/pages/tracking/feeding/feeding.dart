@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/pages/tracking/feeding/bottleFeeding.dart';
 import 'package:babysteps/app/pages/tracking/feeding/breastFeeding.dart';
+import 'package:babysteps/app/widgets/widgets.dart';
 import 'dart:core';
 
 class FeedingPage extends StatefulWidget {
@@ -11,33 +12,64 @@ class FeedingPage extends StatefulWidget {
 }
 
 class _FeedingPageState extends State<FeedingPage> {
-
+  
+  String lastTimeFed = "8:20";
+  String lastFeedingType = "bottle";
+  String lastBreastSide = "right";
+  String lastBottleAmount = "8oz";
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      //title: 'Feeding',
+      title: 'Feeding',
       home: Scaffold(
+        backgroundColor: const Color(0xffb3beb6),
         appBar: AppBar(
-          title: const Text('Feeding'),
+          title: const Text('Tracking',
+              style: TextStyle(fontSize: 36, color: Colors.black45)),
+          backgroundColor: Color(0xFFFFFAF1),
         ),
         body: Center(
           child: Column(children: <Widget>[
-            const FilledCard(),
-            FilledButton(
-              onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return const BreastFeedingPage();
-                  }));
-                },
-              child: Text("Breast feeding"),
+            const Padding(
+              padding: EdgeInsets.all(32),
+              child: Text('Feeding',
+                  style: TextStyle(fontSize: 36, color: Color(0xFFFFFAF1))),
             ),
-            FilledButton(
-              onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return const BottleFeedingPage();
-                  }));
-                },
-              child: Text("Bottle feeding"),
+            Padding(
+              padding: EdgeInsets.only(bottom: 16),
+              child: FilledCard("last fed: $lastTimeFed",
+                      "type: $lastFeedingType", Icon(Icons.edit)),
+            ),
+
+            // Feeding options
+            Padding(
+              padding: EdgeInsets.only(bottom: 16),
+              child: FeedingOptionCard(
+                      Icon(Icons.water_drop, size: 40, color: const Color(0xFFFFFAF1)), "Breast feeding", "Last side: $lastBreastSide", () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return const BreastFeedingPage();
+                            },
+                          ),
+                        );
+              }),
+            ),
+            Padding(
+              padding: EdgeInsets.only(bottom: 16),
+              child: FeedingOptionCard(
+                      Icon(Icons.local_drink, size: 40, color: const Color(0xFFFFFAF1)), "Bottle feeding", "Last amount: $lastBottleAmount", () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return const BottleFeedingPage();
+                            },
+                          ),
+                        );
+              }),
             ),
           ]),
         ),
@@ -46,40 +78,57 @@ class _FeedingPageState extends State<FeedingPage> {
   }
 }
 
-class FilledCard extends StatelessWidget {
-  const FilledCard({super.key});
+
+
+// Just different colors and some variable names
+class FeedingOptionCard extends StatelessWidget {
+  const FeedingOptionCard(this.icon, this.name, this.extraInfo, this.pageFunc,
+      {super.key});
+  final Icon icon;
+  final String name;
+  final String extraInfo;
+  final void Function() pageFunc;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 180,
-      child: Card(
-        elevation: 0,
-        color: Theme.of(context).colorScheme.primary,
-        child: const SizedBox(
-          width: 300,
-          height: 100,
-          child: Column(children: <Widget>[
-            ListTile(
-              title: Text('Time since last fed: 1:28'),
-              // tileColor: ,
-            ),
-            Divider(height: 0),
-            ListTile(
-              title: Text('Last Type: Breast fed'),
-              // tileColor: ,
-            ),
-            Divider(height: 0),
-            ListTile(
-              title: Text('Last side: right'),
-              // tileColor: ,
-            ),
-            Divider(height: 0),
-            ListTile(
-              title: Text('Notes'),
-              // tileColor: ,
-            ),
-          ]),
+    return Card(
+      color: const Color(0x0d4b5fff), 
+      child: InkWell(
+        splashColor: const Color(0x0d4b5fff),
+        onTap: pageFunc,
+        child: SizedBox(
+          width: 360,
+          height: 80,
+          child: Row(
+            children: [
+              Padding(padding: EdgeInsets.all(16), child: icon),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      name,
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: const Color(0xfffffaf1)),
+                    ),
+                    Text(
+                      extraInfo,
+                      style:
+                          TextStyle(color: const Color(0xfffffaf1)),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(child: SizedBox()),
+              Padding(
+                padding: EdgeInsets.all(16),
+                child: Align(
+                    child: Icon(Icons.arrow_circle_right_outlined, size: 30, color: const Color(0xfffffaf1))),
+              )
+            ],
+          ),
         ),
       ),
     );
