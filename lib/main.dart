@@ -1,5 +1,6 @@
 import 'package:babysteps/app/pages/tracking/sleep.dart';
 import 'package:flutter/material.dart';
+import 'package:babysteps/app/pages/tracking/feeding/feeding.dart';
 
 void main() {
   runApp(const MyApp());
@@ -90,15 +91,29 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
      
         body: Center(
-        child: TextButton(
-          onPressed: () {
-   Navigator.push(context, MaterialPageRoute(builder: (context) {
-     return const SleepPage();
-   }));
-},
-          child: const Text('Sleep Tracking'),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return const SleepPage();
+                  }));
+                },
+                child: const Text('Sleep Tracking'),
+              ),
+              SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return const FeedingPage();
+                  }));
+                },
+                child: const Text('Feeding'),
+              ),
+            ]
+          )
         ),
-      ),
          
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
