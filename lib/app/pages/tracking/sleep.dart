@@ -1,3 +1,4 @@
+import 'package:babysteps/app/widgets/stopwatch.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
 import 'dart:core';
@@ -22,7 +23,10 @@ class _SleepPageState extends State<SleepPage> {
       // print(stopWatch.elapsedMilliseconds); // 0
       // stopWatch.start();
       timerData = "00:00:01";
+      timeSinceNap = "00:00:00";
+      lastNap = "00:00:00";
       buttonText = "Stop Nap";
+      // NewStopWatch();
     });
   }
 
@@ -49,19 +53,20 @@ class _SleepPageState extends State<SleepPage> {
               child: FilledCard("last nap: $timeSinceNap",
                       "nap: $lastNap", Icon(Icons.person_search_sharp)),
             ),
-            Text("$timerData", style: const TextStyle(fontSize: 30, color: Color(0xFFFFFAF1))),
-             Padding(
-              padding: EdgeInsets.all(32),
-            child:FilledButton(
-                style: FilledButton.styleFrom(
-                  backgroundColor:
-                       Color.fromARGB(255, 13, 60, 70), // Background color
-                ),
-                onPressed: napClicked,
-                child: Text("$buttonText",
-                    style: const TextStyle(
-                        fontSize: 20, color: Color(0xFFFFFAF1)))),
-            ),
+            // Text("$timerData", style: const TextStyle(fontSize: 30, color: Color(0xFFFFFAF1))),
+            //  Padding(
+            //   padding: EdgeInsets.all(32),
+            // child:FilledButton(
+            //     style: FilledButton.styleFrom(
+            //       backgroundColor:
+            //            Color.fromARGB(255, 13, 60, 70), // Background color
+            //     ),
+            //     onPressed: napClicked,
+            //     child: Text("$buttonText",
+            //         style: const TextStyle(
+            //             fontSize: 20, color: Color(0xFFFFFAF1)))),
+            // ),
+            NewStopWatch(),
           ]),
         ),
       ),
