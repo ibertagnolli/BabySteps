@@ -1,5 +1,6 @@
 import 'package:babysteps/app/pages/tracking/sleep.dart';
 import 'package:babysteps/app/pages/tracking/diaper.dart';
+import 'package:babysteps/app/pages/tracking/weight.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
 
@@ -92,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-          child: Column(children: [
+        child: Column(children: [
         Padding(
           padding: EdgeInsets.symmetric(vertical: 32),
           child: Text("Tracking Metrics",
@@ -139,7 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
             context,
             MaterialPageRoute(
               builder: (context) {
-                return const SleepPage();
+                return const WeightPage();
               },
             ),
           );
