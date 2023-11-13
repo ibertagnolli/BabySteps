@@ -21,6 +21,7 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
     });
   }
 
+  // Start/stop stopwatch func
   void bottleClicked() {
     setState(() {
       stopwatchGoing = !stopwatchGoing;
@@ -46,10 +47,14 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
               child: Text('Feeding',
                   style: TextStyle(fontSize: 36, color: Color(0xFFFFFAF1))),
             ),
+
+            // Top card with info
             Padding(
               padding: EdgeInsets.only(bottom: 16),
               child: TimeSinceCard(timeSince),
             ),
+
+            // Buttons for bottle type
             Row(mainAxisAlignment:MainAxisAlignment.center, children: [
               BottleTypeButton('Breast milk', activeButton.contains("Breast milk"),
                             bottleTypeClicked),
@@ -57,10 +62,14 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
               BottleTypeButton('Formula', activeButton.contains("Formula"),
                             bottleTypeClicked)
             ],),
+
+            // Stopwatch
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text("(stopwatch)"),
             ),
+
+            // Start/stop button 
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: SizedBox(
@@ -95,7 +104,6 @@ class TimeSinceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
         elevation: 0,
-        //color: Theme.of(context).colorScheme.primary,
         color: Color.fromARGB(255, 13, 60, 70),
         child: SizedBox(
           width: 380,
@@ -116,6 +124,7 @@ class TimeSinceCard extends StatelessWidget {
 class BottleTypeButton extends StatelessWidget {
   const BottleTypeButton(this.buttonText, this.activeButton, this.onPress,
       {super.key});
+      
   final String buttonText;
   final bool activeButton;
   final void Function(String bottleType) onPress;
@@ -132,7 +141,7 @@ class BottleTypeButton extends StatelessWidget {
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.resolveWith((states) {
               return activeButton
-                  ? const Color(0xFFF2BB9B)    // **** this color is wrong
+                  ? const Color(0xFFF2BB9B)
                   : const Color(0xFFFFFAF1);
             }),
             foregroundColor: MaterialStateProperty.resolveWith((states) {

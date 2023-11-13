@@ -55,17 +55,24 @@ class _BottleFeedingPageState extends State<BreastFeedingPage> {
               child: Text('Feeding',
                   style: TextStyle(fontSize: 36, color: Color(0xFFFFFAF1))),
             ),
+
+            // Top card with info 
             Padding(
               padding: EdgeInsets.only(bottom: 16),
-              child: TimeSinceCard(timeSince, lastSide),
+              child: InfoCard(timeSince, lastSide),
             ),
+
+            // Stopwatches and start/stop buttons for left and right
             Row(mainAxisAlignment:MainAxisAlignment.center, children: [
+              // Left
               Column(
                 children: [
+                  // Stopwatch
                   Padding(
                     padding: const EdgeInsets.all(22.0),
                     child: Text("(stopwatch)"),
                   ),
+                  // Start/stop button 
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: SizedBox(
@@ -85,12 +92,15 @@ class _BottleFeedingPageState extends State<BreastFeedingPage> {
                   ),
                 ],
               ),
+              // Right 
               Column(
                 children: [
+                  // Stopwatch 
                   Padding(
                     padding: const EdgeInsets.all(22.0),
                     child: Text("(stopwatch)"),
                   ),
+                  // Start/stop button 
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: SizedBox(
@@ -111,6 +121,8 @@ class _BottleFeedingPageState extends State<BreastFeedingPage> {
                 ],
               )
             ],),
+
+            // Done button - stops both timers if going, will log time since 
             Padding(
               padding: const EdgeInsets.all(22.0),
               child: SizedBox(
@@ -118,7 +130,7 @@ class _BottleFeedingPageState extends State<BreastFeedingPage> {
                 width: 220,
                 child: FilledButton(
                   style: FilledButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 13, 60, 70), // Background color
+                    backgroundColor: Color.fromARGB(255, 13, 60, 70), 
                   ),
                   onPressed: doneClicked,
                   child: Text("We're done!",
@@ -134,9 +146,9 @@ class _BottleFeedingPageState extends State<BreastFeedingPage> {
   }
 }
 
-
-class TimeSinceCard extends StatelessWidget {
-  const TimeSinceCard(this.timeSince, this.lastSide, {super.key});
+// Displays time since and last side
+class InfoCard extends StatelessWidget {
+  const InfoCard(this.timeSince, this.lastSide, {super.key});
 
   final String timeSince;
   final String lastSide;
@@ -145,7 +157,6 @@ class TimeSinceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
         elevation: 0,
-        //color: Theme.of(context).colorScheme.primary,
         color: Color.fromARGB(255, 13, 60, 70),
         child: SizedBox(
           width: 380,

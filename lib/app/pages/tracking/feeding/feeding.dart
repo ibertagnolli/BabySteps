@@ -36,13 +36,15 @@ class _FeedingPageState extends State<FeedingPage> {
               child: Text('Feeding',
                   style: TextStyle(fontSize: 36, color: Color(0xFFFFFAF1))),
             ),
+
+            // Top card with data
             Padding(
               padding: EdgeInsets.only(bottom: 16),
               child: FilledCard("last fed: $lastTimeFed",
                       "type: $lastFeedingType", Icon(Icons.edit)),
             ),
 
-            // Feeding options
+            // Feeding options - breast feeding or bottle feeding
             Padding(
               padding: EdgeInsets.only(bottom: 16),
               child: FeedingOptionCard(
@@ -78,9 +80,7 @@ class _FeedingPageState extends State<FeedingPage> {
   }
 }
 
-
-
-// Just different colors and some variable names
+// Same as TrackingCard widget but different colors 
 class FeedingOptionCard extends StatelessWidget {
   const FeedingOptionCard(this.icon, this.name, this.extraInfo, this.pageFunc,
       {super.key});
