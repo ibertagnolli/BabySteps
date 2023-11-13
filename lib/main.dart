@@ -100,7 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
               style: TextStyle(fontSize: 36, color: Color(0xFFFFFAF1))),
         ),
         TrackingCard(
-            Icon(Icons.local_drink, size: 40), "Feeding", "15 mintues ago", () {
+            Icon(Icons.local_drink, size: 40), "Feeding", "15 minutes ago", () {
           Navigator.push(
             context,
             MaterialPageRoute(

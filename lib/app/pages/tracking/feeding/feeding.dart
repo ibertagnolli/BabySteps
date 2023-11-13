@@ -92,9 +92,9 @@ class FeedingOptionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: const Color(0x0d4b5fff), 
+      color: Color.fromARGB(255, 13, 60, 70), 
       child: InkWell(
-        splashColor: const Color(0x0d4b5fff),
+        splashColor: Color.fromARGB(255, 13, 60, 70),
         onTap: pageFunc,
         child: SizedBox(
           width: 360,
@@ -111,12 +111,12 @@ class FeedingOptionCard extends StatelessWidget {
                     Text(
                       name,
                       style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: const Color(0xfffffaf1)),
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: const Color(0xfffffaf1),),
                     ),
                     Text(
                       extraInfo,
                       style:
-                          TextStyle(color: const Color(0xfffffaf1)),
+                          TextStyle(color: const Color(0xfffffaf1),),
                     ),
                   ],
                 ),
