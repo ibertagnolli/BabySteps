@@ -132,7 +132,7 @@ class BottleTypeButton extends StatelessWidget {
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.resolveWith((states) {
               return activeButton
-                  ? const Color(0xF2BB9B00)    // **** this color is wrong
+                  ? const Color(0xFFF2BB9B)    // **** this color is wrong
                   : const Color(0xFFFFFAF1);
             }),
             foregroundColor: MaterialStateProperty.resolveWith((states) {
