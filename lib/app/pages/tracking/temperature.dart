@@ -10,25 +10,30 @@ class TemperaturePage extends StatefulWidget {
 }
 
 class _TemperaturePageState extends State<TemperaturePage> {
-  int daysSinceTemp = 3;
+  String daysSinceTemp = "3";
   String lastTemp = "101.5";
   String buttonText = "Add Temp";
-final myController = TextEditingController();
+  final tempController = TextEditingController();
+  final dateController = TextEditingController();
+  final timeController = TextEditingController();
 
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    myController.dispose();
+    tempController.dispose();
+    timeController.dispose();
+    dateController.dispose();
     super.dispose();
   }
 
- void addClicked() {
+  void addClicked() {
     setState(() {
       // timerData = stopWatch.elapsedMilliseconds;
       // print(stopWatch.elapsedMilliseconds); // 0
       // stopWatch.start();
       //daysSinceTemp =  Text(myController.text).toString();
-      lastTemp =  Text(myController.text).toString();
+      lastTemp = Text(tempController.text).data!;
+      daysSinceTemp = Text(dateController.text).data!;
     });
   }
 
@@ -63,23 +68,23 @@ final myController = TextEditingController();
             ),
 
             // Add temp Card // TODO: round corners, default card open, turn into widget
-             Padding(
-              padding:const EdgeInsets.all(15),
+            Padding(
+              padding: const EdgeInsets.all(15),
               child: ExpansionTile(
                 backgroundColor: const Color(0xFFFFFAF1),
                 collapsedBackgroundColor: const Color(0xFFFFFAF1),
-                title:const Text('Add Temperature',
+                title: const Text('Add Temperature',
                     style: TextStyle(
                         fontSize: 20,
                         color: Colors.black,
                         fontWeight: FontWeight.bold)),
                 children: <Widget>[
-               const  Text('Temperature:',
+                  const Text('Temperature:',
                       style: TextStyle(fontSize: 20, color: Colors.black)),
-               Padding(
-                    padding:const EdgeInsets.all(20),
+                  Padding(
+                    padding: const EdgeInsets.all(20),
                     child: TextField(
-                      controller: myController,
+                      controller: tempController,
                       decoration: const InputDecoration(
                         icon: Icon(Icons.device_thermostat),
                         border: OutlineInputBorder(),
@@ -88,7 +93,7 @@ final myController = TextEditingController();
                       ),
                     ),
                   ),
-                Row(
+                  Row(
                     children: <Widget>[
                       const Padding(
                         padding: EdgeInsets.only(left: 20),
@@ -101,7 +106,7 @@ final myController = TextEditingController();
                         child: SizedBox(
                           width: 100.0,
                           child: TextField(
-                            controller: myController,
+                            controller: dateController,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               hintText: '10/27/23',
@@ -116,7 +121,7 @@ final myController = TextEditingController();
                         child: SizedBox(
                           width: 100.0,
                           child: TextField(
-                            controller: myController,
+                            controller: timeController,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               hintText: '8:32',
@@ -127,16 +132,15 @@ final myController = TextEditingController();
                     ],
                   ),
                   Padding(padding: EdgeInsets.only(bottom: 20)),
-              FilledButton(
-                style: FilledButton.styleFrom(
-                  backgroundColor:
-                       Color.fromARGB(255, 13, 60, 70), // Background color
-                ),
-                onPressed: addClicked,
-                child: Text("$buttonText",
-                    style:  TextStyle(
-                        fontSize: 20, color: Color(0xFFFFFAF1)))),
-            
+                  FilledButton(
+                      style: FilledButton.styleFrom(
+                        backgroundColor:
+                            Color.fromARGB(255, 13, 60, 70), // Background color
+                      ),
+                      onPressed: addClicked,
+                      child: Text("$buttonText",
+                          style: TextStyle(
+                              fontSize: 20, color: Color(0xFFFFFAF1)))),
                 ],
               ),
             ),
