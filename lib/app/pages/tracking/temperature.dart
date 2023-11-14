@@ -11,7 +11,26 @@ class TemperaturePage extends StatefulWidget {
 
 class _TemperaturePageState extends State<TemperaturePage> {
   int daysSinceTemp = 3;
-  double lastTemp = 101.5;
+  String lastTemp = "101.5";
+  String buttonText = "Add Temp";
+final myController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    myController.dispose();
+    super.dispose();
+  }
+
+ void addClicked() {
+    setState(() {
+      // timerData = stopWatch.elapsedMilliseconds;
+      // print(stopWatch.elapsedMilliseconds); // 0
+      // stopWatch.start();
+      //daysSinceTemp =  Text(myController.text).toString();
+      lastTemp =  Text(myController.text).toString();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,32 +58,85 @@ class _TemperaturePageState extends State<TemperaturePage> {
             // FilledCard Quick Weight Info
             Padding(
               padding: EdgeInsets.only(bottom: 15),
-              child: FilledCard("Days since last temperature: $daysSinceTemp",
+              child: FilledCard("last temperature: $daysSinceTemp",
                   "temperature: $lastTemp", Icon(Icons.device_thermostat)),
             ),
 
-            // Add Weight Card // TODO: round corners
-            Padding(
-              padding: EdgeInsets.all(15),
+            // Add temp Card // TODO: round corners, default card open, turn into widget
+             Padding(
+              padding:const EdgeInsets.all(15),
               child: ExpansionTile(
-                backgroundColor: Color(0xFFFFFAF1),
-                collapsedBackgroundColor: Color(0xFFFFFAF1),
-                title: const Text('Add Temperature',
+                backgroundColor: const Color(0xFFFFFAF1),
+                collapsedBackgroundColor: const Color(0xFFFFFAF1),
+                title:const Text('Add Temperature',
                     style: TextStyle(
                         fontSize: 20,
                         color: Colors.black,
                         fontWeight: FontWeight.bold)),
                 children: <Widget>[
-                  const Text('Temperature'),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.device_thermostat),
-                      hintText: 'Baby\'s Temperature',
-                      labelText: 'Farenheight',
+               const  Text('Temperature:',
+                      style: TextStyle(fontSize: 20, color: Colors.black)),
+               Padding(
+                    padding:const EdgeInsets.all(20),
+                    child: TextField(
+                      controller: myController,
+                      decoration: const InputDecoration(
+                        icon: Icon(Icons.device_thermostat),
+                        border: OutlineInputBorder(),
+                        hintText: '98.7',
+                        labelText: 'Farenheight',
+                      ),
                     ),
                   ),
-                  // TODO make widgets for the ListTiles
-                  ListTile(title: Text('Date')),
+                Row(
+                    children: <Widget>[
+                      const Padding(
+                        padding: EdgeInsets.only(left: 20),
+                        child: Text('Date:',
+                            style:
+                                TextStyle(fontSize: 20, color: Colors.black)),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 10, right: 10),
+                        child: SizedBox(
+                          width: 100.0,
+                          child: TextField(
+                            controller: myController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: '10/27/23',
+                            ),
+                          ),
+                        ),
+                      ),
+                      Text('Time:',
+                          style: TextStyle(fontSize: 20, color: Colors.black)),
+                      Padding(
+                        padding: EdgeInsets.only(left: 10, right: 10),
+                        child: SizedBox(
+                          width: 100.0,
+                          child: TextField(
+                            controller: myController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: '8:32',
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(padding: EdgeInsets.only(bottom: 20)),
+              FilledButton(
+                style: FilledButton.styleFrom(
+                  backgroundColor:
+                       Color.fromARGB(255, 13, 60, 70), // Background color
+                ),
+                onPressed: addClicked,
+                child: Text("$buttonText",
+                    style:  TextStyle(
+                        fontSize: 20, color: Color(0xFFFFFAF1)))),
+            
                 ],
               ),
             ),
@@ -81,7 +153,7 @@ class _TemperaturePageState extends State<TemperaturePage> {
                         color: Colors.black,
                         fontWeight: FontWeight.bold)),
                 children: <Widget>[
-                  ListTile(title: Text('This is tile 1')),
+                  ListTile(title: Text('No Recent Temeratures')),
                 ],
               ),
             ),
