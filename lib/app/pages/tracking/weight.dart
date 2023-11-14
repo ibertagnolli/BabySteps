@@ -158,7 +158,7 @@ class _WeightPageState extends State<WeightPage> {
                 collapsedBackgroundColor: Color(0xFFFFFAF1),
                 title: Text('History', style: TextStyle(fontSize: 25, color: Colors.black, fontWeight: FontWeight.bold)),
                 children: <Widget>[
-                  ListTile(title: Text('This is tile 1')),
+                  Text('TODO Add chart of baby\'s weight history here:', style: TextStyle(fontSize: 20, color: Colors.black)),
                 ],
               ),
             ),
