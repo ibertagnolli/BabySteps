@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
 import 'dart:core';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
+
 
 class WeightPage extends StatefulWidget {
   const WeightPage({super.key});
@@ -12,6 +15,7 @@ class WeightPage extends StatefulWidget {
 class _WeightPageState extends State<WeightPage> {
   int daysSinceWeight = 3;
   double lastWeightPounds = 10.5;
+  TextEditingController date = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -45,25 +49,23 @@ class _WeightPageState extends State<WeightPage> {
             ),
             
             // Add Weight Card // TODO: round corners 
-            const Padding(
-              padding: EdgeInsets.all(15),
+            Padding(
+              padding: const EdgeInsets.all(15),
               child: ExpansionTile(   // TODO does this need a PageExpansionKey? TODO: have open by default
-                backgroundColor: Color(0xFFFFFAF1),
-                collapsedBackgroundColor: Color(0xFFFFFAF1),
-                title: Text('Add Weight', style: TextStyle(fontSize: 25, color: Colors.black, fontWeight: FontWeight.bold)),
+                backgroundColor: const Color(0xFFFFFAF1),
+                collapsedBackgroundColor: const Color(0xFFFFFAF1),
+                title: const Text('Add Weight', style: TextStyle(fontSize: 25, color: Colors.black, fontWeight: FontWeight.bold)),
                 children: <Widget>[
 
                   // Padding around main contents of Weight Card
                   Padding(
-                    padding: EdgeInsets.all(15),
+                    padding: const EdgeInsets.all(15),
                     child: Column(children: <Widget>[ // TODO make ListView instead? -> Will it need to scroll?
 
-                      // Padding between rows of Weight Card
-                      Padding(
+                      // First row: Weight inputs
+                      const Padding(
                         padding: EdgeInsets.only(bottom: 10),
                         child: Row(children: <Widget> [
-                          
-                          // First row - input pounds
                           Text('Weight:', style: TextStyle(fontSize: 20, color: Colors.black)),
                           Expanded(
                             child: Padding(
@@ -91,6 +93,31 @@ class _WeightPageState extends State<WeightPage> {
                           Text('oz', style: TextStyle(fontSize: 20, color: Colors.black)),
                         ]),
                       ),
+
+                      // Second row: Date input
+                      TextField(
+                        controller: date,
+                        decoration: const InputDecoration(
+                          icon: Icon(Icons.calendar_today_rounded),
+                          labelText: "Select Date" // DateFormat('dd-MM-yyyy').format(DateTime.now()) // TODO: This is the idea for default date selection, doesn't work with const
+                        ),
+                        onTap: () async {
+                          DateTime? pickeddate = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(), 
+                            firstDate: DateTime(2020), 
+                            lastDate: DateTime(2101));
+
+                          if (pickeddate != null) {
+                            setState(() {
+                              date.text = DateFormat('dd-MM-yyyy').format(pickeddate);
+                            });
+                          }
+                        }
+                      ),
+
+
+                      // Third row: Submit
                     ], ),
                   ),
                 ],
