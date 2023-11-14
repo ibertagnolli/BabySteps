@@ -17,6 +17,10 @@ class _WeightPageState extends State<WeightPage> {
   double lastWeightPounds = 10.5;
   TextEditingController date = TextEditingController();
 
+  void saveNewWeight() {
+    // TODO save new weight in the database
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -116,8 +120,30 @@ class _WeightPageState extends State<WeightPage> {
                         }
                       ),
 
+                      // Third row: Submit button
+                      Padding(
+                        padding: const EdgeInsets.only(top: 40),
+                        child: SizedBox(
+                          height: 75,
+                          width: 185,
+                          child: FilledButton.tonal(
+                            onPressed: saveNewWeight,
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(const Color(0xFF4F646F)),
+                              foregroundColor: MaterialStateProperty.all(Colors.white),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                              ),
+                            ),
+                            child: const Text("Save",
+                                style: TextStyle(fontSize: 25)),
+                          ),
+                        ),
+                      )
 
-                      // Third row: Submit
                     ], ),
                   ),
                 ],
@@ -130,7 +156,7 @@ class _WeightPageState extends State<WeightPage> {
               child: ExpansionTile(
                 backgroundColor: Color(0xFFFFFAF1),
                 collapsedBackgroundColor: Color(0xFFFFFAF1),
-                title: Text('History', style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold)),
+                title: Text('History', style: TextStyle(fontSize: 25, color: Colors.black, fontWeight: FontWeight.bold)),
                 children: <Widget>[
                   ListTile(title: Text('This is tile 1')),
                 ],
