@@ -27,7 +27,7 @@ class _WeightPageState extends State<WeightPage> {
         ),
         
         body: Center(
-          child: Column(children: <Widget>[
+          child: ListView(children: <Widget>[
             
             // Weight Title
             const Padding(
@@ -44,16 +44,55 @@ class _WeightPageState extends State<WeightPage> {
               ),
             ),
             
-            // Add Weight Card // TODO: round corners
+            // Add Weight Card // TODO: round corners 
             const Padding(
               padding: EdgeInsets.all(15),
-              child: ExpansionTile(
+              child: ExpansionTile(   // TODO does this need a PageExpansionKey? TODO: have open by default
                 backgroundColor: Color(0xFFFFFAF1),
                 collapsedBackgroundColor: Color(0xFFFFFAF1),
-                title: Text('Add Weight', style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold)),
+                title: Text('Add Weight', style: TextStyle(fontSize: 25, color: Colors.black, fontWeight: FontWeight.bold)),
                 children: <Widget>[
-                  ListTile(title: Text('This is tile 1')), // TODO make widgets for the ListTiles
-                  ListTile(title: Text('This is tile 2')),
+
+                  // Padding around main contents of Weight Card
+                  Padding(
+                    padding: EdgeInsets.all(15),
+                    child: Column(children: <Widget>[ // TODO make ListView instead? -> Will it need to scroll?
+
+                      // Padding between rows of Weight Card
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 10),
+                        child: Row(children: <Widget> [
+                          
+                          // First row - input pounds
+                          Text('Weight:', style: TextStyle(fontSize: 20, color: Colors.black)),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 10, right: 10),
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: '13',
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text('lbs', style: TextStyle(fontSize: 20, color: Colors.black)),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 10, right: 10),
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: '13',
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text('oz', style: TextStyle(fontSize: 20, color: Colors.black)),
+                        ]),
+                      ),
+                    ], ),
+                  ),
                 ],
               ),
             ),
