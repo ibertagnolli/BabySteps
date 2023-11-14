@@ -52,7 +52,7 @@ class _TemperaturePageState extends State<TemperaturePage> {
         ),
 
         body: Center(
-          child: Column(children: <Widget>[
+          child: ListView(children: <Widget>[
             // Weight Title
             const Padding(
               padding: EdgeInsets.all(32),
