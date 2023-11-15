@@ -44,7 +44,7 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
           child: Column(children: <Widget>[
             const Padding(
               padding: EdgeInsets.all(32),
-              child: Text('Feeding',
+              child: Text('Bottle Feeding',
                   style: TextStyle(fontSize: 36, color: Color(0xFFFFFAF1))),
             ),
 
@@ -106,7 +106,7 @@ class TimeSinceCard extends StatelessWidget {
         elevation: 0,
         color: Color.fromARGB(255, 13, 60, 70),
         child: SizedBox(
-          width: 380,
+          width: 360,
           height: 90,
           child: Row(mainAxisAlignment:MainAxisAlignment.center, children: <Widget>[
             Padding(
@@ -135,7 +135,7 @@ class BottleTypeButton extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       child: SizedBox(
         height: 60,
-        width: 180,
+        width: 160,
         child: FilledButton.tonal(
           onPressed: () => {onPress(buttonText)},
           style: ButtonStyle(

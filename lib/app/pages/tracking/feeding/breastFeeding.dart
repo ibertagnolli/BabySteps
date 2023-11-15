@@ -5,11 +5,11 @@ class BreastFeedingPage extends StatefulWidget {
   const BreastFeedingPage({super.key});
 
   @override
-  State<BreastFeedingPage> createState() => _BottleFeedingPageState();
+  State<BreastFeedingPage> createState() => _BreastFeedingPageState();
 }
 
 
-class _BottleFeedingPageState extends State<BreastFeedingPage> {
+class _BreastFeedingPageState extends State<BreastFeedingPage> {
   
   String timeSince = "8:20";
   String lastSide = "left";
@@ -39,7 +39,7 @@ class _BottleFeedingPageState extends State<BreastFeedingPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Bottle Feeding',
+      title: 'Breast Feeding',
       home: Scaffold(
         backgroundColor: const Color(0xffb3beb6),
         appBar: AppBar(
@@ -52,7 +52,7 @@ class _BottleFeedingPageState extends State<BreastFeedingPage> {
           child: Column(children: <Widget>[
             const Padding(
               padding: EdgeInsets.all(32),
-              child: Text('Feeding',
+              child: Text('Breast Feeding',
                   style: TextStyle(fontSize: 36, color: Color(0xFFFFFAF1))),
             ),
 
@@ -77,7 +77,7 @@ class _BottleFeedingPageState extends State<BreastFeedingPage> {
                     padding: const EdgeInsets.all(16.0),
                     child: SizedBox(
                       height: 60,
-                      width: 160,
+                      width: 150,
                       child: FilledButton(
                         style: FilledButton.styleFrom(
                           backgroundColor:
@@ -105,7 +105,7 @@ class _BottleFeedingPageState extends State<BreastFeedingPage> {
                     padding: const EdgeInsets.all(16.0),
                     child: SizedBox(
                       height: 60,
-                      width: 160,
+                      width: 150,
                       child: FilledButton(
                         style: FilledButton.styleFrom(
                           backgroundColor:
@@ -127,7 +127,7 @@ class _BottleFeedingPageState extends State<BreastFeedingPage> {
               padding: const EdgeInsets.all(22.0),
               child: SizedBox(
                 height: 60,
-                width: 220,
+                width: 200,
                 child: FilledButton(
                   style: FilledButton.styleFrom(
                     backgroundColor: Color.fromARGB(255, 13, 60, 70), 
@@ -159,8 +159,8 @@ class InfoCard extends StatelessWidget {
         elevation: 0,
         color: Color.fromARGB(255, 13, 60, 70),
         child: SizedBox(
-          width: 380,
-          height: 120,
+          width: 360,
+          height: 150,
           child: Column(
             children: [
               Padding(
