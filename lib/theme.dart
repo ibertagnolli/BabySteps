@@ -1,40 +1,15 @@
 import 'package:flutter/material.dart';
 
-const lightGreen =  Color(0xFFB3BEB6);
-const neutral = Color(0xFFFFFAF1);
-const darkTeal = Color(0xFF0D4B5F);
-const peach = Color(0xFFF2BB9B);
-const darkGray = Color(0xFF4F646F);
-const white = Color(0xFFFFFFFF); 
-const black = Color(0xFF000000);
-const lightGray = Color(0xFFb71c1c); // wrong color, have to find it 
-const darkRed = Color(0xFFB0413E);
-const brightRed = Color(0xFFF00000);
-
-
-class BabyStepsColorScheme {
-
-  static ColorScheme _myColorScheme() {
-    return ColorScheme.fromSeed(
-        seedColor: darkTeal, // not important to us, just required to be there
-
-        background: lightGreen,
-        onBackground: neutral,
-        surface: neutral,
-        onSurface: black,
-        onSurfaceVariant: lightGray,
-        primary: peach,
-        onPrimary: black,
-        secondary: darkTeal,
-        onSecondary: neutral,
-        tertiary: darkGray,
-        onTertiary: neutral,
-        error: darkRed,
-        onError: neutral,
-    );
-  }
-}
-
+Color lightGreen =  Color(0xFFB3BEB6);
+Color neutral = Color(0xFFFFFAF1);
+Color darkTeal = Color(0xFF0D4B5F);
+Color peach = Color(0xFFF2BB9B);
+Color darkGray = Color(0xFF4F646F);
+Color white = Color(0xFFFFFFFF); 
+Color black = Color(0xFF000000);
+Color lightGray = Color(0xFFb71c1c); // wrong color, have to find it 
+Color darkRed = Color(0xFFB0413E);
+Color brightRed = Color(0xFFF00000);
 
 
 class BabyStepsTheme {
