@@ -13,6 +13,7 @@ class _NewStopWatchState extends State<NewStopWatch> {
   Stopwatch watch = Stopwatch();
   late Timer timer;
   bool startStop = true;
+  
 
   String elapsedTime = '';
 updateTime(Timer timer) {
@@ -34,15 +35,23 @@ updateTime(Timer timer) {
           SizedBox(height: 20.0),
           Row(mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              FilledButton(
-                  style: FilledButton.styleFrom(backgroundColor:  Color.fromARGB(255, 13, 60, 70)),
-                  onPressed: () => startOrStop(),
-                  child: const Text("Start Nap", style: TextStyle(fontSize: 30, color: Color(0xFFFFFAF1)))),
-             // SizedBox(width: 20.0),
-              //  FilledButton(
-              //    style: FilledButton.styleFrom( backgroundColor: Color.fromARGB(255, 13, 60, 70)),
-              //     onPressed: null, //resetWatch,
-              //     child: const Text("Stop Nap", style: TextStyle(fontSize: 30, color: Color(0xFFFFFAF1)))),
+               Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SizedBox(
+                height: 60,
+                width: 220,
+                child: FilledButton(
+                  style: FilledButton.styleFrom(
+                    backgroundColor:
+                         startStop ?Color.fromARGB(255, 0, 0, 0) : Color(0xFFFFFAF1), // Background color
+                  ),
+                  onPressed: startOrStop,
+                  child: Text(startStop ? "Start Nap" : "Stop Nap",
+                      style: TextStyle(
+                          fontSize: 18, 
+                          color: startStop ?Color(0xFFFFFAF1) : Color.fromARGB(255, 13, 60, 70)))),
+              ),
+            ),
             ],
           )
         ],
@@ -53,6 +62,8 @@ startOrStop() {
     if(startStop) {
       startWatch();
     } else {
+      //Or update filled card here?
+      watch.reset();
       stopWatch();
     }
   }
@@ -67,9 +78,11 @@ startOrStop() {
 
   stopWatch() {
     setState(() {
+      watch.reset();
       startStop = true;
       watch.stop();
       setTime();
+      //TODO: Update filled card here
     });
   }
 setTime() {
