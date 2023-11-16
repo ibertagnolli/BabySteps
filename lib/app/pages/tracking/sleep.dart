@@ -40,7 +40,7 @@ class _SleepPageState extends State<SleepPage> {
                       "nap: $lastNap", Icon(Icons.person_search_sharp)),
             ),
          //TODO: pass time since strings to the stopwatch widget!!
-            NewStopWatch(),
+            NewStopWatch(timeSinceNap, lastNap),
           ]),
         ),
       ),

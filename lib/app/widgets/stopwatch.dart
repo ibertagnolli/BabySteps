@@ -3,6 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class NewStopWatch extends StatefulWidget {
+   const NewStopWatch(this.timeSince, this.lastThing, {super.key});
+
+  final String timeSince;
+  final String lastThing;
 
   @override
   _NewStopWatchState createState() => _NewStopWatchState();
@@ -13,7 +17,6 @@ class _NewStopWatchState extends State<NewStopWatch> {
   Stopwatch watch = Stopwatch();
   late Timer timer;
   bool startStop = true;
-  
 
   String elapsedTime = '';
 updateTime(Timer timer) {
@@ -89,6 +92,8 @@ setTime() {
     var timeSoFar = watch.elapsedMilliseconds;
     setState(() {
       elapsedTime = transformMilliSeconds(timeSoFar);
+      //timeSince = elapsedTime;
+      //lastThing = 0:00
     });
   }
 
