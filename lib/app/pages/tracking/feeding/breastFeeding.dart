@@ -41,19 +41,19 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
     return MaterialApp(
       title: 'Breast Feeding',
       home: Scaffold(
-        backgroundColor: const Color(0xffb3beb6),
+        backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(
-          title: const Text('Tracking',
-              style: TextStyle(fontSize: 36, color: Colors.black45)),
-          backgroundColor: Color(0xFFFFFAF1),
+          title: Text('Tracking',
+              style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onSurfaceVariant)),
+          backgroundColor: Theme.of(context).colorScheme.surface,
         ),
 
         body: Center(
           child: Column(children: <Widget>[
-            const Padding(
+            Padding(
               padding: EdgeInsets.all(32),
               child: Text('Breast Feeding',
-                  style: TextStyle(fontSize: 36, color: Color(0xFFFFFAF1))),
+                  style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onBackground)),
             ),
 
             // Top card with info 
@@ -81,13 +81,13 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
                       child: FilledButton(
                         style: FilledButton.styleFrom(
                           backgroundColor:
-                              leftSideGoing ? Color(0xFFF2BB9B) : Color(0xFFFFFAF1), // Background color
+                              leftSideGoing ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.surface, // Background color
                         ),
                         onPressed: leftSideClicked,
                         child: Text(leftSideGoing ? "Stop left" : "Start left",
                             style: TextStyle(
                                 fontSize: 18, 
-                                color: Color.fromARGB(255, 0, 0, 0) ))),
+                                color: Theme.of(context).colorScheme.onSurface ))),
                     ),
                   ),
                 ],
@@ -109,13 +109,13 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
                       child: FilledButton(
                         style: FilledButton.styleFrom(
                           backgroundColor:
-                              rightSideGoing ? Color(0xFFF2BB9B) : Color(0xFFFFFAF1), // Background color
+                              rightSideGoing ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.surface, // Background color
                         ),
                         onPressed: rightSideClicked,
                         child: Text(rightSideGoing ? "Stop right" : "Start right",
                             style: TextStyle(
                                 fontSize: 18, 
-                                color: Color.fromARGB(255, 0, 0, 0) ))),
+                                color: Theme.of(context).colorScheme.onSurface ))),
                     ),
                   ),
                 ],
@@ -130,13 +130,13 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
                 width: 200,
                 child: FilledButton(
                   style: FilledButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 13, 60, 70), 
+                    backgroundColor: Theme.of(context).colorScheme.secondary, 
                   ),
                   onPressed: doneClicked,
                   child: Text("We're done!",
                       style: TextStyle(
                           fontSize: 18, 
-                          color: Color(0xFFFFFAF1)))),
+                          color: Theme.of(context).colorScheme.onSecondary))),
               ),
             ),
           ]),
@@ -157,7 +157,7 @@ class InfoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
         elevation: 0,
-        color: Color.fromARGB(255, 13, 60, 70),
+        color: Theme.of(context).colorScheme.secondary, // obviously wrong
         child: SizedBox(
           width: 360,
           height: 150,
@@ -166,20 +166,20 @@ class InfoCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(6.0),
                 child: ListTile(
-                    leading: const Icon(Icons.access_alarm, size: 50, color: Color(0xFFFFFAF1)),
+                    leading: Icon(Icons.access_alarm, size: 50, color: Theme.of(context).colorScheme.onSecondary),
                     title: 
                       Text('Time since last fed: $timeSince',
-                      style: const TextStyle(fontSize: 20, color: const Color(0xfffffaf1),),),
+                      style: TextStyle(fontSize: 20, color: Theme.of(context).colorScheme.onSecondary,),),
                   ),
               ),
               Padding(
                 padding: const EdgeInsets.all(6.0),
                 child:
                   ListTile(
-                    leading: const Icon(Icons.sync_alt, size: 50, color: Color(0xFFFFFAF1)),
+                    leading: Icon(Icons.sync_alt, size: 50, color: Theme.of(context).colorScheme.onSecondary),
                     title:
                         Text('Last side: $lastSide', 
-                        style: const TextStyle(fontSize: 20, color: const Color(0xfffffaf1),)),
+                        style: TextStyle(fontSize: 20, color: Theme.of(context).colorScheme.onSecondary,)),
                     // tileColor: ,
                   ),
               ),

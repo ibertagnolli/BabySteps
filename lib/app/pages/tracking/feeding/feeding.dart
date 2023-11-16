@@ -23,18 +23,18 @@ class _FeedingPageState extends State<FeedingPage> {
     return MaterialApp(
       title: 'Feeding',
       home: Scaffold(
-        backgroundColor: const Color(0xffb3beb6),
+        backgroundColor: Theme.of(context).colorScheme.background, 
         appBar: AppBar(
-          title: const Text('Tracking',
-              style: TextStyle(fontSize: 36, color: Colors.black45)),
-          backgroundColor: Color(0xFFFFFAF1),
+          title: Text('Tracking',
+              style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onSurfaceVariant,)),
+          backgroundColor: Theme.of(context).colorScheme.surface, 
         ),
         body: Center(
           child: Column(children: <Widget>[
-            const Padding(
+            Padding(
               padding: EdgeInsets.all(32),
               child: Text('Feeding',
-                  style: TextStyle(fontSize: 36, color: Color(0xFFFFFAF1))),
+                  style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onBackground)),
             ),
 
             // Top card with data
@@ -48,7 +48,7 @@ class _FeedingPageState extends State<FeedingPage> {
             Padding(
               padding: EdgeInsets.only(bottom: 16),
               child: FeedingOptionCard(
-                      Icon(Icons.water_drop, size: 40, color: const Color(0xFFFFFAF1)), "Breast feeding", "Last side: $lastBreastSide", () {
+                      Icon(Icons.water_drop, size: 40, color: Theme.of(context).colorScheme.onSecondary), "Breast feeding", "Last side: $lastBreastSide", () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -62,7 +62,7 @@ class _FeedingPageState extends State<FeedingPage> {
             Padding(
               padding: EdgeInsets.only(bottom: 16),
               child: FeedingOptionCard(
-                      Icon(Icons.local_drink, size: 40, color: const Color(0xFFFFFAF1)), "Bottle feeding", "Last amount: $lastBottleAmount", () {
+                      Icon(Icons.local_drink, size: 40, color: Theme.of(context).colorScheme.onSecondary), "Bottle feeding", "Last amount: $lastBottleAmount", () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -92,9 +92,9 @@ class FeedingOptionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Color.fromARGB(255, 13, 60, 70), 
+      color: Theme.of(context).colorScheme.secondary, // obviously wrong
       child: InkWell(
-        splashColor: Color.fromARGB(255, 13, 60, 70),
+        splashColor: Theme.of(context).colorScheme.secondary, // obviously wrong
         onTap: pageFunc,
         child: SizedBox(
           width: 360,
@@ -111,12 +111,12 @@ class FeedingOptionCard extends StatelessWidget {
                     Text(
                       name,
                       style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: const Color(0xfffffaf1),),
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSecondary,),
                     ),
                     Text(
                       extraInfo,
                       style:
-                          TextStyle(color: const Color(0xfffffaf1),),
+                          TextStyle(color: Theme.of(context).colorScheme.onSecondary,),
                     ),
                   ],
                 ),
@@ -125,7 +125,7 @@ class FeedingOptionCard extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.all(16),
                 child: Align(
-                    child: Icon(Icons.arrow_circle_right_outlined, size: 30, color: const Color(0xfffffaf1))),
+                    child: Icon(Icons.arrow_circle_right_outlined, size: 30, color: Theme.of(context).colorScheme.onSecondary)),
               )
             ],
           ),
