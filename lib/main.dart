@@ -94,17 +94,17 @@ class _MyHomePageState extends State<MyHomePage> {
         // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
         // change color while the other colors stay the same.
 
-        backgroundColor: Theme.of(context).navigationRailTheme.backgroundColor, 
+        backgroundColor: Theme.of(context).colorScheme.background, 
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
       body: Center(
         child: Column(children: [
-       const Padding(
+       Padding(
           padding: EdgeInsets.symmetric(vertical: 32),
           child: Text("Tracking Metrics",
-              style: TextStyle(fontSize: 36, color: Color(0xFFFFFAF1))),
+              style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onBackground)),
         ),
         TrackingCard(
             Icon(Icons.local_drink, size: 40), "Feeding", "15 minutes ago", () {
