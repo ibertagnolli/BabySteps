@@ -3,9 +3,12 @@ import 'package:babysteps/app/widgets/checkList.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'dart:core';
 
-//TODO: add navigation to this page from any page.
-//This next line allows me to run the calendar page as main since we don't have the navigation to the calendar page setup yet.
-//void main() => runApp(const CalendarPage());
+/**
+ * The Calendar Page will track upcoming appointments and daily tasks, with some
+ * type of Milestone and Notes integration.
+ * 
+ * Currently: Monthly view with drop down for daily task check boxes.
+ */
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
