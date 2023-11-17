@@ -8,11 +8,11 @@ import 'package:babysteps/app/pages/calendar.dart';
 
 //TODO: add navigation to this page from any page.
 //This next line allows me to run the calendar page as main since we don't have the navigation to the calendar page setup yet.
-void main() => runApp(const CalendarPage());
+// void main() => runApp(const CalendarPage());
 
-// void main() {
-//   runApp(const MyApp());
-// }
+void main() {
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
