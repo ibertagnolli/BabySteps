@@ -5,6 +5,11 @@ import 'package:babysteps/app/pages/tracking/weight.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/pages/tracking/feeding/feeding.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
+import 'package:babysteps/app/pages/calendar.dart';
+
+//TODO: add navigation to this page from any page.
+//This next line allows me to run the calendar page as main since we don't have the navigation to the calendar page setup yet.
+// void main() => runApp(const CalendarPage());
 
 void main() {
   runApp(const MyApp());
