@@ -32,6 +32,7 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Bottle Feeding',
+      theme: Theme.of(context),
       home: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(
@@ -141,7 +142,7 @@ class BottleTypeButton extends StatelessWidget {
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.resolveWith((states) {
               return activeButton
-                  ? Theme.of(context).colorScheme.primary // obviously wrong
+                  ? Theme.of(context).colorScheme.primary 
                   : Theme.of(context).colorScheme.surface;
             }),
             foregroundColor: MaterialStateProperty.resolveWith((states) {

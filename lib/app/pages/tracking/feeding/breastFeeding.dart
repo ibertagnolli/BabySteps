@@ -59,7 +59,7 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
             // Top card with info 
             Padding(
               padding: EdgeInsets.only(bottom: 16),
-              child: InfoCard(timeSince, lastSide),
+              child: InfoCard(timeSince, lastSide, Theme.of(context)),
             ),
 
             // Stopwatches and start/stop buttons for left and right
@@ -148,16 +148,17 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
 
 // Displays time since and last side
 class InfoCard extends StatelessWidget {
-  const InfoCard(this.timeSince, this.lastSide, {super.key});
+  const InfoCard(this.timeSince, this.lastSide, this.theme, {super.key});
 
   final String timeSince;
   final String lastSide;
+  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
     return Card(
         elevation: 0,
-        color: Theme.of(context).colorScheme.secondary, // obviously wrong
+        color: theme.colorScheme.secondary, 
         child: SizedBox(
           width: 360,
           height: 150,
@@ -166,21 +167,20 @@ class InfoCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(6.0),
                 child: ListTile(
-                    leading: Icon(Icons.access_alarm, size: 50, color: Theme.of(context).colorScheme.onSecondary),
+                    leading: Icon(Icons.access_alarm, size: 50, color: theme.colorScheme.onSecondary),
                     title: 
                       Text('Time since last fed: $timeSince',
-                      style: TextStyle(fontSize: 20, color: Theme.of(context).colorScheme.onSecondary,),),
+                      style: TextStyle(fontSize: 20, color: theme.colorScheme.onSecondary,),),
                   ),
               ),
               Padding(
                 padding: const EdgeInsets.all(6.0),
                 child:
                   ListTile(
-                    leading: Icon(Icons.sync_alt, size: 50, color: Theme.of(context).colorScheme.onSecondary),
+                    leading: Icon(Icons.sync_alt, size: 50, color: theme.colorScheme.onSecondary),
                     title:
                         Text('Last side: $lastSide', 
-                        style: TextStyle(fontSize: 20, color: Theme.of(context).colorScheme.onSecondary,)),
-                    // tileColor: ,
+                        style: TextStyle(fontSize: 20, color: theme.colorScheme.onSecondary,)),
                   ),
               ),
             ],

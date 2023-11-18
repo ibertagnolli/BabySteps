@@ -57,11 +57,13 @@ class _FeedingPageState extends State<FeedingPage> {
                             },
                           ),
                         );
-              }),
+                      }, 
+                      Theme.of(context)),
             ),
             Padding(
               padding: EdgeInsets.only(bottom: 16),
-              child: FeedingOptionCard(
+              child: 
+              FeedingOptionCard(
                       Icon(Icons.local_drink, size: 40, color: Theme.of(context).colorScheme.onSecondary), "Bottle feeding", "Last amount: $lastBottleAmount", () {
                         Navigator.push(
                           context,
@@ -71,7 +73,8 @@ class _FeedingPageState extends State<FeedingPage> {
                             },
                           ),
                         );
-              }),
+                      },
+                      Theme.of(context)),
             ),
           ]),
         ),
@@ -82,19 +85,20 @@ class _FeedingPageState extends State<FeedingPage> {
 
 // Same as TrackingCard widget but different colors 
 class FeedingOptionCard extends StatelessWidget {
-  const FeedingOptionCard(this.icon, this.name, this.extraInfo, this.pageFunc,
+  const FeedingOptionCard(this.icon, this.name, this.extraInfo, this.pageFunc, this.theme,
       {super.key});
   final Icon icon;
   final String name;
   final String extraInfo;
   final void Function() pageFunc;
+  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Theme.of(context).colorScheme.secondary, // obviously wrong
+      color: theme.colorScheme.secondary, 
       child: InkWell(
-        splashColor: Theme.of(context).colorScheme.secondary, // obviously wrong
+        splashColor: theme.colorScheme.secondary, 
         onTap: pageFunc,
         child: SizedBox(
           width: 360,
@@ -125,7 +129,7 @@ class FeedingOptionCard extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.all(16),
                 child: Align(
-                    child: Icon(Icons.arrow_circle_right_outlined, size: 30, color: Theme.of(context).colorScheme.onSecondary)),
+                    child: Icon(Icons.arrow_circle_right_outlined, size: 30, color: theme.colorScheme.onSecondary)),
               )
             ],
           ),

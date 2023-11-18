@@ -7,7 +7,7 @@ Color peach = Color(0xFFF2BB9B);
 Color darkGray = Color(0xFF4F646F);
 Color white = Color(0xFFFFFFFF); 
 Color black = Color(0xFF000000);
-Color lightGray = Color.fromARGB(115, 0, 0, 0); // wrong color, have to find it 
+Color lightGray = Color.fromARGB(115, 0, 0, 0); 
 Color darkRed = Color(0xFFB0413E);
 Color brightRed = Color(0xFFF00000);
 
