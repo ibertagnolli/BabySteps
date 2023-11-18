@@ -46,6 +46,10 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
           title: const Text('Tracking',
               style: TextStyle(fontSize: 36, color: Colors.black45)),
           backgroundColor: Color(0xFFFFFAF1),
+          leading: BackButton(
+            onPressed: () => Navigator.of(context).pop(),
+            color: Colors.black,
+          ),
         ),
 
         body: Center(

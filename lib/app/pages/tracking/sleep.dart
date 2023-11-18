@@ -36,6 +36,10 @@ class _SleepPageState extends State<SleepPage> {
           title: const Text('Tracking',
               style: TextStyle(fontSize: 36, color: Colors.black45)),
           backgroundColor: Color(0xFFFFFAF1),
+          leading: BackButton(
+            onPressed: () => Navigator.of(context).pop(),
+            color: Colors.black,
+          ),
         ),
         body: Center(
           child: Column(children: <Widget>[
@@ -46,21 +50,22 @@ class _SleepPageState extends State<SleepPage> {
             ),
             Padding(
               padding: EdgeInsets.only(bottom: 16),
-              child: FilledCard("last nap: $timeSinceNap",
-                      "nap: $lastNap", Icon(Icons.person_search_sharp)),
+              child: FilledCard("last nap: $timeSinceNap", "nap: $lastNap",
+                  Icon(Icons.person_search_sharp)),
             ),
-            Text("$timerData", style: const TextStyle(fontSize: 30, color: Color(0xFFFFFAF1))),
-             Padding(
+            Text("$timerData",
+                style: const TextStyle(fontSize: 30, color: Color(0xFFFFFAF1))),
+            Padding(
               padding: EdgeInsets.all(32),
-            child:FilledButton(
-                style: FilledButton.styleFrom(
-                  backgroundColor:
-                       Color.fromARGB(255, 13, 60, 70), // Background color
-                ),
-                onPressed: napClicked,
-                child: Text("$buttonText",
-                    style: const TextStyle(
-                        fontSize: 20, color: Color(0xFFFFFAF1)))),
+              child: FilledButton(
+                  style: FilledButton.styleFrom(
+                    backgroundColor:
+                        Color.fromARGB(255, 13, 60, 70), // Background color
+                  ),
+                  onPressed: napClicked,
+                  child: Text("$buttonText",
+                      style: const TextStyle(
+                          fontSize: 20, color: Color(0xFFFFFAF1)))),
             ),
           ]),
         ),
