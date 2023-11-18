@@ -1,5 +1,27 @@
 import 'package:flutter/material.dart';
 
+
+// GENERALLY WORKS: 
+// The widget usually already has the right context/ThemeData, then you can access it with:
+// color: Theme.of(context).colorScheme.titleOfColor
+
+// ALTERNATE:
+// Pass to the widget as a parameter: Theme.of(context)
+// In the widget put this.theme in the constructor, and have attribute final ThemeData theme   
+// Then to access it do:   color: theme.colorScheme.titleOfColor
+
+// Color title guide:
+// background green = "background"
+// neutral beige = "surface" (and "onBackground", "onSecondary", "onTertiary", and "onError")
+// peach = "primary"
+// blue = "secondary"
+// dark gray = "tertiary"
+// black = "onSurface" and "onPrimary"
+// light gray = "onSurfaceVariant"
+// dark red = "error"
+
+
+
 Color lightGreen =  Color(0xFFB3BEB6);
 Color neutral = Color(0xFFFFFAF1);
 Color darkTeal = Color(0xFF0D4B5F);
@@ -10,7 +32,6 @@ Color black = Color(0xFF000000);
 Color lightGray = Color.fromARGB(115, 0, 0, 0); 
 Color darkRed = Color(0xFFB0413E);
 Color brightRed = Color(0xFFF00000);
-
 
 class BabyStepsTheme {
 
