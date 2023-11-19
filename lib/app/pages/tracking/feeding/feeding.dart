@@ -27,7 +27,11 @@ class _FeedingPageState extends State<FeedingPage> {
         appBar: AppBar(
           title: Text('Tracking',
               style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onSurfaceVariant,)),
-          backgroundColor: Theme.of(context).colorScheme.surface, 
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          leading: BackButton(
+            onPressed: () => Navigator.of(context).pop(),
+            color: Colors.black,
+          ),
         ),
         body: Center(
           child: Column(children: <Widget>[

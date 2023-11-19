@@ -36,7 +36,13 @@ class _DiaperPageState extends State<DiaperPage> {
       home: Scaffold(
         backgroundColor: const Color(0xffb3beb6),
         appBar: AppBar(
-          title: const Text('Tracking'),
+          backgroundColor: Color(0xFFFFFAF1),
+          leading: BackButton(
+            onPressed: () => Navigator.of(context).pop(),
+            color: Colors.black,
+          ),
+          title: const Text('Tracking',
+              style: TextStyle(fontSize: 36, color: Colors.black45)),
         ),
         body: Center(
           child: Column(

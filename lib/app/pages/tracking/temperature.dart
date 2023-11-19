@@ -46,6 +46,10 @@ class _TemperaturePageState extends State<TemperaturePage> {
 
         // Temporary Nav Bar
         appBar: AppBar(
+          leading: BackButton(
+            onPressed: () => Navigator.of(context).pop(),
+            color: Colors.black,
+          ),
           title: const Text('Tracking',
               style: TextStyle(fontSize: 36, color: Colors.black45)),
           backgroundColor: Color(0xFFFFFAF1),
