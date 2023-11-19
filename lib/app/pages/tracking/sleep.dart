@@ -31,22 +31,22 @@ class _SleepPageState extends State<SleepPage> {
     return MaterialApp(
       title: 'Sleep',
       home: Scaffold(
-        backgroundColor: const Color(0xffb3beb6),
+        backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(
-          title: const Text('Tracking',
-              style: TextStyle(fontSize: 36, color: Colors.black45)),
-          backgroundColor: Color(0xFFFFFAF1),
+          title: Text('Tracking',
+              style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onSurfaceVariant)),
+          backgroundColor: Theme.of(context).colorScheme.surface,
           leading: BackButton(
             onPressed: () => Navigator.of(context).pop(),
-            color: Colors.black,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
         body: Center(
           child: Column(children: <Widget>[
-            const Padding(
+            Padding(
               padding: EdgeInsets.all(32),
               child: Text('Sleep',
-                  style: TextStyle(fontSize: 36, color: Color(0xFFFFFAF1))),
+                  style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onBackground)),
             ),
             Padding(
               padding: EdgeInsets.only(bottom: 16),
@@ -54,18 +54,18 @@ class _SleepPageState extends State<SleepPage> {
                   Icon(Icons.person_search_sharp)),
             ),
             Text("$timerData",
-                style: const TextStyle(fontSize: 30, color: Color(0xFFFFFAF1))),
+                style: TextStyle(fontSize: 30, color: Theme.of(context).colorScheme.onBackground)),
             Padding(
               padding: EdgeInsets.all(32),
               child: FilledButton(
                   style: FilledButton.styleFrom(
                     backgroundColor:
-                        Color.fromARGB(255, 13, 60, 70), // Background color
+                        Theme.of(context).colorScheme.secondary, // Background color
                   ),
                   onPressed: napClicked,
                   child: Text("$buttonText",
-                      style: const TextStyle(
-                          fontSize: 20, color: Color(0xFFFFFAF1)))),
+                      style: TextStyle(
+                          fontSize: 20, color: Theme.of(context).colorScheme.onSecondary))),
             ),
           ]),
         ),
