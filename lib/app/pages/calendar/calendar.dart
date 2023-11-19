@@ -30,10 +30,10 @@ class _CalendarPageState extends State<CalendarPage> {
       child: ListView(
         children: <Widget>[
           // Weight Title
-          const Padding(
+          Padding(
             padding: EdgeInsets.all(32),
             child: Text('Calendar',
-                style: TextStyle(fontSize: 36, color: Color(0xFFFFFAF1))),
+                style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onBackground)),
           ),
 
           // Very Very Basic calendar
@@ -50,15 +50,15 @@ class _CalendarPageState extends State<CalendarPage> {
           //To Do list card
           //TODO: propogate todo items from variables through to the widget
           //TODO: add notes icon and integration at bottom of card
-          const Padding(
+          Padding(
             padding: EdgeInsets.all(15),
             child: ExpansionTile(
-              backgroundColor: Color(0xFFFFFAF1),
-              collapsedBackgroundColor: Color(0xFFFFFAF1),
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
               title: Text('To Do',
                   style: TextStyle(
                       fontSize: 20,
-                      color: Colors.black,
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontWeight: FontWeight.bold)),
               children: <Widget>[
                 CheckboxListTileExample(item1, item2, item3),
@@ -67,15 +67,15 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
 
           // Milestones Card
-          const Padding(
+          Padding(
             padding: EdgeInsets.all(15),
             child: ExpansionTile(
-              backgroundColor: Color(0xFFFFFAF1),
-              collapsedBackgroundColor: Color(0xFFFFFAF1),
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
               title: Text('Milestones',
                   style: TextStyle(
                       fontSize: 20,
-                      color: Colors.black,
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontWeight: FontWeight.bold)),
               children: <Widget>[
                 ListTile(title: Text('No new milestones to be aware of')),
