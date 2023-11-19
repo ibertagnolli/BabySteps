@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 // color: Theme.of(context).colorScheme.titleOfColor
 
 // ALTERNATE:
-// Pass to the widget as a parameter: Theme.of(context)
-// In the widget put this.theme in the constructor, and have attribute final ThemeData theme   
+// Pass to the widget: Theme.of(context)
+// In the widget add this.theme and attribute final ThemeData theme   
 // Then to access it do:   color: theme.colorScheme.titleOfColor
 
 // Color title guide:
@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 // light gray = "onSurfaceVariant"
 // dark red = "error"
 
+// Note: You can't apply theme to const values (just get rid of const label to fix)
 
 
 Color lightGreen =  Color(0xFFB3BEB6);
