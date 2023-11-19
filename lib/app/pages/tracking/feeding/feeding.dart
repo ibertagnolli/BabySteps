@@ -30,7 +30,7 @@ class _FeedingPageState extends State<FeedingPage> {
           backgroundColor: Theme.of(context).colorScheme.surface,
           leading: BackButton(
             onPressed: () => Navigator.of(context).pop(),
-            color: Colors.black,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
         body: Center(
@@ -119,12 +119,12 @@ class FeedingOptionCard extends StatelessWidget {
                     Text(
                       name,
                       style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSecondary,),
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: theme.colorScheme.onSecondary,),
                     ),
                     Text(
                       extraInfo,
                       style:
-                          TextStyle(color: Theme.of(context).colorScheme.onSecondary,),
+                          TextStyle(color: theme.colorScheme.onSecondary,),
                     ),
                   ],
                 ),

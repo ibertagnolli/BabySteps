@@ -42,7 +42,7 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
           backgroundColor: Theme.of(context).colorScheme.surface,
           leading: BackButton(
             onPressed: () => Navigator.of(context).pop(),
-            color: Colors.black,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
 
