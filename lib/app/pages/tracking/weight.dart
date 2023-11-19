@@ -25,26 +25,26 @@ class _WeightPageState extends State<WeightPage> {
     return MaterialApp(
       title: 'Weight',
       home: Scaffold(
-        backgroundColor: const Color(0xffb3beb6),
+        backgroundColor: Theme.of(context).colorScheme.background,
 
         // Temporary Nav Bar
         appBar: AppBar(
-          title: const Text('Tracking',
-              style: TextStyle(fontSize: 36, color: Colors.black45)),
+          title: Text('Tracking',
+              style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onSurfaceVariant)),
           leading: BackButton(
             onPressed: () => Navigator.of(context).pop(),
-            color: Colors.black,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
-          backgroundColor: Color(0xFFFFFAF1),
+          backgroundColor: Theme.of(context).colorScheme.surface,
         ),
 
         body: Center(
           child: ListView(children: <Widget>[
             // Weight Title
-            const Padding(
+            Padding(
               padding: EdgeInsets.all(32),
               child: Text('Weight',
-                  style: TextStyle(fontSize: 36, color: Color(0xFFFFFAF1))),
+                  style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onBackground)),
             ),
 
             // FilledCard Quick Weight Info
@@ -59,12 +59,12 @@ class _WeightPageState extends State<WeightPage> {
               padding: const EdgeInsets.all(15),
               child: ExpansionTile(
                 // TODO does this need a PageExpansionKey? TODO: have open by default
-                backgroundColor: const Color(0xFFFFFAF1),
-                collapsedBackgroundColor: const Color(0xFFFFFAF1),
-                title: const Text('Add Weight',
+                backgroundColor: Theme.of(context).colorScheme.surface,
+                collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
+                title: Text('Add Weight',
                     style: TextStyle(
                         fontSize: 25,
-                        color: Colors.black,
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontWeight: FontWeight.bold)),
                 children: <Widget>[
                   // Padding around main contents of Weight Card
@@ -75,12 +75,12 @@ class _WeightPageState extends State<WeightPage> {
                         // TODO make ListView instead? -> Will it need to scroll?
 
                         // First row: Weight inputs
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: Row(children: <Widget>[
                             Text('Weight:',
                                 style: TextStyle(
-                                    fontSize: 20, color: Colors.black)),
+                                    fontSize: 20, color: Theme.of(context).colorScheme.onSurface)),
                             Expanded(
                               child: Padding(
                                 padding: EdgeInsets.only(left: 10, right: 10),
@@ -94,7 +94,7 @@ class _WeightPageState extends State<WeightPage> {
                             ),
                             Text('lbs',
                                 style: TextStyle(
-                                    fontSize: 20, color: Colors.black)),
+                                    fontSize: 20, color: Theme.of(context).colorScheme.onSurface)),
                             Expanded(
                               child: Padding(
                                 padding: EdgeInsets.only(left: 10, right: 10),
@@ -108,7 +108,7 @@ class _WeightPageState extends State<WeightPage> {
                             ),
                             Text('oz',
                                 style: TextStyle(
-                                    fontSize: 20, color: Colors.black)),
+                                    fontSize: 20, color: Theme.of(context).colorScheme.onSurface)),
                           ]),
                         ),
 
@@ -145,9 +145,9 @@ class _WeightPageState extends State<WeightPage> {
                               onPressed: saveNewWeight,
                               style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all(
-                                    const Color(0xFF4F646F)),
+                                    Theme.of(context).colorScheme.tertiary),
                                 foregroundColor:
-                                    MaterialStateProperty.all(Colors.white),
+                                    MaterialStateProperty.all(Theme.of(context).colorScheme.onTertiary),  
                                 shape: MaterialStateProperty.all<
                                     RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
@@ -168,19 +168,19 @@ class _WeightPageState extends State<WeightPage> {
             ),
 
             // History Card
-            const Padding(
+            Padding(
               padding: EdgeInsets.all(15),
               child: ExpansionTile(
-                backgroundColor: Color(0xFFFFFAF1),
-                collapsedBackgroundColor: Color(0xFFFFFAF1),
+                backgroundColor: Theme.of(context).colorScheme.surface,
+                collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
                 title: Text('History',
                     style: TextStyle(
                         fontSize: 25,
-                        color: Colors.black,
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontWeight: FontWeight.bold)),
                 children: <Widget>[
                   Text('TODO Add chart of baby\'s weight history here:',
-                      style: TextStyle(fontSize: 20, color: Colors.black)),
+                      style: TextStyle(fontSize: 20, color: Theme.of(context).colorScheme.onSurface)),
                 ],
               ),
             ),
