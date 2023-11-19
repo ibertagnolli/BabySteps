@@ -1,10 +1,15 @@
 import 'package:babysteps/app/pages/notes/notes.dart';
-import 'package:babysteps/app/pages/tracking/temperature.dart';
 import 'package:babysteps/app/pages/tracking/tracking.dart';
 import 'package:flutter/material.dart';
+import 'package:babysteps/theme.dart';
 import 'package:babysteps/app/pages/home/home.dart';
 import 'package:babysteps/app/pages/social/social.dart';
 import 'package:babysteps/app/pages/calendar/calendar.dart';
+
+//TODO: add navigation to this page from any page.
+//This next line allows me to run the calendar page as main since we don't have the navigation to the calendar page setup yet.
+// void main() => runApp(const CalendarPage());
+
 
 void main() {
   runApp(const MyApp());
@@ -19,11 +24,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'BabySteps',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        scaffoldBackgroundColor: const Color(0xffb3beb6),
+        colorScheme: BabyStepsTheme().themedata.colorScheme,
+        fontFamily: 'Georgia',
+        //scaffoldBackgroundColor: const Color(0xffb3beb6),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'BabySteps'),
+
     );
   }
 }
@@ -49,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).navigationRailTheme.backgroundColor,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         title: Text(tabName[_currentTab].toString()),
       ),
       bottomNavigationBar: BottomNavigation(
@@ -121,8 +128,8 @@ class BottomNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return NavigationBar(
-      backgroundColor: const Color(0xfffffaf1),
-      indicatorColor: const Color(0xfff2bb9b),
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      indicatorColor: Theme.of(context).colorScheme.primary,
       destinations: [
         _buildItem(TabItem.home),
         _buildItem(TabItem.tracking),

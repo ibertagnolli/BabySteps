@@ -34,23 +34,23 @@ class _DiaperPageState extends State<DiaperPage> {
     return MaterialApp(
       title: 'Diaper Change',
       home: Scaffold(
-        backgroundColor: const Color(0xffb3beb6),
+        backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(
-          backgroundColor: Color(0xFFFFFAF1),
+          backgroundColor: Theme.of(context).colorScheme.surface,
           leading: BackButton(
             onPressed: () => Navigator.of(context).pop(),
-            color: Colors.black,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
-          title: const Text('Tracking',
-              style: TextStyle(fontSize: 36, color: Colors.black45)),
+          title: Text('Tracking',
+              style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onSurfaceVariant)),
         ),
         body: Center(
           child: Column(
             children: <Widget>[
-              const Padding(
+              Padding(
                 padding: EdgeInsets.all(32),
                 child: Text("Diaper Change",
-                    style: TextStyle(fontSize: 36, color: Color(0xFFFFFAF1))),
+                    style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onBackground)),
               ),
               Padding(
                   padding: const EdgeInsets.only(bottom: 16),
@@ -61,25 +61,25 @@ class _DiaperPageState extends State<DiaperPage> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("Type:",
+                    Text("Type:",
                         style:
-                            TextStyle(fontSize: 30, color: Color(0xFFFFFAF1))),
+                            TextStyle(fontSize: 30, color: Theme.of(context).colorScheme.onBackground)),
                     Column(
                       children: [
                         DiaperButton(
-                            'Pee', activeButton.contains("Pee"), buttonClicked),
+                            'Pee', activeButton.contains("Pee"), buttonClicked, Theme.of(context)),
                         const Padding(padding: EdgeInsets.only(top: 16)),
                         DiaperButton('Mixed', activeButton.contains("Mixed"),
-                            buttonClicked)
+                            buttonClicked, Theme.of(context))
                       ],
                     ),
                     Column(
                       children: [
                         DiaperButton('Poop', activeButton.contains("Poop"),
-                            buttonClicked),
+                            buttonClicked, Theme.of(context)),
                         const Padding(padding: EdgeInsets.only(top: 16)),
                         DiaperButton(
-                            'Dry', activeButton.contains("Dry"), buttonClicked)
+                            'Dry', activeButton.contains("Dry"), buttonClicked, Theme.of(context))
                       ],
                     ),
                   ],
@@ -90,11 +90,11 @@ class _DiaperPageState extends State<DiaperPage> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Padding(
+                    Padding(
                         padding: EdgeInsets.only(top: 6),
                         child: Text("Diaper Rash?",
                             style: TextStyle(
-                                fontSize: 30, color: Color(0xFFFFFAF1)))),
+                                fontSize: 30, color: Theme.of(context).colorScheme.onBackground))),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 32),
                       child: Transform.scale(
@@ -102,8 +102,8 @@ class _DiaperPageState extends State<DiaperPage> {
                         child: Checkbox(
                           value: diaperRash,
                           fillColor: MaterialStateProperty.all(
-                              const Color(0xFFFFFAF1)),
-                          checkColor: Colors.black,
+                              Theme.of(context).colorScheme.surface),
+                          checkColor: Theme.of(context).colorScheme.onSurface,
                           side: const BorderSide(
                             color: Colors.grey,
                             width: 1,
@@ -128,8 +128,8 @@ class _DiaperPageState extends State<DiaperPage> {
                     onPressed: addDiaperClicked,
                     style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all(const Color(0xFF4F646F)),
-                      foregroundColor: MaterialStateProperty.all(Colors.white),
+                          MaterialStateProperty.all(Theme.of(context).colorScheme.tertiary),
+                      foregroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.onTertiary),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0),
@@ -150,11 +150,12 @@ class _DiaperPageState extends State<DiaperPage> {
 }
 
 class DiaperButton extends StatelessWidget {
-  const DiaperButton(this.buttonText, this.activeButton, this.onPress,
+  const DiaperButton(this.buttonText, this.activeButton, this.onPress, this.theme,
       {super.key});
   final String buttonText;
   final bool activeButton;
   final void Function(String diaperType) onPress;
+  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
@@ -168,13 +169,13 @@ class DiaperButton extends StatelessWidget {
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.resolveWith((states) {
               return activeButton
-                  ? const Color(0xFF4F646F)
-                  : const Color(0xFFFFFAF1);
+                  ? theme.colorScheme.tertiary
+                  : theme.colorScheme.surface;
             }),
             foregroundColor: MaterialStateProperty.resolveWith((states) {
               return activeButton
-                  ? const Color.fromARGB(255, 255, 255, 255)
-                  : const Color.fromARGB(255, 0, 0, 0);
+                  ? theme.colorScheme.onTertiary
+                  : theme.colorScheme.onSurface;
             }),
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(

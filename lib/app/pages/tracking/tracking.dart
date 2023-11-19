@@ -26,10 +26,10 @@ class _TrackingPageState extends State<TrackingPage> {
         Center(
       child: Column(
         children: [
-          const Padding(
+          Padding(
             padding: EdgeInsets.symmetric(vertical: 32),
             child: Text("Tracking Metrics",
-                style: TextStyle(fontSize: 36, color: Color(0xFFFFFAF1))),
+                style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onBackground)),
           ),
           TrackingCard(
             const Icon(Icons.local_drink, size: 40),
