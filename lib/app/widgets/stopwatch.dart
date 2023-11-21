@@ -3,10 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class NewStopWatch extends StatefulWidget {
-   const NewStopWatch(this.timeSince, this.lastThing, {super.key});
+   const NewStopWatch(this.timeSince, this.buttonText, {super.key});
 
   final String timeSince;
-  final String lastThing;
+  //final String lastThing;
+  final String buttonText;
 
   @override
   _NewStopWatchState createState() => _NewStopWatchState();
@@ -29,7 +30,9 @@ updateTime(Timer timer) {
   }
   @override
   Widget build(BuildContext context) {
-
+    //access above variables using
+    //widget.timeSince;
+      String buttonText = widget.buttonText;
     return Container(
       padding: EdgeInsets.all(20.0),
       child: Column(
@@ -49,7 +52,7 @@ updateTime(Timer timer) {
                          startStop ?Color.fromARGB(255, 0, 0, 0) : Color(0xFFFFFAF1), // Background color
                   ),
                   onPressed: startOrStop,
-                  child: Text(startStop ? "Start Nap" : "Stop Nap",
+                  child: Text(startStop ? "Start $buttonText" : "Stop $buttonText",
                       style: TextStyle(
                           fontSize: 18, 
                           color: startStop ?Color(0xFFFFFAF1) : Color.fromARGB(255, 13, 60, 70)))),

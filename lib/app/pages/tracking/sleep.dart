@@ -13,6 +13,7 @@ class SleepPage extends StatefulWidget {
 class _SleepPageState extends State<SleepPage> {
   String timeSinceNap = "4:38";
   String lastNap = "0:55";
+  String buttonText = "Nap";
 
 
 
@@ -39,8 +40,9 @@ class _SleepPageState extends State<SleepPage> {
               child: FilledCard("last nap: $timeSinceNap",
                       "nap: $lastNap", Icon(Icons.person_search_sharp)),
             ),
+      
          //TODO: pass time since strings to the stopwatch widget!!
-            NewStopWatch(timeSinceNap, lastNap),
+            NewStopWatch(timeSinceNap, buttonText),
           ]),
         ),
       ),
