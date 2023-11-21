@@ -34,20 +34,26 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Bottle Feeding',
+      theme: Theme.of(context),
       home: Scaffold(
-        backgroundColor: const Color(0xffb3beb6),
+        backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(
-          title: const Text('Tracking',
-              style: TextStyle(fontSize: 36, color: Colors.black45)),
-          backgroundColor: Color(0xFFFFFAF1),
+
+          title: Text('Tracking',
+              style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onSurfaceVariant)),
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          leading: BackButton(
+            onPressed: () => Navigator.of(context).pop(),
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
         ),
 
         body: Center(
           child: Column(children: <Widget>[
-            const Padding(
+            Padding(
               padding: EdgeInsets.all(32),
               child: Text('Bottle Feeding',
-                  style: TextStyle(fontSize: 36, color: Color(0xFFFFFAF1))),
+                  style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onBackground)),
             ),
 
             // Top card with info
@@ -82,17 +88,17 @@ class TimeSinceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
         elevation: 0,
-        color: Color.fromARGB(255, 13, 60, 70),
+        color: Theme.of(context).colorScheme.secondary, // obviously wrong
         child: SizedBox(
           width: 360,
           height: 90,
           child: Row(mainAxisAlignment:MainAxisAlignment.center, children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(right: 8.0),
-              child: const Icon(Icons.access_alarm, size: 60, color: Color(0xFFFFFAF1)),
+              child: Icon(Icons.access_alarm, size: 60, color: Theme.of(context).colorScheme.onSecondary),
             ),
             Text('Time since last bottle: $timeSince',
-                  style: const TextStyle(fontSize: 20, color: const Color(0xfffffaf1),),),
+                  style: TextStyle(fontSize: 20, color: Theme.of(context).colorScheme.onSecondary,),),
           ]),
         ),
       );
@@ -119,11 +125,11 @@ class BottleTypeButton extends StatelessWidget {
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.resolveWith((states) {
               return activeButton
-                  ? const Color(0xFFF2BB9B)
-                  : const Color(0xFFFFFAF1);
+                  ? Theme.of(context).colorScheme.primary 
+                  : Theme.of(context).colorScheme.surface;
             }),
             foregroundColor: MaterialStateProperty.resolveWith((states) {
-              return const Color.fromARGB(255, 0, 0, 0);
+              return Theme.of(context).colorScheme.onSurface;
             }),
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(

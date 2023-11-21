@@ -14,8 +14,7 @@ class FilledCard extends StatelessWidget {
       width: 380,
       child: Card(
         elevation: 0,
-        //color: Theme.of(context).colorScheme.primary,
-        color: const Color(0xFFFFFAF1),
+        color: Theme.of(context).colorScheme.surface,
         child: SizedBox(
           width: 380,
           height: 180,
@@ -61,9 +60,9 @@ class TrackingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: const Color(0xfffffaf1),
+      color: Theme.of(context).colorScheme.surface,
       child: InkWell(
-        splashColor: const Color(0xfffffaf1),
+        splashColor: Theme.of(context).colorScheme.surface,
         onTap: pageFunc,
         child: SizedBox(
           width: 360,
@@ -101,3 +100,5 @@ class TrackingCard extends StatelessWidget {
     );
   }
 }
+
+

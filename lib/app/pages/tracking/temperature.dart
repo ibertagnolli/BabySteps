@@ -42,22 +42,26 @@ class _TemperaturePageState extends State<TemperaturePage> {
     return MaterialApp(
       title: 'Temperature',
       home: Scaffold(
-        backgroundColor: const Color(0xffb3beb6),
+        backgroundColor: Theme.of(context).colorScheme.background,
 
         // Temporary Nav Bar
         appBar: AppBar(
-          title: const Text('Tracking',
-              style: TextStyle(fontSize: 36, color: Colors.black45)),
-          backgroundColor: Color(0xFFFFFAF1),
+          leading: BackButton(
+            onPressed: () => Navigator.of(context).pop(),
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+          title: Text('Tracking',
+              style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onSurfaceVariant)),
+          backgroundColor: Theme.of(context).colorScheme.surface,
         ),
 
         body: Center(
           child: ListView(children: <Widget>[
             // Weight Title
-            const Padding(
+            Padding(
               padding: EdgeInsets.all(32),
               child: Text('Temperature',
-                  style: TextStyle(fontSize: 36, color: Color(0xFFFFFAF1))),
+                  style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onBackground)),
             ),
 
             // FilledCard Quick Weight Info
@@ -71,16 +75,16 @@ class _TemperaturePageState extends State<TemperaturePage> {
             Padding(
               padding: const EdgeInsets.all(15),
               child: ExpansionTile(
-                backgroundColor: const Color(0xFFFFFAF1),
-                collapsedBackgroundColor: const Color(0xFFFFFAF1),
-                title: const Text('Add Temperature',
+                backgroundColor: Theme.of(context).colorScheme.surface,
+                collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
+                title: Text('Add Temperature',
                     style: TextStyle(
                         fontSize: 20,
-                        color: Colors.black,
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontWeight: FontWeight.bold)),
                 children: <Widget>[
-                  const Text('Temperature:',
-                      style: TextStyle(fontSize: 20, color: Colors.black)),
+                  Text('Temperature:',
+                      style: TextStyle(fontSize: 20, color: Theme.of(context).colorScheme.onSurface)),
                   Padding(
                     padding: const EdgeInsets.all(20),
                     child: TextField(
@@ -95,11 +99,11 @@ class _TemperaturePageState extends State<TemperaturePage> {
                   ),
                   Row(
                     children: <Widget>[
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.only(left: 20),
                         child: Text('Date:',
                             style:
-                                TextStyle(fontSize: 20, color: Colors.black)),
+                                TextStyle(fontSize: 20, color: Theme.of(context).colorScheme.onSurface)),
                       ),
                       Padding(
                         padding: EdgeInsets.only(left: 10, right: 10),
@@ -115,7 +119,7 @@ class _TemperaturePageState extends State<TemperaturePage> {
                         ),
                       ),
                       Text('Time:',
-                          style: TextStyle(fontSize: 20, color: Colors.black)),
+                          style: TextStyle(fontSize: 20, color: Theme.of(context).colorScheme.onSurface)),
                       Padding(
                         padding: EdgeInsets.only(left: 10, right: 10),
                         child: SizedBox(
@@ -135,26 +139,26 @@ class _TemperaturePageState extends State<TemperaturePage> {
                   FilledButton(
                       style: FilledButton.styleFrom(
                         backgroundColor:
-                            Color.fromARGB(255, 13, 60, 70), // Background color
+                            Theme.of(context).colorScheme.secondary, // Background color
                       ),
                       onPressed: addClicked,
                       child: Text("$buttonText",
                           style: TextStyle(
-                              fontSize: 20, color: Color(0xFFFFFAF1)))),
+                              fontSize: 20, color: Theme.of(context).colorScheme.onSecondary))),
                 ],
               ),
             ),
 
             // History Card
-            const Padding(
+            Padding(
               padding: EdgeInsets.all(15),
               child: ExpansionTile(
-                backgroundColor: Color(0xFFFFFAF1),
-                collapsedBackgroundColor: Color(0xFFFFFAF1),
+                backgroundColor: Theme.of(context).colorScheme.surface,
+                collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
                 title: Text('History',
                     style: TextStyle(
                         fontSize: 20,
-                        color: Colors.black,
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontWeight: FontWeight.bold)),
                 children: <Widget>[
                   ListTile(title: Text('No Recent Temeratures')),

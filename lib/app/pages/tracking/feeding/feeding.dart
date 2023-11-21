@@ -23,18 +23,22 @@ class _FeedingPageState extends State<FeedingPage> {
     return MaterialApp(
       title: 'Feeding',
       home: Scaffold(
-        backgroundColor: const Color(0xffb3beb6),
+        backgroundColor: Theme.of(context).colorScheme.background, 
         appBar: AppBar(
-          title: const Text('Tracking',
-              style: TextStyle(fontSize: 36, color: Colors.black45)),
-          backgroundColor: Color(0xFFFFFAF1),
+          title: Text('Tracking',
+              style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onSurfaceVariant,)),
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          leading: BackButton(
+            onPressed: () => Navigator.of(context).pop(),
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
         ),
         body: Center(
           child: Column(children: <Widget>[
-            const Padding(
+            Padding(
               padding: EdgeInsets.all(32),
               child: Text('Feeding',
-                  style: TextStyle(fontSize: 36, color: Color(0xFFFFFAF1))),
+                  style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onBackground)),
             ),
 
             // Top card with data
@@ -48,7 +52,7 @@ class _FeedingPageState extends State<FeedingPage> {
             Padding(
               padding: EdgeInsets.only(bottom: 16),
               child: FeedingOptionCard(
-                      Icon(Icons.water_drop, size: 40, color: const Color(0xFFFFFAF1)), "Breast feeding", "Last side: $lastBreastSide", () {
+                      Icon(Icons.water_drop, size: 40, color: Theme.of(context).colorScheme.onSecondary), "Breast feeding", "Last side: $lastBreastSide", () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -57,12 +61,14 @@ class _FeedingPageState extends State<FeedingPage> {
                             },
                           ),
                         );
-              }),
+                      }, 
+                      Theme.of(context)),
             ),
             Padding(
               padding: EdgeInsets.only(bottom: 16),
-              child: FeedingOptionCard(
-                      Icon(Icons.local_drink, size: 40, color: const Color(0xFFFFFAF1)), "Bottle feeding", "Last amount: $lastBottleAmount", () {
+              child: 
+              FeedingOptionCard(
+                      Icon(Icons.local_drink, size: 40, color: Theme.of(context).colorScheme.onSecondary), "Bottle feeding", "Last amount: $lastBottleAmount", () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -71,7 +77,8 @@ class _FeedingPageState extends State<FeedingPage> {
                             },
                           ),
                         );
-              }),
+                      },
+                      Theme.of(context)),
             ),
           ]),
         ),
@@ -82,19 +89,20 @@ class _FeedingPageState extends State<FeedingPage> {
 
 // Same as TrackingCard widget but different colors 
 class FeedingOptionCard extends StatelessWidget {
-  const FeedingOptionCard(this.icon, this.name, this.extraInfo, this.pageFunc,
+  const FeedingOptionCard(this.icon, this.name, this.extraInfo, this.pageFunc, this.theme,
       {super.key});
   final Icon icon;
   final String name;
   final String extraInfo;
   final void Function() pageFunc;
+  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Color.fromARGB(255, 13, 60, 70), 
+      color: theme.colorScheme.secondary, 
       child: InkWell(
-        splashColor: Color.fromARGB(255, 13, 60, 70),
+        splashColor: theme.colorScheme.secondary, 
         onTap: pageFunc,
         child: SizedBox(
           width: 360,
@@ -111,12 +119,12 @@ class FeedingOptionCard extends StatelessWidget {
                     Text(
                       name,
                       style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: const Color(0xfffffaf1),),
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: theme.colorScheme.onSecondary,),
                     ),
                     Text(
                       extraInfo,
                       style:
-                          TextStyle(color: const Color(0xfffffaf1),),
+                          TextStyle(color: theme.colorScheme.onSecondary,),
                     ),
                   ],
                 ),
@@ -125,7 +133,7 @@ class FeedingOptionCard extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.all(16),
                 child: Align(
-                    child: Icon(Icons.arrow_circle_right_outlined, size: 30, color: const Color(0xfffffaf1))),
+                    child: Icon(Icons.arrow_circle_right_outlined, size: 30, color: theme.colorScheme.onSecondary)),
               )
             ],
           ),

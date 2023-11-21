@@ -22,23 +22,27 @@ class _SleepPageState extends State<SleepPage> {
     return MaterialApp(
       title: 'Sleep',
       home: Scaffold(
-        backgroundColor: const Color(0xffb3beb6),
+        backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(
-          title: const Text('Tracking',
-              style: TextStyle(fontSize: 36, color: Colors.black45)),
-          backgroundColor: Color(0xFFFFFAF1),
+          title: Text('Tracking',
+              style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onSurfaceVariant)),
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          leading: BackButton(
+            onPressed: () => Navigator.of(context).pop(),
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
         ),
         body: Center(
           child: Column(children: <Widget>[
-            const Padding(
+            Padding(
               padding: EdgeInsets.all(32),
               child: Text('Sleep',
-                  style: TextStyle(fontSize: 36, color: Color(0xFFFFFAF1))),
+                  style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onBackground)),
             ),
             Padding(
               padding: EdgeInsets.only(bottom: 16),
-              child: FilledCard("last nap: $timeSinceNap",
-                      "nap: $lastNap", Icon(Icons.person_search_sharp)),
+              child: FilledCard("last nap: $timeSinceNap", "nap: $lastNap",
+                  Icon(Icons.person_search_sharp)),
             ),
       
          //TODO: pass time since strings to the stopwatch widget!!
