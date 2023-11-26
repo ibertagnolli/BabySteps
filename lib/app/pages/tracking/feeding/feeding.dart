@@ -34,53 +34,55 @@ class _FeedingPageState extends State<FeedingPage> {
           ),
         ),
         body: Center(
-          child: Column(children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(32),
-              child: Text('Feeding',
-                  style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onBackground)),
-            ),
-
-            // Top card with data
-            Padding(
-              padding: EdgeInsets.only(bottom: 16),
-              child: FilledCard("last fed: $lastTimeFed",
-                      "type: $lastFeedingType", Icon(Icons.edit)),
-            ),
-
-            // Feeding options - breast feeding or bottle feeding
-            Padding(
-              padding: EdgeInsets.only(bottom: 16),
-              child: FeedingOptionCard(
-                      Icon(Icons.water_drop, size: 40, color: Theme.of(context).colorScheme.onSecondary), "Breast feeding", "Last side: $lastBreastSide", () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return const BreastFeedingPage();
-                            },
-                          ),
-                        );
-                      }, 
-                      Theme.of(context)),
-            ),
-            Padding(
-              padding: EdgeInsets.only(bottom: 16),
-              child: 
-              FeedingOptionCard(
-                      Icon(Icons.local_drink, size: 40, color: Theme.of(context).colorScheme.onSecondary), "Bottle feeding", "Last amount: $lastBottleAmount", () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return const BottleFeedingPage();
-                            },
-                          ),
-                        );
-                      },
-                      Theme.of(context)),
-            ),
-          ]),
+          child: FittedBox(
+            child: Column(children: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(32),
+                child: Text('Feeding',
+                    style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onBackground)),
+              ),
+          
+              // Top card with data
+              Padding(
+                padding: EdgeInsets.only(bottom: 16),
+                child: FilledCard("last fed: $lastTimeFed",
+                        "type: $lastFeedingType", Icon(Icons.edit)),
+              ),
+          
+              // Feeding options - breast feeding or bottle feeding
+              Padding(
+                padding: EdgeInsets.only(bottom: 16),
+                child: FeedingOptionCard(
+                        Icon(Icons.water_drop, size: 40, color: Theme.of(context).colorScheme.onSecondary), "Breast feeding", "Last side: $lastBreastSide", () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return const BreastFeedingPage();
+                              },
+                            ),
+                          );
+                        }, 
+                        Theme.of(context)),
+              ),
+              Padding(
+                padding: EdgeInsets.only(bottom: 16),
+                child: 
+                FeedingOptionCard(
+                        Icon(Icons.local_drink, size: 40, color: Theme.of(context).colorScheme.onSecondary), "Bottle feeding", "Last amount: $lastBottleAmount", () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return const BottleFeedingPage();
+                              },
+                            ),
+                          );
+                        },
+                        Theme.of(context)),
+              ),
+            ]),
+          ),
         ),
       ),
     );

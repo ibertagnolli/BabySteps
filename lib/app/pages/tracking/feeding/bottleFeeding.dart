@@ -47,53 +47,55 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
         ),
 
         body: Center(
-          child: Column(children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(32),
-              child: Text('Bottle Feeding',
-                  style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onBackground)),
-            ),
-
-            // Top card with info
-            Padding(
-              padding: EdgeInsets.only(bottom: 16),
-              child: TimeSinceCard(timeSince),
-            ),
-
-            // Buttons for bottle type
-            Row(mainAxisAlignment:MainAxisAlignment.center, children: [
-              BottleTypeButton('Breast milk', activeButton.contains("Breast milk"),
-                            bottleTypeClicked),
-              
-              BottleTypeButton('Formula', activeButton.contains("Formula"),
-                            bottleTypeClicked)
-            ],),
-
-            // Stopwatch
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text("(stopwatch)"),
-            ),
-
-            // Start/stop button 
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SizedBox(
-                height: 60,
-                width: 220,
-                child: FilledButton(
-                  style: FilledButton.styleFrom(
-                    backgroundColor:
-                         stopwatchGoing ? Theme.of(context).colorScheme.surface : Theme.of(context).colorScheme.secondary, // Background color
-                  ),
-                  onPressed: bottleClicked,
-                  child: Text(stopwatchGoing ? "Stop bottle" : "Start new bottle",
-                      style: TextStyle(
-                          fontSize: 18, 
-                          color: stopwatchGoing ? Theme.of(context).colorScheme.onSurface : Theme.of(context).colorScheme.onSecondary))),
+          child: FittedBox(
+            child: Column(children: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(32),
+                child: Text('Bottle Feeding',
+                    style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onBackground)),
               ),
-            ),
-          ]),
+          
+              // Top card with info
+              Padding(
+                padding: EdgeInsets.only(bottom: 16),
+                child: TimeSinceCard(timeSince),
+              ),
+          
+              // Buttons for bottle type
+              Row(mainAxisAlignment:MainAxisAlignment.center, children: [
+                BottleTypeButton('Breast milk', activeButton.contains("Breast milk"),
+                              bottleTypeClicked),
+                
+                BottleTypeButton('Formula', activeButton.contains("Formula"),
+                              bottleTypeClicked)
+              ],),
+          
+              // Stopwatch
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text("(stopwatch)"),
+              ),
+          
+              // Start/stop button 
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: SizedBox(
+                  height: 60,
+                  width: 220,
+                  child: FilledButton(
+                    style: FilledButton.styleFrom(
+                      backgroundColor:
+                           stopwatchGoing ? Theme.of(context).colorScheme.surface : Theme.of(context).colorScheme.secondary, // Background color
+                    ),
+                    onPressed: bottleClicked,
+                    child: Text(stopwatchGoing ? "Stop bottle" : "Start new bottle",
+                        style: TextStyle(
+                            fontSize: 18, 
+                            color: stopwatchGoing ? Theme.of(context).colorScheme.onSurface : Theme.of(context).colorScheme.onSecondary))),
+                ),
+              ),
+            ]),
+          ),
         ),
       ),
     );

@@ -54,97 +54,99 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
         ),
 
         body: Center(
-          child: Column(children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(32),
-              child: Text('Breast Feeding',
-                  style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onBackground)),
-            ),
-
-            // Top card with info 
-            Padding(
-              padding: EdgeInsets.only(bottom: 16),
-              child: InfoCard(timeSince, lastSide, Theme.of(context)),
-            ),
-
-            // Stopwatches and start/stop buttons for left and right
-            Row(mainAxisAlignment:MainAxisAlignment.center, children: [
-              // Left
-              Column(
-                children: [
-                  // Stopwatch
-                  Padding(
-                    padding: const EdgeInsets.all(22.0),
-                    child: Text("(stopwatch)"),
-                  ),
-                  // Start/stop button 
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: SizedBox(
-                      height: 60,
-                      width: 150,
-                      child: FilledButton(
-                        style: FilledButton.styleFrom(
-                          backgroundColor:
-                              leftSideGoing ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.surface, // Background color
-                        ),
-                        onPressed: leftSideClicked,
-                        child: Text(leftSideGoing ? "Stop left" : "Start left",
-                            style: TextStyle(
-                                fontSize: 18, 
-                                color: Theme.of(context).colorScheme.onSurface ))),
-                    ),
-                  ),
-                ],
+          child: FittedBox(
+            child: Column(children: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(32),
+                child: Text('Breast Feeding',
+                    style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onBackground)),
               ),
-              // Right 
-              Column(
-                children: [
-                  // Stopwatch 
-                  Padding(
-                    padding: const EdgeInsets.all(22.0),
-                    child: Text("(stopwatch)"),
-                  ),
-                  // Start/stop button 
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: SizedBox(
-                      height: 60,
-                      width: 150,
-                      child: FilledButton(
-                        style: FilledButton.styleFrom(
-                          backgroundColor:
-                              rightSideGoing ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.surface, // Background color
-                        ),
-                        onPressed: rightSideClicked,
-                        child: Text(rightSideGoing ? "Stop right" : "Start right",
-                            style: TextStyle(
-                                fontSize: 18, 
-                                color: Theme.of(context).colorScheme.onSurface ))),
-                    ),
-                  ),
-                ],
-              )
-            ],),
-
-            // Done button - stops both timers if going, will log time since 
-            Padding(
-              padding: const EdgeInsets.all(22.0),
-              child: SizedBox(
-                height: 60,
-                width: 200,
-                child: FilledButton(
-                  style: FilledButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.secondary, 
-                  ),
-                  onPressed: doneClicked,
-                  child: Text("We're done!",
-                      style: TextStyle(
-                          fontSize: 18, 
-                          color: Theme.of(context).colorScheme.onSecondary))),
+          
+              // Top card with info 
+              Padding(
+                padding: EdgeInsets.only(bottom: 16),
+                child: InfoCard(timeSince, lastSide, Theme.of(context)),
               ),
-            ),
-          ]),
+          
+              // Stopwatches and start/stop buttons for left and right
+              Row(mainAxisAlignment:MainAxisAlignment.center, children: [
+                // Left
+                Column(
+                  children: [
+                    // Stopwatch
+                    Padding(
+                      padding: const EdgeInsets.all(22.0),
+                      child: Text("(stopwatch)"),
+                    ),
+                    // Start/stop button 
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: SizedBox(
+                        height: 60,
+                        width: 150,
+                        child: FilledButton(
+                          style: FilledButton.styleFrom(
+                            backgroundColor:
+                                leftSideGoing ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.surface, // Background color
+                          ),
+                          onPressed: leftSideClicked,
+                          child: Text(leftSideGoing ? "Stop left" : "Start left",
+                              style: TextStyle(
+                                  fontSize: 18, 
+                                  color: Theme.of(context).colorScheme.onSurface ))),
+                      ),
+                    ),
+                  ],
+                ),
+                // Right 
+                Column(
+                  children: [
+                    // Stopwatch 
+                    Padding(
+                      padding: const EdgeInsets.all(22.0),
+                      child: Text("(stopwatch)"),
+                    ),
+                    // Start/stop button 
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: SizedBox(
+                        height: 60,
+                        width: 150,
+                        child: FilledButton(
+                          style: FilledButton.styleFrom(
+                            backgroundColor:
+                                rightSideGoing ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.surface, // Background color
+                          ),
+                          onPressed: rightSideClicked,
+                          child: Text(rightSideGoing ? "Stop right" : "Start right",
+                              style: TextStyle(
+                                  fontSize: 18, 
+                                  color: Theme.of(context).colorScheme.onSurface ))),
+                      ),
+                    ),
+                  ],
+                )
+              ],),
+          
+              // Done button - stops both timers if going, will log time since 
+              Padding(
+                padding: const EdgeInsets.all(22.0),
+                child: SizedBox(
+                  height: 60,
+                  width: 200,
+                  child: FilledButton(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.secondary, 
+                    ),
+                    onPressed: doneClicked,
+                    child: Text("We're done!",
+                        style: TextStyle(
+                            fontSize: 18, 
+                            color: Theme.of(context).colorScheme.onSecondary))),
+                ),
+              ),
+            ]),
+          ),
         ),
       ),
     );
