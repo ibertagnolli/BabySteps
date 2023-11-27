@@ -15,17 +15,48 @@ class _AddWeightCardState extends State<AddWeightCard> {
   TextEditingController ounces = TextEditingController();
   TextEditingController date = TextEditingController();
 
+  /// Saves a new weight entry in the Firestore database.
   Future<DocumentReference> saveNewWeight() {
-    print("in newWeight()");
-    // TODO save new weight in the database
-    return FirebaseFirestore.instance
-      .collection('weight')
-      .add(<String, dynamic>{
-        'pounds': pounds.text,
-        'ounces': ounces.text,
-        'date': date.text,
-        // TODO add userID
-      });
+    DateTime currentDate = DateTime.now();
+    DateTime dateInput = new DateFormat("dd-MM-yyyy").parse(date.text);
+
+    if (pounds.text == "" || ounces.text == "" || date.text == "") {
+      showDialog(
+        context: context, 
+        builder: (context) {
+          return AlertDialog(
+            content: Text('Please enter pounds, ounces, and a valid date.')
+          );
+        }
+      );
+      
+      throw Exception('Invalid weight input.');
+    }
+    else if (dateInput.isAfter(currentDate)) {
+      showDialog(
+        context: context, 
+        builder: (context) {
+          return AlertDialog(
+            content: Text('Please enter a previous or current date.')
+          );
+        }
+      );
+      
+      throw Exception('Invalid date entry for weight input.');
+    }
+    else {
+      return FirebaseFirestore.instance
+        .collection('weight')
+        .add(<String, dynamic>{
+          'pounds': pounds.text,
+          'ounces': ounces.text,
+          'date': date.text,
+          // TODO add userID
+        });
+    }
+
+    // TODO show something when the date is saved (check mark?) 
+    // TODO prevent user from inserting the data entry multiple times -> disable the Save button?
   }
 
   @override
@@ -64,6 +95,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
                   Text('Weight:',
                       style: TextStyle(
                           fontSize: 20, color: Theme.of(context).colorScheme.onSurface)),
+                  
                   // Pounds input
                   Expanded(
                     child: Padding(
@@ -80,6 +112,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
                   Text('lbs',
                       style: TextStyle(
                           fontSize: 20, color: Theme.of(context).colorScheme.onSurface)),
+                  
                   // Ounces input
                   Expanded(
                     child: Padding(
