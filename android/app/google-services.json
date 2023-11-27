@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1051140534821",
+    "project_id": "babysteps-c362f",
+    "storage_bucket": "babysteps-c362f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1051140534821:android:689d1271df53f799d145cc",
+        "android_client_info": {
+          "package_name": "com.example.babysteps"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClX2CGv4RDuN_8MiYPwzJaC_a_b6wOOps"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
