@@ -5,13 +5,21 @@ import 'package:babysteps/theme.dart';
 import 'package:babysteps/app/pages/home/home.dart';
 import 'package:babysteps/app/pages/social/social.dart';
 import 'package:babysteps/app/pages/calendar/calendar.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 //TODO: add navigation to this page from any page.
 //This next line allows me to run the calendar page as main since we don't have the navigation to the calendar page setup yet.
 // void main() => runApp(const CalendarPage());
 
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const MyApp());
 }
 

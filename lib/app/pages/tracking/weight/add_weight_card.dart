@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -5,17 +6,35 @@ import 'package:intl/intl.dart';
 class AddWeightCard extends StatefulWidget {
   // AddWeightCard();
   @override
-  State<StatefulWidget> createState() => _AddWeightCardState();
-  
+  State<StatefulWidget> createState() => _AddWeightCardState(); 
 }
 
 /// Stores the mutable data that can change over the lifetime of the AddWeightCard.
 class _AddWeightCardState extends State<AddWeightCard> {
-
+  TextEditingController pounds = TextEditingController();
+  TextEditingController ounces = TextEditingController();
   TextEditingController date = TextEditingController();
 
-  void saveNewWeight() {
+  Future<DocumentReference> saveNewWeight() {
+    print("in newWeight()");
     // TODO save new weight in the database
+    return FirebaseFirestore.instance
+      .collection('weight')
+      .add(<String, dynamic>{
+        'pounds': pounds.text,
+        'ounces': ounces.text,
+        'date': date.text,
+        // TODO add userID
+      });
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    pounds.dispose();
+    ounces.dispose();
+    date.dispose();
+    super.dispose();
   }
 
   @override
@@ -45,13 +64,15 @@ class _AddWeightCardState extends State<AddWeightCard> {
                   Text('Weight:',
                       style: TextStyle(
                           fontSize: 20, color: Theme.of(context).colorScheme.onSurface)),
-                  const Expanded(
+                  // Pounds input
+                  Expanded(
                     child: Padding(
                       padding: EdgeInsets.only(left: 10, right: 10),
                       child: TextField(
+                        controller: pounds,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          hintText: '13',
+                          hintText: 'testPounds',
                         ),
                       ),
                     ),
@@ -59,13 +80,15 @@ class _AddWeightCardState extends State<AddWeightCard> {
                   Text('lbs',
                       style: TextStyle(
                           fontSize: 20, color: Theme.of(context).colorScheme.onSurface)),
-                  const Expanded(
+                  // Ounces input
+                  Expanded(
                     child: Padding(
                       padding: EdgeInsets.only(left: 10, right: 10),
                       child: TextField(
+                        controller: ounces,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          hintText: '13',
+                          hintText: 'testOunces',
                         ),
                       ),
                     ),
