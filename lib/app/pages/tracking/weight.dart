@@ -50,7 +50,7 @@ class _WeightPageState extends State<WeightPage> {
             // FilledCard Quick Weight Info
             Padding(
               padding: EdgeInsets.only(bottom: 15),
-              child: FilledCard("Days since last weight: $daysSinceWeight",
+              child: FilledCard("last weight: $daysSinceWeight",
                   "weight: $lastWeightPounds", Icon(Icons.scale)),
             ),
 
