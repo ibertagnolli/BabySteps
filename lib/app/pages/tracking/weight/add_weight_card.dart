@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 
 /// The widget that adds a weight measurement.
 class AddWeightCard extends StatefulWidget {
-  // AddWeightCard();
   @override
   State<StatefulWidget> createState() => _AddWeightCardState(); 
 }
@@ -20,6 +19,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
     DateTime currentDate = DateTime.now();
     DateTime dateInput = new DateFormat("dd-MM-yyyy").parse(date.text);
 
+    // Check that all fields have input
     if (pounds.text == "" || ounces.text == "" || date.text == "") {
       showDialog(
         context: context, 
@@ -32,6 +32,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
       
       throw Exception('Invalid weight input.');
     }
+    // Check that date is today's date, or in the past
     else if (dateInput.isAfter(currentDate)) {
       showDialog(
         context: context, 
@@ -44,6 +45,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
       
       throw Exception('Invalid date entry for weight input.');
     }
+    // Write weight data to database
     else {
       return FirebaseFirestore.instance
         .collection('weight')
