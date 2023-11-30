@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:babysteps/app/widgets/stopwatch.dart';
 import 'dart:core';
 
 class BottleFeedingPage extends StatefulWidget {
@@ -12,6 +13,7 @@ class BottleFeedingPage extends StatefulWidget {
 class _BottleFeedingPageState extends State<BottleFeedingPage> {
   
   String activeButton = "Breast milk";
+  String buttonText = "Bottle";
   String timeSince = "8:20";
   bool stopwatchGoing = false;
 
@@ -68,31 +70,7 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
               BottleTypeButton('Formula', activeButton.contains("Formula"),
                             bottleTypeClicked)
             ],),
-
-            // Stopwatch
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text("(stopwatch)"),
-            ),
-
-            // Start/stop button 
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SizedBox(
-                height: 60,
-                width: 220,
-                child: FilledButton(
-                  style: FilledButton.styleFrom(
-                    backgroundColor:
-                         stopwatchGoing ? Theme.of(context).colorScheme.surface : Theme.of(context).colorScheme.secondary, // Background color
-                  ),
-                  onPressed: bottleClicked,
-                  child: Text(stopwatchGoing ? "Stop bottle" : "Start new bottle",
-                      style: TextStyle(
-                          fontSize: 18, 
-                          color: stopwatchGoing ? Theme.of(context).colorScheme.onSurface : Theme.of(context).colorScheme.onSecondary))),
-              ),
-            ),
+        NewStopWatch(timeSince, buttonText)
           ]),
         ),
       ),

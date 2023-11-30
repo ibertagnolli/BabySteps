@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:babysteps/app/widgets/stopwatch.dart';
 import 'dart:core';
 
 class BreastFeedingPage extends StatefulWidget {
@@ -13,6 +14,8 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
   
   String timeSince = "8:20";
   String lastSide = "left";
+  String buttonTextL = "left";
+  String buttonTextR = "right";
   bool leftSideGoing = false;
   bool rightSideGoing = false;
 
@@ -68,83 +71,30 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
             ),
 
             // Stopwatches and start/stop buttons for left and right
-            Row(mainAxisAlignment:MainAxisAlignment.center, children: [
-              // Left
-              Column(
-                children: [
-                  // Stopwatch
-                  Padding(
-                    padding: const EdgeInsets.all(22.0),
-                    child: Text("(stopwatch)"),
-                  ),
-                  // Start/stop button 
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: SizedBox(
-                      height: 60,
-                      width: 150,
-                      child: FilledButton(
-                        style: FilledButton.styleFrom(
-                          backgroundColor:
-                              leftSideGoing ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.surface, // Background color
-                        ),
-                        onPressed: leftSideClicked,
-                        child: Text(leftSideGoing ? "Stop left" : "Start left",
-                            style: TextStyle(
-                                fontSize: 18, 
-                                color: Theme.of(context).colorScheme.onSurface ))),
-                    ),
-                  ),
-                ],
-              ),
-              // Right 
-              Column(
-                children: [
+              // Left 
                   // Stopwatch 
-                  Padding(
-                    padding: const EdgeInsets.all(22.0),
-                    child: Text("(stopwatch)"),
+                  Column(children:[
+                   SizedBox(
+                    height: 200,
+                    width: 300, 
+                    child: NewStopWatch(timeSince, buttonTextL),
                   ),
-                  // Start/stop button 
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: SizedBox(
-                      height: 60,
-                      width: 150,
-                      child: FilledButton(
-                        style: FilledButton.styleFrom(
-                          backgroundColor:
-                              rightSideGoing ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.surface, // Background color
-                        ),
-                        onPressed: rightSideClicked,
-                        child: Text(rightSideGoing ? "Stop right" : "Start right",
-                            style: TextStyle(
-                                fontSize: 18, 
-                                color: Theme.of(context).colorScheme.onSurface ))),
-                    ),
-                  ),
+            ]),
+                  // Right
+                    // Stopwatch  
+                  Column(children:[
+                   SizedBox(
+                    height: 200,
+                    width: 300, 
+                    child: NewStopWatch(timeSince, buttonTextR),
+                  )
+                  ])
                 ],
-              )
-            ],),
+            ),
 
             // Done button - stops both timers if going, will log time since 
-            Padding(
-              padding: const EdgeInsets.all(22.0),
-              child: SizedBox(
-                height: 60,
-                width: 200,
-                child: FilledButton(
-                  style: FilledButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.secondary, 
-                  ),
-                  onPressed: doneClicked,
-                  child: Text("We're done!",
-                      style: TextStyle(
-                          fontSize: 18, 
-                          color: Theme.of(context).colorScheme.onSecondary))),
-              ),
-            ),
-          ]),
+          
+         
         ),
       ),
     );
