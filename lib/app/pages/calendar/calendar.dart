@@ -3,6 +3,8 @@ import 'package:babysteps/app/widgets/checkList.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'dart:core';
 
+import 'event.dart';
+
 //TODO: add navigation to this page from any page.
 //This next line allows me to run the calendar page as main since we don't have the navigation to the calendar page setup yet.
 //void main() => runApp(const CalendarPage());
@@ -27,39 +29,27 @@ class _CalendarPageState extends State<CalendarPage> {
       DateTime.now().year, DateTime.now().month - 3, DateTime.now().day);
   DateTime kLastDay = DateTime(
       DateTime.now().year, DateTime.now().month + 3, DateTime.now().day);
-
+  Map<DateTime, List<Event>> events = {};
+  TextEditingController _eventController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Calendar',
+      //title: 'Calendar',
       home: Scaffold(
         backgroundColor: const Color(0xffb3beb6),
 
-        // Temporary Nav Bar
-        appBar: AppBar(
-          title: const Text('Calendar',
-              style: TextStyle(fontSize: 36, color: Colors.black45)),
-          backgroundColor: Color(0xFFFFFAF1),
-        ),
-
         body: Center(
           child: ListView(children: <Widget>[
-            // Weight Title
-            const Padding(
-              padding: EdgeInsets.all(32),
-              child: Text('Calendar',
-                  style: TextStyle(fontSize: 36, color: Color(0xFFFFFAF1))),
-            ),
-
             // Very Very Basic calendar 
             //TODO: use api to flesh out calendar and make a more interactive calendar
             Padding(
               padding: EdgeInsets.only(bottom: 15),
               child: TableCalendar(
-                firstDay: DateTime.utc(2023, 10, 16),
+                headerStyle: const HeaderStyle(formatButtonVisible: false, titleCentered: true),
+                firstDay: DateTime.utc(2023, 5, 16),
                 lastDay: DateTime.utc(2025, 3, 14),
-                focusedDay: DateTime.now(),
+                focusedDay: _focusedDay,
         selectedDayPredicate: (day) {
           // Use `selectedDayPredicate` to determine which day is currently selected.
           // If this returns true, then `day` will be marked as selected.
@@ -73,26 +63,52 @@ class _CalendarPageState extends State<CalendarPage> {
             // Call `setState()` when updating the selected day
             setState(() {
               _selectedDay = selectedDay;
-              _focusedDay = focusedDay;
+             _focusedDay = focusedDay;
             });
           }
         },
-        onFormatChanged: (format) {
-          if (_calendarFormat != format) {
-            // Call `setState()` when updating calendar format
-            setState(() {
-              _calendarFormat = format;
-            });
-          }
-        },
-        onPageChanged: (focusedDay) {
-          // No need to call `setState()` here
-          _focusedDay = focusedDay;
-        },
+        //TODO: will need these later for customizing formatting and page changing 
+        // onFormatChanged: (format) {
+        //   if (_calendarFormat != format) {
+        //     // Call `setState()` when updating calendar format
+        //     setState(() {
+        //       _calendarFormat = format;
+        //     });
+        //   }
+        // },
+        // onPageChanged: (focusedDay) {
+        //   // No need to call `setState()` here
+        //   _focusedDay = focusedDay;
+        // },
         
             ),
-
             ),//To Do list card 
+             Padding(
+              padding: EdgeInsets.all(15),
+              child: FilledButton(
+                  style: FilledButton.styleFrom(
+                    backgroundColor:
+                        Theme.of(context).colorScheme.secondary, // Background color
+                  ),child: Text("Add event"), 
+              onPressed: () {
+                //show dialog for the user to input event
+                showDialog(context: context, builder: (context){
+                  return AlertDialog(
+                    scrollable: true,
+                    title: Text("Event Name"), 
+                    content: Padding(padding: EdgeInsets.all(8),
+                      child: TextField(
+                     controller: _eventController,
+                     
+               ), 
+                  ), 
+                  //actions: [ElevatedButton(onPressed: onPressed () {}, child: const Text("Submit"))],
+                  );
+                });
+              },
+            ),
+            
+            ),
             //TODO: propogate todo items from variables through to the widget
             //TODO: add notes icon and integration at bottom of card 
             const Padding(
