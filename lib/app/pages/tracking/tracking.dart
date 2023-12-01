@@ -1,5 +1,5 @@
 import 'package:babysteps/app/pages/tracking/temperature.dart';
-import 'package:babysteps/app/pages/tracking/weight.dart';
+import 'package:babysteps/app/pages/tracking/weight/weight.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/pages/tracking/sleep.dart';
 import 'package:babysteps/app/pages/tracking/diaper.dart';
