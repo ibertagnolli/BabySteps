@@ -15,43 +15,37 @@ class _SleepPageState extends State<SleepPage> {
   String lastNap = "0:55";
   String buttonText = "Nap";
 
-
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Sleep',
-      home: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        appBar: AppBar(
-          title: Text('Tracking',
-              style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onSurfaceVariant)),
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          leading: BackButton(
-            onPressed: () => Navigator.of(context).pop(),
-            color: Theme.of(context).colorScheme.onSurface,
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        title: const Text('Tracking'),
+        leading: BackButton(
+          onPressed: () => Navigator.of(context).pop(),
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
+      ),
+      body: Center(
+        child: Column(children: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(32),
+            child: Text('Sleep',
+                style: TextStyle(
+                    fontSize: 36,
+                    color: Theme.of(context).colorScheme.onBackground)),
           ),
-        ),
-        body: Center(
-          child: Column(children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(32),
-              child: Text('Sleep',
-                  style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onBackground)),
-            ),
-            Padding(
-              padding: EdgeInsets.only(bottom: 16),
-              child: FilledCard("last nap: $timeSinceNap", "nap: $lastNap",
-                  Icon(Icons.person_search_sharp)),
-            ),
-      
-         //TODO: pass time since strings to the stopwatch widget!!
-            NewStopWatch(timeSinceNap, buttonText),
-          ]),
-        ),
+          Padding(
+            padding: EdgeInsets.only(bottom: 16),
+            child: FilledCard("last nap: $timeSinceNap", "nap: $lastNap",
+                Icon(Icons.person_search_sharp)),
+          ),
+
+          //TODO: pass time since strings to the stopwatch widget!!
+          NewStopWatch(timeSinceNap, buttonText),
+        ]),
       ),
     );
   }
 }
-
-
