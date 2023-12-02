@@ -1,17 +1,31 @@
 import 'package:babysteps/app/pages/notes/notes.dart';
+import 'package:babysteps/app/pages/tracking/diaper.dart';
+import 'package:babysteps/app/pages/tracking/feeding/bottleFeeding.dart';
+import 'package:babysteps/app/pages/tracking/feeding/breastFeeding.dart';
+import 'package:babysteps/app/pages/tracking/feeding/feeding.dart';
+import 'package:babysteps/app/pages/tracking/sleep.dart';
+import 'package:babysteps/app/pages/tracking/temperature.dart';
 import 'package:babysteps/app/pages/tracking/tracking.dart';
+import 'package:babysteps/app/pages/tracking/weight/weight.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/theme.dart';
 import 'package:babysteps/app/pages/home/home.dart';
 import 'package:babysteps/app/pages/social/social.dart';
 import 'package:babysteps/app/pages/calendar/calendar.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:go_router/go_router.dart';
 
-//TODO: add navigation to this page from any page.
-//This next line allows me to run the calendar page as main since we don't have the navigation to the calendar page setup yet.
-// void main() => runApp(const CalendarPage());
+//Code for routing (most of this page) taken and adjusted from this tutorial and this github:
+//https://codewithandrea.com/articles/flutter-bottom-navigation-bar-nested-routes-gorouter/
+//https://github.com/bizz84/nested_navigation_examples/blob/main/examples/gorouter/lib/main.dart
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
-void main() {
   runApp(const MyApp());
 }
 
@@ -21,7 +35,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
+      routerConfig: goRouter,
+      debugShowCheckedModeBanner: false,
       title: 'BabySteps',
       theme: ThemeData(
         colorScheme: BabyStepsTheme().themedata.colorScheme,
@@ -29,126 +45,170 @@ class MyApp extends StatelessWidget {
         //scaffoldBackgroundColor: const Color(0xffb3beb6),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'BabySteps'),
-
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
+// Stateful nested navigation based on:
+// https://github.com/flutter/packages/blob/main/packages/go_router/example/lib/stateful_shell_route.dart
+class ScaffoldWithNestedNavigation extends StatelessWidget {
+  const ScaffoldWithNestedNavigation({
+    Key? key,
+    required this.navigationShell,
+  }) : super(key: key ?? const ValueKey('ScaffoldWithNestedNavigation'));
+  final StatefulNavigationShell navigationShell;
 
-class _MyHomePageState extends State<MyHomePage> {
-  var _currentTab = TabItem.home;
-  final navigatorKey = GlobalKey<NavigatorState>();
-
-  void _selectTab(TabItem tabItem) {
-    setState(() {
-      _currentTab = tabItem;
-    });
+  void _goBranch(int index) {
+    navigationShell.goBranch(
+      index,
+      // A common pattern when using bottom navigation bars is to support
+      // navigating to the initial location when tapping the item that is
+      // already active. This example demonstrates how to support this behavior,
+      // using the initialLocation parameter of goBranch.
+      initialLocation: index == navigationShell.currentIndex,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        title: Text(tabName[_currentTab].toString()),
+      body: navigationShell,
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: navigationShell.currentIndex,
+        indicatorColor: Theme.of(context).colorScheme.primary,
+        destinations: const [
+          NavigationDestination(label: 'Home', icon: Icon(Icons.home)),
+          NavigationDestination(label: 'Tracking', icon: Icon(Icons.folder)),
+          NavigationDestination(
+              label: 'Calendar', icon: Icon(Icons.calendar_month)),
+          NavigationDestination(label: 'Notes', icon: Icon(Icons.note)),
+          NavigationDestination(label: 'Social', icon: Icon(Icons.people)),
+        ],
+        onDestinationSelected: _goBranch,
       ),
-      bottomNavigationBar: BottomNavigation(
-        currentTab: _currentTab,
-        onSelectTab: _selectTab,
-      ),
-      body: tabPage[_currentTab],
     );
   }
 }
 
-//These aren't currently being used, beginings of making sure we can navigate to the subpages and still see navigation
-class TabNavigatorRoutes {
-  static const String routeHome = '/';
-  static const String routeTracking = '/tracking';
-  static const String routeFeeding = '/tracking/feeding';
-  static const String routeBreastfeeding = '/tracking/feeding/breastfeeding';
-  static const String routeBottle = '/tracking/feeding/bottle';
-  static const String routeSleep = '/tracking/sleep';
-  static const String routeDiaper = '/tracking/diaper';
-  static const String routeWeight = '/tracking/weight';
-  static const String routeTemperature = '/tracking/temperature';
-  static const String routeCalendar = '/calendar';
-  static const String routeNotes = '/notes';
-  static const String routeSocial = '/social';
-}
+// private navigators
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
+final _shellNavigatorHomeKey =
+    GlobalKey<NavigatorState>(debugLabel: 'shellHome');
+final _shellNavigatorTrackingKey =
+    GlobalKey<NavigatorState>(debugLabel: 'shellTracking');
+final _shellNavigatorCalendarKey =
+    GlobalKey<NavigatorState>(debugLabel: 'shellCalendar');
+final _shellNavigatorNotesKey =
+    GlobalKey<NavigatorState>(debugLabel: 'shellNotes');
+final _shellNavigatorSocialKey =
+    GlobalKey<NavigatorState>(debugLabel: 'shellSocial');
 
-/*The following items are for dynamic tab setup*/
-
-//Enum listing each available tab in the app
-enum TabItem { home, tracking, calendar, notes, social }
-
-//Maps each TabItem to it's string name to display under the icon
-//and on the app bar.
-const Map<TabItem, String> tabName = {
-  TabItem.home: 'Home',
-  TabItem.tracking: 'Tracking',
-  TabItem.calendar: 'Calendar',
-  TabItem.notes: 'Notes',
-  TabItem.social: 'Social',
-};
-
-//Maps each TabItem to it's icon
-const Map<TabItem, Icon> tabIcon = {
-  TabItem.home: Icon(Icons.home),
-  TabItem.tracking: Icon(Icons.folder),
-  TabItem.calendar: Icon(Icons.calendar_month),
-  TabItem.notes: Icon(Icons.note),
-  TabItem.social: Icon(Icons.people),
-};
-
-//Maps each tab item to the actual page it displays
-Map<TabItem, Widget> tabPage = {
-  TabItem.home: const HomePage(),
-  TabItem.tracking: const TrackingPage(),
-  TabItem.calendar: const CalendarPage(),
-  TabItem.notes: const NotesPage(),
-  TabItem.social: const SocialPage(),
-};
-
-//This widget builds the navigation bar using the enum for the different tab items
-//It's own widget to make the code above less messy and readable
-class BottomNavigation extends StatelessWidget {
-  const BottomNavigation(
-      {required this.currentTab, required this.onSelectTab, super.key});
-  final TabItem currentTab;
-  final ValueChanged<TabItem> onSelectTab;
-
-  @override
-  Widget build(BuildContext context) {
-    return NavigationBar(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      indicatorColor: Theme.of(context).colorScheme.primary,
-      destinations: [
-        _buildItem(TabItem.home),
-        _buildItem(TabItem.tracking),
-        _buildItem(TabItem.calendar),
-        _buildItem(TabItem.notes),
-        _buildItem(TabItem.social)
+// the one and only GoRouter instance
+final goRouter = GoRouter(
+  initialLocation: '/home',
+  navigatorKey: _rootNavigatorKey,
+  routes: [
+    // Stateful nested navigation based on:
+    // https://github.com/flutter/packages/blob/main/packages/go_router/example/lib/stateful_shell_route.dart
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) {
+        // the UI shell
+        return ScaffoldWithNestedNavigation(navigationShell: navigationShell);
+      },
+      branches: [
+        // first branch (Home)
+        StatefulShellBranch(
+          navigatorKey: _shellNavigatorHomeKey,
+          routes: [
+            // top route inside branch
+            GoRoute(
+              path: '/home',
+              pageBuilder: (context, state) => NoTransitionPage(
+                  child: HomePage() //(label: 'A', detailsPath: '/a/details'),
+                  ),
+            ),
+          ],
+        ),
+        // second branch (Tracking)
+        StatefulShellBranch(
+          navigatorKey: _shellNavigatorTrackingKey,
+          routes: [
+            // top route inside branch
+            GoRoute(
+              path: '/tracking',
+              pageBuilder: (context, state) =>
+                  const NoTransitionPage(child: TrackingPage()),
+              routes: [
+                // feeding routes
+                GoRoute(
+                  path: 'feeding',
+                  builder: (context, state) => const FeedingPage(),
+                  routes: [
+                    GoRoute(
+                        path: 'breastFeeding',
+                        builder: (context, state) => const BreastFeedingPage()),
+                    GoRoute(
+                        path: 'bottleFeeding',
+                        builder: (context, state) => const BottleFeedingPage()),
+                  ],
+                ),
+                GoRoute(
+                  path: 'sleep',
+                  builder: (context, state) => const SleepPage(),
+                ),
+                GoRoute(
+                  path: 'diaper',
+                  builder: (context, state) => const DiaperPage(),
+                ),
+                GoRoute(
+                  path: 'weight',
+                  builder: (context, state) => const WeightPage(),
+                ),
+                GoRoute(
+                  path: 'temperature',
+                  builder: (context, state) => const TemperaturePage(),
+                ),
+              ],
+            ),
+          ],
+        ),
+        // third branch (Calendar)
+        StatefulShellBranch(
+          navigatorKey: _shellNavigatorCalendarKey,
+          routes: [
+            // top route inside branch
+            GoRoute(
+              path: '/calendar',
+              pageBuilder: (context, state) =>
+                  const NoTransitionPage(child: CalendarPage()),
+            ),
+          ],
+        ),
+        // fourth branch (Notes)
+        StatefulShellBranch(
+          navigatorKey: _shellNavigatorNotesKey,
+          routes: [
+            // top route inside branch
+            GoRoute(
+              path: '/notes',
+              pageBuilder: (context, state) =>
+                  const NoTransitionPage(child: NotesPage()),
+            ),
+          ],
+        ),
+        // fifth branch (Social)
+        StatefulShellBranch(
+          navigatorKey: _shellNavigatorSocialKey,
+          routes: [
+            // top route inside branch
+            GoRoute(
+              path: '/social',
+              pageBuilder: (context, state) =>
+                  const NoTransitionPage(child: SocialPage()),
+            ),
+          ],
+        ),
       ],
-      onDestinationSelected: (index) => onSelectTab(
-        TabItem.values[index],
-      ),
-      selectedIndex: TabItem.values.indexOf(currentTab),
-    );
-  }
-
-  //Helper to build the widget with its icon and label
-  NavigationDestination _buildItem(TabItem tabItem) {
-    return NavigationDestination(
-      icon: tabIcon[tabItem]!,
-      label: tabName[tabItem]!,
-    );
-  }
-}
+    ),
+  ],
+);

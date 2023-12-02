@@ -3,12 +3,9 @@ import 'package:babysteps/app/widgets/checkList.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'dart:core';
 
-/**
- * The Calendar Page will track upcoming appointments and daily tasks, with some
- * type of Milestone and Notes integration.
- * 
- * Currently: Monthly view with drop down for daily task check boxes.
- */
+//TODO: add navigation to this page from any page.
+//This next line allows me to run the calendar page as main since we don't have the navigation to the calendar page setup yet.
+//void main() => runApp(const CalendarPage());
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
@@ -23,17 +20,29 @@ class _CalendarPageState extends State<CalendarPage> {
   static const String item2 = "101.5";
   static const String item3 = "do dishes";
   String buttonText = "Add Temp";
+  CalendarFormat _calendarFormat = CalendarFormat.month;
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
+  DateTime kFirstDay = DateTime(
+      DateTime.now().year, DateTime.now().month - 3, DateTime.now().day);
+  DateTime kLastDay = DateTime(
+      DateTime.now().year, DateTime.now().month + 3, DateTime.now().day);
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ListView(
-        children: <Widget>[
+    return Scaffold(
+      backgroundColor: const Color(0xffb3beb6),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        title: const Text('Calendar'),
+      ),
+      body: Center(
+        child: ListView(children: <Widget>[
           // Weight Title
-          Padding(
+          const Padding(
             padding: EdgeInsets.all(32),
             child: Text('Calendar',
-                style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onBackground)),
+                style: TextStyle(fontSize: 36, color: Color(0xFFFFFAF1))),
           ),
 
           // Very Very Basic calendar
@@ -44,21 +53,48 @@ class _CalendarPageState extends State<CalendarPage> {
               firstDay: DateTime.utc(2023, 10, 16),
               lastDay: DateTime.utc(2025, 3, 14),
               focusedDay: DateTime.now(),
-            ),
-          ),
+              selectedDayPredicate: (day) {
+                // Use `selectedDayPredicate` to determine which day is currently selected.
+                // If this returns true, then `day` will be marked as selected.
 
-          //To Do list card
+                // Using `isSameDay` is recommended to disregard
+                // the time-part of compared DateTime objects.
+                return isSameDay(_selectedDay, day);
+              },
+              onDaySelected: (selectedDay, focusedDay) {
+                if (!isSameDay(_selectedDay, selectedDay)) {
+                  // Call `setState()` when updating the selected day
+                  setState(() {
+                    _selectedDay = selectedDay;
+                    _focusedDay = focusedDay;
+                  });
+                }
+              },
+              onFormatChanged: (format) {
+                if (_calendarFormat != format) {
+                  // Call `setState()` when updating calendar format
+                  setState(() {
+                    _calendarFormat = format;
+                  });
+                }
+              },
+              onPageChanged: (focusedDay) {
+                // No need to call `setState()` here
+                _focusedDay = focusedDay;
+              },
+            ),
+          ), //To Do list card
           //TODO: propogate todo items from variables through to the widget
           //TODO: add notes icon and integration at bottom of card
-          Padding(
+          const Padding(
             padding: EdgeInsets.all(15),
             child: ExpansionTile(
-              backgroundColor: Theme.of(context).colorScheme.surface,
-              collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
+              backgroundColor: Color(0xFFFFFAF1),
+              collapsedBackgroundColor: Color(0xFFFFFAF1),
               title: Text('To Do',
                   style: TextStyle(
                       fontSize: 20,
-                      color: Theme.of(context).colorScheme.onSurface,
+                      color: Colors.black,
                       fontWeight: FontWeight.bold)),
               children: <Widget>[
                 CheckboxListTileExample(item1, item2, item3),
@@ -67,22 +103,22 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
 
           // Milestones Card
-          Padding(
+          const Padding(
             padding: EdgeInsets.all(15),
             child: ExpansionTile(
-              backgroundColor: Theme.of(context).colorScheme.surface,
-              collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
+              backgroundColor: Color(0xFFFFFAF1),
+              collapsedBackgroundColor: Color(0xFFFFFAF1),
               title: Text('Milestones',
                   style: TextStyle(
                       fontSize: 20,
-                      color: Theme.of(context).colorScheme.onSurface,
+                      color: Colors.black,
                       fontWeight: FontWeight.bold)),
               children: <Widget>[
                 ListTile(title: Text('No new milestones to be aware of')),
               ],
             ),
           ),
-        ],
+        ]),
       ),
     );
   }
