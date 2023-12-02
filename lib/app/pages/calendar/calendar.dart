@@ -22,15 +22,29 @@ class _CalendarPageState extends State<CalendarPage> {
   static const String item2 = "101.5";
   static const String item3 = "do dishes";
   String buttonText = "Add Temp";
-   CalendarFormat _calendarFormat = CalendarFormat.month;
+  CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
+  DateTime? _selectedDay = DateTime.now();
   DateTime kFirstDay = DateTime(
       DateTime.now().year, DateTime.now().month - 3, DateTime.now().day);
   DateTime kLastDay = DateTime(
       DateTime.now().year, DateTime.now().month + 3, DateTime.now().day);
   Map<DateTime, List<Event>> events = {};
   TextEditingController _eventController = TextEditingController();
+  late final ValueNotifier<List<Event>> _selectedEvents;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _selectedDay = _focusedDay;
+    _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
+  }
+
+  List<Event> _getEventsForDay(DateTime day) {
+    //retrieve all events from the selected day.
+    return events[day] ?? [];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,79 +52,95 @@ class _CalendarPageState extends State<CalendarPage> {
       //title: 'Calendar',
       home: Scaffold(
         backgroundColor: const Color(0xffb3beb6),
-
         body: Center(
           child: ListView(children: <Widget>[
-            // Very Very Basic calendar 
+            // Very Very Basic calendar
             //TODO: use api to flesh out calendar and make a more interactive calendar
             Padding(
               padding: EdgeInsets.only(bottom: 15),
               child: TableCalendar(
-                headerStyle: const HeaderStyle(formatButtonVisible: false, titleCentered: true),
+                headerStyle: const HeaderStyle(
+                    formatButtonVisible: false, titleCentered: true),
                 firstDay: DateTime.utc(2023, 5, 16),
                 lastDay: DateTime.utc(2025, 3, 14),
                 focusedDay: _focusedDay,
-        selectedDayPredicate: (day) {
-          // Use `selectedDayPredicate` to determine which day is currently selected.
-          // If this returns true, then `day` will be marked as selected.
+                eventLoader: _getEventsForDay,
+                selectedDayPredicate: (day) {
+                  // Use `selectedDayPredicate` to determine which day is currently selected.
+                  // If this returns true, then `day` will be marked as selected.
 
-          // Using `isSameDay` is recommended to disregard
-          // the time-part of compared DateTime objects.
-          return isSameDay(_selectedDay, day);
-        },
-        onDaySelected: (selectedDay, focusedDay) {
-          if (!isSameDay(_selectedDay, selectedDay)) {
-            // Call `setState()` when updating the selected day
-            setState(() {
-              _selectedDay = selectedDay;
-             _focusedDay = focusedDay;
-            });
-          }
-        },
-        //TODO: will need these later for customizing formatting and page changing 
-        // onFormatChanged: (format) {
-        //   if (_calendarFormat != format) {
-        //     // Call `setState()` when updating calendar format
-        //     setState(() {
-        //       _calendarFormat = format;
-        //     });
-        //   }
-        // },
-        // onPageChanged: (focusedDay) {
-        //   // No need to call `setState()` here
-        //   _focusedDay = focusedDay;
-        // },
-        
-            ),
-            ),//To Do list card 
-             Padding(
+                  // Using `isSameDay` is recommended to disregard
+                  // the time-part of compared DateTime objects.
+                  return isSameDay(_selectedDay, day);
+                },
+                onDaySelected: (selectedDay, focusedDay) {
+                  if (!isSameDay(_selectedDay, selectedDay)) {
+                    // Call `setState()` when updating the selected day
+                    setState(() {
+                      _selectedDay = selectedDay;
+                      _focusedDay = focusedDay;
+                      _selectedEvents.value = _getEventsForDay(selectedDay);
+                    });
+                  }
+                },
+                //TODO: will need these later for customizing formatting and page changing
+                // onFormatChanged: (format) {
+                //   if (_calendarFormat != format) {
+                //     // Call `setState()` when updating calendar format
+                //     setState(() {
+                //       _calendarFormat = format;
+                //     });
+                //   }
+                // },
+                // onPageChanged: (focusedDay) {
+                //   // No need to call `setState()` here
+                //   _focusedDay = focusedDay;
+                // },
+              ),
+            ), //To Do list card
+            Padding(
               padding: EdgeInsets.all(15),
               child: FilledButton(
-                  style: FilledButton.styleFrom(
-                    backgroundColor:
-                        Theme.of(context).colorScheme.secondary, // Background color
-                  ),child: Text("Add event"), 
-              onPressed: () {
-                //show dialog for the user to input event
-                showDialog(context: context, builder: (context){
-                  return AlertDialog(
-                    scrollable: true,
-                    title: Text("Event Name"), 
-                    content: Padding(padding: EdgeInsets.all(8),
-                      child: TextField(
-                     controller: _eventController,
-                     
-               ), 
-                  ), 
-                  //actions: [ElevatedButton(onPressed: onPressed () {}, child: const Text("Submit"))],
-                  );
-                });
-              },
-            ),
-            
+                style: FilledButton.styleFrom(
+                  backgroundColor: Theme.of(context)
+                      .colorScheme
+                      .secondary, // Background color
+                ),
+                child: const Text("Add event"),
+                onPressed: () {
+                  //show dialog for the user to input event
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          scrollable: true,
+                          title: Text("Event Name"),
+                          content: Padding(
+                            padding: EdgeInsets.all(8),
+                            child: TextField(
+                              controller: _eventController,
+                            ),
+                          ),
+                          actions: [
+                            ElevatedButton(
+                                onPressed: () {
+                                  events.addAll({
+                                    _selectedDay!: [
+                                      Event(_eventController.text)
+                                    ]
+                                  });
+                                  Navigator.of(context).pop();
+                                  _selectedEvents.value = _getEventsForDay(_selectedDay!);
+                                },
+                                child: const Text("Submit"))
+                          ],
+                        );
+                      });
+                },
+              ),
             ),
             //TODO: propogate todo items from variables through to the widget
-            //TODO: add notes icon and integration at bottom of card 
+            //TODO: add notes icon and integration at bottom of card
             const Padding(
               padding: EdgeInsets.all(15),
               child: ExpansionTile(
@@ -140,6 +170,37 @@ class _CalendarPageState extends State<CalendarPage> {
                         fontWeight: FontWeight.bold)),
                 children: <Widget>[
                   ListTile(title: Text('No new milestones to be aware of')),
+                ],
+              ),
+            ),
+            //events for that day on calendar.
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: ExpansionTile(
+                backgroundColor: const Color(0xFFFFFAF1),
+                collapsedBackgroundColor: const Color(0xFFFFFAF1),
+                title: const Text('Calendar Events',
+                    style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold)),
+                children: <Widget>[
+                  SizedBox(
+                    height: 100,
+                    child: ValueListenableBuilder(
+                        valueListenable: _selectedEvents,
+                        builder: (context, value, _) {
+                          return ListView.builder(itemCount: value.length,
+                              itemBuilder: (context, index) {
+                            return Container(
+                              child: ListTile(
+                                  onTap: () => Text('$value'),
+                                  title: Text('${value[index]}')),
+                            );
+                          });
+                        }),
+                  ),
+                  //const ListTile(title: Text('No new milestones to be aware of')),
                 ],
               ),
             ),
