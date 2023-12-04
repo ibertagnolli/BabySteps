@@ -23,10 +23,12 @@ class _NewStopWatchState extends State<NewStopWatch> {
   String elapsedTime = '';
   updateTime(Timer timer) {
     if (watch.isRunning) {
+      if(mounted){
       setState(() {
         print("startstop Inside=$startStop");
         elapsedTime = transformMilliSeconds(watch.elapsedMilliseconds);
       });
+      }
     }
   }
 
@@ -84,14 +86,17 @@ class _NewStopWatchState extends State<NewStopWatch> {
   }
 
   startWatch() {
+    if(mounted){
     setState(() {
       startStop = false;
       watch.start();
       timer = Timer.periodic(Duration(milliseconds: 100), updateTime);
     });
+    }
   }
 
   stopWatch() {
+    if(mounted){
     setState(() {
       watch.reset();
       startStop = true;
@@ -99,15 +104,18 @@ class _NewStopWatchState extends State<NewStopWatch> {
       setTime();
       //TODO: Update filled card here
     });
+    }
   }
 
   setTime() {
     var timeSoFar = watch.elapsedMilliseconds;
+    if(mounted){
     setState(() {
       elapsedTime = transformMilliSeconds(timeSoFar);
       //timeSince = elapsedTime;
       //lastThing = 0:00
     });
+    }
   }
 
   transformMilliSeconds(int milliseconds) {
