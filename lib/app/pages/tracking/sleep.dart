@@ -1,4 +1,3 @@
-import 'package:babysteps/app/widgets/stopwatch.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
 import 'dart:core';
@@ -18,8 +17,8 @@ class _SleepPageState extends State<SleepPage> {
   Stopwatch watch = Stopwatch();
   late Timer timer;
   bool startStop = true;
-
   String elapsedTime = '';
+//while the timer is running update the screen to show that time.
 updateTime(Timer timer) {
     if (watch.isRunning) {
       setState(() {
@@ -28,9 +27,10 @@ updateTime(Timer timer) {
       });
     }
   }
-
+//If we go back in the navigation stop the timer
+//TODO: add logic here that will start timer at same time again
 void backButton(){
-  startOrStop();
+  watch.stop();
   Navigator.of(context).pop();
 }
   @override
@@ -59,8 +59,6 @@ void backButton(){
             child: FilledCard("last nap: $timeSinceNap", "nap: $lastNap",
                 Icon(Icons.person_search_sharp)),
           ),
-
-          //TODO: pass time since strings to the stopwatch widget!!
          Container(
       padding: EdgeInsets.all(20.0),
       child: Column(
