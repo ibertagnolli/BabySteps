@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+
+//This branch is basically just the old way of doing the stopwatch stuff. If we end up reverting to this version.
 class NewStopWatch extends StatefulWidget {
    const NewStopWatch(this.timeSince, this.buttonText, {super.key});
 

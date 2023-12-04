@@ -2,7 +2,8 @@ import 'package:babysteps/app/widgets/stopwatch.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
 import 'dart:core';
-
+//To use the old way stopwatch, just call NewStopWatch(timeSince, ButtonText)
+// with the time since for the card and then the text you want on the button and it will make that in the stopwatch widget. 
 class SleepPage extends StatefulWidget {
   const SleepPage({super.key});
 
