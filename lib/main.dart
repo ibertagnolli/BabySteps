@@ -1,4 +1,5 @@
 import 'package:babysteps/app/pages/notes/notes.dart';
+import 'package:babysteps/app/pages/notes/notes_home.dart';
 import 'package:babysteps/app/pages/tracking/tracking.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/theme.dart';
@@ -113,7 +114,7 @@ Map<TabItem, Widget> tabPage = {
   TabItem.home: const HomePage(),
   TabItem.tracking: const TrackingPage(),
   TabItem.calendar: const CalendarPage(),
-  TabItem.notes: const NotesPage(),
+  TabItem.notes: const NotesHomePage(),
   TabItem.social: const SocialPage(),
 };
 
