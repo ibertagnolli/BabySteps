@@ -11,7 +11,7 @@ class BreastFeedingPage extends StatefulWidget {
 
 class _BreastFeedingPageState extends State<BreastFeedingPage> {
   String timeSince = "8:20";
-  String lastSide = "left";
+  String lastSide = "Left";
   String buttonTextL = "left";
   String buttonTextR = "right";
   bool leftSideGoing = false;
@@ -34,6 +34,20 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
       leftSideGoing = false;
       rightSideGoing = false;
       // Reset time since last feed
+    });
+  }
+
+  void leftFeedingDone(String feedingLength) {
+    setState(() {
+      timeSince = "0:00";
+      lastSide = "Left";
+    });
+  }
+
+  void rightFeedingDone(String feedingLength) {
+    setState(() {
+      timeSince = "0:00";
+      lastSide = "Right";
     });
   }
 
@@ -73,7 +87,7 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
               SizedBox(
                 height: 200,
                 width: 300,
-                child: NewStopWatch(timeSince, buttonTextL),
+                child: NewStopWatch(timeSince, buttonTextL, leftFeedingDone),
               ),
             ]),
             // Right
@@ -82,7 +96,7 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
               SizedBox(
                 height: 200,
                 width: 300,
-                child: NewStopWatch(timeSince, buttonTextR),
+                child: NewStopWatch(timeSince, buttonTextR, rightFeedingDone),
               )
             ])
           ],

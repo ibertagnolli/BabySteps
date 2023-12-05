@@ -28,6 +28,13 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
     });
   }
 
+  void bottleDone(String bottleLength) {
+    setState(() {
+      timeSince = "0:00";
+      // lastNap = napLength;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,7 +73,7 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
                   bottleTypeClicked)
             ],
           ),
-          NewStopWatch(timeSince, buttonText)
+          NewStopWatch(timeSince, buttonText, bottleDone)
         ]),
       ),
     );
