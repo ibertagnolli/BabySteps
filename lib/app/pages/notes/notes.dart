@@ -60,7 +60,15 @@ _editNote(int index) {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+   return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
+      appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          title: const Text('Notes'),
+          leading: BackButton(
+            color: Theme.of(context).colorScheme.onSurface,
+            onPressed: () => Navigator.of(context).pop(),
+          )),
       body: Column(
         children: <Widget>[
           Expanded(

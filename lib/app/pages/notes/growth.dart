@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
-class MedicalPage extends StatefulWidget {
-  const MedicalPage({super.key});
+class GrowthPage extends StatefulWidget {
+  const GrowthPage({super.key});
 
   @override
-  State<StatefulWidget> createState() => _MedicalPageState();
+  State<StatefulWidget> createState() => _GrowthPageState();
 }
 
-class _MedicalPageState extends State<MedicalPage> {
+class _GrowthPageState extends State<GrowthPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,31 +26,26 @@ class _MedicalPageState extends State<MedicalPage> {
           children: [
             Padding(
               padding: EdgeInsets.symmetric(vertical: 32),
-              child: Text("Medical",
+              child: Text("Growth",
                   style: TextStyle(
                       fontSize: 36,
                       color: Theme.of(context).colorScheme.onBackground)),
             ),
             NotesCard(
               //const Icon(Icons.medical_services, size: 40),
-              "Dr.appointment questions",
-              "10/3/23",
-              () => context.go('/notes/medical/appointments'),
+              "Weight",
+              "8/9/23",
+              () => context.go('/notes/growth/weight'),
             ),
             NotesCard(
-              "Vaccines",
-              "9/28/23",
-              () => context.go('/notes/medical/vaccines'),
+              "Teeth",
+              "9/4/23",
+              () => context.go('/notes/growth/teeth'),
             ),
             NotesCard(
-              "Birth Stats",
-              "6/12/23",
-              () => context.go('/notes/medical/birthStats'),
-            ),
-            NotesCard(
-              "History",
-              "6/14/23",
-              () => context.go('/notes/medical/history'),
+              "Height",
+              "10/18/23",
+              () => context.go('/notes/growth/weight'),
             ),
           ],
         ),

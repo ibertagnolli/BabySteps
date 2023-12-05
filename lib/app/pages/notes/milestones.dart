@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
-class MedicalPage extends StatefulWidget {
-  const MedicalPage({super.key});
+class MilestonePage extends StatefulWidget {
+  const MilestonePage({super.key});
 
   @override
-  State<StatefulWidget> createState() => _MedicalPageState();
+  State<StatefulWidget> createState() => _MilestonePageState();
 }
 
-class _MedicalPageState extends State<MedicalPage> {
+class _MilestonePageState extends State<MilestonePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.surface,
-          title: const Text('Notes'),
+          title: const Text('Tracking'),
           leading: BackButton(
             color: Theme.of(context).colorScheme.onSurface,
             onPressed: () => Navigator.of(context).pop(),
@@ -26,31 +26,26 @@ class _MedicalPageState extends State<MedicalPage> {
           children: [
             Padding(
               padding: EdgeInsets.symmetric(vertical: 32),
-              child: Text("Medical",
+              child: Text("Milestones",
                   style: TextStyle(
                       fontSize: 36,
                       color: Theme.of(context).colorScheme.onBackground)),
             ),
             NotesCard(
               //const Icon(Icons.medical_services, size: 40),
-              "Dr.appointment questions",
-              "10/3/23",
-              () => context.go('/notes/medical/appointments'),
+              "Allergens",
+              "8/9/23",
+              () => context.go('/notes/milestone/allergens'),
             ),
             NotesCard(
-              "Vaccines",
-              "9/28/23",
-              () => context.go('/notes/medical/vaccines'),
+              "Food Likes/Dislikes",
+              "9/4/23",
+              () => context.go('/notes/milestone/food'),
             ),
             NotesCard(
-              "Birth Stats",
-              "6/12/23",
-              () => context.go('/notes/medical/birthStats'),
-            ),
-            NotesCard(
-              "History",
-              "6/14/23",
-              () => context.go('/notes/medical/history'),
+              "Firsts",
+              "10/18/23",
+              () => context.go('/notes/milestone/firsts'),
             ),
           ],
         ),

@@ -1,5 +1,4 @@
 import 'package:babysteps/app/pages/notes/notes.dart';
-import 'package:babysteps/app/pages/notes/medical.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -14,19 +13,21 @@ class NotesHomePage extends StatefulWidget {
 class _NotesHomePageState extends State<NotesHomePage> {
   @override
   Widget build(BuildContext context) {
-    return
-        // Scaffold(
-        //   appBar: AppBar(
-        //     backgroundColor: const Color(0xffb3beb6),
-        //     title: const Text('Tracking'),
-        //   ),
-        //   body:
+    return Scaffold(
+       appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          title: const Text('Notes'),
+          leading: BackButton(
+            color: Theme.of(context).colorScheme.onSurface,
+            onPressed: () => Navigator.of(context).pop(),
+          )),
+      body:
         Center(
       child: Column(
         children: [
           Padding(
             padding: EdgeInsets.symmetric(vertical: 32),
-            child: Text("Notes",
+            child: Text("Notes Folders",
                 style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onBackground)),
           ),
           TrackingCard(
@@ -40,45 +41,24 @@ class _NotesHomePageState extends State<NotesHomePage> {
             const Icon(Icons.flag, size: 40),
             "Milestones",
             "3 weeks ago",
-            () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return const NotesPage();
-                  },
-                ),
-              );
-            },
+           () => context.go('/notes/milestone')
+               
           ),
           TrackingCard(
             const Icon(Icons.scale, size: 40),
             'Growth',
             '3 hours ago',
-            () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const NotesPage()),
-              );
-            },
+            () => context.go('/notes/growth')
           ),
           TrackingCard(
             const Icon(Icons.settings, size: 40),
             "Orginization",
             "2 months ago",
-            () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return const NotesPage();
-                  },
-                ),
-              );
-            },
+             () => context.go('/notes/organization')
           ),
         ],
       ),
+        ),
     );
     // );
   }

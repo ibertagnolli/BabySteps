@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
-class MedicalPage extends StatefulWidget {
-  const MedicalPage({super.key});
+class OrganizationPage extends StatefulWidget {
+  const OrganizationPage({super.key});
 
   @override
-  State<StatefulWidget> createState() => _MedicalPageState();
+  State<StatefulWidget> createState() => _OrganizationPageState();
 }
 
-class _MedicalPageState extends State<MedicalPage> {
+class _OrganizationPageState extends State<OrganizationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,31 +26,21 @@ class _MedicalPageState extends State<MedicalPage> {
           children: [
             Padding(
               padding: EdgeInsets.symmetric(vertical: 32),
-              child: Text("Medical",
+              child: Text("Organization",
                   style: TextStyle(
                       fontSize: 36,
                       color: Theme.of(context).colorScheme.onBackground)),
             ),
             NotesCard(
               //const Icon(Icons.medical_services, size: 40),
-              "Dr.appointment questions",
-              "10/3/23",
-              () => context.go('/notes/medical/appointments'),
+              "Shopping List",
+              "10/19/23",
+              () => context.go('/notes/organization/shopping'),
             ),
             NotesCard(
-              "Vaccines",
-              "9/28/23",
-              () => context.go('/notes/medical/vaccines'),
-            ),
-            NotesCard(
-              "Birth Stats",
-              "6/12/23",
-              () => context.go('/notes/medical/birthStats'),
-            ),
-            NotesCard(
-              "History",
-              "6/14/23",
-              () => context.go('/notes/medical/history'),
+              "Nap Time To Do",
+              "10/21/23",
+              () => context.go('/notes/organization/todo'),
             ),
           ],
         ),
