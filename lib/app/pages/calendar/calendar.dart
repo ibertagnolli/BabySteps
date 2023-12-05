@@ -23,6 +23,7 @@ class _CalendarPageState extends State<CalendarPage> {
   static const String item3 = "do dishes";
   String buttonText = "Add Temp";
   CalendarFormat _calendarFormat = CalendarFormat.month;
+  CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay = DateTime.now();
   DateTime kFirstDay = DateTime(
@@ -48,26 +49,32 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      //title: 'Calendar',
-      home: Scaffold(
-        backgroundColor: const Color(0xffb3beb6),
-        body: Center(
-          child: ListView(children: <Widget>[
-            // Very Very Basic calendar
-            //TODO: use api to flesh out calendar and make a more interactive calendar
-            Padding(
-              padding: EdgeInsets.only(bottom: 15),
-              child: TableCalendar(
-                headerStyle: const HeaderStyle(
-                    formatButtonVisible: false, titleCentered: true),
-                firstDay: DateTime.utc(2023, 5, 16),
-                lastDay: DateTime.utc(2025, 3, 14),
-                focusedDay: _focusedDay,
-                eventLoader: _getEventsForDay,
-                selectedDayPredicate: (day) {
-                  // Use `selectedDayPredicate` to determine which day is currently selected.
-                  // If this returns true, then `day` will be marked as selected.
+    return Scaffold(
+      backgroundColor: const Color(0xffb3beb6),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        title: const Text('Calendar'),
+      ),
+      body: Center(
+        child: ListView(children: <Widget>[
+          // Weight Title
+          const Padding(
+            padding: EdgeInsets.all(32),
+            child: Text('Calendar',
+                style: TextStyle(fontSize: 36, color: Color(0xFFFFFAF1))),
+          ),
+
+          // Very Very Basic calendar
+          //TODO: use api to flesh out calendar and make a more interactive calendar
+          Padding(
+            padding: EdgeInsets.only(bottom: 15),
+            child: TableCalendar(
+              firstDay: DateTime.utc(2023, 10, 16),
+              lastDay: DateTime.utc(2025, 3, 14),
+              focusedDay: DateTime.now(),
+              selectedDayPredicate: (day) {
+                // Use `selectedDayPredicate` to determine which day is currently selected.
+                // If this returns true, then `day` will be marked as selected.
 
                   // Using `isSameDay` is recommended to disregard
                   // the time-part of compared DateTime objects.
