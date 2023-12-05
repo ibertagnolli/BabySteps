@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:babysteps/app/widgets/stopwatch.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
@@ -11,6 +12,7 @@ class SleepPage extends StatefulWidget {
 }
 
 class _SleepPageState extends State<SleepPage> {
+  CollectionReference nap = FirebaseFirestore.instance.collection('nap');
   String timeSinceNap = "4:38";
   String lastNap = "0:55";
   String buttonText = "Nap";
@@ -20,6 +22,24 @@ class _SleepPageState extends State<SleepPage> {
       timeSinceNap = "0:00";
       lastNap = napLength;
     });
+
+  }
+
+Future<void> saveNewNap() {
+    DateTime currentDate = DateTime.now();
+
+    // Write weight data to database
+    return nap
+        .add({
+          'timeSince': timeSinceNap,
+          'last': lastNap,
+          // TODO add userID
+        })
+        .then((value) => napDone(lastNap))
+        .catchError((error) => debugPrint("nap couldn't be added: $error"));
+
+    // TODO show something when the date is saved (check mark?)
+    // TODO prevent user from inserting the data entry multiple times -> disable the Save button?
   }
 
   @override
