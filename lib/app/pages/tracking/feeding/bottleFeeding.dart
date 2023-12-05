@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:babysteps/app/widgets/stopwatch.dart';
 import 'dart:core';
 
 class BottleFeedingPage extends StatefulWidget {
@@ -8,10 +9,9 @@ class BottleFeedingPage extends StatefulWidget {
   State<BottleFeedingPage> createState() => _BottleFeedingPageState();
 }
 
-
 class _BottleFeedingPageState extends State<BottleFeedingPage> {
-  
   String activeButton = "Breast milk";
+  String buttonText = "Bottle";
   String timeSince = "8:20";
   bool stopwatchGoing = false;
 
@@ -27,79 +27,58 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
       stopwatchGoing = !stopwatchGoing;
     });
   }
-  
+
+  void bottleDone(String bottleLength) {
+    setState(() {
+      timeSince = "0:00";
+      // lastNap = napLength;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Bottle Feeding',
-      theme: Theme.of(context),
-      home: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        appBar: AppBar(
-
-          title: Text('Tracking',
-              style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onSurfaceVariant)),
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          leading: BackButton(
-            onPressed: () => Navigator.of(context).pop(),
-            color: Theme.of(context).colorScheme.onSurface,
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        title: const Text('Tracking'),
+        leading: BackButton(
+          onPressed: () => Navigator.of(context).pop(),
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
+      ),
+      body: Center(
+        child: Column(children: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(32),
+            child: Text('Bottle Feeding',
+                style: TextStyle(
+                    fontSize: 36,
+                    color: Theme.of(context).colorScheme.onBackground)),
           ),
-        ),
 
-        body: Center(
-          child: Column(children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(32),
-              child: Text('Bottle Feeding',
-                  style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onBackground)),
-            ),
+          // Top card with info
+          Padding(
+            padding: EdgeInsets.only(bottom: 16),
+            child: TimeSinceCard(timeSince),
+          ),
 
-            // Top card with info
-            Padding(
-              padding: EdgeInsets.only(bottom: 16),
-              child: TimeSinceCard(timeSince),
-            ),
-
-            // Buttons for bottle type
-            Row(mainAxisAlignment:MainAxisAlignment.center, children: [
-              BottleTypeButton('Breast milk', activeButton.contains("Breast milk"),
-                            bottleTypeClicked),
-              
+          // Buttons for bottle type
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              BottleTypeButton('Breast milk',
+                  activeButton.contains("Breast milk"), bottleTypeClicked),
               BottleTypeButton('Formula', activeButton.contains("Formula"),
-                            bottleTypeClicked)
-            ],),
-
-            // Stopwatch
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text("(stopwatch)"),
-            ),
-
-            // Start/stop button 
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SizedBox(
-                height: 60,
-                width: 220,
-                child: FilledButton(
-                  style: FilledButton.styleFrom(
-                    backgroundColor:
-                         stopwatchGoing ? Theme.of(context).colorScheme.surface : Theme.of(context).colorScheme.secondary, // Background color
-                  ),
-                  onPressed: bottleClicked,
-                  child: Text(stopwatchGoing ? "Stop bottle" : "Start new bottle",
-                      style: TextStyle(
-                          fontSize: 18, 
-                          color: stopwatchGoing ? Theme.of(context).colorScheme.onSurface : Theme.of(context).colorScheme.onSecondary))),
-              ),
-            ),
-          ]),
-        ),
+                  bottleTypeClicked)
+            ],
+          ),
+          NewStopWatch(timeSince, buttonText, bottleDone)
+        ]),
       ),
     );
   }
 }
-
 
 class TimeSinceCard extends StatelessWidget {
   const TimeSinceCard(this.timeSince, {super.key});
@@ -109,28 +88,35 @@ class TimeSinceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-        elevation: 0,
-        color: Theme.of(context).colorScheme.secondary, // obviously wrong
-        child: SizedBox(
-          width: 360,
-          height: 90,
-          child: Row(mainAxisAlignment:MainAxisAlignment.center, children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: Icon(Icons.access_alarm, size: 60, color: Theme.of(context).colorScheme.onSecondary),
+      elevation: 0,
+      color: Theme.of(context).colorScheme.secondary, // obviously wrong
+      child: SizedBox(
+        width: 360,
+        height: 90,
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: Icon(Icons.access_alarm,
+                size: 60, color: Theme.of(context).colorScheme.onSecondary),
+          ),
+          Text(
+            'Time since last bottle: $timeSince',
+            style: TextStyle(
+              fontSize: 20,
+              color: Theme.of(context).colorScheme.onSecondary,
             ),
-            Text('Time since last bottle: $timeSince',
-                  style: TextStyle(fontSize: 20, color: Theme.of(context).colorScheme.onSecondary,),),
-          ]),
-        ),
-      );
+          ),
+        ]),
+      ),
+    );
   }
 }
 
 class BottleTypeButton extends StatelessWidget {
   const BottleTypeButton(this.buttonText, this.activeButton, this.onPress,
       {super.key});
-      
+
   final String buttonText;
   final bool activeButton;
   final void Function(String bottleType) onPress;
@@ -147,7 +133,7 @@ class BottleTypeButton extends StatelessWidget {
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.resolveWith((states) {
               return activeButton
-                  ? Theme.of(context).colorScheme.primary 
+                  ? Theme.of(context).colorScheme.primary
                   : Theme.of(context).colorScheme.surface;
             }),
             foregroundColor: MaterialStateProperty.resolveWith((states) {
