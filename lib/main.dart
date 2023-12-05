@@ -1,3 +1,4 @@
+import 'package:babysteps/app/pages/notes/medical.dart';
 import 'package:babysteps/app/pages/notes/notes.dart';
 import 'package:babysteps/app/pages/notes/notes_home.dart';
 import 'package:babysteps/app/pages/tracking/diaper.dart';
@@ -194,15 +195,26 @@ final goRouter = GoRouter(
               path: '/notes',
               pageBuilder: (context, state) =>
                   const NoTransitionPage(child: NotesHomePage()),
-            ),
-            // GoRoute(
-            //     path: 'medical',
-            //     builder: (context, state) => const FeedingPage(),
-            //     routes: [
-            //       GoRoute(
-            //           path: 'note',
-            //           builder: (context, state) => const BreastFeedingPage()),
-            //     ]),
+            routes:[
+            GoRoute(
+                path: 'medical',
+                builder: (context, state) => const MedicalPage(),
+                routes: [
+                  GoRoute(
+                      path: 'appointments',
+                      builder: (context, state) => const NotesPage()),
+                  GoRoute(
+                      path: 'vaccines',
+                      builder: (context, state) => const NotesPage()),
+                  GoRoute(
+                      path: 'birthStats',
+                      builder: (context, state) => const NotesPage()),
+                  GoRoute(
+                      path: 'history',
+                      builder: (context, state) => const NotesPage()),
+                ]),
+                
+                ]),
             // GoRoute(
             //     path: 'milestones',
             //     builder: (context, state) => const FeedingPage(),

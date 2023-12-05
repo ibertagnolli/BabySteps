@@ -1,6 +1,8 @@
 import 'package:babysteps/app/pages/notes/notes.dart';
+import 'package:babysteps/app/pages/notes/medical.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
+import 'package:go_router/go_router.dart';
 
 class NotesHomePage extends StatefulWidget {
   const NotesHomePage({super.key});
@@ -31,16 +33,8 @@ class _NotesHomePageState extends State<NotesHomePage> {
             const Icon(Icons.medical_services, size: 40),
             "Medical",
             "6 days ago",
-            () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return const NotesPage();
-                  },
-                ),
-              );
-            },
+            () => context.go('/notes/medical')
+            ,
           ),
           TrackingCard(
             const Icon(Icons.flag, size: 40),
