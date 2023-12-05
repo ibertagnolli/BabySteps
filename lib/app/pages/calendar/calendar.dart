@@ -71,6 +71,7 @@ class _CalendarPageState extends State<CalendarPage> {
               firstDay: DateTime.utc(2023, 10, 16),
               lastDay: DateTime.utc(2025, 3, 14),
               focusedDay: DateTime.now(),
+              eventLoader: _getEventsForDay,
               selectedDayPredicate: (day) {
                 // Use `selectedDayPredicate` to determine which day is currently selected.
                 // If this returns true, then `day` will be marked as selected.
