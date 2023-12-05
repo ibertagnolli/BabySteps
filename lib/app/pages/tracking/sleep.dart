@@ -15,6 +15,13 @@ class _SleepPageState extends State<SleepPage> {
   String lastNap = "0:55";
   String buttonText = "Nap";
 
+  void napDone(String napLength) {
+    setState(() {
+      timeSinceNap = "0:00";
+      lastNap = napLength;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +50,7 @@ class _SleepPageState extends State<SleepPage> {
           ),
 
           //TODO: pass time since strings to the stopwatch widget!!
-          NewStopWatch(timeSinceNap, buttonText),
+          NewStopWatch(timeSinceNap, buttonText, napDone),
         ]),
       ),
     );

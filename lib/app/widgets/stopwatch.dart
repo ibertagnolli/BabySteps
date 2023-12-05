@@ -3,24 +3,25 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class NewStopWatch extends StatefulWidget {
-   const NewStopWatch(this.timeSince, this.buttonText, {super.key});
+  const NewStopWatch(this.timeSince, this.buttonText, this.stopwatchFinish,
+      {super.key});
 
   final String timeSince;
   //final String lastThing;
   final String buttonText;
+  final void Function(String length) stopwatchFinish;
 
   @override
   _NewStopWatchState createState() => _NewStopWatchState();
 }
 
 class _NewStopWatchState extends State<NewStopWatch> {
-
   Stopwatch watch = Stopwatch();
   late Timer timer;
   bool startStop = true;
 
   String elapsedTime = '';
-updateTime(Timer timer) {
+  updateTime(Timer timer) {
     if (watch.isRunning) {
       setState(() {
         print("startstop Inside=$startStop");
@@ -28,47 +29,55 @@ updateTime(Timer timer) {
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     //access above variables using
     //widget.timeSince;
-      String buttonText = widget.buttonText;
+    String buttonText = widget.buttonText;
     return Container(
       padding: EdgeInsets.all(20.0),
       child: Column(
         children: <Widget>[
           Text(elapsedTime, style: TextStyle(fontSize: 25.0)),
           SizedBox(height: 20.0),
-          Row(mainAxisAlignment: MainAxisAlignment.center,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-               Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SizedBox(
-                height: 60,
-                width: 220,
-                child: FilledButton(
-                  style: FilledButton.styleFrom(
-                    backgroundColor:
-                         startStop ?Color.fromARGB(255, 0, 0, 0) : Color(0xFFFFFAF1), // Background color
-                  ),
-                  onPressed: startOrStop,
-                  child: Text(startStop ? "Start $buttonText" : "Stop $buttonText",
-                      style: TextStyle(
-                          fontSize: 18, 
-                          color: startStop ?Color(0xFFFFFAF1) : Color.fromARGB(255, 13, 60, 70)))),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: SizedBox(
+                  height: 60,
+                  width: 220,
+                  child: FilledButton(
+                      style: FilledButton.styleFrom(
+                        backgroundColor: startStop
+                            ? Color.fromARGB(255, 0, 0, 0)
+                            : Color(0xFFFFFAF1), // Background color
+                      ),
+                      onPressed: startOrStop,
+                      child: Text(
+                          startStop ? "Start $buttonText" : "Stop $buttonText",
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: startStop
+                                  ? Color(0xFFFFFAF1)
+                                  : Color.fromARGB(255, 13, 60, 70)))),
+                ),
               ),
-            ),
             ],
           )
         ],
       ),
     );
   }
-startOrStop() {
-    if(startStop) {
+
+  startOrStop() {
+    if (startStop) {
       startWatch();
     } else {
       //Or update filled card here?
+      widget.stopwatchFinish(elapsedTime);
       watch.reset();
       stopWatch();
     }
@@ -91,7 +100,8 @@ startOrStop() {
       //TODO: Update filled card here
     });
   }
-setTime() {
+
+  setTime() {
     var timeSoFar = watch.elapsedMilliseconds;
     setState(() {
       elapsedTime = transformMilliSeconds(timeSoFar);
