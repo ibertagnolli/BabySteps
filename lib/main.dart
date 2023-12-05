@@ -193,8 +193,40 @@ final goRouter = GoRouter(
             GoRoute(
               path: '/notes',
               pageBuilder: (context, state) =>
-                  const NoTransitionPage(child: NotesPage()),
+                  const NoTransitionPage(child: NotesHomePage()),
             ),
+            // GoRoute(
+            //     path: 'medical',
+            //     builder: (context, state) => const FeedingPage(),
+            //     routes: [
+            //       GoRoute(
+            //           path: 'note',
+            //           builder: (context, state) => const BreastFeedingPage()),
+            //     ]),
+            // GoRoute(
+            //     path: 'milestones',
+            //     builder: (context, state) => const FeedingPage(),
+            //     routes: [
+            //       GoRoute(
+            //           path: 'note',
+            //           builder: (context, state) => const BreastFeedingPage()),
+            //     ]),
+            // GoRoute(
+            //     path: 'growth',
+            //     builder: (context, state) => const FeedingPage(),
+            //     routes: [
+            //       GoRoute(
+            //           path: 'note',
+            //           builder: (context, state) => const BreastFeedingPage()),
+            //     ]),
+            // GoRoute(
+            //     path: 'organization',
+            //     builder: (context, state) => const FeedingPage(),
+            //     routes: [
+            //       GoRoute(
+            //           path: 'note',
+            //           builder: (context, state) => const BreastFeedingPage()),
+            //     ])
           ],
         ),
         // fifth branch (Social)
