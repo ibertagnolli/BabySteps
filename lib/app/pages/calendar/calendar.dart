@@ -23,7 +23,6 @@ class _CalendarPageState extends State<CalendarPage> {
   static const String item3 = "do dishes";
   String buttonText = "Add Temp";
   CalendarFormat _calendarFormat = CalendarFormat.month;
-  CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay = DateTime.now();
   DateTime kFirstDay = DateTime(
@@ -213,7 +212,6 @@ class _CalendarPageState extends State<CalendarPage> {
             ),
           ]),
         ),
-      ),
     );
   }
 }
