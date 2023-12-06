@@ -4,6 +4,7 @@ import 'package:babysteps/app/pages/notes/growth.dart';
 import 'package:babysteps/app/pages/notes/notes.dart';
 import 'package:babysteps/app/pages/notes/notes_home.dart';
 import 'package:babysteps/app/pages/notes/organization.dart';
+import 'package:babysteps/app/pages/social/new_post.dart';
 import 'package:babysteps/app/pages/tracking/diaper.dart';
 import 'package:babysteps/app/pages/tracking/feeding/bottleFeeding.dart';
 import 'package:babysteps/app/pages/tracking/feeding/breastFeeding.dart';
@@ -291,10 +292,27 @@ final goRouter = GoRouter(
           routes: [
             // top route inside branch
             GoRoute(
-              path: '/social',
-              pageBuilder: (context, state) =>
-                  const NoTransitionPage(child: SocialPage()),
-            ),
+                path: '/social',
+                pageBuilder: (context, state) =>
+                    const NoTransitionPage(child: SocialPage()),
+                routes: [
+                  GoRoute(
+                    path: 'newPost',
+                    builder: (context, state) {
+                      //TODO: take this out once social is hooked up to database
+                      void Function(String userName, String time, String child,
+                              String? postTitle, String? cap, String? img)
+                          addPost = state.extra as void Function(
+                              String userName,
+                              String time,
+                              String child,
+                              String? postTitle,
+                              String? cap,
+                              String? img);
+                      return CreatePostPage(addPost: addPost);
+                    },
+                  ),
+                ]),
           ],
         ),
       ],
