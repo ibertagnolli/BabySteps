@@ -41,7 +41,7 @@ class _NotesPageState extends State<NotesPage> {
     }
   }
 
-_editNote(int index) {
+  _editNote(int index) {
     String newNote = _noteController.text;
     if (newNote.isNotEmpty) {
       setState(() {
@@ -51,6 +51,7 @@ _editNote(int index) {
       _saveNotes();
     }
   }
+
   _deleteNote(int index) {
     setState(() {
       _notes.removeAt(index);
@@ -60,7 +61,7 @@ _editNote(int index) {
 
   @override
   Widget build(BuildContext context) {
-   return Scaffold(
+    return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.surface,
@@ -76,18 +77,17 @@ _editNote(int index) {
               itemCount: _notes.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(_notes[index]),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children:<Widget>[ 
-                     IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () => _deleteNote(index),
-                  ),
-                  IconButton(icon: Icon(Icons.edit),
-                  onPressed: () => _editNote(index)),]
-                )
-                );
+                    title: Text(_notes[index]),
+                    trailing:
+                        Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                      IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () => _deleteNote(index),
+                      ),
+                      IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () => _editNote(index)),
+                    ]));
               },
             ),
           ),

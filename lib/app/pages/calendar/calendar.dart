@@ -53,6 +53,12 @@ class _CalendarPageState extends State<CalendarPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface,
         title: const Text('Calendar'),
+        leading: const Padding(
+          padding: EdgeInsets.all(8),
+          child: Image(
+            image: AssetImage('assets/BabyStepsLogo.png'),
+          ),
+        ),
       ),
       body: Center(
         child: ListView(children: <Widget>[
@@ -76,143 +82,142 @@ class _CalendarPageState extends State<CalendarPage> {
                 // Use `selectedDayPredicate` to determine which day is currently selected.
                 // If this returns true, then `day` will be marked as selected.
 
-                  // Using `isSameDay` is recommended to disregard
-                  // the time-part of compared DateTime objects.
-                  return isSameDay(_selectedDay, day);
-                },
-                onDaySelected: (selectedDay, focusedDay) {
-                  if (!isSameDay(_selectedDay, selectedDay)) {
-                    // Call `setState()` when updating the selected day
-                    setState(() {
-                      _selectedDay = selectedDay;
-                      _focusedDay = focusedDay;
-                      _selectedEvents.value = _getEventsForDay(selectedDay);
-                    });
-                  }
-                },
-                //TODO: will need these later for customizing formatting and page changing
-                // onFormatChanged: (format) {
-                //   if (_calendarFormat != format) {
-                //     // Call `setState()` when updating calendar format
-                //     setState(() {
-                //       _calendarFormat = format;
-                //     });
-                //   }
-                // },
-                // onPageChanged: (focusedDay) {
-                //   // No need to call `setState()` here
-                //   _focusedDay = focusedDay;
-                // },
+                // Using `isSameDay` is recommended to disregard
+                // the time-part of compared DateTime objects.
+                return isSameDay(_selectedDay, day);
+              },
+              onDaySelected: (selectedDay, focusedDay) {
+                if (!isSameDay(_selectedDay, selectedDay)) {
+                  // Call `setState()` when updating the selected day
+                  setState(() {
+                    _selectedDay = selectedDay;
+                    _focusedDay = focusedDay;
+                    _selectedEvents.value = _getEventsForDay(selectedDay);
+                  });
+                }
+              },
+              //TODO: will need these later for customizing formatting and page changing
+              // onFormatChanged: (format) {
+              //   if (_calendarFormat != format) {
+              //     // Call `setState()` when updating calendar format
+              //     setState(() {
+              //       _calendarFormat = format;
+              //     });
+              //   }
+              // },
+              // onPageChanged: (focusedDay) {
+              //   // No need to call `setState()` here
+              //   _focusedDay = focusedDay;
+              // },
+            ),
+          ), //To Do list card
+          Padding(
+            padding: EdgeInsets.all(15),
+            child: FilledButton(
+              style: FilledButton.styleFrom(
+                backgroundColor:
+                    Theme.of(context).colorScheme.secondary, // Background color
               ),
-            ), //To Do list card
-            Padding(
-              padding: EdgeInsets.all(15),
-              child: FilledButton(
-                style: FilledButton.styleFrom(
-                  backgroundColor: Theme.of(context)
-                      .colorScheme
-                      .secondary, // Background color
-                ),
-                child: const Text("Add event"),
-                onPressed: () {
-                  //show dialog for the user to input event
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          scrollable: true,
-                          title: Text("Event Name"),
-                          content: Padding(
-                            padding: EdgeInsets.all(8),
-                            child: TextField(
-                              controller: _eventController,
-                            ),
+              child: const Text("Add event"),
+              onPressed: () {
+                //show dialog for the user to input event
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        scrollable: true,
+                        title: Text("Event Name"),
+                        content: Padding(
+                          padding: EdgeInsets.all(8),
+                          child: TextField(
+                            controller: _eventController,
                           ),
-                          actions: [
-                            ElevatedButton(
-                                onPressed: () {
-                                  events.addAll({
-                                    _selectedDay!: [
-                                      Event(_eventController.text)
-                                    ]
-                                  });
-                                  Navigator.of(context).pop();
-                                  _selectedEvents.value = _getEventsForDay(_selectedDay!);
-                                },
-                                child: const Text("Submit"))
-                          ],
-                        );
-                      });
-                },
-              ),
+                        ),
+                        actions: [
+                          ElevatedButton(
+                              onPressed: () {
+                                events.addAll({
+                                  _selectedDay!: [Event(_eventController.text)]
+                                });
+                                Navigator.of(context).pop();
+                                _selectedEvents.value =
+                                    _getEventsForDay(_selectedDay!);
+                              },
+                              child: const Text("Submit"))
+                        ],
+                      );
+                    });
+              },
             ),
-            //TODO: propogate todo items from variables through to the widget
-            //TODO: add notes icon and integration at bottom of card
-            const Padding(
-              padding: EdgeInsets.all(15),
-              child: ExpansionTile(
-                backgroundColor: Color(0xFFFFFAF1),
-                collapsedBackgroundColor: Color(0xFFFFFAF1),
-                title: Text('To Do',
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold)),
-                children: <Widget>[
-                  CheckboxListTileExample(item1, item2, item3),
-                ],
-              ),
+          ),
+          //TODO: propogate todo items from variables through to the widget
+          //TODO: add notes icon and integration at bottom of card
+          const Padding(
+            padding: EdgeInsets.all(15),
+            child: ExpansionTile(
+              backgroundColor: Color(0xFFFFFAF1),
+              collapsedBackgroundColor: Color(0xFFFFFAF1),
+              title: Text('To Do',
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold)),
+              children: <Widget>[
+                CheckboxListTileExample(item1, item2, item3),
+              ],
             ),
+          ),
 
-            // Milestones Card
-            const Padding(
-              padding: EdgeInsets.all(15),
-              child: ExpansionTile(
-                backgroundColor: Color(0xFFFFFAF1),
-                collapsedBackgroundColor: Color(0xFFFFFAF1),
-                title: Text('Milestones',
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold)),
-                children: <Widget>[
-                  ListTile(title: Text('No new milestones to be aware of')),
-                ],
-              ),
+          // Milestones Card
+          const Padding(
+            padding: EdgeInsets.all(15),
+            child: ExpansionTile(
+              backgroundColor: Color(0xFFFFFAF1),
+              collapsedBackgroundColor: Color(0xFFFFFAF1),
+              title: Text('Milestones',
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold)),
+              children: <Widget>[
+                ListTile(title: Text('No new milestones to be aware of')),
+              ],
             ),
-            //events for that day on calendar.
-            Padding(
-              padding: const EdgeInsets.all(15),
-              child: ExpansionTile(
-                backgroundColor: const Color(0xFFFFFAF1),
-                collapsedBackgroundColor: const Color(0xFFFFFAF1),
-                title: const Text('Calendar Events',
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold)),
-                children: <Widget>[
-                  SizedBox(
-                    height: 100,
-                    child: ValueListenableBuilder(
-                        valueListenable: _selectedEvents,
-                        builder: (context, value, _) {
-                          return ListView.builder(itemCount: value.length,
-                              itemBuilder: (context, index) {
-                            return Container(
-                              child: ListTile(
-                                  onTap: () => Text('$value'),
-                                  title: Text('${value[index]}')),
-                            );
-                          });
-                        }),
-                  ),
-                  //const ListTile(title: Text('No new milestones to be aware of')),
-                ],
-              ),
+          ),
+          //events for that day on calendar.
+          Padding(
+            padding: const EdgeInsets.all(15),
+            child: ExpansionTile(
+              backgroundColor: const Color(0xFFFFFAF1),
+              collapsedBackgroundColor: const Color(0xFFFFFAF1),
+              title: const Text('Calendar Events',
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold)),
+              children: <Widget>[
+                SizedBox(
+                  height: 100,
+                  child: ValueListenableBuilder(
+                      valueListenable: _selectedEvents,
+                      builder: (context, value, _) {
+                        return ListView.builder(
+                            itemCount: value.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                child: ListTile(
+                                    onTap: () => Text('$value'),
+                                    title: Text('${value[index]}')),
+                              );
+                            });
+                      }),
+                ),
+                //const ListTile(title: Text('No new milestones to be aware of')),
+              ],
             ),
-          ]),
-        ),
+          ),
+        ]),
+      ),
     );
   }
 }
