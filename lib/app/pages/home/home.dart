@@ -15,22 +15,30 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface,
         title: const Text('Home'),
+        leading: const Padding(
+          padding: EdgeInsets.all(8),
+          child: Image(
+            image: AssetImage('assets/BabyStepsLogo.png'),
+          ),
+        ),
       ),
       body: Center(
         child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(
-              width: 300, 
-              height: 300, 
-              child:
-              Image.asset('assets/BabyStepsLogo.png',fit: BoxFit.scaleDown)),
-               Text(
-                'Welcome to BabySteps',
-                style: TextStyle(fontSize: 30.0, color:Theme.of(context).colorScheme.surface ) ,
-              ),
-            ]),
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(
+                width: 300,
+                height: 300,
+                child: Image.asset('assets/BabyStepsLogo.png',
+                    fit: BoxFit.scaleDown)),
+            Text(
+              'Welcome to BabySteps',
+              style: TextStyle(
+                  fontSize: 30.0, color: Theme.of(context).colorScheme.surface),
+            ),
+          ],
+        ),
       ),
     );
   }

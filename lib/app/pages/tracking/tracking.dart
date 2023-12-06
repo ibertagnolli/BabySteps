@@ -16,6 +16,12 @@ class _TrackingPageState extends State<TrackingPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface,
         title: const Text('Tracking'),
+        leading: const Padding(
+          padding: EdgeInsets.all(8),
+          child: Image(
+            image: AssetImage('assets/BabyStepsLogo.png'),
+          ),
+        ),
       ),
       body: Center(
         child: Column(

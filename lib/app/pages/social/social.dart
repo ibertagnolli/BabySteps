@@ -41,6 +41,12 @@ class _SocialPageState extends State<SocialPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface,
         title: const Text('Social'),
+        leading: const Padding(
+          padding: EdgeInsets.all(8),
+          child: Image(
+            image: AssetImage('assets/BabyStepsLogo.png'),
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
