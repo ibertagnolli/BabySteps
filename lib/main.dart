@@ -1,4 +1,9 @@
+import 'package:babysteps/app/pages/notes/medical.dart';
+import 'package:babysteps/app/pages/notes/milestones.dart';
+import 'package:babysteps/app/pages/notes/growth.dart';
 import 'package:babysteps/app/pages/notes/notes.dart';
+import 'package:babysteps/app/pages/notes/notes_home.dart';
+import 'package:babysteps/app/pages/notes/organization.dart';
 import 'package:babysteps/app/pages/social/new_post.dart';
 import 'package:babysteps/app/pages/tracking/diaper.dart';
 import 'package:babysteps/app/pages/tracking/feeding/bottleFeeding.dart';
@@ -191,10 +196,70 @@ final goRouter = GoRouter(
           routes: [
             // top route inside branch
             GoRoute(
-              path: '/notes',
-              pageBuilder: (context, state) =>
-                  const NoTransitionPage(child: NotesPage()),
-            ),
+                path: '/notes',
+                pageBuilder: (context, state) =>
+                    const NoTransitionPage(child: NotesHomePage()),
+                routes: [
+                  GoRoute(
+                    path: 'medical',
+                    builder: (context, state) => const MedicalPage(),
+                    routes: [
+                      GoRoute(
+                          path: 'appointments',
+                          builder: (context, state) => const NotesPage()),
+                      GoRoute(
+                          path: 'vaccines',
+                          builder: (context, state) => const NotesPage()),
+                      GoRoute(
+                          path: 'birthStats',
+                          builder: (context, state) => const NotesPage()),
+                      GoRoute(
+                          path: 'history',
+                          builder: (context, state) => const NotesPage()),
+                    ],
+                  ),
+                  GoRoute(
+                    path: 'milestone',
+                    builder: (context, state) => const MilestonePage(),
+                    routes: [
+                      GoRoute(
+                          path: 'allergens',
+                          builder: (context, state) => const NotesPage()),
+                      GoRoute(
+                          path: 'food',
+                          builder: (context, state) => const NotesPage()),
+                      GoRoute(
+                          path: 'firsts',
+                          builder: (context, state) => const NotesPage()),
+                    ],
+                  ),
+                  GoRoute(
+                      path: 'growth',
+                      builder: (context, state) => const GrowthPage(),
+                      routes: [
+                        GoRoute(
+                            path: 'weight',
+                            builder: (context, state) => const NotesPage()),
+                        GoRoute(
+                            path: 'teeth',
+                            builder: (context, state) => const NotesPage()),
+                        GoRoute(
+                            path: 'height',
+                            builder: (context, state) => const NotesPage()),
+                      ]),
+                  GoRoute(
+                    path: 'organization',
+                    builder: (context, state) => const OrganizationPage(),
+                    routes: [
+                      GoRoute(
+                          path: 'shopping',
+                          builder: (context, state) => const NotesPage()),
+                      GoRoute(
+                          path: 'todo',
+                          builder: (context, state) => const NotesPage()),
+                    ],
+                  ),
+                ]),
           ],
         ),
         // fifth branch (Social)

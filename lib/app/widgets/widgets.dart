@@ -49,6 +49,56 @@ class FilledCard extends StatelessWidget {
   }
 }
 
+class NotesCard extends StatelessWidget {
+  const NotesCard(this.name, this.lastEdited, this.pageFunc,
+      {super.key});
+  final String name;
+  final String lastEdited;
+  final void Function() pageFunc;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: Theme.of(context).colorScheme.surface,
+      child: InkWell(
+        splashColor: Theme.of(context).colorScheme.surface,
+        onTap: pageFunc,
+        child: SizedBox(
+          width: 400,
+          height: 80,
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16), //EdgeInsets.symmetric(vertical: 12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      name,
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      "Last edited $lastEdited",
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(child: SizedBox()),
+              Padding(
+                padding: EdgeInsets.all(16),
+                child: Align(
+                    child: Icon(Icons.edit, size: 30)),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class TrackingCard extends StatelessWidget {
   const TrackingCard(this.icon, this.name, this.hoursAgo, this.pageFunc,
       {super.key});
@@ -100,5 +150,6 @@ class TrackingCard extends StatelessWidget {
     );
   }
 }
+
 
 
