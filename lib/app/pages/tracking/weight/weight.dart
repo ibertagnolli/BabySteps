@@ -1,6 +1,7 @@
 import 'package:babysteps/app/pages/tracking/weight/add_weight_card.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:core';
 
 /// Holds the widgets for the Weight page.
@@ -14,7 +15,7 @@ class WeightPage extends StatefulWidget {
 class _WeightPageState extends State<WeightPage> {
   int daysSinceWeight = 3;
   double lastWeightPounds = 10.5;
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -48,13 +48,16 @@ class _AddWeightCardState extends State<AddWeightCard> {
     // Write weight data to database
     else {
       return FirebaseFirestore.instance
-        .collection('weight')
+        .collection('Babies')
+        .doc('IYyV2hqR7omIgeA4r7zQ') // TODO update to current user's document id
+        .collection('Weight')
         .add(<String, dynamic>{
           'pounds': pounds.text,
           'ounces': ounces.text,
-          'date': date.text,
+          'date': dateInput,
           // TODO add userID
-        });
+      });
+      // TODO update read value
     }
 
     // TODO show something when the date is saved (check mark?) 
@@ -150,7 +153,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
                         lastDate: DateTime(2101));
 
                     if (pickeddate != null) {
-                      setState(() {
+                      setState(() {                        
                         date.text = DateFormat('dd-MM-yyyy')
                             .format(pickeddate);
                       });
