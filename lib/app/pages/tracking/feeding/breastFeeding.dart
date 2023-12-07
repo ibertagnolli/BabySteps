@@ -81,24 +81,20 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
             ),
 
             // Stopwatches and start/stop buttons for left and right
-            // Left
-            // Stopwatch
-            Column(children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
               SizedBox(
                 height: 200,
-                width: 300,
+                width: 195,
                 child: NewStopWatch(timeSince, buttonTextL, leftFeedingDone),
               ),
-            ]),
-            // Right
-            // Stopwatch
-            Column(children: [
               SizedBox(
                 height: 200,
-                width: 300,
+                width: 195,
                 child: NewStopWatch(timeSince, buttonTextR, rightFeedingDone),
               )
-            ])
+            ]),
           ],
         ),
 
@@ -123,7 +119,7 @@ class InfoCard extends StatelessWidget {
       color: theme.colorScheme.secondary,
       child: SizedBox(
         width: 360,
-        height: 150,
+        height: 140,
         child: Column(
           children: [
             Padding(

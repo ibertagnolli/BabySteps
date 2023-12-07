@@ -96,9 +96,9 @@ class TimeSinceCard extends StatelessWidget {
         child:
             Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(right: 8.0),
+            padding: const EdgeInsets.only(right: 15.0),
             child: Icon(Icons.access_alarm,
-                size: 60, color: Theme.of(context).colorScheme.onSecondary),
+                size: 50, color: Theme.of(context).colorScheme.onSecondary),
           ),
           Text(
             'Time since last bottle: $timeSince',

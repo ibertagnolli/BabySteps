@@ -20,7 +20,7 @@ class _NewStopWatchState extends State<NewStopWatch> {
   late Timer timer;
   bool startStop = true;
 
-  String elapsedTime = '';
+  String elapsedTime = '00:00:00';
   updateTime(Timer timer) {
     if (watch.isRunning) {
       if(mounted){
@@ -38,23 +38,26 @@ class _NewStopWatchState extends State<NewStopWatch> {
     //widget.timeSince;
     String buttonText = widget.buttonText;
     return Container(
-      padding: EdgeInsets.all(20.0),
+      padding: EdgeInsets.all(1.0),
       child: Column(
         children: <Widget>[
-          Text(elapsedTime, style: TextStyle(fontSize: 25.0)),
-          SizedBox(height: 20.0),
+
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Text(elapsedTime, style: TextStyle(fontSize: 35.0, color: Color(0xFFFFFAF1),)),
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(1.0),
                 child: SizedBox(
                   height: 60,
-                  width: 220,
+                  width: 180,
                   child: FilledButton(
                       style: FilledButton.styleFrom(
                         backgroundColor: startStop
-                            ? Color.fromARGB(255, 0, 0, 0)
+                            ? Color.fromARGB(255, 13, 60, 70)
                             : Color(0xFFFFFAF1), // Background color
                       ),
                       onPressed: startOrStop,

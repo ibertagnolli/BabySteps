@@ -21,7 +21,7 @@ class FilledCard extends StatelessWidget {
           child: Column(children: <Widget>[
             ListTile(
               leading: const Icon(Icons.access_alarm),
-              title: Text('Time Since $timeSince',
+              title: Text('Time since $timeSince',
                   style: const TextStyle(fontSize: 20)),
               // tileColor: ,
             ),
