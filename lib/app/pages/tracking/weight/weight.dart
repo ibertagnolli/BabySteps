@@ -32,47 +32,49 @@ class _WeightPageState extends State<WeightPage> {
 
       body: Center(
         child: ListView(children: <Widget>[
-          // Weight Title
-          Padding(
-            padding: EdgeInsets.all(32),
-            child: Text('Weight',
-                style: TextStyle(
-                    fontSize: 36,
-                    color: Theme.of(context).colorScheme.onBackground)),
-          ),
-
-          // FilledCard Quick Weight Info
-          Padding(
-            padding: EdgeInsets.only(bottom: 15),
-            child: FilledCard("last weight: $daysSinceWeight",
-                "weight: $lastWeightPounds", Icon(Icons.scale)),
-          ),
-
-          // Add Weight Card
-          Padding(
-            padding: const EdgeInsets.all(15),
-            child: AddWeightCard(),
-          ),
-
-          // History Card
-          Padding(
-            padding: EdgeInsets.all(15),
-            child: ExpansionTile(
-              backgroundColor: Theme.of(context).colorScheme.surface,
-              collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
-              title: Text('History',
+          Column(children: [
+            // Weight Title
+            Padding(
+              padding: EdgeInsets.all(32),
+              child: Text('Weight',
                   style: TextStyle(
-                      fontSize: 25,
-                      color: Theme.of(context).colorScheme.onSurface,
-                      fontWeight: FontWeight.bold)),
-              children: <Widget>[
-                Text('TODO Add chart of baby\'s weight history here:',
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Theme.of(context).colorScheme.onSurface)),
-              ],
+                      fontSize: 36,
+                      color: Theme.of(context).colorScheme.onBackground)),
             ),
-          ),
+
+            // FilledCard Quick Weight Info
+            Padding(
+              padding: EdgeInsets.only(bottom: 15),
+              child: FilledCard("last weight: $daysSinceWeight",
+                  "weight: $lastWeightPounds", Icon(Icons.scale)),
+            ),
+
+            // Add Weight Card
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: AddWeightCard(),
+            ),
+
+            // History Card
+            Padding(
+              padding: EdgeInsets.all(15),
+              child: ExpansionTile(
+                backgroundColor: Theme.of(context).colorScheme.surface,
+                collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
+                title: Text('History',
+                    style: TextStyle(
+                        fontSize: 25,
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontWeight: FontWeight.bold)),
+                children: <Widget>[
+                  Text('TODO Add chart of baby\'s weight history here:',
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Theme.of(context).colorScheme.onSurface)),
+                ],
+              ),
+            ),
+          ],),
         ]),
       ),
     );

@@ -16,7 +16,7 @@ class _MilestonePageState extends State<MilestonePage> {
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.surface,
-          title: const Text('Tracking'),
+          title: const Text('Notes'),
           leading: BackButton(
             color: Theme.of(context).colorScheme.onSurface,
             onPressed: () => Navigator.of(context).pop(),

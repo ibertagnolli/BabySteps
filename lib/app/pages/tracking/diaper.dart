@@ -60,6 +60,7 @@ class _DiaperPageState extends State<DiaperPage> {
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text("Type:",
                         style: TextStyle(
@@ -89,7 +90,8 @@ class _DiaperPageState extends State<DiaperPage> {
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Padding(
                         padding: EdgeInsets.only(top: 6),
@@ -120,9 +122,13 @@ class _DiaperPageState extends State<DiaperPage> {
                         ),
                       ),
                     ),
+                    const SizedBox(width: 56), // Just there to line "Diaper Rash" up with "Type" 
                   ],
                 ),
               ),
+
+
+
               Padding(
                 padding: const EdgeInsets.only(top: 40),
                 child: SizedBox(
