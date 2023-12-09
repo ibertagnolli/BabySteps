@@ -1,11 +1,16 @@
+import 'package:babysteps/app/pages/tracking/weight/weight_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 /// The widget that adds a weight measurement.
 class AddWeightCard extends StatefulWidget {
+  const AddWeightCard({super.key, required this.weightAdded});
+  final void Function(String pounds, String ounces, DateTime dateInput)
+      weightAdded;
+
   @override
-  State<StatefulWidget> createState() => _AddWeightCardState(); 
+  State<StatefulWidget> createState() => _AddWeightCardState();
 }
 
 /// Stores the mutable data that can change over the lifetime of the AddWeightCard.
@@ -15,49 +20,48 @@ class _AddWeightCardState extends State<AddWeightCard> {
   TextEditingController date = TextEditingController();
 
   /// Saves a new weight entry in the Firestore database.
-  Future<DocumentReference> saveNewWeight() {
+  saveNewWeight() async {
     DateTime currentDate = DateTime.now();
-    DateTime dateInput = new DateFormat("dd-MM-yyyy").parse(date.text);
+    DateTime dateInput = DateFormat("dd-MM-yyyy").parse(date.text);
 
     // Check that all fields have input
     if (pounds.text == "" || ounces.text == "" || date.text == "") {
       showDialog(
-        context: context, 
-        builder: (context) {
-          return AlertDialog(
-            content: Text('Please enter pounds, ounces, and a valid date.')
-          );
-        }
-      );
-      
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+                content:
+                    Text('Please enter pounds, ounces, and a valid date.'));
+          });
+
       throw Exception('Invalid weight input.');
     }
     // Check that date is today's date, or in the past
     else if (dateInput.isAfter(currentDate)) {
       showDialog(
-        context: context, 
-        builder: (context) {
-          return AlertDialog(
-            content: Text('Please enter a previous or current date.')
-          );
-        }
-      );
-      
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+                content: Text('Please enter a previous or current date.'));
+          });
+
       throw Exception('Invalid date entry for weight input.');
     }
     // Write weight data to database
     else {
-      return FirebaseFirestore.instance
-        .collection('weight')
-        .add(<String, dynamic>{
-          'pounds': pounds.text,
-          'ounces': ounces.text,
-          'date': date.text,
-          // TODO add userID
-        });
+      Map<String, dynamic> uploaddata = {
+        'pounds': pounds.text,
+        'ounces': ounces.text,
+        'date': dateInput,
+      };
+      await WeightDatabaseMethods().addWeight(uploaddata);
+      widget.weightAdded(pounds.text, ounces.text, dateInput);
+      pounds.clear();
+      ounces.clear();
+      date.clear();
     }
 
-    // TODO show something when the date is saved (check mark?) 
+    // TODO show something when the date is saved (check mark?)
     // TODO prevent user from inserting the data entry multiple times -> disable the Save button?
   }
 
@@ -96,8 +100,9 @@ class _AddWeightCardState extends State<AddWeightCard> {
                 child: Row(children: <Widget>[
                   Text('Weight:',
                       style: TextStyle(
-                          fontSize: 20, color: Theme.of(context).colorScheme.onSurface)),
-                  
+                          fontSize: 20,
+                          color: Theme.of(context).colorScheme.onSurface)),
+
                   // Pounds input
                   Expanded(
                     child: Padding(
@@ -113,8 +118,9 @@ class _AddWeightCardState extends State<AddWeightCard> {
                   ),
                   Text('lbs',
                       style: TextStyle(
-                          fontSize: 20, color: Theme.of(context).colorScheme.onSurface)),
-                  
+                          fontSize: 20,
+                          color: Theme.of(context).colorScheme.onSurface)),
+
                   // Ounces input
                   Expanded(
                     child: Padding(
@@ -130,7 +136,8 @@ class _AddWeightCardState extends State<AddWeightCard> {
                   ),
                   Text('oz',
                       style: TextStyle(
-                          fontSize: 20, color: Theme.of(context).colorScheme.onSurface)),
+                          fontSize: 20,
+                          color: Theme.of(context).colorScheme.onSurface)),
                 ]),
               ),
 
@@ -151,8 +158,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
 
                     if (pickeddate != null) {
                       setState(() {
-                        date.text = DateFormat('dd-MM-yyyy')
-                            .format(pickeddate);
+                        date.text = DateFormat('dd-MM-yyyy').format(pickeddate);
                       });
                     }
                   }),
@@ -168,17 +174,15 @@ class _AddWeightCardState extends State<AddWeightCard> {
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
                           Theme.of(context).colorScheme.tertiary),
-                      foregroundColor:
-                          MaterialStateProperty.all(Theme.of(context).colorScheme.onTertiary),  
-                      shape: MaterialStateProperty.all<
-                          RoundedRectangleBorder>(
+                      foregroundColor: MaterialStateProperty.all(
+                          Theme.of(context).colorScheme.onTertiary),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0),
                         ),
                       ),
                     ),
-                    child: const Text("Save",
-                        style: TextStyle(fontSize: 25)),
+                    child: const Text("Save", style: TextStyle(fontSize: 25)),
                   ),
                 ),
               )

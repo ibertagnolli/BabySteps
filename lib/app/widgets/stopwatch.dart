@@ -4,18 +4,26 @@ import 'package:flutter/material.dart';
 
 class NewStopWatch extends StatefulWidget {
   const NewStopWatch(this.timeSince, this.buttonText, this.stopwatchFinish,
+      this.stopwatchBegin, this.timeAlreadyElapsed, this.timerOngoing,
       {super.key});
 
   final String timeSince;
   //final String lastThing;
   final String buttonText;
   final void Function(String length) stopwatchFinish;
+  final void Function() stopwatchBegin;
+  final int timeAlreadyElapsed;
+  final bool timerOngoing;
 
+//TODO: figure out the better way to pass the inital timeAlreadyElapsed, if grabbed via
+//widget.timeAlreadyElapsed, it continues to increase making the time funky.
   @override
-  _NewStopWatchState createState() => _NewStopWatchState();
+  _NewStopWatchState createState() => _NewStopWatchState(timeAlreadyElapsed);
 }
 
 class _NewStopWatchState extends State<NewStopWatch> {
+  int initTime;
+  _NewStopWatchState(this.initTime);
   Stopwatch watch = Stopwatch();
   late Timer timer;
   bool startStop = true;
@@ -23,12 +31,23 @@ class _NewStopWatchState extends State<NewStopWatch> {
   String elapsedTime = '00:00:00';
   updateTime(Timer timer) {
     if (watch.isRunning) {
-      if(mounted){
-      setState(() {
-        print("startstop Inside=$startStop");
-        elapsedTime = transformMilliSeconds(watch.elapsedMilliseconds);
-      });
+      if (mounted) {
+        setState(() {
+          // print("startstop Inside=$startStop");
+          int totalElapsed = watch.elapsedMilliseconds + initTime;
+          elapsedTime = transformMilliSeconds(totalElapsed);
+        });
       }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    //if we have an ongoing timer on intialization, start the timer
+    //so it looks like its continuing from where it left off
+    if (widget.timerOngoing) {
+      startOrStop();
     }
   }
 
@@ -41,10 +60,13 @@ class _NewStopWatchState extends State<NewStopWatch> {
       padding: EdgeInsets.all(1.0),
       child: Column(
         children: <Widget>[
-
           Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Text(elapsedTime, style: TextStyle(fontSize: 35.0, color: Color(0xFFFFFAF1),)),
+            child: Text(elapsedTime,
+                style: TextStyle(
+                  fontSize: 35.0,
+                  color: Color(0xFFFFFAF1),
+                )),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -79,6 +101,8 @@ class _NewStopWatchState extends State<NewStopWatch> {
 
   startOrStop() {
     if (startStop) {
+      //If the timer hasn't been started yet, call the passed through method to begin a timer
+      if (!widget.timerOngoing) widget.stopwatchBegin();
       startWatch();
     } else {
       //Or update filled card here?
@@ -89,35 +113,35 @@ class _NewStopWatchState extends State<NewStopWatch> {
   }
 
   startWatch() {
-    if(mounted){
-    setState(() {
-      startStop = false;
-      watch.start();
-      timer = Timer.periodic(Duration(milliseconds: 100), updateTime);
-    });
+    if (mounted) {
+      setState(() {
+        startStop = false;
+        watch.start();
+        timer = Timer.periodic(Duration(milliseconds: 100), updateTime);
+      });
     }
   }
 
   stopWatch() {
-    if(mounted){
-    setState(() {
-      watch.reset();
-      startStop = true;
-      watch.stop();
-      setTime();
-      //TODO: Update filled card here
-    });
+    if (mounted) {
+      setState(() {
+        watch.reset();
+        startStop = true;
+        watch.stop();
+        setTime();
+        //TODO: Update filled card here
+      });
     }
   }
 
   setTime() {
     var timeSoFar = watch.elapsedMilliseconds;
-    if(mounted){
-    setState(() {
-      elapsedTime = transformMilliSeconds(timeSoFar);
-      //timeSince = elapsedTime;
-      //lastThing = 0:00
-    });
+    if (mounted) {
+      setState(() {
+        elapsedTime = transformMilliSeconds(timeSoFar);
+        //timeSince = elapsedTime;
+        //lastThing = 0:00
+      });
     }
   }
 

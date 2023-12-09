@@ -1,3 +1,5 @@
+import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
 import 'dart:core';
@@ -12,10 +14,63 @@ class FeedingPage extends StatefulWidget {
 }
 
 class _FeedingPageState extends State<FeedingPage> {
-  String lastTimeFed = "8:20";
-  String lastFeedingType = "bottle";
-  String lastBreastSide = "right";
-  String lastBottleAmount = "8oz";
+  //Set the inital state to nothing, that way if the user doesn't have any data yet, they can see that indication
+  String lastTimeFed = "--";
+  String lastFeedingType = "--";
+  String lastBreastSide = "--";
+  String lastBottleAmount = "--";
+
+  //Get the data from the database
+  getData() async {
+    //Get the latest finished information in general, and between breastfeeding and bottle so we can update the cards
+    QuerySnapshot feedingQuerySnapshot =
+        await FeedingDatabaseMethods().getLatestFeedingEntry();
+    QuerySnapshot breastFeedingQuerySnapshot =
+        await FeedingDatabaseMethods().getLatestFinishedBreastFeedingEntry();
+    QuerySnapshot bottleQuerySnapshot =
+        await FeedingDatabaseMethods().getLatestFinishedBottleEntry();
+
+    //Ensure we have data first so we don't try to access something we can't
+    if (feedingQuerySnapshot.docs.isNotEmpty) {
+      try {
+        lastFeedingType = feedingQuerySnapshot.docs[0]['type'];
+        //Get the difference in time between now and when the last logged diaper was
+        String diff = DateTime.now()
+            .difference(
+                DateTime.parse(feedingQuerySnapshot.docs[0]['date'].toString()))
+            .inMinutes
+            .toString();
+        lastTimeFed = diff == '1' ? '$diff min' : '$diff mins';
+      } catch (error) {
+        //If there's an error, print it to the output
+        debugPrint(error.toString());
+      }
+    }
+    if (breastFeedingQuerySnapshot.docs.isNotEmpty) {
+      try {
+        lastBreastSide = breastFeedingQuerySnapshot.docs[0]['side'];
+      } catch (error) {
+        //If there's an error, print it to the output
+        debugPrint(error.toString());
+      }
+    }
+    if (bottleQuerySnapshot.docs.isNotEmpty) {
+      try {
+        lastBottleAmount = bottleQuerySnapshot.docs[0]['length'];
+      } catch (error) {
+        //If there's an error, print it to the output
+        debugPrint(error.toString());
+      }
+    }
+    setState(() {});
+  }
+
+  //Grab the data on page initialization
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
 
   @override
   Widget build(BuildContext context) {

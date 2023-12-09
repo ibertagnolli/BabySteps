@@ -9,9 +9,12 @@ class FilledCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 180,
-      width: 380,
+    final screenWidth = MediaQuery.of(context).size.width;
+    double width = screenWidth * 0.85;
+
+    return ConstrainedBox(
+      constraints:
+          BoxConstraints(minHeight: 180, minWidth: width, maxWidth: width),
       child: Card(
         elevation: 0,
         color: Theme.of(context).colorScheme.surface,
@@ -50,8 +53,7 @@ class FilledCard extends StatelessWidget {
 }
 
 class NotesCard extends StatelessWidget {
-  const NotesCard(this.name, this.lastEdited, this.pageFunc,
-      {super.key});
+  const NotesCard(this.name, this.lastEdited, this.pageFunc, {super.key});
   final String name;
   final String lastEdited;
   final void Function() pageFunc;
@@ -69,7 +71,8 @@ class NotesCard extends StatelessWidget {
           child: Row(
             children: [
               Padding(
-                padding: const EdgeInsets.all(16), //EdgeInsets.symmetric(vertical: 12.0),
+                padding: const EdgeInsets.all(
+                    16), //EdgeInsets.symmetric(vertical: 12.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -88,8 +91,7 @@ class NotesCard extends StatelessWidget {
               Expanded(child: SizedBox()),
               Padding(
                 padding: EdgeInsets.all(16),
-                child: Align(
-                    child: Icon(Icons.edit, size: 30)),
+                child: Align(child: Icon(Icons.edit, size: 30)),
               )
             ],
           ),
@@ -150,6 +152,3 @@ class TrackingCard extends StatelessWidget {
     );
   }
 }
-
-
-
