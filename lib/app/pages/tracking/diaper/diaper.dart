@@ -1,3 +1,5 @@
+import 'package:babysteps/app/pages/tracking/diaper/diaper_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
 import 'package:babysteps/app/widgets/widgets.dart';
@@ -10,23 +12,66 @@ class DiaperPage extends StatefulWidget {
 }
 
 class _DiaperPageState extends State<DiaperPage> {
+  //set initial state for cards
   String activeButton = "Pee";
   bool diaperRash = false;
-  String timeSinceChange = "4:38";
-  String lastType = "Mixed";
+  String timeSinceChange = "--";
+  String lastType = "--";
   void buttonClicked(String buttonName) {
     setState(() {
       activeButton = buttonName;
     });
   }
 
+  //Get the data from the database
+  getData() async {
+    QuerySnapshot querySnapshot =
+        await DiaperDatabaseMethods().getLatestDiaperInfo();
+    if (querySnapshot.docs.isNotEmpty) {
+      try {
+        lastType = querySnapshot.docs[0]['type'];
+        //Get the difference in time between now and when the last logged diaper was
+        String diff = DateTime.now()
+            .difference(
+                DateTime.parse(querySnapshot.docs[0]['date'].toString()))
+            .inMinutes
+            .toString();
+        timeSinceChange = diff == '1' ? '$diff min' : '$diff mins';
+      } catch (error) {
+        //If there's an error, print it to the output
+        debugPrint(error.toString());
+      }
+    }
+    setState(() {});
+  }
+
+  //Upload data to the database with existing choices
+  uploadData() async {
+    Map<String, dynamic> uploaddata = {
+      'type': activeButton,
+      'rash': diaperRash,
+      'date': DateTime.now().toIso8601String(),
+    };
+
+    await DiaperDatabaseMethods().addDiaper(uploaddata);
+    //once data has been added, update the card accordingly
+    addDiaperClicked();
+  }
+
   void addDiaperClicked() {
     setState(() {
-      timeSinceChange = "0:00";
+      timeSinceChange = "0 minutes";
       lastType = activeButton;
       diaperRash = false;
       activeButton = "Pee";
     });
+  }
+
+  //Grab the data on page initialization
+  @override
+  void initState() {
+    super.initState();
+    getData();
   }
 
   @override
@@ -122,20 +167,19 @@ class _DiaperPageState extends State<DiaperPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 56), // Just there to line "Diaper Rash" up with "Type" 
+                    const SizedBox(
+                        width:
+                            56), // Just there to line "Diaper Rash" up with "Type"
                   ],
                 ),
               ),
-
-
-
               Padding(
                 padding: const EdgeInsets.only(top: 40),
                 child: SizedBox(
                   height: 75,
                   width: 185,
                   child: FilledButton.tonal(
-                    onPressed: addDiaperClicked,
+                    onPressed: uploadData,
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
                           Theme.of(context).colorScheme.tertiary),
@@ -151,7 +195,7 @@ class _DiaperPageState extends State<DiaperPage> {
                         style: TextStyle(fontSize: 25)),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
