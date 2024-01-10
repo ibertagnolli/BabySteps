@@ -20,11 +20,9 @@ class CalendarPage extends StatefulWidget {
 
 
 class _CalendarPageState extends State<CalendarPage> {
- //TODO: propagate these item strings through to the checklist box
- static const String item1 = "3";
- static const String item2 = "101.5";
- static const String item3 = "do dishes";
- CalendarFormat _calendarFormat = CalendarFormat.twoWeeks;
+ ///TODO: get these list items from the notes page!!!!!!!!!!!???????????????
+ static List< String> items = ["Fold laundry", "Cook dinner", "Sweep floors"];
+ CalendarFormat _calendarFormat = CalendarFormat.month;
  DateTime _focusedDay = DateTime.now();
  DateTime? _selectedDay = DateTime.now();
  DateTime kFirstDay = DateTime(
@@ -162,8 +160,6 @@ class _CalendarPageState extends State<CalendarPage> {
              ),
            ),
          ),
-         //TODO: propogate todo items from variables through to the widget
-         //TODO: add notes icon and integration at bottom of card
          Padding(
            padding: EdgeInsets.all(15),
            child: ExpansionTile(
@@ -175,14 +171,14 @@ class _CalendarPageState extends State<CalendarPage> {
                      color: Theme.of(context).colorScheme.onSurface,
                      fontWeight: FontWeight.bold)),
              children: <Widget>[
-               CheckboxListTileExample(item1, item2, item3),
+               CheckboxListTileExample(items),
                Padding(
                  padding: EdgeInsets.only(right: 15),
                  child: Align(
                    alignment: Alignment.bottomRight,
                    child: IconButton(
                      icon: const Icon(Icons.note),
-                     tooltip: 'Go to notes',
+                     tooltip: 'Go to To Do note',
                      onPressed: () => context.go('/notes/organization/todo'),
                      // setState(() {
 

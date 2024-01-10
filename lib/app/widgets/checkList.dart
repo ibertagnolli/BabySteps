@@ -19,12 +19,12 @@ import 'package:flutter/material.dart';
 // }
 
 class CheckboxListTileExample extends StatefulWidget {
-  const CheckboxListTileExample(this.item1, this.item2, this.item3,
+  CheckboxListTileExample(this.items,
       {super.key});
 
-  final String item1;
-  final String item2;
-  final String item3;
+  final List<String> items;
+  // final String item2;
+  // final String item3;
 
   @override
   State<CheckboxListTileExample> createState() =>
@@ -32,12 +32,14 @@ class CheckboxListTileExample extends StatefulWidget {
 }
 
 class _CheckboxListTileExampleState extends State<CheckboxListTileExample> {
-  bool checkboxValue1 = true;
-  bool checkboxValue2 = true;
-  bool checkboxValue3 = true;
+  bool checkboxValue1 = false;
+  bool checkboxValue2 = false;
+  bool checkboxValue3 = false;
 
   @override
   Widget build(BuildContext context) {
+    List<String> items = widget.items;
+    //String item1 = widget.item1; 
     return Column(
       children: <Widget>[
         CheckboxListTile(
@@ -47,7 +49,7 @@ class _CheckboxListTileExampleState extends State<CheckboxListTileExample> {
               checkboxValue1 = value!;
             });
           },
-          title: const Text('get groceries'), //put item 1 here
+          title:Text(items[0]), //put item 1 here
           //subtitle: const Text('Supporting text'),
         ),
         //const Divider(height: 0),
@@ -58,7 +60,7 @@ class _CheckboxListTileExampleState extends State<CheckboxListTileExample> {
               checkboxValue2 = value!;
             });
           },
-          title: const Text('Fold Laundry'), //put item 2 here
+          title: Text(items[1]), //put item 2 here
           //   subtitle: const Text(
           //       'Longer supporting text to demonstrate how the text wraps and the checkbox is centered vertically with the text.'),
         ),
@@ -70,7 +72,7 @@ class _CheckboxListTileExampleState extends State<CheckboxListTileExample> {
               checkboxValue3 = value!;
             });
           },
-          title: const Text('Make dinner'), //put item 3 here
+          title: Text(items[2]), //put item 3 here
           // subtitle: const Text(
           //     "Longer supporting text to demonstrate how the text wraps and how setting 'CheckboxListTile.isThreeLine = true' aligns the checkbox to the top vertically with the text."),
           // isThreeLine: true,
