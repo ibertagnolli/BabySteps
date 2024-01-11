@@ -62,17 +62,8 @@ class _CalendarPageState extends State<CalendarPage> {
       ),
       body: Center(
         child: ListView(children: <Widget>[
-          // Weight Title
           Padding(
-            padding: EdgeInsets.all(32),
-            child: Text('Calendar',
-                style: TextStyle(fontSize: 36, color: Theme.of(context).colorScheme.onBackground)),
-          ),
-
-          // Very Very Basic calendar
-          //TODO: use api to flesh out calendar and make a more interactive calendar
-          Padding(
-            padding: EdgeInsets.only(bottom: 15),
+            padding: EdgeInsets.all(15),
             child: TableCalendar(
               firstDay: DateTime.utc(2023, 10, 16),
               lastDay: DateTime.utc(2025, 3, 14),

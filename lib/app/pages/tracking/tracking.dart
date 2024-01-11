@@ -122,14 +122,11 @@ class _TrackingPageState extends State<TrackingPage> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 32),
-              child: Text("Tracking Metrics",
-                  style: TextStyle(
-                      fontSize: 36,
-                      color: Theme.of(context).colorScheme.onBackground)),
-            ),
+              padding: EdgeInsets.only(top: 32),
+              child: 
+            
             TrackingCard(const Icon(Icons.local_drink, size: 40), "Feeding",
-                lastFeed, () => context.go('/tracking/feeding')),
+                lastFeed, () => context.go('/tracking/feeding')),),
             TrackingCard(const Icon(Icons.crib, size: 40), "Sleep", lastSleep,
                 () => context.go('/tracking/sleep')),
             TrackingCard(

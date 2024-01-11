@@ -28,18 +28,14 @@ class _NotesHomePageState extends State<NotesHomePage> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 32),
-              child: Text("Notes Folders",
-                  style: TextStyle(
-                      fontSize: 36,
-                      color: Theme.of(context).colorScheme.onBackground)),
-            ),
+              padding: EdgeInsets.only(top: 32),
+              child: 
             TrackingCard(
               const Icon(Icons.medical_services, size: 40),
               "Medical",
               "6 days ago",
               () => context.go('/notes/medical'),
-            ),
+            ),),
             TrackingCard(const Icon(Icons.flag, size: 40), "Milestones",
                 "3 weeks ago", () => context.go('/notes/milestone')),
             TrackingCard(const Icon(Icons.scale, size: 40), 'Growth',
