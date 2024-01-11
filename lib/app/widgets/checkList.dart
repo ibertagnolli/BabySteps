@@ -19,12 +19,9 @@ import 'package:flutter/material.dart';
 // }
 
 class CheckboxListTileExample extends StatefulWidget {
-  CheckboxListTileExample(this.items,
-      {super.key});
+  CheckboxListTileExample(this.items, {super.key});
 
   final List<String> items;
-  // final String item2;
-  // final String item3;
 
   @override
   State<CheckboxListTileExample> createState() =>
@@ -39,9 +36,30 @@ class _CheckboxListTileExampleState extends State<CheckboxListTileExample> {
   @override
   Widget build(BuildContext context) {
     List<String> items = widget.items;
-    //String item1 = widget.item1; 
     return Column(
       children: <Widget>[
+        //TODO: use a list view builder here instead of hardcoding 3 items 
+        //This is causing an error right now
+        ListView.builder(
+          // Let the ListView know how many items it needs to build.
+          itemCount: items.length,
+          // Provide a builder function. This is where the magic happens.
+          // Convert each item into a widget based on the type of item it is.
+          itemBuilder: (context, index) {
+            final item = items[index];
+
+            return CheckboxListTile(
+              value: checkboxValue1,
+              onChanged: (bool? value) {
+                setState(() {
+                  checkboxValue1 = value!;
+                });
+              },
+              title: Text(item), 
+            );
+          },
+        ),
+
         CheckboxListTile(
           value: checkboxValue1,
           onChanged: (bool? value) {
@@ -49,7 +67,7 @@ class _CheckboxListTileExampleState extends State<CheckboxListTileExample> {
               checkboxValue1 = value!;
             });
           },
-          title:Text(items[0]), //put item 1 here
+          title: Text(items[0]), //put item 1 here
           //subtitle: const Text('Supporting text'),
         ),
         //const Divider(height: 0),
