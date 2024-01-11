@@ -88,10 +88,10 @@ class _WeightPageState extends State<WeightPage> {
               // FilledCard Quick Weight Info
               Padding(
                 padding: EdgeInsets.only(bottom: 15),
-                child: FilledCard(
+                child: SizedBox(height: 200, child: FilledCard(
                     "last weight: $daysSinceWeight",
                     "weight: $lastWeightPounds lbs $lastWeightOunces oz",
-                    Icon(Icons.scale)),
+                    Icon(Icons.scale)),),
               ),
 
               // Add Weight Card

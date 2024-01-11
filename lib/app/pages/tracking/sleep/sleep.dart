@@ -121,8 +121,8 @@ class _SleepPageState extends State<SleepPage> {
           ),
           Padding(
             padding: EdgeInsets.only(bottom: 16),
-            child: FilledCard("last nap: $timeSinceNap", "nap: $lastNap",
-                Icon(Icons.person_search_sharp)),
+            child: SizedBox(height: 200, child: FilledCard("last nap: $timeSinceNap", "nap: $lastNap",
+                Icon(Icons.person_search_sharp)),),
           ),
           //Using a future builder (should we be using a stream builder?)
           //This will ensure that we don't put up the stopwatch until we see if the stopwatch should still be going

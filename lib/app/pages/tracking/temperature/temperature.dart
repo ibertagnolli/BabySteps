@@ -145,8 +145,8 @@ class _TemperaturePageState extends State<TemperaturePage> {
               // FilledCard Quick Weight Info
               Padding(
                 padding: EdgeInsets.only(bottom: 15),
-                child: FilledCard("last temp: $daysSinceTemp",
-                    "temperature: $lastTemp", Icon(Icons.device_thermostat)),
+                child:SizedBox(height: 200, child:  FilledCard("last temp: $daysSinceTemp",
+                    "temperature: $lastTemp", Icon(Icons.device_thermostat)),),
               ),
 
               // Add temp Card // TODO: round corners, default card open, turn into widget
