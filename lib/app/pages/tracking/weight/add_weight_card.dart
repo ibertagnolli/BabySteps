@@ -22,31 +22,27 @@ class _AddWeightCardState extends State<AddWeightCard> {
   // validation of the form.
   final _formKey = GlobalKey<FormState>();
 
-
   TextEditingController pounds = TextEditingController();
   TextEditingController ounces = TextEditingController();
-  TextEditingController date = TextEditingController();
+  TextEditingController date = TextEditingController(text: DateFormat("MM-dd-yyyy HH:mm").format(DateTime.now())); // TODO is 24hr time ok? this is hard-coded, so we would need a bool if user can customize it
 
   /// Saves a new weight entry in the Firestore database.
   saveNewWeight() async {
-    // DateTime dateInput =  DateFormat.yMd().add_jm().parse(date.text); //DateFormat("dd-MM-yyyy").parse(date.text); // TODO update times to include hours so the most recent entry for a given day is selected
-
     // Write weight data to database
     Map<String, dynamic> uploaddata = {
       'pounds': pounds.text,
       'ounces': ounces.text,
-      'date': DateTime.now(), // TODO update to data from date TextEditingController
+      'date': date.text,
     };
     await WeightDatabaseMethods().addWeight(uploaddata);
 
     // Update the FilledCard
-    widget.weightAdded(pounds.text, ounces.text, DateTime.now()); // TODO update to data from date TextEditingController
+    DateTime dateInput =  DateFormat.yMd().add_jm().parse(date.text);
+    widget.weightAdded(pounds.text, ounces.text, dateInput);
+    
     pounds.clear();
     ounces.clear();
     date.clear();
-
-    // TODO show something when the date is saved (check mark?)
-    // TODO prevent user from inserting the data entry multiple times -> disable the Save button?
   }
 
   @override
@@ -131,18 +127,37 @@ class _AddWeightCardState extends State<AddWeightCard> {
                   ),
                 ),
 
-                // Second row: Date input
-                TextFormField(
+                // Second row: Date entry
+                TextFormField(                  
                   controller: date,
                   decoration: const InputDecoration(
                       icon: Icon(Icons.calendar_today_rounded),
                   ),
-                  // initialValue: DateFormat.yMd().add_jm().format(DateTime.now()),
+                  onTap: () async {
+                    // Don't show keyboard
+                    FocusScope.of(context).requestFocus(new FocusNode());
+
+                    DateTime? pickeddate = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(2020),
+                      lastDate: DateTime(2101));
+
+                      if (pickeddate != null) {
+                        setState(() {
+                          date.text =  DateFormat.yMd().add_jm().format(pickeddate);
+                        });                      
+                      }
+                  },
                   validator: (value) {
-                    // TODO check for dates out of range
                     if (value == null || value.isEmpty) {
                       return 'Please enter a date';
                     }
+
+                    // TODO check for dates out of range?
+                    // NOTE: If user picks a date after current date, it reverts to the previously picked date.
+                    // The entry field reflects this. No error checking, but doesn't let user input invalid data.
+
                     return null;
                   },
                 ),
@@ -166,7 +181,6 @@ class _AddWeightCardState extends State<AddWeightCard> {
                         ),
                       ),
                     ),
-
                     child: const Text('Save Weight'),
                   ),
                 ),
@@ -175,65 +189,6 @@ class _AddWeightCardState extends State<AddWeightCard> {
           ),
           )
       ]
-      
-
-
-
-
-
-      
-
-              // Second row: Date input
-              // TextField(
-              //     controller: date,
-              //     // initialValue: DateFormat.yMd().add_jm().format(DateTime.now()),
-              //     decoration: InputDecoration(
-              //         icon: const Icon(Icons.calendar_today_rounded),
-              //         labelText:
-              //             DateFormat.yMd().add_jm().format(DateTime.now()),
-              //             //"Select Date" // DateFormat('dd-MM-yyyy').format(DateTime.now()) // TODO: This is the idea for default date selection, doesn't work with const
-              //     ),
-              //     onTap: () async {
-              //       DateTime? pickeddate = await showDatePicker(
-              //           context: context,
-              //           initialDate: DateTime.now(),
-              //           firstDate: DateTime(2020),
-              //           lastDate: DateTime(2101));
-
-              //       if (pickeddate != null) {
-              //         setState(() {
-              //           date.text =  DateFormat.yMd().add_jm().format(pickeddate); // DateFormat('dd-MM-yyyy').format(pickeddate);
-              //         });
-              //       }
-              //     }),
-
-              // Third row: Submit button
-              // Padding(
-              //   padding: const EdgeInsets.only(top: 40),
-              //   child: SizedBox(
-              //     height: 75,
-              //     width: 185,
-              //     child: FilledButton.tonal(
-              //       onPressed: saveNewWeight,
-              //       style: ButtonStyle(
-              //         backgroundColor: MaterialStateProperty.all(
-              //             Theme.of(context).colorScheme.tertiary),
-              //         foregroundColor: MaterialStateProperty.all(
-              //             Theme.of(context).colorScheme.onTertiary),
-              //         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              //           RoundedRectangleBorder(
-              //             borderRadius: BorderRadius.circular(20.0),
-              //           ),
-              //         ),
-              //       ),
-              //       child: const Text("Save", style: TextStyle(fontSize: 25)),
-              //     ),
-              //   ),
-              // )
-            // ],
-          // ),
-        // ),
-      // ],
     );
   }
 }
