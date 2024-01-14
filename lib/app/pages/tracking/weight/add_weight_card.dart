@@ -40,6 +40,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
     DateTime dateInput =  DateFormat.yMd().add_jm().parse(date.text);
     widget.weightAdded(pounds.text, ounces.text, dateInput);
     
+    // Clear fields for next entry
     pounds.clear();
     ounces.clear();
     date.clear();
