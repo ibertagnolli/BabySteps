@@ -59,6 +59,8 @@ class _WeightPageState extends State<WeightPage> {
 
   @override
   Widget build(BuildContext context) {
+    WeightDatabaseMethods().connectToDB();
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
 
