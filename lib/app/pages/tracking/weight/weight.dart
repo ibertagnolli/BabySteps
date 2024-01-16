@@ -21,7 +21,8 @@ class _WeightPageState extends State<WeightPage> {
 
   void weightAdded(String pounds, String ounces, DateTime dateInput) {
     setState(() {
-      if ((lastDate == null || lastDate != null && lastDate!.isBefore(dateInput))) {
+      if ((lastDate == null ||
+          lastDate != null && lastDate!.isBefore(dateInput))) {
         lastWeightPounds = pounds;
         lastWeightOunces = ounces;
         String diff = DateTime.now().difference(dateInput).inDays.toString();
@@ -72,9 +73,9 @@ class _WeightPageState extends State<WeightPage> {
         ),
       ),
 
-      body: Center(
-        child: ListView(children: <Widget>[
-          Column(
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
             children: [
               // Weight Title
               Padding(
@@ -88,10 +89,13 @@ class _WeightPageState extends State<WeightPage> {
               // FilledCard Quick Weight Info
               Padding(
                 padding: EdgeInsets.only(bottom: 15),
-                child: FilledCard(
-                    "last weight: $daysSinceWeight",
-                    "weight: $lastWeightPounds lbs $lastWeightOunces oz",
-                    Icon(Icons.scale)),
+                child: SizedBox(
+                  height: 200,
+                  child: FilledCard(
+                      "last weight: $daysSinceWeight",
+                      "weight: $lastWeightPounds lbs $lastWeightOunces oz",
+                      Icon(Icons.scale)),
+                ),
               ),
 
               // Add Weight Card
@@ -122,7 +126,7 @@ class _WeightPageState extends State<WeightPage> {
               ),
             ],
           ),
-        ]),
+        ),
       ),
     );
   }

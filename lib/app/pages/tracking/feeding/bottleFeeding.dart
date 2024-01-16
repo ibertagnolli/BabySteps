@@ -122,7 +122,8 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
           color: Theme.of(context).colorScheme.onSurface,
         ),
       ),
-      body: Center(
+      body: SingleChildScrollView(
+      child:Center(
         child: Column(children: <Widget>[
           Padding(
             padding: EdgeInsets.all(32),
@@ -198,6 +199,7 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
           // NewStopWatch(timeSince, buttonText, updateData, () => {}, 0, false)
         ]),
       ),
+      ),
     );
   }
 }
@@ -208,9 +210,10 @@ class TimeSinceCard extends StatelessWidget {
   final String timeSince;
 
   @override
+  //Not sure what responsive design lexi had in mind here
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    double width = screenWidth * 0.85;
+    double width = screenWidth * 0.9;
     return Card(
       elevation: 0,
       color: Theme.of(context).colorScheme.secondary, // obviously wrong
@@ -227,6 +230,7 @@ class TimeSinceCard extends StatelessWidget {
           Text(
             'Time since last bottle: $timeSince',
             style: TextStyle(
+              overflow: TextOverflow.ellipsis,
               fontSize: 20,
               color: Theme.of(context).colorScheme.onSecondary,
             ),
