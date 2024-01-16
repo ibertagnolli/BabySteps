@@ -21,28 +21,30 @@ class _OrganizationPageState extends State<OrganizationPage> {
             color: Theme.of(context).colorScheme.onSurface,
             onPressed: () => Navigator.of(context).pop(),
           )),
-      body: Center(
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 32),
-              child: Text("Organization",
-                  style: TextStyle(
-                      fontSize: 36,
-                      color: Theme.of(context).colorScheme.onBackground)),
-            ),
-            NotesCard(
-              //const Icon(Icons.medical_services, size: 40),
-              "Shopping List",
-              "10/19/23",
-              () => context.go('/notes/organization/shopping'),
-            ),
-            NotesCard(
-              "Nap Time To Do",
-              "10/21/23",
-              () => context.go('/notes/organization/todo'),
-            ),
-          ],
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 32),
+                child: Text("Organization",
+                    style: TextStyle(
+                        fontSize: 36,
+                        color: Theme.of(context).colorScheme.onBackground)),
+              ),
+              NotesCard(
+                //const Icon(Icons.medical_services, size: 40),
+                "Shopping List",
+                "10/19/23",
+                () => context.go('/notes/organization/shopping'),
+              ),
+              NotesCard(
+                "Nap Time To Do",
+                "10/21/23",
+                () => context.go('/notes/organization/todo'),
+              ),
+            ],
+          ),
         ),
       ),
     );

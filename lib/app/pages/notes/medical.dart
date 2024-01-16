@@ -21,38 +21,40 @@ class _MedicalPageState extends State<MedicalPage> {
             color: Theme.of(context).colorScheme.onSurface,
             onPressed: () => Navigator.of(context).pop(),
           )),
-      body: Center(
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 32),
-              child: Text("Medical",
-                  style: TextStyle(
-                      fontSize: 36,
-                      color: Theme.of(context).colorScheme.onBackground)),
-            ),
-            NotesCard(
-              //const Icon(Icons.medical_services, size: 40),
-              "Dr.appointment questions",
-              "10/3/23",
-              () => context.go('/notes/medical/appointments'),
-            ),
-            NotesCard(
-              "Vaccines",
-              "9/28/23",
-              () => context.go('/notes/medical/vaccines'),
-            ),
-            NotesCard(
-              "Birth Stats",
-              "6/12/23",
-              () => context.go('/notes/medical/birthStats'),
-            ),
-            NotesCard(
-              "History",
-              "6/14/23",
-              () => context.go('/notes/medical/history'),
-            ),
-          ],
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 32),
+                child: Text("Medical",
+                    style: TextStyle(
+                        fontSize: 36,
+                        color: Theme.of(context).colorScheme.onBackground)),
+              ),
+              NotesCard(
+                //const Icon(Icons.medical_services, size: 40),
+                "Dr.appointment questions",
+                "10/3/23",
+                () => context.go('/notes/medical/appointments'),
+              ),
+              NotesCard(
+                "Vaccines",
+                "9/28/23",
+                () => context.go('/notes/medical/vaccines'),
+              ),
+              NotesCard(
+                "Birth Stats",
+                "6/12/23",
+                () => context.go('/notes/medical/birthStats'),
+              ),
+              NotesCard(
+                "History",
+                "6/14/23",
+                () => context.go('/notes/medical/history'),
+              ),
+            ],
+          ),
         ),
       ),
     );
