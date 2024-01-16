@@ -22,12 +22,13 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      body: Center(
+      body: SingleChildScrollView(
+        child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            SizedBox(
+         SizedBox(
                 width: 300,
                 height: 300,
                 child: Image.asset('assets/BabyStepsLogo.png',
@@ -37,9 +38,12 @@ class _HomePageState extends State<HomePage> {
               style: TextStyle(
                   fontSize: 30.0, color: Theme.of(context).colorScheme.surface),
             ),
+            
           ],
         ),
+      
       ),
+      ),   
     );
   }
 }

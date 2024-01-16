@@ -21,33 +21,36 @@ class _GrowthPageState extends State<GrowthPage> {
             color: Theme.of(context).colorScheme.onSurface,
             onPressed: () => Navigator.of(context).pop(),
           )),
-      body: Center(
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 32),
-              child: Text("Growth",
-                  style: TextStyle(
-                      fontSize: 36,
-                      color: Theme.of(context).colorScheme.onBackground)),
-            ),
-            NotesCard(
-              //const Icon(Icons.medical_services, size: 40),
-              "Weight",
-              "8/9/23",
-              () => context.go('/notes/growth/weight'),
-            ),
-            NotesCard(
-              "Teeth",
-              "9/4/23",
-              () => context.go('/notes/growth/teeth'),
-            ),
-            NotesCard(
-              "Height",
-              "10/18/23",
-              () => context.go('/notes/growth/weight'),
-            ),
-          ],
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+              
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 32),
+                child: Text("Growth",
+                    style: TextStyle(
+                        fontSize: 36,
+                        color: Theme.of(context).colorScheme.onBackground)),
+              ),
+              NotesCard(
+                //const Icon(Icons.medical_services, size: 40),
+                "Weight",
+                "8/9/23",
+                () => context.go('/notes/growth/weight'),
+              ),
+              NotesCard(
+                "Teeth",
+                "9/4/23",
+                () => context.go('/notes/growth/teeth'),
+              ),
+              NotesCard(
+                "Height",
+                "10/18/23",
+                () => context.go('/notes/growth/weight'),
+              ),
+            ],
+          ),
         ),
       ),
     );

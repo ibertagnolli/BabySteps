@@ -24,9 +24,11 @@ class _NotesHomePageState extends State<NotesHomePage> {
           ),
         ),
       ),
-      body: Center(
-        child: Column(
-          children: [
+      body: 
+       SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
             Padding(
               padding: EdgeInsets.only(top: 32),
               child: 
@@ -43,6 +45,7 @@ class _NotesHomePageState extends State<NotesHomePage> {
             TrackingCard(const Icon(Icons.settings, size: 40), "Orginization",
                 "2 months ago", () => context.go('/notes/organization')),
           ],
+        ),
         ),
       ),
     );

@@ -182,7 +182,8 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
           color: Theme.of(context).colorScheme.onSurface,
         ),
       ),
-      body: Center(
+      body: SingleChildScrollView(
+      child: Center(
         child: Column(
           children: <Widget>[
             Padding(
@@ -272,6 +273,7 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
         ),
 
         // Done button - stops both timers if going, will log time since
+      ),
       ),
     );
   }

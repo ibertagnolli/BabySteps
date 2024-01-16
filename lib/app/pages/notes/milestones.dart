@@ -21,33 +21,35 @@ class _MilestonePageState extends State<MilestonePage> {
             color: Theme.of(context).colorScheme.onSurface,
             onPressed: () => Navigator.of(context).pop(),
           )),
-      body: Center(
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 32),
-              child: Text("Milestones",
-                  style: TextStyle(
-                      fontSize: 36,
-                      color: Theme.of(context).colorScheme.onBackground)),
-            ),
-            NotesCard(
-              //const Icon(Icons.medical_services, size: 40),
-              "Allergens",
-              "8/9/23",
-              () => context.go('/notes/milestone/allergens'),
-            ),
-            NotesCard(
-              "Food Likes/Dislikes",
-              "9/4/23",
-              () => context.go('/notes/milestone/food'),
-            ),
-            NotesCard(
-              "Firsts",
-              "10/18/23",
-              () => context.go('/notes/milestone/firsts'),
-            ),
-          ],
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 32),
+                child: Text("Milestones",
+                    style: TextStyle(
+                        fontSize: 36,
+                        color: Theme.of(context).colorScheme.onBackground)),
+              ),
+              NotesCard(
+                //const Icon(Icons.medical_services, size: 40),
+                "Allergens",
+                "8/9/23",
+                () => context.go('/notes/milestone/allergens'),
+              ),
+              NotesCard(
+                "Food Likes/Dislikes",
+                "9/4/23",
+                () => context.go('/notes/milestone/food'),
+              ),
+              NotesCard(
+                "Firsts",
+                "10/18/23",
+                () => context.go('/notes/milestone/firsts'),
+              ),
+            ],
+          ),
         ),
       ),
     );

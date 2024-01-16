@@ -118,8 +118,10 @@ class _TrackingPageState extends State<TrackingPage> {
           ),
         ),
       ),
-      body: Center(
-        child: Column(
+      body: SingleChildScrollView(
+        child: Center(
+        child:
+        Column(
           children: [
             Padding(
               padding: EdgeInsets.only(top: 32),
@@ -139,6 +141,7 @@ class _TrackingPageState extends State<TrackingPage> {
             TrackingCard(const Icon(Icons.thermostat, size: 40), "Temperature",
                 lastTemp, () => context.go('/tracking/temperature')),
           ],
+        ),
         ),
       ),
     );

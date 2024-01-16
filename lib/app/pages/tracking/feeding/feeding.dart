@@ -84,7 +84,8 @@ class _FeedingPageState extends State<FeedingPage> {
           color: Theme.of(context).colorScheme.onSurface,
         ),
       ),
-      body: Center(
+      body: SingleChildScrollView(
+     child: Center(
         child: Column(children: <Widget>[
           Padding(
             padding: EdgeInsets.all(32),
@@ -124,6 +125,7 @@ class _FeedingPageState extends State<FeedingPage> {
                 Theme.of(context)),
           ),
         ]),
+      ),
       ),
     );
   }

@@ -129,9 +129,9 @@ class _TemperaturePageState extends State<TemperaturePage> {
         title: const Text('Tracking'),
       ),
 
-      body: Center(
-        child: ListView(children: <Widget>[
-          Column(
+      body:  SingleChildScrollView(
+        child: Center(
+          child: Column(
             children: [
               // Weight Title
               Padding(
@@ -275,7 +275,7 @@ class _TemperaturePageState extends State<TemperaturePage> {
               ),
             ],
           )
-        ]),
+        ),
       ),
     );
   }

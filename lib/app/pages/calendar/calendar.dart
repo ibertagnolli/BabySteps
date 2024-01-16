@@ -60,8 +60,10 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
         ),
       ),
-      body: Center(
-        child: ListView(children: <Widget>[
+      body:  SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
           Padding(
             padding: EdgeInsets.all(15),
             child: TableCalendar(
@@ -209,6 +211,7 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
         ]),
       ),
+      )
     );
   }
 }
