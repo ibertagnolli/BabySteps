@@ -20,6 +20,7 @@ import 'package:babysteps/app/pages/social/social.dart';
 import 'package:babysteps/app/pages/calendar/calendar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
 //Code for routing (most of this page) taken and adjusted from this tutorial and this github:
@@ -27,6 +28,10 @@ import 'package:go_router/go_router.dart';
 //https://github.com/bizz84/nested_navigation_examples/blob/main/examples/gorouter/lib/main.dart
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
