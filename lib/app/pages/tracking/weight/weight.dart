@@ -1,5 +1,6 @@
 import 'package:babysteps/app/pages/tracking/weight/add_weight_card.dart';
 import 'package:babysteps/app/pages/tracking/weight/weight_database.dart';
+import 'package:babysteps/app/pages/tracking/weight/weight_stream.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
@@ -59,7 +60,9 @@ class _WeightPageState extends State<WeightPage> {
 
   @override
   Widget build(BuildContext context) {
-    WeightDatabaseMethods().connectToDB();
+    // Read any realtime updates to weight
+    WeightDatabaseMethods().listenForWeightReads(); // TODO also needed in add_weight_card?
+    // daysSinceWeight = WeightStream(); // Doesn't work because WeightStream returns a widget
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
@@ -91,9 +94,15 @@ class _WeightPageState extends State<WeightPage> {
               Padding(
                 padding: EdgeInsets.only(bottom: 15),
                 child: FilledCard(
-                    "last weight: $daysSinceWeight",
+                    "last weight: ${WeightStream()}", //$daysSinceWeight",
                     "weight: $lastWeightPounds lbs $lastWeightOunces oz",
                     Icon(Icons.scale)),
+              ),
+
+              // TESTING weight_stream
+              Padding(
+                padding: EdgeInsets.only(bottom: 15),
+                child: WeightStream(),
               ),
 
               // Add Weight Card

@@ -54,7 +54,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
     date.dispose();
     super.dispose();
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(

@@ -6,7 +6,7 @@ class WeightDatabaseMethods {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
   // Sets up the snapshot to listen to changes in the collection.
-  void connectToDB() {
+  void listenForWeightReads() {
     final docRef = db.collection("Babies").doc("IYyV2hqR7omIgeA4r7zQ").collection("Weight");
     docRef.snapshots().listen(
           (event) => print("current data: ${event.size}"),
