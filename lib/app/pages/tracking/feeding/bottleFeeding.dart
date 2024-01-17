@@ -94,6 +94,7 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
     setState(() {
       activeButton = type;
     });
+    openDialog();
   }
 
   // Start/stop stopwatch func
@@ -108,6 +109,45 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
       timeSince = "0:00";
       // lastNap = napLength;
     });
+    openDialog();
+  }
+
+  // Popup text window for bottle quantity
+  Future openDialog() => showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      title: Text('How much did baby eat?', style: TextStyle(color: Theme.of(context).colorScheme.onSurface,)),
+      content: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              autofocus: true, // Automatically enter the text field and pull up keyboard
+              decoration: InputDecoration(hintText: 'Enter quantity')
+              ),
+          ),
+          Text('oz', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant))
+        ],
+      ),
+      actions: [
+        FilledButton(
+          child: Text('Skip'),
+          onPressed: skipQuantity,
+          ),
+        FilledButton(
+          child: Text('Save'),
+          onPressed: saveQuantity,
+        ),
+      ]
+    )
+  );
+
+  void skipQuantity() {
+    Navigator.of(context, rootNavigator: true).pop(); // Makes the popup go away
+  }
+  void saveQuantity() {
+    // Store info in database
+    Navigator.of(context, rootNavigator: true).pop(); // Makes the popup go away
   }
 
   @override
