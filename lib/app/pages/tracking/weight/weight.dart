@@ -94,7 +94,7 @@ class _WeightPageState extends State<WeightPage> {
               Padding(
                 padding: EdgeInsets.only(bottom: 15),
                 child: FilledCard(
-                    "last weight: ${WeightStream()}", //$daysSinceWeight",
+                    "last weight: $daysSinceWeight",  // ${WeightStream()}",
                     "weight: $lastWeightPounds lbs $lastWeightOunces oz",
                     Icon(Icons.scale)),
               ),

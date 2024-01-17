@@ -27,15 +27,10 @@ class _WeightStreamState extends State<WeightStream> {
           return const Text("Loading");
         }
 
-        // else {
-        //   return const Text("No errors");
-        // }
-
         // IDEA: Return a widget with all the data values. Extract the data values as the individual strings for the FilledCard.
         // Access the most recently added document. Get its timestamp, pounds, and ounces.
         // FIRST: just return the timestamp
         // NEXT THING: test returning the Text widget with fresh read allocation!
-
 
         DateTime timestamp = DateTime.now();
         String pounds = "";
@@ -55,19 +50,6 @@ class _WeightStreamState extends State<WeightStream> {
         return Text(
           "$timestampStr , $pounds , $ounces",
         );
-
-        // return ListView(
-        //   children: snapshot.data!.docs.map((DocumentSnapshot document) {
-        //     Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-        //     return ListTile(
-        //       title: Text(data['pounds']),
-        //       // ounces: Text(data['ounces']),
-        //       subtitle: Text(data['date']),
-        //     );
-        //   })
-        //   .toList()
-        //   .cast(),
-        // );
       },
     );
   }
