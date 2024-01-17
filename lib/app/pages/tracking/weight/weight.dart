@@ -104,7 +104,7 @@ class _WeightPageState extends State<WeightPage> {
                 child: AddWeightCard(weightAdded: weightAdded),
               ),
 
-              // History Card
+             // History Card
               Padding(
                 padding: EdgeInsets.all(15),
                 child: ExpansionTile(
