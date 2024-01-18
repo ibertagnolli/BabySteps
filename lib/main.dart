@@ -13,6 +13,8 @@ import 'package:babysteps/app/pages/tracking/sleep/sleep.dart';
 import 'package:babysteps/app/pages/tracking/temperature/temperature.dart';
 import 'package:babysteps/app/pages/tracking/tracking.dart';
 import 'package:babysteps/app/pages/tracking/weight/weight.dart';
+import 'package:babysteps/app/pages/user/add_baby.dart';
+import 'package:babysteps/app/pages/user/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/theme.dart';
 import 'package:babysteps/app/pages/home/home.dart';
@@ -22,10 +24,17 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:babysteps/app/pages/user/login_landing.dart';
+import 'package:babysteps/app/pages/user/login.dart';
+import 'package:babysteps/app/pages/user/signup.dart';
 
 //Code for routing (most of this page) taken and adjusted from this tutorial and this github:
 //https://codewithandrea.com/articles/flutter-bottom-navigation-bar-nested-routes-gorouter/
 //https://github.com/bizz84/nested_navigation_examples/blob/main/examples/gorouter/lib/main.dart
+
+bool loggedIn = false;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([
@@ -36,6 +45,16 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  FirebaseAuth.instance.authStateChanges().listen((User? user) {
+    if (user == null) {
+      loggedIn = false;
+      print('User is currently signed out!');
+    } else {
+      loggedIn = true;
+      print('User is signed in!');
+    }
+  });
 
   runApp(const MyApp());
 }
@@ -83,26 +102,27 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: navigationShell,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: navigationShell.currentIndex,
-        indicatorColor: Theme.of(context).colorScheme.primary,
-        destinations: const [
-          NavigationDestination(label: 'Home', icon: Icon(Icons.home)),
-          NavigationDestination(label: 'Tracking', icon: Icon(Icons.folder)),
-          NavigationDestination(
-              label: 'Calendar', icon: Icon(Icons.calendar_month)),
-          NavigationDestination(label: 'Notes', icon: Icon(Icons.note)),
-          NavigationDestination(label: 'Social', icon: Icon(Icons.people)),
-        ],
-        onDestinationSelected: _goBranch,
-      ),
-    );
+        body: navigationShell,
+        bottomNavigationBar: NavigationBar(
+          selectedIndex: navigationShell.currentIndex,
+          indicatorColor: Theme.of(context).colorScheme.primary,
+          destinations: const [
+            NavigationDestination(label: 'Home', icon: Icon(Icons.home)),
+            NavigationDestination(label: 'Tracking', icon: Icon(Icons.folder)),
+            NavigationDestination(
+                label: 'Calendar', icon: Icon(Icons.calendar_month)),
+            NavigationDestination(label: 'Notes', icon: Icon(Icons.note)),
+            NavigationDestination(label: 'Social', icon: Icon(Icons.people)),
+          ],
+          onDestinationSelected: _goBranch,
+        ));
   }
 }
 
 // private navigators
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
+final _shellNavigatorLoginKey =
+    GlobalKey<NavigatorState>(debugLabel: 'shellLogin');
 final _shellNavigatorHomeKey =
     GlobalKey<NavigatorState>(debugLabel: 'shellHome');
 final _shellNavigatorTrackingKey =
@@ -116,9 +136,32 @@ final _shellNavigatorSocialKey =
 
 // the one and only GoRouter instance
 final goRouter = GoRouter(
-  initialLocation: '/home',
+  initialLocation: loggedIn ? '/home' : '/login',
   navigatorKey: _rootNavigatorKey,
   routes: [
+    GoRoute(
+        path: '/login',
+        pageBuilder: (context, state) =>
+            NoTransitionPage(child: LoginLandingPage()),
+        routes: [
+          GoRoute(
+            path: 'loginPage',
+            builder: (context, state) => const LoginPage(),
+          ),
+          GoRoute(
+              path: 'signup',
+              builder: (context, state) => const SignupPage(),
+              routes: [
+                GoRoute(
+                  path: 'addBaby',
+                  builder: (context, state) => const AddBabyPage(),
+                )
+              ])
+        ]),
+    GoRoute(
+      path: '/profile',
+      pageBuilder: (context, state) => NoTransitionPage(child: ProfilePage()),
+    ),
     // Stateful nested navigation based on:
     // https://github.com/flutter/packages/blob/main/packages/go_router/example/lib/stateful_shell_route.dart
     StatefulShellRoute.indexedStack(

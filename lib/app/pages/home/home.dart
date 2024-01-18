@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:core';
+import 'package:go_router/go_router.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,6 +22,11 @@ class _HomePageState extends State<HomePage> {
             image: AssetImage('assets/BabyStepsLogo.png'),
           ),
         ),
+        actions: [
+          IconButton(
+              onPressed: () => context.go('/profile'),
+              icon: const Icon(Icons.person))
+        ],
       ),
       body: SingleChildScrollView(
         child: Center(
