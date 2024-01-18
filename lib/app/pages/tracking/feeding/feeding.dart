@@ -84,7 +84,8 @@ class _FeedingPageState extends State<FeedingPage> {
           color: Theme.of(context).colorScheme.onSurface,
         ),
       ),
-      body: Center(
+      body: SingleChildScrollView(
+     child: Center(
         child: Column(children: <Widget>[
           Padding(
             padding: EdgeInsets.all(32),
@@ -97,8 +98,9 @@ class _FeedingPageState extends State<FeedingPage> {
           // Top card with data
           Padding(
             padding: EdgeInsets.only(bottom: 16),
-            child: FilledCard("last fed: $lastTimeFed",
-                "type: $lastFeedingType", Icon(Icons.edit)),
+            child:
+            SizedBox(height: 200, child:FilledCard("last fed: $lastTimeFed",
+                "type: $lastFeedingType", Icon(Icons.edit)) ,) ,
           ),
 
           // Feeding options - breast feeding or bottle feeding
@@ -123,6 +125,7 @@ class _FeedingPageState extends State<FeedingPage> {
                 Theme.of(context)),
           ),
         ]),
+      ),
       ),
     );
   }

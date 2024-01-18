@@ -129,9 +129,9 @@ class _TemperaturePageState extends State<TemperaturePage> {
         title: const Text('Tracking'),
       ),
 
-      body: Center(
-        child: ListView(children: <Widget>[
-          Column(
+      body:  SingleChildScrollView(
+        child: Center(
+          child: Column(
             children: [
               // Weight Title
               Padding(
@@ -145,8 +145,8 @@ class _TemperaturePageState extends State<TemperaturePage> {
               // FilledCard Quick Weight Info
               Padding(
                 padding: EdgeInsets.only(bottom: 15),
-                child: FilledCard("last temp: $daysSinceTemp",
-                    "temperature: $lastTemp", Icon(Icons.device_thermostat)),
+                child:SizedBox(height: 200, child:  FilledCard("last temp: $daysSinceTemp",
+                    "temperature: $lastTemp", Icon(Icons.device_thermostat)),),
               ),
 
               // Add temp Card // TODO: round corners, default card open, turn into widget
@@ -275,7 +275,7 @@ class _TemperaturePageState extends State<TemperaturePage> {
               ),
             ],
           )
-        ]),
+        ),
       ),
     );
   }

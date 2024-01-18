@@ -19,12 +19,9 @@ import 'package:flutter/material.dart';
 // }
 
 class CheckboxListTileExample extends StatefulWidget {
-  const CheckboxListTileExample(this.item1, this.item2, this.item3,
-      {super.key});
+  CheckboxListTileExample(this.items, {super.key});
 
-  final String item1;
-  final String item2;
-  final String item3;
+  final List<String> items;
 
   @override
   State<CheckboxListTileExample> createState() =>
@@ -32,14 +29,37 @@ class CheckboxListTileExample extends StatefulWidget {
 }
 
 class _CheckboxListTileExampleState extends State<CheckboxListTileExample> {
-  bool checkboxValue1 = true;
-  bool checkboxValue2 = true;
-  bool checkboxValue3 = true;
+  bool checkboxValue1 = false;
+  bool checkboxValue2 = false;
+  bool checkboxValue3 = false;
 
   @override
   Widget build(BuildContext context) {
+    List<String> items = widget.items;
     return Column(
       children: <Widget>[
+        //TODO: use a list view builder here instead of hardcoding 3 items 
+        //This is causing an error right now
+        // ListView.builder(
+        //   // Let the ListView know how many items it needs to build.
+        //   itemCount: items.length,
+        //   // Provide a builder function. This is where the magic happens.
+        //   // Convert each item into a widget based on the type of item it is.
+        //   itemBuilder: (context, index) {
+        //     final item = items[index];
+
+        //     return CheckboxListTile(
+        //       value: checkboxValue1,
+        //       onChanged: (bool? value) {
+        //         setState(() {
+        //           checkboxValue1 = value!;
+        //         });
+        //       },
+        //       title: Text(item), 
+        //     );
+        //   },
+        // ),
+
         CheckboxListTile(
           value: checkboxValue1,
           onChanged: (bool? value) {
@@ -47,7 +67,7 @@ class _CheckboxListTileExampleState extends State<CheckboxListTileExample> {
               checkboxValue1 = value!;
             });
           },
-          title: const Text('get groceries'), //put item 1 here
+          title: Text(items[0]), //put item 1 here
           //subtitle: const Text('Supporting text'),
         ),
         //const Divider(height: 0),
@@ -58,7 +78,7 @@ class _CheckboxListTileExampleState extends State<CheckboxListTileExample> {
               checkboxValue2 = value!;
             });
           },
-          title: const Text('Fold Laundry'), //put item 2 here
+          title: Text(items[1]), //put item 2 here
           //   subtitle: const Text(
           //       'Longer supporting text to demonstrate how the text wraps and the checkbox is centered vertically with the text.'),
         ),
@@ -70,7 +90,7 @@ class _CheckboxListTileExampleState extends State<CheckboxListTileExample> {
               checkboxValue3 = value!;
             });
           },
-          title: const Text('Make dinner'), //put item 3 here
+          title: Text(items[2]), //put item 3 here
           // subtitle: const Text(
           //     "Longer supporting text to demonstrate how the text wraps and how setting 'CheckboxListTile.isThreeLine = true' aligns the checkbox to the top vertically with the text."),
           // isThreeLine: true,

@@ -99,8 +99,8 @@ class _DiaperPageState extends State<DiaperPage> {
               ),
               Padding(
                   padding: const EdgeInsets.only(bottom: 16),
-                  child: FilledCard("last change: $timeSinceChange",
-                      "type: $lastType", Icon(Icons.person_search_sharp))),
+                  child:SizedBox(height: 200, child:  FilledCard("last change: $timeSinceChange",
+                      "type: $lastType", Icon(Icons.person_search_sharp))),),
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Row(
