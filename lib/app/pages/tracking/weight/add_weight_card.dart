@@ -6,11 +6,7 @@ import 'package:intl/intl.dart';
 
 /// The widget that adds a weight measurement.
 class AddWeightCard extends StatefulWidget {
-  const AddWeightCard({super.key, required this.weightAdded});
-
-  // Sends added weight data to the FilledCard -> this won't be necessary with realtime database updates
-  final void Function(String pounds, String ounces, String dateInput) //DateTime dateInput)
-      weightAdded;
+  const AddWeightCard({super.key});
 
   @override
   State<StatefulWidget> createState() => _AddWeightCardState();
@@ -24,23 +20,19 @@ class _AddWeightCardState extends State<AddWeightCard> {
 
   TextEditingController pounds = TextEditingController();
   TextEditingController ounces = TextEditingController();
-  TextEditingController date = TextEditingController(text: DateFormat("MM-dd-yyyy HH:mm").format(DateTime.now())); // TODO is 24hr time ok? this is hard-coded, so we would need a bool if user can customize it
+  TextEditingController date = TextEditingController(text: DateFormat("MM/dd/yyyy HH:mm").format(DateTime.now())); // TODO is 24hr time ok? this is hard-coded, so we would need a bool if user can customize it
 
   /// Saves a new weight entry in the Firestore database.
   saveNewWeight() async {
-    DateTime savedDate = new DateFormat("MM-dd-yyyy hh:mm").parse(date.text); // TODO throws on / when adding another date without leaving the page first
-    // DateTime savedDate = DateTime.parse(date.text);
+    DateTime savedDate = DateFormat("MM/dd/yyyy hh:mm").parse(date.text);
 
     // Write weight data to database
     Map<String, dynamic> uploaddata = {
       'pounds': pounds.text,
       'ounces': ounces.text,
-      'date': savedDate, //date.text,
+      'date': savedDate,
     };
     await WeightDatabaseMethods().addWeight(uploaddata);
-
-    // Update the FilledCard
-    widget.weightAdded(pounds.text, ounces.text, date.text); // TODO might not be needed if realtime updates work
     
     // Clear fields for next entry
     pounds.clear();
@@ -157,7 +149,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
                       return 'Please enter a date';
                     }
 
-                    // TODO check for dates out of range?
+                    // ERROR -> THIS ISN'T WORKING!!!
                     // NOTE: If user picks a date after current date, it reverts to the previously picked date.
                     // The entry field reflects this. No error checking, but doesn't let user input invalid data.
 

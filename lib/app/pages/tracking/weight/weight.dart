@@ -18,47 +18,17 @@ class _WeightPageState extends State<WeightPage> {
   String daysSinceWeight = '--';
   String lastWeightPounds = '--';
   String lastWeightOunces = '--';
-  DateTime? lastDate;
-
-  void weightAdded(String pounds, String ounces, String dateInput) {
-    setState(() {
-      if ((lastDate == null || lastDate != null )) {
-        lastWeightPounds = pounds;
-        lastWeightOunces = ounces;
-        daysSinceWeight = dateInput;
-      }
-    });
-  }
-
-  //Get the data from the database
-  getData() async {
-    QuerySnapshot querySnapshot =
-        await WeightDatabaseMethods().getLatestWeightInfo();
-    if (querySnapshot.docs.isNotEmpty) {
-      try {
-        lastWeightPounds = querySnapshot.docs[0]['pounds'];
-        lastWeightOunces = querySnapshot.docs[0]['ounces'];
-        daysSinceWeight = querySnapshot.docs[0]['date'];
-      } catch (error) {
-        //If there's an error, print it to the output
-        debugPrint(error.toString());
-      }
-    }
-    setState(() {});
-  }
 
   @override
   void initState() {
     super.initState();
-    getData();
+
+    // Read real time updates to weight
+    WeightDatabaseMethods().listenForWeightReads();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Read any realtime updates to weight
-    WeightDatabaseMethods().listenForWeightReads(); // TODO also needed in add_weight_card?
-    // daysSinceWeight = WeightStream(); // Doesn't work because WeightStream returns a widget
-
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
 
@@ -72,43 +42,38 @@ class _WeightPageState extends State<WeightPage> {
         ),
       ),
 
-      body: Center(
-        child: ListView(children: <Widget>[
-          Column(
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
             children: [
               // Weight Title
               Padding(
-                padding: EdgeInsets.all(32),
+                padding: const EdgeInsets.all(32),
                 child: Text('Weight',
                     style: TextStyle(
                         fontSize: 36,
                         color: Theme.of(context).colorScheme.onBackground)),
               ),
 
-              // FilledCard Quick Weight Info
+              // FilledCard Quick Weight Info 
+              // (WeightStream returns the card with real time reads)
               Padding(
-                padding: EdgeInsets.only(bottom: 15),
-                child: FilledCard(
-                    "last weight: $daysSinceWeight",  // ${WeightStream()}",
-                    "weight: $lastWeightPounds lbs $lastWeightOunces oz",
-                    Icon(Icons.scale)),
-              ),
-
-              // TESTING weight_stream
-              Padding(
-                padding: EdgeInsets.only(bottom: 15),
-                child: WeightStream(),
+                padding: const EdgeInsets.only(bottom: 15),
+                child: SizedBox(
+                  height: 180,
+                  child: WeightStream(),
+                ),
               ),
 
               // Add Weight Card
-              Padding(
-                padding: const EdgeInsets.all(15),
-                child: AddWeightCard(weightAdded: weightAdded),
+              const Padding(
+                padding: EdgeInsets.all(15),
+                child: AddWeightCard(),
               ),
 
               // History Card
               Padding(
-                padding: EdgeInsets.all(15),
+                padding: const EdgeInsets.all(15),
                 child: ExpansionTile(
                   backgroundColor: Theme.of(context).colorScheme.surface,
                   collapsedBackgroundColor:
@@ -128,7 +93,7 @@ class _WeightPageState extends State<WeightPage> {
               ),
             ],
           ),
-        ]),
+        ),
       ),
     );
   }

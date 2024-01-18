@@ -1,4 +1,5 @@
 import 'package:babysteps/app/pages/tracking/weight/weight_database.dart';
+import 'package:babysteps/app/widgets/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,13 +7,14 @@ import 'package:intl/intl.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 
+/// The widget that reads realtime weight updates for the FilledCard.
 class WeightStream extends StatefulWidget{
   @override
   _WeightStreamState createState() => _WeightStreamState();
 }
 
 class _WeightStreamState extends State<WeightStream> {
-  final Stream<QuerySnapshot> _weightStream = db.collection("Babies").doc("IYyV2hqR7omIgeA4r7zQ").collection("Weight").orderBy('date', descending: true).limit(1).snapshots(); // TODO see if orderBy works. Can we just track realtime updates to this specific query? Not the collection in general?
+  final Stream<QuerySnapshot> _weightStream = db.collection("Babies").doc("IYyV2hqR7omIgeA4r7zQ").collection("Weight").orderBy('date', descending: true).limit(1).snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +37,9 @@ class _WeightStreamState extends State<WeightStream> {
         String pounds = lastWeightDoc[0]['pounds'];
         String ounces = lastWeightDoc[0]['ounces'];
 
-        // TODO update what we return!
-        return Text(
-          "$dateStr , $pounds , $ounces",
-        );
+        // Returns the FilledCard with read values for date, pounds, and ounces
+        // updated in real time.
+        return FilledCard(dateStr, "weight: $pounds lbs $ounces oz", Icon(Icons.scale));
       },
     );
   }

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-//Contains the database methods to access weight information
+// Contains the database methods to access weight information
 class WeightDatabaseMethods {
 
   FirebaseFirestore db = FirebaseFirestore.instance;
@@ -9,12 +9,12 @@ class WeightDatabaseMethods {
   void listenForWeightReads() {
     final docRef = db.collection("Babies").doc("IYyV2hqR7omIgeA4r7zQ").collection("Weight");
     docRef.snapshots().listen(
-          (event) => print("current data: ${event.size}"),
+          (event) => print("current data: ${event.size}"),    // These are helpful for debugging, but we can remove them
           onError: (error) => print("Listen failed: $error"),
         );
   }
 
-  //This methods adds an entry to the weight collection
+  // This methods adds an entry to the weight collection
   Future addWeight(Map<String, dynamic> userInfoMap) async {
     return await db
         .collection('Babies')
@@ -24,7 +24,7 @@ class WeightDatabaseMethods {
         .add(userInfoMap);
   }
 
-  //This method gets the entries from the weight collection and orders them so the most recent entry is document[0].
+  // This method gets the entries from the weight collection and orders them so the most recent entry is document[0].
   Future<QuerySnapshot> getLatestWeightInfo() async {
     return await db
         .collection('Babies')
@@ -34,4 +34,4 @@ class WeightDatabaseMethods {
         .orderBy('date', descending: true)
         .get();
   }
-}
+} 
