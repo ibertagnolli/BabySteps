@@ -9,7 +9,7 @@ class AddWeightCard extends StatefulWidget {
   const AddWeightCard({super.key, required this.weightAdded});
 
   // Sends added weight data to the FilledCard -> this won't be necessary with realtime database updates
-  final void Function(String pounds, String ounces, DateTime dateInput)
+  final void Function(String pounds, String ounces, String dateInput) //DateTime dateInput)
       weightAdded;
 
   @override
@@ -28,17 +28,19 @@ class _AddWeightCardState extends State<AddWeightCard> {
 
   /// Saves a new weight entry in the Firestore database.
   saveNewWeight() async {
+    DateTime savedDate = new DateFormat("MM-dd-yyyy hh:mm").parse(date.text); // TODO throws on / when adding another date without leaving the page first
+    // DateTime savedDate = DateTime.parse(date.text);
+
     // Write weight data to database
     Map<String, dynamic> uploaddata = {
       'pounds': pounds.text,
       'ounces': ounces.text,
-      'date': date.text,
+      'date': savedDate, //date.text,
     };
     await WeightDatabaseMethods().addWeight(uploaddata);
 
     // Update the FilledCard
-    DateTime dateInput =  DateFormat.yMd().add_jm().parse(date.text);
-    widget.weightAdded(pounds.text, ounces.text, dateInput);
+    widget.weightAdded(pounds.text, ounces.text, date.text); // TODO might not be needed if realtime updates work
     
     // Clear fields for next entry
     pounds.clear();

@@ -20,13 +20,12 @@ class _WeightPageState extends State<WeightPage> {
   String lastWeightOunces = '--';
   DateTime? lastDate;
 
-  void weightAdded(String pounds, String ounces, DateTime dateInput) {
+  void weightAdded(String pounds, String ounces, String dateInput) {
     setState(() {
-      if ((lastDate == null || lastDate != null && lastDate!.isBefore(dateInput))) {
+      if ((lastDate == null || lastDate != null )) {
         lastWeightPounds = pounds;
         lastWeightOunces = ounces;
-        String diff = DateTime.now().difference(dateInput).inDays.toString();
-        daysSinceWeight = diff == '1' ? '$diff day' : '$diff days';
+        daysSinceWeight = dateInput;
       }
     });
   }
@@ -39,11 +38,7 @@ class _WeightPageState extends State<WeightPage> {
       try {
         lastWeightPounds = querySnapshot.docs[0]['pounds'];
         lastWeightOunces = querySnapshot.docs[0]['ounces'];
-        DateTime dt = (querySnapshot.docs[0]['date'] as Timestamp).toDate();
-        lastDate = dt;
-        //Get the difference in time between now and when the last logged diaper was
-        String diff = DateTime.now().difference(dt).inDays.toString();
-        daysSinceWeight = diff == '1' ? '$diff day' : '$diff days';
+        daysSinceWeight = querySnapshot.docs[0]['date'];
       } catch (error) {
         //If there's an error, print it to the output
         debugPrint(error.toString());
