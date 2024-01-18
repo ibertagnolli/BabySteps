@@ -1,3 +1,6 @@
+import 'package:babysteps/app/pages/user/user_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
 
@@ -15,6 +18,21 @@ class _AddBabyPageState extends State<AddBabyPage> {
   TextEditingController date = TextEditingController(
       text: DateFormat("MM-dd-yyyy").format(DateTime.now()));
   TextEditingController babyName = TextEditingController();
+
+  uploadData() async {
+    Map<String, dynamic> uploaddata = {
+      'DOB': date.text,
+      'Name': babyName.text,
+    };
+    DocumentReference babyRef = await UserDatabaseMethods().addBaby(uploaddata);
+
+    Map<String, dynamic> userData = {
+      'baby': babyRef.id,
+      'UID': FirebaseAuth.instance.currentUser?.uid,
+    };
+
+    await UserDatabaseMethods().addBabyToUser(userData);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +65,7 @@ class _AddBabyPageState extends State<AddBabyPage> {
                 padding: EdgeInsets.all(16),
                 child: TextField(
                   cursorColor: Theme.of(context).colorScheme.secondary,
+                  controller: babyName,
                   decoration: InputDecoration(
                     labelText: 'Baby\'s first name',
                     labelStyle: TextStyle(
@@ -103,7 +122,10 @@ class _AddBabyPageState extends State<AddBabyPage> {
               Padding(
                 padding: EdgeInsets.all(16),
                 child: FilledButton(
-                    onPressed: () => context.go('/home'),
+                    onPressed: () {
+                      uploadData();
+                      context.go('/home');
+                    },
                     style: FilledButton.styleFrom(
                         backgroundColor:
                             Theme.of(context).colorScheme.secondary),
