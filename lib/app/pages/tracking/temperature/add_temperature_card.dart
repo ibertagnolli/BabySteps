@@ -1,43 +1,40 @@
-import 'package:babysteps/app/pages/tracking/temperature/temperature_database.dart';
-import 'package:babysteps/app/pages/tracking/weight/weight_database.dart';
+import 'package:babysteps/app/pages/tracking/temperature/temperature_database.dart';import 'package:babysteps/app/pages/tracking/weight/weight_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 /// The widget that adds a weight measurement.
-class AddTempCard extends StatefulWidget {
-  const AddTempCard({super.key, required this.tempAdded});
+class AddTemperatureCard extends StatefulWidget {
+  const AddTemperatureCard({super.key});
 
-  // Sends added weight data to the FilledCard -> this won't be necessary with realtime database updates
-  final void Function(String temp, DateTime dateInput)
-      tempAdded;
 
   @override
-  State<StatefulWidget> createState() => _AddTempCardState();
+  State<StatefulWidget> createState() => _AddTemperatureCardState();
 }
 
 /// Stores the mutable data that can change over the lifetime of the AddWeightCard.
-class _AddTempCardState extends State<AddTempCard> {
+class _AddTemperatureCardState extends State<AddTemperatureCard> {
   // The global key uniquely identifies the Form widget and allows 
   // validation of the form.
   final _formKey = GlobalKey<FormState>();
 
   TextEditingController temp = TextEditingController();
-  TextEditingController date = TextEditingController(text: DateFormat("MM-dd-yyyy HH:mm").format(DateTime.now())); // TODO is 24hr time ok? this is hard-coded, so we would need a bool if user can customize it
+  TextEditingController date = TextEditingController(text: DateFormat("MM/dd/yyyy HH:mm").format(DateTime.now())); // TODO is 24hr time ok? this is hard-coded, so we would need a bool if user can customize it
 
-  /// Saves a new weight entry in the Firestore database.
-  saveNewTemp() async {
-    // Write weight data to database
+  /// Saves a new Temperature entry in the Firestore database.
+  saveNewTemperature() async {
+    // Write Temperature data to database
+    DateTime savedDate = DateFormat("MM/dd/yyyy hh:mm").parse(date.text);
     Map<String, dynamic> uploaddata = {
       'temperature': temp.text,
-      'date': date.text,
+      'date': savedDate,
     };
     await TemperatureDatabaseMethods().addTemperature(uploaddata);
 
-    // Update the FilledCard
-    DateTime dateInput =  DateFormat.yMd().add_jm().parse(date.text);
-    widget.tempAdded(temp.text, dateInput);
+    // // Update the FilledCard
+    // DateTime dateInput =  DateFormat.yMd().add_jm().parse(date.text);
+    // widget.tempAdded(temp.text, dateInput);
     
     // Clear fields for next entry
     temp.clear();
@@ -85,7 +82,7 @@ class _AddTempCardState extends State<AddTempCard> {
                             keyboardType: TextInputType.number,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter temperature in Farenheight';
+                                return 'Please enter temperature';
                               }
                               return null;
                             },
@@ -138,7 +135,7 @@ class _AddTempCardState extends State<AddTempCard> {
                     onPressed: () {
                       // Validate returns true if the form is valid, or false otherwise.
                       if (_formKey.currentState!.validate()) {
-                        saveNewTemp();
+                        saveNewTemperature();
                       }
                     },
                     style: ButtonStyle(
