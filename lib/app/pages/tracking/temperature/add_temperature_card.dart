@@ -1,10 +1,10 @@
-import 'package:babysteps/app/pages/tracking/temperature/temperature_database.dart';import 'package:babysteps/app/pages/tracking/weight/weight_database.dart';
+import 'package:babysteps/app/pages/tracking/temperature/temperature_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-/// The widget that adds a weight measurement.
+/// The widget that adds a Temperature measurement.
 class AddTemperatureCard extends StatefulWidget {
   const AddTemperatureCard({super.key});
 
@@ -13,7 +13,7 @@ class AddTemperatureCard extends StatefulWidget {
   State<StatefulWidget> createState() => _AddTemperatureCardState();
 }
 
-/// Stores the mutable data that can change over the lifetime of the AddWeightCard.
+/// Stores the mutable data that can change over the lifetime of the AddTemperatureCard.
 class _AddTemperatureCardState extends State<AddTemperatureCard> {
   // The global key uniquely identifies the Form widget and allows 
   // validation of the form.
@@ -32,9 +32,6 @@ class _AddTemperatureCardState extends State<AddTemperatureCard> {
     };
     await TemperatureDatabaseMethods().addTemperature(uploaddata);
 
-    // // Update the FilledCard
-    // DateTime dateInput =  DateFormat.yMd().add_jm().parse(date.text);
-    // widget.tempAdded(temp.text, dateInput);
     
     // Clear fields for next entry
     temp.clear();
@@ -67,7 +64,7 @@ class _AddTemperatureCardState extends State<AddTemperatureCard> {
             child: Column(
               children: <Widget>[
 
-                // First row: Weight inputs
+                // First row: Temperature input
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: Row(
