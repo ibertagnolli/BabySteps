@@ -14,6 +14,17 @@ class WeightDatabaseMethods {
         );
   }
 
+  // Returns a snapshot of the most recently added Weight entry
+  Stream<QuerySnapshot> getStream() {
+    return db
+        .collection("Babies")
+        .doc("IYyV2hqR7omIgeA4r7zQ")
+        .collection("Weight")
+        .orderBy('date', descending: true)
+        .limit(1)
+        .snapshots();
+  }
+
   // This methods adds an entry to the weight collection
   Future addWeight(Map<String, dynamic> userInfoMap) async {
     return await db

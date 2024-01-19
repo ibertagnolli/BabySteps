@@ -14,7 +14,7 @@ class WeightStream extends StatefulWidget{
 }
 
 class _WeightStreamState extends State<WeightStream> {
-  final Stream<QuerySnapshot> _weightStream = db.collection("Babies").doc("IYyV2hqR7omIgeA4r7zQ").collection("Weight").orderBy('date', descending: true).limit(1).snapshots();
+  final Stream<QuerySnapshot> _weightStream = WeightDatabaseMethods().getStream();
 
   @override
   Widget build(BuildContext context) {
