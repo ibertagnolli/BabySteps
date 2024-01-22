@@ -23,10 +23,11 @@ class _TrackingPageState extends State<TrackingPage> {
   String lastWeight = 'Never';
   String lastTemp = 'Never';
 
+  final Stream<QuerySnapshot> _diaperStream =
+      DiaperDatabaseMethods().getStream();
+
   getData() async {
     //Get the latest information for the fields
-    QuerySnapshot diaperQuerySnapshot =
-        await DiaperDatabaseMethods().getLatestDiaperInfo();
     QuerySnapshot sleepQuerySnapshot =
         await SleepDatabaseMethods().getLatestFinishedSleepEntry();
     QuerySnapshot feedingQuerySnapshot =
@@ -36,20 +37,6 @@ class _TrackingPageState extends State<TrackingPage> {
     QuerySnapshot tempQuerySnapshot =
         await TemperatureDatabaseMethods().getLatestTemperatureInfo();
 
-    //as long as we get data back, we'll want to compute the time between now and the last documented
-    //time for each category.
-    if (diaperQuerySnapshot.docs.isNotEmpty) {
-      try {
-        String diff = DateTime.now()
-            .difference(
-                DateTime.parse(diaperQuerySnapshot.docs[0]['date'].toString()))
-            .inMinutes
-            .toString();
-        lastDiaper = diff == '1' ? '$diff minute ago' : '$diff minutes ago';
-      } catch (error) {
-        debugPrint(error.toString());
-      }
-    }
     if (sleepQuerySnapshot.docs.isNotEmpty) {
       try {
         String diff = DateTime.now()
@@ -120,28 +107,55 @@ class _TrackingPageState extends State<TrackingPage> {
       ),
       body: SingleChildScrollView(
         child: Center(
-        child:
-        Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(top: 32),
-              child: 
-            
-            TrackingCard(const Icon(Icons.local_drink, size: 40), "Feeding",
-                lastFeed, () => context.go('/tracking/feeding')),),
-            TrackingCard(const Icon(Icons.crib, size: 40), "Sleep", lastSleep,
-                () => context.go('/tracking/sleep')),
-            TrackingCard(
-                const Icon(Icons.baby_changing_station, size: 40),
-                'Diaper Change',
-                lastDiaper,
-                () => context.go('/tracking/diaper')),
-            TrackingCard(const Icon(Icons.scale, size: 40), "Weight",
-                lastWeight, () => context.go('/tracking/weight')),
-            TrackingCard(const Icon(Icons.thermostat, size: 40), "Temperature",
-                lastTemp, () => context.go('/tracking/temperature')),
-          ],
-        ),
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: 32),
+                child: TrackingCard(const Icon(Icons.local_drink, size: 40),
+                    "Feeding", lastFeed, () => context.go('/tracking/feeding')),
+              ),
+              TrackingCard(const Icon(Icons.crib, size: 40), "Sleep", lastSleep,
+                  () => context.go('/tracking/sleep')),
+              StreamBuilder<QuerySnapshot>(
+                stream: _diaperStream,
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasError) {
+                    return const Text('Something went wrong');
+                  }
+
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Text("Loading");
+                  }
+
+                  // An array of documents, but our query only returns an array of one document
+                  var lastDiaperDoc = snapshot.data!.docs;
+
+                  DateTime date =
+                      DateTime.parse(lastDiaperDoc[0]['date'].toString());
+                  String diff =
+                      DateTime.now().difference(date).inMinutes.toString();
+                  String timeSinceChange =
+                      diff == '1' ? '$diff min' : '$diff mins';
+
+                  // Returns the FilledCard with read values for date, pounds, and ounces
+                  // updated in real time.
+                  return TrackingCard(
+                      const Icon(Icons.baby_changing_station, size: 40),
+                      'Diaper Change',
+                      timeSinceChange,
+                      () => context.go('/tracking/diaper'));
+                },
+              ),
+              TrackingCard(const Icon(Icons.scale, size: 40), "Weight",
+                  lastWeight, () => context.go('/tracking/weight')),
+              TrackingCard(
+                  const Icon(Icons.thermostat, size: 40),
+                  "Temperature",
+                  lastTemp,
+                  () => context.go('/tracking/temperature')),
+            ],
+          ),
         ),
       ),
     );

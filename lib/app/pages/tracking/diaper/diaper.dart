@@ -1,8 +1,7 @@
 import 'package:babysteps/app/pages/tracking/diaper/diaper_database.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:babysteps/app/pages/tracking/diaper/diaper_stream.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
-import 'package:babysteps/app/widgets/widgets.dart';
 
 class DiaperPage extends StatefulWidget {
   const DiaperPage({super.key});
@@ -15,34 +14,10 @@ class _DiaperPageState extends State<DiaperPage> {
   //set initial state for cards
   String activeButton = "Pee";
   bool diaperRash = false;
-  String timeSinceChange = "--";
-  String lastType = "--";
   void buttonClicked(String buttonName) {
     setState(() {
       activeButton = buttonName;
     });
-  }
-
-  //Get the data from the database
-  getData() async {
-    QuerySnapshot querySnapshot =
-        await DiaperDatabaseMethods().getLatestDiaperInfo();
-    if (querySnapshot.docs.isNotEmpty) {
-      try {
-        lastType = querySnapshot.docs[0]['type'];
-        //Get the difference in time between now and when the last logged diaper was
-        String diff = DateTime.now()
-            .difference(
-                DateTime.parse(querySnapshot.docs[0]['date'].toString()))
-            .inMinutes
-            .toString();
-        timeSinceChange = diff == '1' ? '$diff min' : '$diff mins';
-      } catch (error) {
-        //If there's an error, print it to the output
-        debugPrint(error.toString());
-      }
-    }
-    setState(() {});
   }
 
   //Upload data to the database with existing choices
@@ -55,23 +30,13 @@ class _DiaperPageState extends State<DiaperPage> {
 
     await DiaperDatabaseMethods().addDiaper(uploaddata);
     //once data has been added, update the card accordingly
-    addDiaperClicked();
-  }
-
-  void addDiaperClicked() {
-    setState(() {
-      timeSinceChange = "0 minutes";
-      lastType = activeButton;
-      diaperRash = false;
-      activeButton = "Pee";
-    });
   }
 
   //Grab the data on page initialization
   @override
   void initState() {
     super.initState();
-    getData();
+    DiaperDatabaseMethods().listenForDiaperReads();
   }
 
   @override
@@ -91,16 +56,19 @@ class _DiaperPageState extends State<DiaperPage> {
           child: Column(
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.all(32),
+                padding: const EdgeInsets.all(32),
                 child: Text("Diaper Change",
                     style: TextStyle(
                         fontSize: 36,
                         color: Theme.of(context).colorScheme.onBackground)),
               ),
-              Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child:SizedBox(height: 200, child:  FilledCard("last change: $timeSinceChange",
-                      "type: $lastType", Icon(Icons.person_search_sharp))),),
+              const Padding(
+                padding: EdgeInsets.only(bottom: 16),
+                child: SizedBox(
+                  height: 200,
+                  child: DiaperStream(),
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Row(
@@ -139,7 +107,7 @@ class _DiaperPageState extends State<DiaperPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Padding(
-                        padding: EdgeInsets.only(top: 6),
+                        padding: const EdgeInsets.only(top: 6),
                         child: Text("Diaper Rash?",
                             style: TextStyle(
                                 fontSize: 30,
