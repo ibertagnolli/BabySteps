@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/widgets/checkList.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:babysteps/app/pages/calendar/calendar_database.dart';
+import 'package:babysteps/app/pages/calendar/calendar_stream.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:core';
-
-
 import 'event.dart';
 //This next line allows me to run the calendar page as main since we don't have the navigation to the calendar page setup yet.
 //void main() => runApp(const CalendarPage());
@@ -29,19 +29,34 @@ class _CalendarPageState extends State<CalendarPage> {
      DateTime.now().year, DateTime.now().month - 3, DateTime.now().day);
  DateTime kLastDay = DateTime(
      DateTime.now().year, DateTime.now().month + 3, DateTime.now().day);
- Map<DateTime, List<Event>> events = {};
- TextEditingController _eventController = TextEditingController();
+
+//Variables for list of events/ event handling 
+ final TextEditingController _eventController = TextEditingController();
  late final ValueNotifier<List<Event>> _selectedEvents;
+  Map<DateTime, List<Event>> events = {};
 
 
+//Upload data to database with existing events? 
+uploadData() async{
+  Map<String, dynamic> uploaddata = {
+      'events': events, //this is a list of events right now does that need to change? 
+      'date': DateTime.now().toIso8601String(),
+    };
+
+    await CalendarDatabaseMethods().addEvent(uploaddata);
+    //once data has been added, update the calendar accordingly
+}
+
+//Grab the data on page initialization
  @override
  void initState() {
    super.initState();
    _selectedDay = _focusedDay;
    _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
+   CalendarDatabaseMethods().listenForEventReads();
  }
 
-
+// TODO: this needs to pull the list of events from the database!! 
  List<Event> _getEventsForDay(DateTime day) {
    //retrieve all events from the selected day.
    return events[day] ?? [];
@@ -66,21 +81,27 @@ class _CalendarPageState extends State<CalendarPage> {
        child: ListView(children: <Widget>[
          // Weight Title
          Padding(
-           padding: EdgeInsets.all(32),
+           padding:const EdgeInsets.all(32),
            child: Text('Calendar',
                style: TextStyle(
                    fontSize: 36,
                    color: Theme.of(context).colorScheme.onBackground)),
          ),
-
+         //TODO:This is causing an error right now since we aren't actually saving the list of events correctly for the stream to access
+        const Padding(
+                padding: EdgeInsets.only(bottom: 16),
+                child: SizedBox(
+                  height: 200,
+                  child: CalendarStream(),
+                ),),
 
          Padding(
-           padding: EdgeInsets.only(bottom: 15),
+           padding: const EdgeInsets.only(bottom: 15),
            child: TableCalendar(
              firstDay: DateTime.utc(2023, 10, 16),
              lastDay: DateTime.utc(2025, 3, 14),
              focusedDay: DateTime.now(),
-             eventLoader: _getEventsForDay,
+             eventLoader: _getEventsForDay, //TODO: pull from database
              selectedDayPredicate: (day) {
                // Use `selectedDayPredicate` to determine which day is currently selected.
                // If this returns true, then `day` will be marked as selected.
@@ -113,7 +134,7 @@ class _CalendarPageState extends State<CalendarPage> {
            ),
          ),
          Padding(
-           padding: EdgeInsets.all(15),
+           padding: const EdgeInsets.all(15),
            child: SizedBox(
              width: 20.0,
              height: 30.0,
@@ -126,6 +147,7 @@ class _CalendarPageState extends State<CalendarPage> {
                child: Text("Add event",
                    style: TextStyle(
                        color: Theme.of(context).colorScheme.onSecondary)),
+              //TODO: when event is added, addEVENT to list of events then add to database? 
                onPressed: () {
                  //show dialog for the user to input event
                  showDialog(
@@ -133,9 +155,9 @@ class _CalendarPageState extends State<CalendarPage> {
                      builder: (context) {
                        return AlertDialog(
                          scrollable: true,
-                         title: Text("Event Name"),
+                         title:const Text("Event Name"),
                          content: Padding(
-                           padding: EdgeInsets.all(8),
+                           padding: const EdgeInsets.all(8),
                            child: TextField(
                              controller: _eventController,
                            ),
@@ -161,7 +183,7 @@ class _CalendarPageState extends State<CalendarPage> {
            ),
          ),
          Padding(
-           padding: EdgeInsets.all(15),
+           padding: const EdgeInsets.all(15),
            child: ExpansionTile(
              backgroundColor: Theme.of(context).colorScheme.surface,
              collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
@@ -173,7 +195,7 @@ class _CalendarPageState extends State<CalendarPage> {
              children: <Widget>[
                CheckboxListTileExample(items),
                Padding(
-                 padding: EdgeInsets.only(right: 15),
+                 padding: const EdgeInsets.only(right: 15),
                  child: Align(
                    alignment: Alignment.bottomRight,
                    child: IconButton(
@@ -209,8 +231,9 @@ class _CalendarPageState extends State<CalendarPage> {
          //   ),
          // ),
          //events for that day on calendar.
+         //TODO: use the stream to display this list of events?
          Padding(
-           padding: EdgeInsets.all(15),
+           padding: const EdgeInsets.all(15),
            child: ExpansionTile(
              backgroundColor: Theme.of(context).colorScheme.surface,
              collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
@@ -226,7 +249,7 @@ class _CalendarPageState extends State<CalendarPage> {
                      valueListenable: _selectedEvents,
                      builder: (context, value, _) {
                        return ListView.builder(
-                           itemCount: value.length,
+                           itemCount: value.length, //should this be events
                            itemBuilder: (context, index) {
                              return Container(
                                child: ListTile(
