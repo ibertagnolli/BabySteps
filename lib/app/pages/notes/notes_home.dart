@@ -11,6 +11,8 @@ class NotesHomePage extends StatefulWidget {
 }
 
 class _NotesHomePageState extends State<NotesHomePage> {
+  String notename = "new note";
+  static List<String> notes = ["Dr Appointment Questions", "Allergies", "Vaccines", "To Do List"];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,30 +26,22 @@ class _NotesHomePageState extends State<NotesHomePage> {
           ),
         ),
       ),
-      body: 
-       SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: [
-            Padding(
-              padding: EdgeInsets.only(top: 32),
-              child: 
-            TrackingCard(
-              const Icon(Icons.medical_services, size: 40),
-              "Medical",
-              "6 days ago",
-              () => context.go('/notes/medical'),
-            ),),
-            TrackingCard(const Icon(Icons.flag, size: 40), "Milestones",
-                "3 weeks ago", () => context.go('/notes/milestone')),
-            TrackingCard(const Icon(Icons.scale, size: 40), 'Growth',
-                '3 hours ago', () => context.go('/notes/growth')),
-            TrackingCard(const Icon(Icons.settings, size: 40), "Orginization",
-                "2 months ago", () => context.go('/notes/organization')),
-          ],
-        ),
-        ),
-      ),
+      body: ListView.builder(
+          itemCount: notes.length,
+          itemBuilder: (BuildContext context, int index) {
+            return ListTile(
+                //leading: const Icon(Icons.edit),
+                trailing: const Icon(Icons.edit),
+                onTap: () {
+                  //TODO: push to the note that is actually attached to the name of that list item
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const NotesPage()),
+                  );
+                },
+                //notes.elementAt(index)
+                title: Text(notes.elementAt(index)));
+          }),
     );
     // );
   }

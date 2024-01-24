@@ -98,9 +98,9 @@ class _NotesPageState extends State<NotesPage> {
               maxLines: null,
               controller: _noteController,
               decoration: InputDecoration(
-                labelText: 'Add a new note',
+                labelText: 'Add to note',
                 suffixIcon: IconButton(
-                  icon: Icon(Icons.add),
+                  icon: Icon(Icons.done),
                   onPressed: _addNote,
                 ),
               ),
