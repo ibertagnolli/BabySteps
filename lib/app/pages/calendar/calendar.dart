@@ -27,8 +27,8 @@ class _CalendarPageState extends State<CalendarPage> {
       DateTime.now().year, DateTime.now().month - 3, DateTime.now().day);
   DateTime kLastDay = DateTime(
       DateTime.now().year, DateTime.now().month + 3, DateTime.now().day);
-  TimeOfDay _time = TimeOfDay.fromDateTime(DateTime.now());
 //Variables for list of events/ event handling
+  TimeOfDay _time = TimeOfDay.fromDateTime(DateTime.now());
   final TextEditingController _eventController = TextEditingController();
   late final ValueNotifier<List<Event>> _selectedEvents;
   Map<DateTime, List<Event>> events = {};
