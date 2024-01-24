@@ -1,5 +1,4 @@
 import 'package:babysteps/app/pages/calendar/calendar_database.dart';
-import 'package:babysteps/app/widgets/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'event.dart';
@@ -33,7 +32,7 @@ class _CalendarStreamState extends State<CalendarStream> {
         var lastEventDoc = snapshot.data!.docs;
 
         DateTime date = DateTime.parse(lastEventDoc[0]['date'].toString());
-        String diff = DateTime.now().difference(date).inMinutes.toString();
+      //  String diff = DateTime.now().difference(date).inMinutes.toString();
         //TODO: Not sure how to get the correct selected events here, we need to pull just the events on that day to list
          Map<DateTime, List<Event>> events = lastEventDoc[0]['events'];
          ValueNotifier<List<Event>> _selectedEvents = events as ValueNotifier<List<Event>>;
