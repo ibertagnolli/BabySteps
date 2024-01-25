@@ -6,9 +6,6 @@ import 'dart:core';
 
 
 import 'event.dart';
-//This next line allows me to run the calendar page as main since we don't have the navigation to the calendar page setup yet.
-//void main() => runApp(const CalendarPage());
-
 
 class CalendarPage extends StatefulWidget {
  const CalendarPage({super.key});
@@ -48,31 +45,41 @@ class _CalendarPageState extends State<CalendarPage> {
  }
 
 
- @override
- Widget build(BuildContext context) {
-   return Scaffold(
-     backgroundColor: Theme.of(context).colorScheme.background,
-     appBar: AppBar(
-       backgroundColor: Theme.of(context).colorScheme.surface,
-       title: const Text('Calendar'),
-       leading: const Padding(
-         padding: EdgeInsets.all(8),
-         child: Image(
-           image: AssetImage('assets/BabyStepsLogo.png'),
-         ),
-       ),
-     ),
-     body: Center(
-       child: ListView(children: <Widget>[
-         // Weight Title
-         Padding(
-           padding: EdgeInsets.all(32),
-           child: Text('Calendar',
-               style: TextStyle(
-                   fontSize: 36,
-                   color: Theme.of(context).colorScheme.onBackground)),
-         ),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        title: const Text('Calendar'),
+        leading: const Padding(
+          padding: EdgeInsets.all(8),
+          child: Image(
+            image: AssetImage('assets/BabyStepsLogo.png'),
+          ),
+        ),
+      ),
+      body: Center(
+        child: ListView(children: <Widget>[
 
+          // Calendar Title
+          Padding(
+            padding: const EdgeInsets.all(32),
+            child: Text('Calendar',
+                style: TextStyle(
+                    fontSize: 36,
+                    color: Theme.of(context).colorScheme.onBackground)),
+          ),
+          
+          //TODO:This is causing an error right now since we aren't actually saving the list of events correctly for the stream to access
+          // Table Calendar
+          // const Padding(
+          //   padding: EdgeInsets.only(bottom: 16),
+          //   child: SizedBox(
+          //     height: 200,
+          //     child: CalendarStream(),
+          //   ),
+          // ),
 
          Padding(
            padding: EdgeInsets.only(bottom: 15),
@@ -86,102 +93,110 @@ class _CalendarPageState extends State<CalendarPage> {
                // If this returns true, then `day` will be marked as selected.
 
 
-               // Using `isSameDay` is recommended to disregard
-               // the time-part of compared DateTime objects.
-               return isSameDay(_selectedDay, day);
-             },
-             onDaySelected: (selectedDay, focusedDay) {
-               if (!isSameDay(_selectedDay, selectedDay)) {
-                 // Call `setState()` when updating the selected day
-                 setState(() {
-                   _selectedDay = selectedDay;
-                   _focusedDay = focusedDay;
-                   _selectedEvents.value = _getEventsForDay(selectedDay);
-                 });
-               }
-             },
-             calendarFormat: _calendarFormat,
-             onFormatChanged: (format) {
-               setState(() {
-                 _calendarFormat = format;
-               });
-             },
-             onPageChanged: (focusedDay) {
-               // No need to call `setState()` here
-               _focusedDay = focusedDay;
-             },
-           ),
-         ),
-         Padding(
-           padding: EdgeInsets.all(15),
-           child: SizedBox(
-             width: 20.0,
-             height: 30.0,
-             child: FilledButton(
-               style: FilledButton.styleFrom(
-                 backgroundColor: Theme.of(context)
-                     .colorScheme
-                     .secondary, // Background color
-               ),
-               child: Text("Add event",
-                   style: TextStyle(
-                       color: Theme.of(context).colorScheme.onSecondary)),
-               onPressed: () {
-                 //show dialog for the user to input event
-                 showDialog(
-                     context: context,
-                     builder: (context) {
-                       return AlertDialog(
-                         scrollable: true,
-                         title: Text("Event Name"),
-                         content: Padding(
-                           padding: EdgeInsets.all(8),
-                           child: TextField(
-                             controller: _eventController,
-                           ),
-                         ),
-                         actions: [
-                           ElevatedButton(
-                               onPressed: () {
-                                 events.addAll({
-                                   _selectedDay!: [
-                                     Event(_eventController.text)
-                                   ]
-                                 });
-                                 Navigator.of(context).pop();
-                                 _selectedEvents.value =
-                                     _getEventsForDay(_selectedDay!);
-                               },
-                               child: const Text("Submit"))
-                         ],
-                       );
-                     });
-               },
-             ),
-           ),
-         ),
-         Padding(
-           padding: EdgeInsets.all(15),
-           child: ExpansionTile(
-             backgroundColor: Theme.of(context).colorScheme.surface,
-             collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
-             title: Text('To Do',
-                 style: TextStyle(
-                     fontSize: 20,
-                     color: Theme.of(context).colorScheme.onSurface,
-                     fontWeight: FontWeight.bold)),
-             children: <Widget>[
-               CheckboxListTileExample(items),
-               Padding(
-                 padding: EdgeInsets.only(right: 15),
-                 child: Align(
-                   alignment: Alignment.bottomRight,
-                   child: IconButton(
-                     icon: const Icon(Icons.note),
-                     tooltip: 'Go to To Do note',
-                     onPressed: () => context.go('/notes/organization/todo'),
-                     // setState(() {
+                // Using `isSameDay` is recommended to disregard
+                // the time-part of compared DateTime objects.
+                return isSameDay(_selectedDay, day);
+              },
+              onDaySelected: (selectedDay, focusedDay) {
+                if (!isSameDay(_selectedDay, selectedDay)) {
+                  // Call `setState()` when updating the selected day
+                  setState(() {
+                    _selectedDay = selectedDay;
+                    _focusedDay = focusedDay;
+                    _selectedEvents.value = _getEventsForDay(selectedDay);
+                  });
+                }
+              },
+              calendarFormat: _calendarFormat,
+              onFormatChanged: (format) {
+                setState(() {
+                  _calendarFormat = format;
+                });
+              },
+              onPageChanged: (focusedDay) {
+                // No need to call `setState()` here
+                _focusedDay = focusedDay;
+              },
+            ),
+          ),
+          
+          // Add event button
+          Padding(
+            padding: const EdgeInsets.all(15),
+            child: SizedBox(
+              width: 20.0,
+              height: 30.0,
+              child: FilledButton(
+                style: FilledButton.styleFrom(
+                  backgroundColor: Theme.of(context)
+                      .colorScheme
+                      .secondary, // Background color
+                ),
+                child: Text("Add event",
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSecondary)),
+                //TODO: when event is added, addEVENT to list of events then add to database?
+                onPressed: () {
+                  //show dialog for the user to input event
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          scrollable: true,
+                          title: const Text("Event Name"),
+                          content: Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: TextField(
+                              controller: _eventController,
+                            ),
+                          ),
+                          actions: [
+                            ElevatedButton(
+                                onPressed: _selectTime,
+                                // () {
+                                //   events.addAll({
+                                //     _selectedDay!: [
+                                //       Event(_eventController.text)
+                                //     ]
+                                //   });
+                                //   // uploadData();
 
+                                //   print(events.entries);
+                                //   Navigator.of(context).pop();
+                                //   _selectedEvents.value =
+                                //       _getEventsForDay(_selectedDay!);
+                                // },
+                                child: const Text("Submit"))
+                          ],
+                        );
+                      });
+                },
+              ),
+            ),
+          ),
+          
+          // To do list card
+          Padding(
+            padding: const EdgeInsets.all(15),
+            child: ExpansionTile(
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
+              title: Text('To Do',
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontWeight: FontWeight.bold)),
+              children: <Widget>[
+                CheckboxListTileExample(items),
+                Padding(
+                  padding: const EdgeInsets.only(right: 15),
+                  child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: IconButton(
+                      icon: const Icon(Icons.note),
+                      tooltip: 'Go to To Do note',
+                      onPressed: () => context.go('/notes/organization/todo'),
+                      // setState(() {
 
                      // });
                    ),
@@ -192,58 +207,61 @@ class _CalendarPageState extends State<CalendarPage> {
          ),
 
 
-         // // Milestones Card
-         // Padding(
-         //   padding: EdgeInsets.all(15),
-         //   child: ExpansionTile(
-         //     backgroundColor: Theme.of(context).colorScheme.surface,
-         //     collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
-         //     title: Text('Milestones',
-         //         style: TextStyle(
-         //             fontSize: 20,
-         //             color: Theme.of(context).colorScheme.onSurface,
-         //             fontWeight: FontWeight.bold)),
-         //     children: <Widget>[
-         //       ListTile(title: Text('No new milestones to be aware of')),
-         //     ],
-         //   ),
-         // ),
-         //events for that day on calendar.
-         Padding(
-           padding: EdgeInsets.all(15),
-           child: ExpansionTile(
-             backgroundColor: Theme.of(context).colorScheme.surface,
-             collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
-             title: Text('Calendar Events',
-                 style: TextStyle(
-                     fontSize: 20,
-                     color: Theme.of(context).colorScheme.onSurface,
-                     fontWeight: FontWeight.bold)),
-             children: <Widget>[
-               SizedBox(
-                 height: 100,
-                 child: ValueListenableBuilder(
-                     valueListenable: _selectedEvents,
-                     builder: (context, value, _) {
-                       return ListView.builder(
-                           itemCount: value.length,
-                           itemBuilder: (context, index) {
-                             return Container(
-                               child: ListTile(
-                                   onTap: () => Text('$value'),
-                                   title: Text('${value[index]}')),
-                             );
-                           });
-                     }),
-               ),
-               //const ListTile(title: Text('No new milestones to be aware of')),
-             ],
-           ),
-         ),
-       ]),
-     ),
-   );
- }
+          // // Milestones Card
+          // Padding(
+          //   padding: EdgeInsets.all(15),
+          //   child: ExpansionTile(
+          //     backgroundColor: Theme.of(context).colorScheme.surface,
+          //     collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
+          //     title: Text('Milestones',
+          //         style: TextStyle(
+          //             fontSize: 20,
+          //             color: Theme.of(context).colorScheme.onSurface,
+          //             fontWeight: FontWeight.bold)),
+          //     children: <Widget>[
+          //       ListTile(title: Text('No new milestones to be aware of')),
+          //     ],
+          //   ),
+          // ),
+          //events for that day on calendar.
+          //TODO: use the stream to display this list of events?
+          
+          // Daily calendar events card
+          Padding(
+            padding: const EdgeInsets.all(15),
+            child: ExpansionTile(
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
+              title: Text('Calendar Events',
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontWeight: FontWeight.bold)),
+              children: <Widget>[
+                SizedBox(
+                  height: 100,
+                  child: ValueListenableBuilder(
+                      valueListenable: _selectedEvents,
+                      builder: (context, value, _) {
+                        return ListView.builder(
+                            itemCount: value.length, //should this be events
+                            itemBuilder: (context, index) {
+                              return Container(
+                                child: ListTile(
+                                    onTap: () => Text('$value'),
+                                    title: Text('${value[index]}')),
+                              );
+                            });
+                      }),
+                ),
+                //const ListTile(title: Text('No new milestones to be aware of')),
+              ],
+            ),
+          ),
+        ]),
+      ),
+    );
+  }
 }
 
 
