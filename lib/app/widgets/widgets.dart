@@ -85,7 +85,7 @@ class NotesCard extends StatelessWidget {
                           TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "Last edited $lastEdited",
+                      "Last edited at $lastEdited" "o'clock",
                     ),
                   ],
                 ),
