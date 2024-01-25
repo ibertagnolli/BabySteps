@@ -6,8 +6,6 @@ import 'package:babysteps/app/pages/calendar/calendar_stream.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:core';
 import 'event.dart';
-//This next line allows me to run the calendar page as main since we don't have the navigation to the calendar page setup yet.
-//void main() => runApp(const CalendarPage());
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
@@ -95,7 +93,8 @@ class _CalendarPageState extends State<CalendarPage> {
       ),
       body: Center(
         child: ListView(children: <Widget>[
-          // Weight Title
+
+          // Calendar Title
           Padding(
             padding: const EdgeInsets.all(32),
             child: Text('Calendar',
@@ -103,14 +102,16 @@ class _CalendarPageState extends State<CalendarPage> {
                     fontSize: 36,
                     color: Theme.of(context).colorScheme.onBackground)),
           ),
+          
           //TODO:This is causing an error right now since we aren't actually saving the list of events correctly for the stream to access
-          const Padding(
-            padding: EdgeInsets.only(bottom: 16),
-            child: SizedBox(
-              height: 200,
-              child: CalendarStream(),
-            ),
-          ),
+          // Table Calendar
+          // const Padding(
+          //   padding: EdgeInsets.only(bottom: 16),
+          //   child: SizedBox(
+          //     height: 200,
+          //     child: CalendarStream(),
+          //   ),
+          // ),
 
           Padding(
             padding: const EdgeInsets.only(bottom: 15),
@@ -149,6 +150,8 @@ class _CalendarPageState extends State<CalendarPage> {
               },
             ),
           ),
+          
+          // Add event button
           Padding(
             padding: const EdgeInsets.all(15),
             child: SizedBox(
@@ -202,6 +205,8 @@ class _CalendarPageState extends State<CalendarPage> {
               ),
             ),
           ),
+          
+          // To do list card
           Padding(
             padding: const EdgeInsets.all(15),
             child: ExpansionTile(
@@ -250,6 +255,8 @@ class _CalendarPageState extends State<CalendarPage> {
           // ),
           //events for that day on calendar.
           //TODO: use the stream to display this list of events?
+          
+          // Daily calendar events card
           Padding(
             padding: const EdgeInsets.all(15),
             child: ExpansionTile(
