@@ -10,57 +10,10 @@ class NotesPage extends StatefulWidget {
 }
 
 class _NotesPageState extends State<NotesPage> {
+  //TODO: probably want to store the date/time the note is added, title and contents in DB
   DateTime date = DateTime.now();
   final TextEditingController _noteController = TextEditingController();
   final TextEditingController _titleController = TextEditingController();
-
-  final List<String> _notes = [];
-  @override
-  void initState() {
-    super.initState();
-    _loadNotes();
-  }
-
-  _loadNotes() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _notes.addAll(prefs.getStringList('notes') ?? []);
-    });
-  }
-
-  _saveNotes() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setStringList('notes', _notes);
-  }
-
-  _addNote() {
-    String newNote = _noteController.text;
-    if (newNote.isNotEmpty) {
-      setState(() {
-        _notes.add(newNote);
-      });
-      _noteController.clear();
-      _saveNotes();
-    }
-  }
-
-  _editNote(int index) {
-    String newNote = _noteController.text;
-    if (newNote.isNotEmpty) {
-      setState(() {
-        _notes.setAll(index, [newNote]);
-      });
-      _noteController.clear();
-      _saveNotes();
-    }
-  }
-
-  _deleteNote(int index) {
-    setState(() {
-      _notes.removeAt(index);
-    });
-    _saveNotes();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +28,7 @@ class _NotesPageState extends State<NotesPage> {
           )),
       body: Column(
         children: <Widget>[
+          //The text field and styling for adding the note title 
           Padding(
             padding: EdgeInsets.all(8.0),
             child: TextField(
@@ -93,47 +47,48 @@ class _NotesPageState extends State<NotesPage> {
                     fontSize: 25,
                     color: Theme.of(context).colorScheme.onSecondary,
                     fontWeight: FontWeight.bold),
-
               ),
             ),
           ),
 
-          // Padding(padding: EdgeInsets.all(8.0),
-          // child: Text(date.toString())),
+         //The text field and styling for writing the note contents.
           Padding(
             padding: EdgeInsets.all(8.0),
             child: Container(
-  decoration: BoxDecoration(
-    border: Border.all(
-      color: Theme.of(context).colorScheme.secondary,
-    ),
-    borderRadius: BorderRadius.all(Radius.circular(20))
-  ),
-  child:Padding(padding:EdgeInsets.all(8.0) , child:TextField(
-              keyboardType: TextInputType.multiline,
-              maxLines: null,
-              controller: _noteController,
-              style: TextStyle(
-                  fontSize: 15,
-                  color: Theme.of(context).colorScheme.onSecondary,
-                  fontWeight: FontWeight.bold),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-               hintText: "Add to note",
-                hintStyle: TextStyle(
-                    fontSize: 15,
-                    color: Theme.of(context).colorScheme.onSecondary,
-                    fontWeight: FontWeight.bold)
+              decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(20))),
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: TextField(
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  controller: _noteController,
+                  style: TextStyle(
+                      fontSize: 15,
+                      color: Theme.of(context).colorScheme.onSecondary,
+                      fontWeight: FontWeight.bold),
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Add to note",
+                      hintStyle: TextStyle(
+                          fontSize: 15,
+                          color: Theme.of(context).colorScheme.onSecondary,
+                          fontWeight: FontWeight.bold)),
+                ),
               ),
-  ),
-  ),
             ),
           ),
+
+          //Elevated button to save the note
           Expanded(
             child: Align(
                 alignment: FractionalOffset.bottomCenter,
                 child: ElevatedButton(
-                  onPressed: _addNote,
+                  //TODO: connect to BE so when they save it adds note to DB
+                  onPressed:() {},
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(
                         Theme.of(context).colorScheme.tertiary),

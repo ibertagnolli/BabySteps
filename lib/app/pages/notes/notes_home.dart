@@ -25,12 +25,9 @@ void _editNote() {
                   );
     }
 
-//TODO: remove it from the database and screen
+//TODO: remove selected note from the database and list 
 _deleteNote() {
-  //notes.removeAt(index);
-    // setState(() {
-    //   notes.removeAt(index);
-    // });
+
   }
 
 
@@ -54,22 +51,8 @@ _deleteNote() {
         child: ListView.builder(
           itemCount: notes.length,
           itemBuilder: (BuildContext context, int index) {
+            //look in widgets to see the note card. It takes in 2 functions for each of the icon buttons that need to be connected to BE
             return NotesCard(notes[index], lastEdited.hour.toString(), index, _editNote, _deleteNote);
-            // return ListTile(
-            //     //leading: CircleAvatar(child:Text(notes[index])),
-            //     trailing:
-            //             Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-            //           IconButton(
-            //             icon: Icon(Icons.delete),
-            //             onPressed: () => _deleteNote(index),
-            //           ),
-            //           IconButton(
-            //               icon: Icon(Icons.edit),
-            //               onPressed: () => _editNote(index)),
-            //             ],
-            //             ),
-            //     title: Text(notes.elementAt(index))
-            // );
           }),
       ),
     );

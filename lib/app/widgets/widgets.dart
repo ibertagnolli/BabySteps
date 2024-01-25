@@ -90,7 +90,7 @@ class NotesCard extends StatelessWidget {
                   ],
                 ),
               ),
-              Expanded(child: SizedBox(
+             const Expanded(child: SizedBox(
                  width: 30,
                 height: 80,
               )),
