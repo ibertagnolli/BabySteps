@@ -1,4 +1,5 @@
 import 'package:babysteps/app/pages/tracking/sleep/sleep_database.dart';
+import 'package:babysteps/app/pages/tracking/sleep/sleep_stream.dart';
 import 'package:babysteps/app/widgets/stopwatch.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -122,8 +123,10 @@ class _SleepPageState extends State<SleepPage> {
           ),
           Padding(
             padding: EdgeInsets.only(bottom: 16),
-            child: SizedBox(height: 200, child: FilledCard("last nap: $timeSinceNap", "nap: $lastNap",
-                Icon(Icons.person_search_sharp)),),
+            child: SizedBox(
+              height: 200, 
+              child: SleepStream(),
+            ),
           ),
           //Using a future builder (should we be using a stream builder?)
           //This will ensure that we don't put up the stopwatch until we see if the stopwatch should still be going
