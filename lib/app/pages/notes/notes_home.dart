@@ -26,11 +26,23 @@ class _NotesHomePageState extends State<NotesHomePage> {
           ),
         ),
       ),
-      body: ListView.builder(
+      body: 
+      Padding(
+        padding: EdgeInsets.all(15),
+        child: ListView.builder(
           itemCount: notes.length,
           itemBuilder: (BuildContext context, int index) {
             return ListTile(
                 //leading: const Icon(Icons.edit),
+                // trailing:
+                //         Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                //       IconButton(
+                //         icon: Icon(Icons.delete),
+                //         onPressed: () => _deleteNote(index),
+                //       ),
+                //       IconButton(
+                //           icon: Icon(Icons.edit),
+                //           onPressed: () => _editNote(index)),
                 trailing: const Icon(Icons.edit),
                 onTap: () {
                   //TODO: push to the note that is actually attached to the name of that list item
@@ -42,6 +54,7 @@ class _NotesHomePageState extends State<NotesHomePage> {
                 //notes.elementAt(index)
                 title: Text(notes.elementAt(index)));
           }),
+      ),
     );
     // );
   }

@@ -10,7 +10,10 @@ class NotesPage extends StatefulWidget {
 }
 
 class _NotesPageState extends State<NotesPage> {
+  DateTime date = DateTime.now();
   final TextEditingController _noteController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
+
   final List<String> _notes = [];
   @override
   void initState() {
@@ -72,25 +75,20 @@ class _NotesPageState extends State<NotesPage> {
           )),
       body: Column(
         children: <Widget>[
-          Expanded(
-            child: ListView.builder(
-              itemCount: _notes.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                    title: Text(_notes[index]),
-                    trailing:
-                        Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-                      IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () => _deleteNote(index),
-                      ),
-                      IconButton(
-                          icon: Icon(Icons.edit),
-                          onPressed: () => _editNote(index)),
-                    ]));
-              },
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: TextField(
+              keyboardType: TextInputType.multiline,
+              maxLines: 1,
+              controller: _titleController,
+              decoration: const InputDecoration(
+                border:InputBorder.none,
+                labelText: 'Note Title'
+              ),
             ),
           ),
+          // Padding(padding: EdgeInsets.all(8.0),
+          // child: Text(date.toString())),
           Padding(
             padding: EdgeInsets.all(8.0),
             child: TextField(
@@ -98,14 +96,31 @@ class _NotesPageState extends State<NotesPage> {
               maxLines: null,
               controller: _noteController,
               decoration: InputDecoration(
+                border:InputBorder.none,
                 labelText: 'Add to note',
-                suffixIcon: IconButton(
-                  icon: Icon(Icons.done),
-                  onPressed: _addNote,
+                // suffixIcon: IconButton(
+                //   icon: Icon(Icons.done),
+                //   onPressed: _addNote,
                 ),
               ),
             ),
-          ),
+            Expanded(
+            child: Align(
+            alignment: FractionalOffset.bottomCenter,
+            child: ElevatedButton(onPressed: _addNote, 
+               style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.tertiary),
+                      foregroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.onTertiary),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                      ),
+                    ),
+                    child: const Text('Save Note'),
+                  )
+             ),
+            ),
         ],
       ),
     );
