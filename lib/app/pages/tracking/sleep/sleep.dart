@@ -1,4 +1,5 @@
 import 'package:babysteps/app/pages/tracking/sleep/sleep_database.dart';
+import 'package:babysteps/app/pages/tracking/sleep/sleep_stream.dart';
 import 'package:babysteps/app/widgets/stopwatch.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -17,33 +18,33 @@ class _SleepPageState extends State<SleepPage> {
   String timeSinceNap = "--";
   String lastNap = "--";
   String buttonText = "Nap";
+  
   //these two will help the stopwatch look like it has the right time if the timer is ongoing
   int timeSoFarInNap = 0;
   bool timerAlreadyStarted = false;
+  
   //this id will be used to update entry later
   String? id;
 
   //Get the data from the database
+  // TODO: update with realtime reads?
   Future getData() async {
     ///Get the most recent finished data for the card
-    QuerySnapshot finishedSleepQuerySnapshot =
-        await SleepDatabaseMethods().getLatestFinishedSleepEntry();
+    QuerySnapshot finishedSleepQuerySnapshot = await SleepDatabaseMethods().getLatestFinishedSleepEntry();
+    
     //Get the ongoing data for the stopwatch
-    QuerySnapshot ongoingSleepQuerySnapshot =
-        await SleepDatabaseMethods().getLatestOngoingSleepEntry();
-    //As long as we have data for the most recent finished sleep time,
-    //we'll want to display the right information
+    QuerySnapshot ongoingSleepQuerySnapshot = await SleepDatabaseMethods().getLatestOngoingSleepEntry();
+    
+    //As long as we have data for the most recent finished sleep time, we'll want to display the right information
     if (finishedSleepQuerySnapshot.docs.isNotEmpty) {
       try {
         lastNap = finishedSleepQuerySnapshot.docs[0]['length'];
+
         //Get the difference in time between now and when the last logged diaper was
-        String diff = DateTime.now()
-            .difference(DateTime.parse(
-                finishedSleepQuerySnapshot.docs[0]['date'].toString()))
-            .inMinutes
-            .toString();
+        String diff = DateTime.now().difference(finishedSleepQuerySnapshot.docs[0]['date'].toDate()).inMinutes.toString();
         timeSinceNap = diff == '1' ? '$diff min' : '$diff mins';
-      } catch (error) {
+      } 
+      catch (error) {
         //If there's an error, print it to the output
         debugPrint(error.toString());
       }
@@ -52,11 +53,10 @@ class _SleepPageState extends State<SleepPage> {
     if (ongoingSleepQuerySnapshot.docs.isNotEmpty) {
       //Grab the id so we can update later
       id = ongoingSleepQuerySnapshot.docs[0].id;
+      
       //Grab how much time has already elapsed
-      timeSoFarInNap = DateTime.now()
-          .difference(DateTime.parse(
-              ongoingSleepQuerySnapshot.docs[0]['date'].toString()))
-          .inMilliseconds;
+      timeSoFarInNap = DateTime.now().difference(ongoingSleepQuerySnapshot.docs[0]['date'].toDate()).inMilliseconds;
+
       //set flag that stopwatch is going
       timerAlreadyStarted = true;
     }
@@ -73,7 +73,7 @@ class _SleepPageState extends State<SleepPage> {
     Map<String, dynamic> uploaddata = {
       'length': '--',
       'active': true,
-      'date': DateTime.now().toIso8601String(),
+      'date': DateTime.now(),
     };
 
     await SleepDatabaseMethods().addSleepEntry(uploaddata);
@@ -83,8 +83,8 @@ class _SleepPageState extends State<SleepPage> {
   //This method will be called when the timer is ended
   updateData(String napLength) async {
     if (id != null) {
-      await SleepDatabaseMethods()
-          .updateSleepEntry(napLength, DateTime.now().toIso8601String(), id!);
+      await SleepDatabaseMethods().updateSleepEntry(napLength, DateTime.now(), id!);
+      
       //once data has been added, update the card accordingly
       napDone(napLength);
     }
@@ -120,10 +120,14 @@ class _SleepPageState extends State<SleepPage> {
                     fontSize: 36,
                     color: Theme.of(context).colorScheme.onBackground)),
           ),
+
+          // Filled Card reading data from SleepStream()
           Padding(
             padding: EdgeInsets.only(bottom: 16),
-            child: SizedBox(height: 200, child: FilledCard("last nap: $timeSinceNap", "nap: $lastNap",
-                Icon(Icons.person_search_sharp)),),
+            child: SizedBox(
+              height: 200, 
+              child: SleepStream(),
+            ),
           ),
           //Using a future builder (should we be using a stream builder?)
           //This will ensure that we don't put up the stopwatch until we see if the stopwatch should still be going
