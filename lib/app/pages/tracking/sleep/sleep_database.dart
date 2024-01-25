@@ -35,6 +35,7 @@ class SleepDatabaseMethods {
         .add(userInfoMap);
   }
 
+  // TODO: can both of these queries return with limit(1)?
   //This method gets the entries from the sleep collection and orders them so the most recent entry
   //where the timer is no longer active is document[0].
   Future<QuerySnapshot> getLatestFinishedSleepEntry() async {
@@ -63,7 +64,7 @@ class SleepDatabaseMethods {
 
   //This method updates the sleep entry so that the length now matches the time elapsed on the timer
   //it also updates the time ended to be the current time
-  Future updateSleepEntry(String napLength, String timeEnded, String id) async {
+  Future updateSleepEntry(String napLength, DateTime timeEnded, String id) async {
     return await db
         .collection("Babies")
         .doc('IYyV2hqR7omIgeA4r7zQ')
