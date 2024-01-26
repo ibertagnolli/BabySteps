@@ -1,6 +1,9 @@
 //This file contains the page for a new post entry
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'dart:core';
+import 'package:image_picker/image_picker.dart';
 
 class CreatePostPage extends StatefulWidget {
   const CreatePostPage({super.key, required this.addPost});
@@ -15,6 +18,22 @@ class _CreatePostState extends State<CreatePostPage> {
   //Controllers for text fields
   TextEditingController title = TextEditingController();
   TextEditingController caption = TextEditingController();
+
+  File? _imgFile;
+
+  void takeSnapshot(bool fromCamera) async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? img = await picker.pickImage(
+      source: fromCamera
+          ? ImageSource.camera
+          : ImageSource.gallery, // alternatively, use ImageSource.gallery
+      maxWidth: 400,
+    );
+    if (img == null) return;
+    setState(() {
+      _imgFile = File(img.path); // convert it to a Dart:io file
+    });
+  }
 
   //This is a temporary boolean for mocking data
   bool photoAdded = false;
@@ -53,12 +72,52 @@ class _CreatePostState extends State<CreatePostPage> {
               Padding(
                 padding: EdgeInsets.all(32),
                 //If a photo has been added, show it, if not show the 'add photo' box
-                child: photoAdded
-                    ? Image(
-                        image: NetworkImage(img),
-                      )
+                child: _imgFile != null
+                    ? Image(image: FileImage(_imgFile!))
                     : InkWell(
-                        onTap: () => addPhoto(),
+                        onTap: () => showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => Dialog(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      takeSnapshot(false);
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                      'From Gallery',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 15),
+                                  TextButton(
+                                    onPressed: () {
+                                      takeSnapshot(true);
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                      'Take Photo',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                         child: Container(
                           height: cardHeight,
                           width: cardWidth,
