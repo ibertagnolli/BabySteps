@@ -53,10 +53,12 @@ class FilledCard extends StatelessWidget {
 }
 
 class NotesCard extends StatelessWidget {
-  const NotesCard(this.name, this.lastEdited, this.pageFunc, {super.key});
+  const NotesCard(this.name, this.lastEdited, this.index, this.editFunc, this.deleteFunc, {super.key});
   final String name;
   final String lastEdited;
-  final void Function() pageFunc;
+  final int index;
+  final void Function() editFunc;
+   final void Function() deleteFunc;
 
   @override
   Widget build(BuildContext context) {
@@ -64,15 +66,15 @@ class NotesCard extends StatelessWidget {
       color: Theme.of(context).colorScheme.surface,
       child: InkWell(
         splashColor: Theme.of(context).colorScheme.surface,
-        onTap: pageFunc,
+        //onTap: pageFunc,
         child: SizedBox(
-          width: 400,
+          width: 200,
           height: 80,
           child: Row(
             children: [
               Padding(
                 padding: const EdgeInsets.all(
-                    16), //EdgeInsets.symmetric(vertical: 12.0),
+                    8), //EdgeInsets.symmetric(vertical: 12.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -83,16 +85,31 @@ class NotesCard extends StatelessWidget {
                           TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "Last edited $lastEdited",
+                      "Last edited at $lastEdited" " o'clock",
                     ),
                   ],
                 ),
               ),
-              Expanded(child: SizedBox()),
+             const Expanded(child: SizedBox(
+                 width: 30,
+                height: 80,
+              )),
               Padding(
-                padding: EdgeInsets.all(16),
-                child: Align(child: Icon(Icons.edit, size: 30)),
-              )
+                padding: EdgeInsets.all(8),
+                child: Align(child:
+                 Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                      IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () => deleteFunc(),
+                      ),
+                      IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () => editFunc()),
+                        ],
+                 ),
+                ),
+                // Icon(Icons.edit, size: 30)),
+              ),
             ],
           ),
         ),
