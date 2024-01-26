@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/widgets/stopwatch.dart';
 import 'dart:core';
+import 'package:babysteps/app/pages/tracking/feeding/bottle_feeding_stream.dart';
 
 class BottleFeedingPage extends StatefulWidget {
   const BottleFeedingPage({super.key});
@@ -176,7 +177,7 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
           // Top card with info
           Padding(
             padding: EdgeInsets.only(bottom: 16),
-            child: TimeSinceCard(timeSince),
+            child: BottleFeedingStream(),
           ),
 
           // Buttons for bottle type
@@ -244,42 +245,42 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
   }
 }
 
-class TimeSinceCard extends StatelessWidget {
-  const TimeSinceCard(this.timeSince, {super.key});
+// class TimeSinceCard extends StatelessWidget {
+//   const TimeSinceCard(this.timeSince, {super.key});
 
-  final String timeSince;
+//   final String timeSince;
 
-  @override
-  //Not sure what responsive design lexi had in mind here
-  Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    double width = screenWidth * 0.9;
-    return Card(
-      elevation: 0,
-      color: Theme.of(context).colorScheme.secondary, // obviously wrong
-      child: ConstrainedBox(
-        constraints:
-            BoxConstraints(minWidth: width, maxWidth: width, minHeight: 90),
-        child:
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(right: 15.0),
-            child: Icon(Icons.access_alarm,
-                size: 50, color: Theme.of(context).colorScheme.onSecondary),
-          ),
-          Text(
-            'Time since last bottle: $timeSince',
-            style: TextStyle(
-              overflow: TextOverflow.ellipsis,
-              fontSize: 20,
-              color: Theme.of(context).colorScheme.onSecondary,
-            ),
-          ),
-        ]),
-      ),
-    );
-  }
-}
+//   @override
+//   
+//   Widget build(BuildContext context) {
+//     final screenWidth = MediaQuery.of(context).size.width;
+//     double width = screenWidth * 0.9;
+//     return Card(
+//       elevation: 0,
+//       color: Theme.of(context).colorScheme.secondary, // obviously wrong
+//       child: ConstrainedBox(
+//         constraints:
+//             BoxConstraints(minWidth: width, maxWidth: width, minHeight: 90),
+//         child:
+//             Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+//           Padding(
+//             padding: const EdgeInsets.only(right: 15.0),
+//             child: Icon(Icons.access_alarm,
+//                 size: 50, color: Theme.of(context).colorScheme.onSecondary),
+//           ),
+//           Text(
+//             'Time since last bottle: $timeSince',
+//             style: TextStyle(
+//               overflow: TextOverflow.ellipsis,
+//               fontSize: 20,
+//               color: Theme.of(context).colorScheme.onSecondary,
+//             ),
+//           ),
+//         ]),
+//       ),
+//     );
+//   }
+// }
 
 class BottleTypeButton extends StatelessWidget {
   const BottleTypeButton(this.buttonText, this.activeButton, this.onPress,
