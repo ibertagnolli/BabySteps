@@ -45,16 +45,47 @@ _deleteNote() {
           ),
         ),
       ),
-      body: 
-      Padding(
-        padding: EdgeInsets.all(8),
-        child: ListView.builder(
-          itemCount: notes.length,
-          itemBuilder: (BuildContext context, int index) {
-            //look in widgets to see the note card. It takes in 2 functions for each of the icon buttons that need to be connected to BE
-            return NotesCard(notes[index], lastEdited.hour.toString(), index, _editNote, _deleteNote);
-          }),
+      body: Column(children: [
+        Flexible(
+            flex: 3,
+            child:Padding(
+          padding: EdgeInsets.all(8),
+          child: ListView.builder(
+            itemCount: notes.length,
+            itemBuilder: (BuildContext context, int index) {
+              //look in widgets to see the note card. It takes in 2 functions for each of the icon buttons that need to be connected to BE
+              return NotesCard(notes[index], lastEdited.hour.toString(), index, _editNote, _deleteNote);
+            }),
+            ),
+        ),
+          //   Flexible(
+           // flex: 1,
+             Expanded(
+            child: Align(
+                alignment: FractionalOffset.bottomCenter,
+                child: ElevatedButton(
+                  //TODO: connect to BE so when they save it adds note to DB
+                  onPressed: _editNote,
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(
+                        Theme.of(context).colorScheme.tertiary),
+                    foregroundColor: MaterialStateProperty.all(
+                        Theme.of(context).colorScheme.onTertiary),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                    ),
+                  ),
+                  child: const Text('New Note'),
+                )),
       ),
+     //  )
+      ],
+        ),
+      
+       
+      
     );
     // );
   }
