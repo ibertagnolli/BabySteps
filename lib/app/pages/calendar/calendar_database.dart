@@ -30,9 +30,8 @@ class CalendarDatabaseMethods {
   //This methods adds an entry to the Calendar/event collection
   Future addEvent(Map<String, dynamic> userInfoMap) async {
     return await db
-        .collection('Babies')
-        .doc(
-            'IYyV2hqR7omIgeA4r7zQ') // TODO update to current user's document id
+        .collection('Users')
+        .doc('2hUD5VwWZHXWRX3mJZOp') // TODO update to current user's document id
         .collection('Calendar')
         .add(userInfoMap);
   }
