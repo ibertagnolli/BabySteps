@@ -1,21 +1,19 @@
 import 'package:babysteps/app/pages/calendar/add_event_button.dart';
+import 'package:babysteps/app/pages/calendar/calendar_database.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/widgets/checkList.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:core';
 
-
 import 'event.dart';
 
 class CalendarPage extends StatefulWidget {
  const CalendarPage({super.key});
 
-
  @override
  State<CalendarPage> createState() => _CalendarPageState();
 }
-
 
 class _CalendarPageState extends State<CalendarPage> {
   ///TODO: get these list items from the notes page!!!!!!!!!!!???????????????
@@ -227,6 +225,3 @@ class _CalendarPageState extends State<CalendarPage> {
     );
   }
 }
-
-
-
