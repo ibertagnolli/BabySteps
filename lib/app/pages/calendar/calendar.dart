@@ -1,3 +1,4 @@
+import 'package:babysteps/app/pages/calendar/add_event_button.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/widgets/checkList.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -17,33 +18,45 @@ class CalendarPage extends StatefulWidget {
 
 
 class _CalendarPageState extends State<CalendarPage> {
- ///TODO: get these list items from the notes page!!!!!!!!!!!???????????????
- static List< String> items = ["Fold laundry", "Cook dinner", "Sweep floors"];
- CalendarFormat _calendarFormat = CalendarFormat.month;
- DateTime _focusedDay = DateTime.now();
- DateTime? _selectedDay = DateTime.now();
- DateTime kFirstDay = DateTime(
-     DateTime.now().year, DateTime.now().month - 3, DateTime.now().day);
- DateTime kLastDay = DateTime(
-     DateTime.now().year, DateTime.now().month + 3, DateTime.now().day);
- Map<DateTime, List<Event>> events = {};
- TextEditingController _eventController = TextEditingController();
- late final ValueNotifier<List<Event>> _selectedEvents;
+  ///TODO: get these list items from the notes page!!!!!!!!!!!???????????????
+  static List<String> items = ["Fold laundry", "Cook dinner", "Sweep floors"];
+  CalendarFormat _calendarFormat = CalendarFormat.month;
+  DateTime _focusedDay = DateTime.now(); // The current day
+  DateTime _selectedDay = DateTime.now(); // The day selected in the calendar
+  DateTime kFirstDay = DateTime(
+      DateTime.now().year, DateTime.now().month - 3, DateTime.now().day);
+  DateTime kLastDay = DateTime(
+      DateTime.now().year, DateTime.now().month + 3, DateTime.now().day);
+  //Variables for list of events/ event handling
+  late final ValueNotifier<List<Event>> _selectedEvents;
+  Map<DateTime, List<Event>> events = {};
 
+//Upload data to database with existing events?
+  uploadData() async {
+    Map<String, dynamic> uploaddata = {
+      'events':
+          events, //this is a list of events right now does that need to change?
+      'date': DateTime.now().toIso8601String(),
+    };
 
- @override
- void initState() {
-   super.initState();
-   _selectedDay = _focusedDay;
-   _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
- }
+    await CalendarDatabaseMethods().addEvent(uploaddata);
+    //once data has been added, update the calendar accordingly
+  }
 
+//Grab the data on page initialization
+  @override
+  void initState() {
+    super.initState();
+    _selectedDay = _focusedDay;
+    _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
+    CalendarDatabaseMethods().listenForEventReads();
+  }
 
- List<Event> _getEventsForDay(DateTime day) {
-   //retrieve all events from the selected day.
-   return events[day] ?? [];
- }
-
+// TODO: this needs to pull the list of events from the database!!
+  List<Event> _getEventsForDay(DateTime day) {
+    //retrieve all events from the selected day.
+    return events[day] ?? [];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -123,56 +136,7 @@ class _CalendarPageState extends State<CalendarPage> {
           // Add event button
           Padding(
             padding: const EdgeInsets.all(15),
-            child: SizedBox(
-              width: 20.0,
-              height: 30.0,
-              child: FilledButton(
-                style: FilledButton.styleFrom(
-                  backgroundColor: Theme.of(context)
-                      .colorScheme
-                      .secondary, // Background color
-                ),
-                child: Text("Add event",
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSecondary)),
-                //TODO: when event is added, addEVENT to list of events then add to database?
-                onPressed: () {
-                  //show dialog for the user to input event
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          scrollable: true,
-                          title: const Text("Event Name"),
-                          content: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: TextField(
-                              controller: _eventController,
-                            ),
-                          ),
-                          actions: [
-                            ElevatedButton(
-                                onPressed: _selectTime,
-                                // () {
-                                //   events.addAll({
-                                //     _selectedDay!: [
-                                //       Event(_eventController.text)
-                                //     ]
-                                //   });
-                                //   // uploadData();
-
-                                //   print(events.entries);
-                                //   Navigator.of(context).pop();
-                                //   _selectedEvents.value =
-                                //       _getEventsForDay(_selectedDay!);
-                                // },
-                                child: const Text("Submit"))
-                          ],
-                        );
-                      });
-                },
-              ),
-            ),
+            child: AddEventButton(selectedDay: _selectedDay,),
           ),
           
           // To do list card
