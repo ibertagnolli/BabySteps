@@ -31,7 +31,7 @@ class CalendarDatabaseMethods {
         .collection('Users')
         .doc('2hUD5VwWZHXWRX3mJZOp')
         .collection("Events")
-        .where('date', isEqualTo: selectedDate)
+        // .where('date', isEqualTo: Timestamp.fromDate(selectedDate))
         .snapshots();
   }
 

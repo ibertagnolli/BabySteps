@@ -19,6 +19,7 @@ class EventStream extends StatefulWidget{
 class _EventStreamState extends State<EventStream> {
   @override
   Widget build(BuildContext context) {
+    print("Selected Day ${widget.selectedDay}");
     final Stream<QuerySnapshot> _eventStream = CalendarDatabaseMethods().getEventStream(widget.selectedDay);
 
     return StreamBuilder<QuerySnapshot>(
@@ -31,18 +32,16 @@ class _EventStreamState extends State<EventStream> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Text("Loading");
         }
-
+        
         // An array of Event documents
-        var lastWeightDoc = snapshot.data!.docs;
+        // TODO account for empty array - day with no events
+        var eventDocs = snapshot.data!.docs;
 
-        DateTime date = lastWeightDoc[0]['date'].toDate();
-        String dateStr = DateFormat('MM-dd hh:mm').format(date);
-        String pounds = lastWeightDoc[0]['pounds'];
-        String ounces = lastWeightDoc[0]['ounces'];
+        DateTime date = eventDocs[0]['dateTime'].toDate();
+        String dateStr = DateFormat('hh:mm').format(date);
+        String name = eventDocs[0]['name'];
 
-        // Returns the FilledCard with read values for date, pounds, and ounces
-        // updated in real time.
-        return FilledCard(dateStr, "weight: $pounds lbs $ounces oz", Icon(Icons.scale));
+        return Text("Date: $dateStr, Name: $name");
       },
     );
   }

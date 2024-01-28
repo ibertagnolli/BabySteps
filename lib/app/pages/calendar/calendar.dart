@@ -1,6 +1,7 @@
 import 'package:babysteps/app/pages/calendar/add_event_button.dart';
 import 'package:babysteps/app/pages/calendar/add_task_button.dart';
 import 'package:babysteps/app/pages/calendar/calendar_database.dart';
+import 'package:babysteps/app/pages/calendar/event_stream.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/widgets/checkList.dart';
 import 'package:intl/intl.dart';
@@ -110,7 +111,8 @@ class _CalendarPageState extends State<CalendarPage> {
             // Daily calendar events card
             Padding(
               padding: const EdgeInsets.all(15),
-              child: ExpansionTile(
+              child: 
+              ExpansionTile(
                 backgroundColor: Theme.of(context).colorScheme.surface,
                 collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
                 title: Text('Events on ${DateFormat.Md().format(_selectedDay)}',
@@ -119,24 +121,26 @@ class _CalendarPageState extends State<CalendarPage> {
                         color: Theme.of(context).colorScheme.onSurface,
                         fontWeight: FontWeight.bold)),
                 initiallyExpanded: true,
-                children: <Widget>[
+                children: 
+                <Widget>[
                   // List of events
-                  SizedBox(
-                    height: 100, // TODO edit this to be sized based on space, not set value
-                    child: ValueListenableBuilder(
-                        valueListenable: _selectedEvents,
-                        builder: (context, value, _) {
-                          return ListView.builder(
-                              itemCount: value.length, //should this be events
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  child: ListTile(
-                                      onTap: () => Text('$value'),
-                                      title: Text('${value[index]}')),
-                                );
-                              });
-                        }),
-                  ),
+                  EventStream(selectedDay: _selectedDay,),
+                  // SizedBox(
+                  //   height: 100, // TODO edit this to be sized based on space, not set value
+                  //   child: ValueListenableBuilder(
+                  //       valueListenable: _selectedEvents,
+                  //       builder: (context, value, _) {
+                  //         return ListView.builder(
+                  //             itemCount: value.length, //should this be events
+                  //             itemBuilder: (context, index) {
+                  //               return Container(
+                  //                 child: ListTile(
+                  //                     onTap: () => Text('$value'),
+                  //                     title: Text('${value[index]}')),
+                  //               );
+                  //             });
+                  //       }),
+                  // ),
                   
                   // Add event button
                   Padding(
