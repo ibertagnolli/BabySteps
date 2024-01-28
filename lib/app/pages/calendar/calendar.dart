@@ -29,18 +29,6 @@ class _CalendarPageState extends State<CalendarPage> {
   late final ValueNotifier<List<Event>> _selectedEvents;
   Map<DateTime, List<Event>> events = {};
 
-//Upload data to database with existing events?
-  uploadData() async {
-    Map<String, dynamic> uploaddata = {
-      'events':
-          events, //this is a list of events right now does that need to change?
-      'date': DateTime.now().toIso8601String(),
-    };
-
-    await CalendarDatabaseMethods().addEvent(uploaddata);
-    //once data has been added, update the calendar accordingly
-  }
-
 //Grab the data on page initialization
   @override
   void initState() {

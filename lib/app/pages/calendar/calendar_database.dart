@@ -4,6 +4,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class CalendarDatabaseMethods {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
+  //This methods adds an entry to the Calendar/event collection
+  Future addEvent(Map<String, dynamic> userInfoMap) async {
+    return await db
+        .collection('Users')
+        .doc('2hUD5VwWZHXWRX3mJZOp') // TODO update to current user's document id
+        .collection('Calendar')
+        .add(userInfoMap);
+  }
+
   // Sets up the snapshot to listen to changes in the collection.
   void listenForEventReads() {
     final docRef = db
@@ -27,14 +36,7 @@ class CalendarDatabaseMethods {
         .snapshots();
   }
 
-  //This methods adds an entry to the Calendar/event collection
-  Future addEvent(Map<String, dynamic> userInfoMap) async {
-    return await db
-        .collection('Users')
-        .doc('2hUD5VwWZHXWRX3mJZOp') // TODO update to current user's document id
-        .collection('Calendar')
-        .add(userInfoMap);
-  }
+
 
   //This method gets the entries from the Calendar/event collection and orders them so the most recent entry is document[0].
   Future<QuerySnapshot> getLatestEventInfo() async {
