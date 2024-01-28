@@ -4,32 +4,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-/// The widget that adds a new event.
-class AddEventButton extends StatefulWidget {
+/// The widget that adds a new task.
+class AddTaskButton extends StatefulWidget {
   DateTime selectedDay;
-  AddEventButton({required this.selectedDay, super.key});
+  AddTaskButton({required this.selectedDay, super.key});
 
   @override
-  State<StatefulWidget> createState() => _AddEventButtonState();
+  State<StatefulWidget> createState() => _AddTaskButtonState();
 }
 
-/// Stores the mutable data that can change over the lifetime of the AddEventButton.
-class _AddEventButtonState extends State<AddEventButton> {
+/// Stores the mutable data that can change over the lifetime of the AddTaskButton.
+class _AddTaskButtonState extends State<AddTaskButton> {
   // The global key uniquely identifies the Form widget and allows 
   // validation of the form.
   final _formKey = GlobalKey<FormState>();
 
   // Store user input for database upload
   TextEditingController nameController = TextEditingController();
-  TextEditingController timeController = TextEditingController();
   TextEditingController dateController = TextEditingController();
-  TimeOfDay eventTime = TimeOfDay.now();
 
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
     nameController.dispose();        
-    timeController.dispose();
     dateController.dispose();
     super.dispose();
   }
@@ -38,36 +35,19 @@ class _AddEventButtonState extends State<AddEventButton> {
     return widget.selectedDay;
   }
 
-  /// Gets the user's selected event time.
-  void _selectTime() async {
-    final TimeOfDay? selectedTime = await showTimePicker(
-      initialTime: TimeOfDay.now(),
-      context: context,
-    );
+  /// Saves a new task entry in the Firestore database.
+  saveNewTask() async {
+    DateTime taskDate = DateFormat("MM/dd/yyyy").parse(dateController.text);
 
-    if (selectedTime != null) {   // TODO can selectedTime ever be null?
-      setState(() {
-        eventTime = selectedTime;
-        timeController.text = selectedTime.format(context);
-      });
-    }
-  }
-
-  /// Saves a new event entry in the Firestore database.
-  saveNewEvent() async {
-    DateTime eventDate = DateFormat("MM/dd/yyyy").parse(dateController.text);
-    DateTime eventDT = DateTime(eventDate.year, eventDate.month, eventDate.day, eventTime.hour, eventTime.minute);
-
-    // Write event data to database
+    // Write task data to database
     Map<String, dynamic> uploaddata = {
       'name': nameController.text,
-      'dateTime': eventDT,    // Stores the event date and its start time
+      'dateTime': taskDate,
     };
-    await CalendarDatabaseMethods().addEvent(uploaddata);
+    await CalendarDatabaseMethods().addTask(uploaddata);
     
     // Clear fields for next entry (not date)
     nameController.clear();
-    timeController.clear();
   }
   
   @override
@@ -76,7 +56,7 @@ class _AddEventButtonState extends State<AddEventButton> {
     dateController.text = DateFormat.yMd().format(widget.selectedDay);
 
     return SizedBox(
-      // Add Event Button
+      // Add Task Button
       width: 170.0,
       height: 30.0,
       child: FilledButton(
@@ -85,39 +65,39 @@ class _AddEventButtonState extends State<AddEventButton> {
               .colorScheme
               .tertiary, // Background color
         ),
-        child: Text("Add event",
+        child: Text("Add task",
             style: TextStyle(
                 color: Theme.of(context).colorScheme.onSecondary)),
         
-        // Dialog with event entry
+        // Dialog with task entry
         onPressed: () {
           showDialog(
             context: context,
             builder: (context) {
               return AlertDialog(
                 scrollable: true,
-                title: const Text("New Event"),
+                title: const Text("New Task"),
                 content: Padding(
                   padding: const EdgeInsets.all(8),
                   child: Form(
                     key: _formKey,
-                    child: Column (children: <Widget>[
+                    child: Column (children: <Widget>[ 
 
-                      // Event Name
+                      // Task Name
                       TextFormField(
                         controller: nameController,
                         decoration: const InputDecoration(
-                          labelText: "Event",
+                          labelText: "Task",
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter the event name';
+                            return 'Please enter the task name';
                           }
                           return null;
                         },
                       ),
 
-                      // Event Date
+                      // Task Date
                       TextFormField(
                         controller: dateController,
                         decoration: const InputDecoration(
@@ -148,26 +128,13 @@ class _AddEventButtonState extends State<AddEventButton> {
                         },
                       ),
 
-                      // Event Start Time
-                      TextFormField(
-                        controller: timeController,
-                        decoration: const InputDecoration(
-                          labelText: "Start Time",
-                        ),
-                        onTap: _selectTime,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter the event start time';
-                          }
-                          return null;
-                        },
-                      ),
+                      // TODO add start time for task notifications 
 
                       // Submit button
                       ElevatedButton(
                         onPressed: () {
                           if(_formKey.currentState!.validate()) {
-                            saveNewEvent();
+                            saveNewTask();
                             Navigator.pop(context);
                           }
                         }, 
@@ -175,7 +142,6 @@ class _AddEventButtonState extends State<AddEventButton> {
                       )
                     ],
                   )
-                  
                 ),
               ));
             }
