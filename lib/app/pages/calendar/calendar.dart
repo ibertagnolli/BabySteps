@@ -2,6 +2,7 @@ import 'package:babysteps/app/pages/calendar/add_event_button.dart';
 import 'package:babysteps/app/pages/calendar/calendar_database.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/widgets/checkList.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:core';
@@ -59,39 +60,18 @@ class _CalendarPageState extends State<CalendarPage> {
         ),
       ),
       body: Center(
-        child: ListView(children: <Widget>[
-
-          // Calendar Title
+        child: ListView(children: <Widget>[      
+          // Calendar
           Padding(
-            padding: const EdgeInsets.all(32),
-            child: Text('Calendar',
-                style: TextStyle(
-                    fontSize: 36,
-                    color: Theme.of(context).colorScheme.onBackground)),
-          ),
-          
-          //TODO:This is causing an error right now since we aren't actually saving the list of events correctly for the stream to access
-          // Table Calendar
-          // const Padding(
-          //   padding: EdgeInsets.only(bottom: 16),
-          //   child: SizedBox(
-          //     height: 200,
-          //     child: CalendarStream(),
-          //   ),
-          // ),
-
-         Padding(
-           padding: EdgeInsets.only(bottom: 15),
-           child: TableCalendar(
-             firstDay: DateTime.utc(2023, 10, 16),
-             lastDay: DateTime.utc(2025, 3, 14),
-             focusedDay: DateTime.now(),
-             eventLoader: _getEventsForDay,
-             selectedDayPredicate: (day) {
-               // Use `selectedDayPredicate` to determine which day is currently selected.
-               // If this returns true, then `day` will be marked as selected.
-
-
+            padding: EdgeInsets.only(bottom: 15),
+            child: TableCalendar(
+              firstDay: DateTime.utc(2023, 10, 16),
+              lastDay: DateTime.utc(2025, 3, 14),
+              focusedDay: DateTime.now(),
+              eventLoader: _getEventsForDay,
+              selectedDayPredicate: (day) {
+                // Use `selectedDayPredicate` to determine which day is currently selected.
+                // If this returns true, then `day` will be marked as selected.
                 // Using `isSameDay` is recommended to disregard
                 // the time-part of compared DateTime objects.
                 return isSameDay(_selectedDay, day);
@@ -125,13 +105,45 @@ class _CalendarPageState extends State<CalendarPage> {
             child: AddEventButton(selectedDay: _selectedDay,),
           ),
           
+          // Daily calendar events card
+          Padding(
+            padding: const EdgeInsets.all(15),
+            child: ExpansionTile(
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
+              title: Text('Events on ${DateFormat.Md().format(_selectedDay)}',
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontWeight: FontWeight.bold)),
+              children: <Widget>[
+                SizedBox(
+                  height: 100,
+                  child: ValueListenableBuilder(
+                      valueListenable: _selectedEvents,
+                      builder: (context, value, _) {
+                        return ListView.builder(
+                            itemCount: value.length, //should this be events
+                            itemBuilder: (context, index) {
+                              return Container(
+                                child: ListTile(
+                                    onTap: () => Text('$value'),
+                                    title: Text('${value[index]}')),
+                              );
+                            });
+                      }),
+                ),
+              ],
+            ),
+          ),
+
           // To do list card
           Padding(
             padding: const EdgeInsets.all(15),
             child: ExpansionTile(
               backgroundColor: Theme.of(context).colorScheme.surface,
               collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
-              title: Text('To Do',
+              title: Text('Tasks for ${DateFormat.Md().format(_selectedDay)}',
                   style: TextStyle(
                       fontSize: 20,
                       color: Theme.of(context).colorScheme.onSurface,
@@ -154,7 +166,8 @@ class _CalendarPageState extends State<CalendarPage> {
                ),
              ],
            ),
-         ),
+          ),
+          
 
 
           // // Milestones Card
@@ -176,38 +189,7 @@ class _CalendarPageState extends State<CalendarPage> {
           //events for that day on calendar.
           //TODO: use the stream to display this list of events?
           
-          // Daily calendar events card
-          Padding(
-            padding: const EdgeInsets.all(15),
-            child: ExpansionTile(
-              backgroundColor: Theme.of(context).colorScheme.surface,
-              collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
-              title: Text('Calendar Events',
-                  style: TextStyle(
-                      fontSize: 20,
-                      color: Theme.of(context).colorScheme.onSurface,
-                      fontWeight: FontWeight.bold)),
-              children: <Widget>[
-                SizedBox(
-                  height: 100,
-                  child: ValueListenableBuilder(
-                      valueListenable: _selectedEvents,
-                      builder: (context, value, _) {
-                        return ListView.builder(
-                            itemCount: value.length, //should this be events
-                            itemBuilder: (context, index) {
-                              return Container(
-                                child: ListTile(
-                                    onTap: () => Text('$value'),
-                                    title: Text('${value[index]}')),
-                              );
-                            });
-                      }),
-                ),
-                //const ListTile(title: Text('No new milestones to be aware of')),
-              ],
-            ),
-          ),
+          
         ]),
       ),
     );
