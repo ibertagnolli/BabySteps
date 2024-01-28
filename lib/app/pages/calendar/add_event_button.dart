@@ -34,9 +34,9 @@ class _AddEventButtonState extends State<AddEventButton> {
     super.dispose();
   }
 
-  DateTime get selectedDay {
-    return widget.selectedDay;
-  }
+  // DateTime get selectedDay {
+  //   return widget.selectedDay;
+  // }
 
   /// Gets the user's selected event time.
   void _selectTime() async {

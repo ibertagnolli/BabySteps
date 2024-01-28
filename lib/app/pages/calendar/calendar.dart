@@ -40,7 +40,7 @@ class _CalendarPageState extends State<CalendarPage> {
     CalendarDatabaseMethods().listenForEventReads();
   }
 
-// TODO: this needs to pull the list of events from the database!!
+  /// Gets the events on a given day
   List<Event> _getEventsForDay(DateTime day) {
     //retrieve all events from the selected day.
     return events[day] ?? [];
@@ -48,6 +48,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Navigation Bar
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
@@ -60,16 +61,19 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
         ),
       ),
+
+      // Widgets
       body: Center(
         child: Padding(
           padding: EdgeInsets.only(top: 15, bottom: 15),
           child: ListView(children: <Widget>[      
-            // Calendar
+            
+            // Calendar Widget
             Padding(
               padding: EdgeInsets.only(bottom: 15),
               child: TableCalendar(
-                firstDay: DateTime.utc(2023, 10, 16),
-                lastDay: DateTime.utc(2025, 3, 14),
+                firstDay: DateTime.utc(2020, 10, 16),
+                lastDay: DateTime.utc(2050, 3, 14),
                 focusedDay: DateTime.now(),
                 eventLoader: _getEventsForDay,
                 selectedDayPredicate: (day) {
@@ -85,7 +89,7 @@ class _CalendarPageState extends State<CalendarPage> {
                     setState(() {
                       _selectedDay = selectedDay;
                       _focusedDay = focusedDay;
-                      _selectedEvents.value = _getEventsForDay(selectedDay);
+                      _selectedEvents.value = _getEventsForDay(selectedDay); // TODO does this draw the dots on dates with events?
                     });
                   }
                 },
@@ -181,13 +185,7 @@ class _CalendarPageState extends State<CalendarPage> {
                   ),
               ],
             ),
-            ),
-
-            // // Add task button
-            // Padding(
-            //   padding: const EdgeInsets.all(15),
-            //   child: AddEventButton(selectedDay: _selectedDay,),
-            // ),           
+            ),     
           ]),
         )
       ),

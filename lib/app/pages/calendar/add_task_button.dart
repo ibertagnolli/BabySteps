@@ -31,9 +31,9 @@ class _AddTaskButtonState extends State<AddTaskButton> {
     super.dispose();
   }
 
-  DateTime get selectedDay {
-    return widget.selectedDay;
-  }
+  // DateTime get selectedDay {
+  //   return widget.selectedDay;
+  // }
 
   /// Saves a new task entry in the Firestore database.
   saveNewTask() async {
