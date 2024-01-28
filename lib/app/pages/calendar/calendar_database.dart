@@ -4,12 +4,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class CalendarDatabaseMethods {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
-  //This methods adds an entry to the Calendar/event collection
+  //This methods adds an event to the Events collection
   Future addEvent(Map<String, dynamic> userInfoMap) async {
     return await db
         .collection('Users')
         .doc('2hUD5VwWZHXWRX3mJZOp') // TODO update to current user's document id
-        .collection('Calendar')
+        .collection('Events')
+        .add(userInfoMap);
+  }
+
+  //This methods adds a task to the Tasks collection
+  Future addTask(Map<String, dynamic> userInfoMap) async {
+    return await db
+        .collection('Users')
+        .doc('2hUD5VwWZHXWRX3mJZOp') // TODO update to current user's document id
+        .collection('Tasks')
         .add(userInfoMap);
   }
 
