@@ -41,6 +41,13 @@ class _EventStreamState extends State<EventStream> {
         String dateStr = DateFormat('hh:mm').format(date);
         String name = eventDocs[0]['name'];
 
+        /*
+        WHERE EMILY LEFT OFF
+
+        Data is being read! Need to update query to select by date, not just all the documents in the collection.
+        When reading from the correct date, return ExpansionTiles to Calendar.dart.
+        */
+
         return Text("Date: $dateStr, Name: $name");
       },
     );
