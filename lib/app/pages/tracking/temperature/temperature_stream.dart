@@ -1,3 +1,4 @@
+import 'package:babysteps/app/pages/tracking/temperature/temperature_database.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
 import 'package:babysteps/time_since.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,13 +15,8 @@ class TemperatureStream extends StatefulWidget {
 }
 
 class _TemperatureStreamState extends State<TemperatureStream> {
-  final Stream<QuerySnapshot> _temperatureStream = db
-      .collection("Babies")
-      .doc("IYyV2hqR7omIgeA4r7zQ")
-      .collection("Temperature")
-      .orderBy('date', descending: true)
-      .limit(1)
-      .snapshots();
+  final Stream<QuerySnapshot> _temperatureStream =
+      TemperatureDatabaseMethods().getStream();
 
   @override
   Widget build(BuildContext context) {

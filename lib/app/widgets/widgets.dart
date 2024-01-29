@@ -1,4 +1,7 @@
+import 'package:babysteps/time_since.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class FilledCard extends StatelessWidget {
   const FilledCard(this.timeSince, this.lastThing, this.lastIcon, {super.key});
@@ -53,12 +56,14 @@ class FilledCard extends StatelessWidget {
 }
 
 class NotesCard extends StatelessWidget {
-  const NotesCard(this.name, this.lastEdited, this.index, this.editFunc, this.deleteFunc, {super.key});
+  const NotesCard(
+      this.name, this.lastEdited, this.index, this.editFunc, this.deleteFunc,
+      {super.key});
   final String name;
   final String lastEdited;
   final int index;
   final void Function() editFunc;
-   final void Function() deleteFunc;
+  final void Function() deleteFunc;
 
   @override
   Widget build(BuildContext context) {
@@ -90,23 +95,25 @@ class NotesCard extends StatelessWidget {
                   ],
                 ),
               ),
-             const Expanded(child: SizedBox(
-                 width: 30,
+              const Expanded(
+                  child: SizedBox(
+                width: 30,
                 height: 80,
               )),
               Padding(
                 padding: EdgeInsets.all(8),
-                child: Align(child:
-                 Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                child: Align(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
                       IconButton(
                         icon: Icon(Icons.delete),
                         onPressed: () => deleteFunc(),
                       ),
                       IconButton(
-                          icon: Icon(Icons.edit),
-                          onPressed: () => editFunc()),
-                        ],
-                 ),
+                          icon: Icon(Icons.edit), onPressed: () => editFunc()),
+                    ],
+                  ),
                 ),
                 // Icon(Icons.edit, size: 30)),
               ),
@@ -119,12 +126,12 @@ class NotesCard extends StatelessWidget {
 }
 
 class TrackingCard extends StatelessWidget {
-  const TrackingCard(this.icon, this.name, this.hoursAgo, this.pageFunc,
+  const TrackingCard(this.icon, this.name, this.hoursAgo, this.goString,
       {super.key});
   final Icon icon;
   final String name;
   final String hoursAgo;
-  final void Function() pageFunc;
+  final String goString;
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +139,7 @@ class TrackingCard extends StatelessWidget {
       color: Theme.of(context).colorScheme.surface,
       child: InkWell(
         splashColor: Theme.of(context).colorScheme.surface,
-        onTap: pageFunc,
+        onTap: () => context.go(goString),
         child: SizedBox(
           width: 360,
           height: 80,
@@ -166,6 +173,41 @@ class TrackingCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class TrackingStream extends StatelessWidget {
+  const TrackingStream(this.icon, this.name, this.goString,
+      {super.key, required this.stream});
+  final Icon icon;
+  final String name;
+  final String goString;
+  final Stream<QuerySnapshot> stream;
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: stream,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return const Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Text("Loading");
+        }
+
+        // An array of documents, but our query only returns an array of one document
+        var lastDoc = snapshot.data!.docs;
+        String timeSinceChange = 'Never';
+        if (lastDoc.isNotEmpty) {
+          DateTime date = lastDoc[0]['date'].toDate();
+          timeSinceChange = getTimeSince(date, ago: true);
+        }
+        // Returns the FilledCard with read values for date, pounds, and ounces
+        // updated in real time.
+        return TrackingCard(icon, name, timeSinceChange, goString);
+      },
     );
   }
 }

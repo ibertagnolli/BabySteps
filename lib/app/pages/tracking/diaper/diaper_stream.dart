@@ -32,7 +32,7 @@ class _DiaperStreamState extends State<DiaperStream> {
         // An array of documents, but our query only returns an array of one document
         var lastDiaperDoc = snapshot.data!.docs;
 
-        DateTime date = DateTime.parse(lastDiaperDoc[0]['date'].toString());
+        DateTime date = lastDiaperDoc[0]['date'].toDate();
         String timeSinceChange = getTimeSince(date);
         String lastType = lastDiaperDoc[0]['type'];
 

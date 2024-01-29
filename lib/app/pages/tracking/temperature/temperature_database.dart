@@ -22,6 +22,18 @@ class TemperatureDatabaseMethods {
         );
   }
 
+  Stream<QuerySnapshot> getStream() {
+    String? babyDoc = prefs?.getString('babyDoc');
+
+    return db
+        .collection("Babies")
+        .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
+        .collection("Temperature")
+        .orderBy('date', descending: true)
+        .limit(1)
+        .snapshots();
+  }
+
   //This methods adds an entry to the temperature collection
   Future addTemperature(Map<String, dynamic> userInfoMap) async {
     String? babyDoc = prefs?.getString('babyDoc');

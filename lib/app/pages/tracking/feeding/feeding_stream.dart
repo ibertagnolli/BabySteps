@@ -1,3 +1,4 @@
+import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
 import 'package:babysteps/app/widgets/feeding_widgets.dart';
 import 'package:babysteps/time_since.dart';
@@ -8,8 +9,6 @@ import 'package:go_router/go_router.dart';
 // Streams for the feeding landing page - has a filled card, a breast feeding button, and a
 // bottle feeding button
 
-FirebaseFirestore db = FirebaseFirestore.instance;
-
 /// The widget that reads realtime feeding updates for the FilledCard.
 class FeedingStream extends StatefulWidget {
   const FeedingStream({super.key});
@@ -19,13 +18,8 @@ class FeedingStream extends StatefulWidget {
 }
 
 class _FeedingStreamState extends State<FeedingStream> {
-  final Stream<QuerySnapshot> _feedingStream = db
-      .collection("Babies")
-      .doc("IYyV2hqR7omIgeA4r7zQ")
-      .collection("Feeding")
-      .orderBy('date', descending: true)
-      .limit(1)
-      .snapshots();
+  final Stream<QuerySnapshot> _feedingStream =
+      FeedingDatabaseMethods().getFeedingStream();
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +37,7 @@ class _FeedingStreamState extends State<FeedingStream> {
         // An array of documents, but our query only returns an array of one document
         var lastFeedDoc = snapshot.data!.docs;
 
-        DateTime date = DateTime.parse(lastFeedDoc[0]['date'].toString());
+        DateTime date = lastFeedDoc[0]['date'].toDate();
         String timeSinceFed = getTimeSince(date);
         String lastType = lastFeedDoc[0]['type'];
 
@@ -58,20 +52,15 @@ class _FeedingStreamState extends State<FeedingStream> {
 
 /// The widget that reads realtime feeding updates for the breast feeding button.
 class BreastFeedingStream extends StatefulWidget {
+  const BreastFeedingStream({super.key});
+
   @override
-  _BreastFeedingStreamState createState() => _BreastFeedingStreamState();
+  State<StatefulWidget> createState() => _BreastFeedingStreamState();
 }
 
 class _BreastFeedingStreamState extends State<BreastFeedingStream> {
-  final Stream<QuerySnapshot> _breastFeedingStream = db
-      .collection('Babies')
-      .doc('IYyV2hqR7omIgeA4r7zQ') // TODO update to current user's document id
-      .collection('Feeding')
-      .where('type', isEqualTo: 'BreastFeeding')
-      .where('active', isEqualTo: false)
-      .orderBy('date', descending: true)
-      .limit(1)
-      .snapshots();
+  final Stream<QuerySnapshot> _breastFeedingStream =
+      FeedingDatabaseMethods().getBreastfeedingStream();
 
   @override
   Widget build(BuildContext context) {
@@ -107,20 +96,15 @@ class _BreastFeedingStreamState extends State<BreastFeedingStream> {
 
 /// The widget that reads realtime feeding updates for the bottle feeding button.
 class BottleFeedingStream extends StatefulWidget {
+  const BottleFeedingStream({super.key});
+
   @override
-  _BottleFeedingStreamState createState() => _BottleFeedingStreamState();
+  State<StatefulWidget> createState() => _BottleFeedingStreamState();
 }
 
 class _BottleFeedingStreamState extends State<BottleFeedingStream> {
-  final Stream<QuerySnapshot> _bottleFeedingStream = db
-      .collection('Babies')
-      .doc('IYyV2hqR7omIgeA4r7zQ') // TODO update to current user's document id
-      .collection('Feeding')
-      .where('type', isEqualTo: 'Bottle')
-      .where('active', isEqualTo: false)
-      .orderBy('date', descending: true)
-      .limit(1)
-      .snapshots();
+  final Stream<QuerySnapshot> _bottleFeedingStream =
+      FeedingDatabaseMethods().getBottleFeedingStream();
 
   @override
   Widget build(BuildContext context) {

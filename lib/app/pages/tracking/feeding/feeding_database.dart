@@ -22,6 +22,48 @@ class FeedingDatabaseMethods {
         );
   }
 
+  Stream<QuerySnapshot> getFeedingStream() {
+    String? babyDoc = prefs?.getString('babyDoc');
+
+    return db
+        .collection("Babies")
+        .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
+        .collection("Feeding")
+        .orderBy('date', descending: true)
+        .limit(1)
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> getBreastfeedingStream() {
+    String? babyDoc = prefs?.getString('babyDoc');
+
+    return db
+        .collection('Babies')
+        .doc(babyDoc ??
+            'IYyV2hqR7omIgeA4r7zQ') // TODO update to current user's document id
+        .collection('Feeding')
+        .where('type', isEqualTo: 'BreastFeeding')
+        .where('active', isEqualTo: false)
+        .orderBy('date', descending: true)
+        .limit(1)
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> getBottleFeedingStream() {
+    String? babyDoc = prefs?.getString('babyDoc');
+
+    return db
+        .collection('Babies')
+        .doc(babyDoc ??
+            'IYyV2hqR7omIgeA4r7zQ') // TODO update to current user's document id
+        .collection('Feeding')
+        .where('type', isEqualTo: 'Bottle')
+        .where('active', isEqualTo: false)
+        .orderBy('date', descending: true)
+        .limit(1)
+        .snapshots();
+  }
+
   //Adds a feeding entry into the Feeding collection
   Future addFeedingEntry(Map<String, dynamic> userInfoMap) async {
     String? babyDoc = prefs?.getString('babyDoc');

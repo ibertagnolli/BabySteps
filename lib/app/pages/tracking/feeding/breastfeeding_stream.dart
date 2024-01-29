@@ -42,7 +42,7 @@ class _BreastFeedingStreamState extends State<BreastFeedingStream> {
         // An array of documents, but our query only returns an array of one document
         var lastFeedDoc = snapshot.data!.docs;
 
-        DateTime date = DateTime.parse(lastFeedDoc[0]['date'].toString());
+        DateTime date = lastFeedDoc[0]['date'].toDate();
         String timeSinceFed = getTimeSince(date);
         String lastBreastSide = lastFeedDoc[0]['side'];
 

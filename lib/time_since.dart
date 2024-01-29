@@ -1,4 +1,4 @@
-String getTimeSince(DateTime date) {
+String getTimeSince(DateTime date, {bool ago = false}) {
   String timeSince = '';
   Duration diff = DateTime.now().difference(date);
   if (diff.inSeconds < 60) {
@@ -20,5 +20,5 @@ String getTimeSince(DateTime date) {
         : '${diff.inDays ~/ 7} weeks';
   }
 
-  return timeSince;
+  return ago ? "$timeSince ago" : timeSince;
 }

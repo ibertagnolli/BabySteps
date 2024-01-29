@@ -4,8 +4,6 @@ import 'package:babysteps/app/widgets/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-FirebaseFirestore db = FirebaseFirestore.instance;
-
 /// The widget that reads realtime weight updates for the FilledCard.
 class WeightStream extends StatefulWidget {
   const WeightStream({super.key});

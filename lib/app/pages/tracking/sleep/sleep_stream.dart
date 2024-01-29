@@ -4,8 +4,6 @@ import 'package:babysteps/time_since.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-FirebaseFirestore db = FirebaseFirestore.instance;
-
 /// The widget that reads realtime weight updates for the FilledCard.
 class SleepStream extends StatefulWidget {
   const SleepStream({super.key});
