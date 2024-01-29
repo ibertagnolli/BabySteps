@@ -31,10 +31,13 @@ class _DiaperStreamState extends State<DiaperStream> {
 
         // An array of documents, but our query only returns an array of one document
         var lastDiaperDoc = snapshot.data!.docs;
-
-        DateTime date = lastDiaperDoc[0]['date'].toDate();
-        String timeSinceChange = getTimeSince(date);
-        String lastType = lastDiaperDoc[0]['type'];
+        String timeSinceChange = "Never";
+        String lastType = "";
+        if (lastDiaperDoc.isNotEmpty) {
+          DateTime date = lastDiaperDoc[0]['date'].toDate();
+          timeSinceChange = getTimeSince(date);
+          lastType = lastDiaperDoc[0]['type'];
+        }
 
         // Returns the FilledCard with read values for date, pounds, and ounces
         // updated in real time.

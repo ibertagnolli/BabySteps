@@ -32,15 +32,21 @@ class _WeightStreamState extends State<WeightStream> {
         // An array of documents, but our query only returns an array of one document
         var lastWeightDoc = snapshot.data!.docs;
 
-        DateTime date = lastWeightDoc[0]['date'].toDate();
-        String dateStr = getTimeSince(date);
-        String pounds = lastWeightDoc[0]['pounds'];
-        String ounces = lastWeightDoc[0]['ounces'];
+        String dateStr = 'Never';
+        String pounds = "";
+        String ounces = "";
+
+        if (lastWeightDoc.isNotEmpty) {
+          DateTime date = lastWeightDoc[0]['date'].toDate();
+          dateStr = getTimeSince(date);
+          pounds = "${lastWeightDoc[0]['pounds']} lbs";
+          ounces = "${lastWeightDoc[0]['ounces']} oz";
+        }
 
         // Returns the FilledCard with read values for date, pounds, and ounces
         // updated in real time.
-        return FilledCard("last weight: $dateStr",
-            "weight: $pounds lbs $ounces oz", Icon(Icons.scale));
+        return FilledCard("last weight: $dateStr", "weight: $pounds $ounces",
+            Icon(Icons.scale));
       },
     );
   }

@@ -1,3 +1,4 @@
+import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
 import 'package:babysteps/app/widgets/feeding_widgets.dart';
 import 'package:babysteps/time_since.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,15 +17,8 @@ class BottleFeedingStream extends StatefulWidget {
 }
 
 class _BottleFeedingStreamState extends State<BottleFeedingStream> {
-  final Stream<QuerySnapshot> _bottleFeedingStream = db
-      .collection('Babies')
-      .doc('IYyV2hqR7omIgeA4r7zQ') // TODO update to current user's document id
-      .collection('Feeding')
-      .where('type', isEqualTo: 'Bottle')
-      .where('active', isEqualTo: false)
-      .orderBy('date', descending: true)
-      .limit(1)
-      .snapshots();
+  final Stream<QuerySnapshot> _bottleFeedingStream =
+      FeedingDatabaseMethods().getBottleFeedingStream();
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +35,14 @@ class _BottleFeedingStreamState extends State<BottleFeedingStream> {
 
         // An array of documents, but our query only returns an array of one document
         var lastFeedDoc = snapshot.data!.docs;
+        String timeSinceFed = 'Never';
+        String lastBottleType = 'None';
 
-        DateTime date = DateTime.parse(lastFeedDoc[0]['date'].toString());
-        String timeSinceFed = getTimeSince(date);
-        String lastBottleType = lastFeedDoc[0]['bottleType'];
+        if (lastFeedDoc.isNotEmpty) {
+          DateTime date = DateTime.parse(lastFeedDoc[0]['date'].toString());
+          timeSinceFed = getTimeSince(date);
+          lastBottleType = lastFeedDoc[0]['bottleType'];
+        }
 
         // Returns a bottle feeding info card
 

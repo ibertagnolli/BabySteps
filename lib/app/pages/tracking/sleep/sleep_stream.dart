@@ -30,14 +30,18 @@ class _SleepStreamState extends State<SleepStream> {
 
         // An array of documents, but our query only returns an array of one document
         var lastSleepDoc = snapshot.data!.docs;
+        String dateStr = 'Never';
+        String length = '';
 
-        DateTime date = lastSleepDoc[0]['date'].toDate();
-        String dateStr = getTimeSince(date);
-        String length = lastSleepDoc[0]['length'];
+        if (lastSleepDoc.isNotEmpty) {
+          DateTime date = lastSleepDoc[0]['date'].toDate();
+          dateStr = getTimeSince(date);
+          length = "${lastSleepDoc[0]['length']} minutes";
+        }
 
         // Returns the FilledCard with read values for date, pounds, and ounces
         // updated in real time.
-        return FilledCard("last nap: $dateStr", "sleep: $length minutes",
+        return FilledCard("last nap: $dateStr", "sleep: $length",
             Icon(Icons.person_search_sharp));
       },
     );

@@ -1,11 +1,10 @@
+import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
 import 'package:babysteps/app/widgets/feeding_widgets.dart';
 import 'package:babysteps/time_since.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 // Streams for breastfeeding specific page
-
-FirebaseFirestore db = FirebaseFirestore.instance;
 
 /// The widget that reads realtime feeding updates for the breastfeeding button.
 class BreastFeedingStream extends StatefulWidget {
@@ -16,15 +15,8 @@ class BreastFeedingStream extends StatefulWidget {
 }
 
 class _BreastFeedingStreamState extends State<BreastFeedingStream> {
-  final Stream<QuerySnapshot> _breastFeedingStream = db
-      .collection('Babies')
-      .doc('IYyV2hqR7omIgeA4r7zQ')
-      .collection('Feeding')
-      .where('type', isEqualTo: 'BreastFeeding')
-      .where('active', isEqualTo: false)
-      .orderBy('date', descending: true)
-      .limit(1)
-      .snapshots();
+  final Stream<QuerySnapshot> _breastFeedingStream =
+      FeedingDatabaseMethods().getBreastfeedingStream();
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +33,14 @@ class _BreastFeedingStreamState extends State<BreastFeedingStream> {
 
         // An array of documents, but our query only returns an array of one document
         var lastFeedDoc = snapshot.data!.docs;
+        String timeSinceFed = 'Never';
+        String lastBreastSide = 'None';
 
-        DateTime date = lastFeedDoc[0]['date'].toDate();
-        String timeSinceFed = getTimeSince(date);
-        String lastBreastSide = lastFeedDoc[0]['side'];
+        if (lastFeedDoc.isNotEmpty) {
+          DateTime date = lastFeedDoc[0]['date'].toDate();
+          timeSinceFed = getTimeSince(date);
+          lastBreastSide = lastFeedDoc[0]['side'];
+        }
 
         // Returns a breastfeeding info card
 

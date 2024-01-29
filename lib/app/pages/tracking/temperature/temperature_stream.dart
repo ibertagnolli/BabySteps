@@ -33,10 +33,14 @@ class _TemperatureStreamState extends State<TemperatureStream> {
 
         // An array of documents, but our query only returns an array of one document
         var lastTemperatureDoc = snapshot.data!.docs;
+        String dateStr = "Never";
+        String temperature = "";
 
-        DateTime date = lastTemperatureDoc[0]['date'].toDate();
-        String dateStr = getTimeSince(date);
-        String temperature = lastTemperatureDoc[0]['temperature'];
+        if (lastTemperatureDoc.isNotEmpty) {
+          DateTime date = lastTemperatureDoc[0]['date'].toDate();
+          dateStr = getTimeSince(date);
+          temperature = lastTemperatureDoc[0]['temperature'];
+        }
 
         // Returns the FilledCard with read values for temperature and date
         // updated in real time.

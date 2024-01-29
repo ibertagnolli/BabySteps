@@ -36,10 +36,13 @@ class _FeedingStreamState extends State<FeedingStream> {
 
         // An array of documents, but our query only returns an array of one document
         var lastFeedDoc = snapshot.data!.docs;
-
-        DateTime date = lastFeedDoc[0]['date'].toDate();
-        String timeSinceFed = getTimeSince(date);
-        String lastType = lastFeedDoc[0]['type'];
+        String timeSinceFed = 'Never';
+        String lastType = '';
+        if (lastFeedDoc.isNotEmpty) {
+          DateTime date = lastFeedDoc[0]['date'].toDate();
+          timeSinceFed = getTimeSince(date);
+          lastType = lastFeedDoc[0]['type'];
+        }
 
         // Returns the FilledCard
 
@@ -77,8 +80,11 @@ class _BreastFeedingStreamState extends State<BreastFeedingStream> {
 
         // An array of documents, but our query only returns an array of one document
         var lastFeedDoc = snapshot.data!.docs;
+        String lastBreastSide = 'None';
 
-        String lastBreastSide = lastFeedDoc[0]['side'];
+        if (lastFeedDoc.isNotEmpty) {
+          lastBreastSide = lastFeedDoc[0]['side'];
+        }
 
         // Returns the breast feeding card/button
 
@@ -122,7 +128,11 @@ class _BottleFeedingStreamState extends State<BottleFeedingStream> {
         // An array of documents, but our query only returns an array of one document
         var lastFeedDoc = snapshot.data!.docs;
 
-        String lastBottleType = lastFeedDoc[0]['bottleType'];
+        String lastBottleType = '';
+
+        if (lastFeedDoc.isNotEmpty) {
+          lastBottleType = lastFeedDoc[0]['bottleType'];
+        }
 
         // Returns the bottle feeding card/button
 
