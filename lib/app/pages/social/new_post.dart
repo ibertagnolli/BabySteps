@@ -1,14 +1,15 @@
 //This file contains the page for a new post entry
 import 'dart:io';
 
+import 'package:babysteps/app/pages/social/social_database.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class CreatePostPage extends StatefulWidget {
-  const CreatePostPage({super.key, required this.addPost});
-  final void Function(String userName, String time, String child,
-      String? postTitle, String? cap, String? img) addPost;
+  const CreatePostPage({super.key});
 
   @override
   State<StatefulWidget> createState() => _CreatePostState();
@@ -18,7 +19,6 @@ class _CreatePostState extends State<CreatePostPage> {
   //Controllers for text fields
   TextEditingController title = TextEditingController();
   TextEditingController caption = TextEditingController();
-
   File? _imgFile;
 
   void takeSnapshot(bool fromCamera) async {
@@ -33,6 +33,36 @@ class _CreatePostState extends State<CreatePostPage> {
     setState(() {
       _imgFile = File(img.path); // convert it to a Dart:io file
     });
+  }
+
+  void createPost() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? filePath;
+    DateTime now = DateTime.now();
+    if (_imgFile != null) {
+      final storageRef = FirebaseStorage.instance.ref();
+      final imagesRef = storageRef.child(prefs.getString("uid")!);
+      final imageRef = imagesRef.child(now.toIso8601String());
+
+      try {
+        await imageRef.putFile(_imgFile!);
+        filePath = await imageRef.getDownloadURL();
+      } catch (e) {
+        // ...
+      }
+    }
+
+    Map<String, dynamic> uploaddata = {
+      'usersName': prefs.getString("name"),
+      'date': now,
+      'title': title.text == '' ? null : title.text,
+      'caption': caption.text == '' ? null : caption.text,
+      'child': prefs.getString("childName"),
+      'image': filePath,
+    };
+
+    await SocialDatabaseMethods().addPost(uploaddata);
+    //once data has been added, update the card accordingly
   }
 
   //This is a temporary boolean for mocking data
@@ -57,9 +87,6 @@ class _CreatePostState extends State<CreatePostPage> {
     final screenWidth = MediaQuery.of(context).size.width;
     final cardWidth = screenWidth * 0.95;
     final cardHeight = cardWidth * 0.75;
-    //TODO: remove this once we're actually using a user's files for the image
-    String img =
-        "https://thumbs.dreamstime.com/b/sleeping-newborn-baby-blanket-59033149.jpg";
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface,
@@ -72,53 +99,53 @@ class _CreatePostState extends State<CreatePostPage> {
               Padding(
                 padding: EdgeInsets.all(32),
                 //If a photo has been added, show it, if not show the 'add photo' box
-                child: _imgFile != null
-                    ? Image(image: FileImage(_imgFile!))
-                    : InkWell(
-                        onTap: () => showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => Dialog(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  TextButton(
-                                    onPressed: () {
-                                      takeSnapshot(false);
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text(
-                                      'From Gallery',
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .secondary),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 15),
-                                  TextButton(
-                                    onPressed: () {
-                                      takeSnapshot(true);
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text(
-                                      'Take Photo',
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .secondary),
-                                    ),
-                                  ),
-                                ],
+                child: InkWell(
+                  onTap: () => showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) => Dialog(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                takeSnapshot(false);
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                'From Gallery',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary),
                               ),
                             ),
-                          ),
+                            const SizedBox(height: 15),
+                            TextButton(
+                              onPressed: () {
+                                takeSnapshot(true);
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                'Take Photo',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary),
+                              ),
+                            ),
+                          ],
                         ),
-                        child: Container(
+                      ),
+                    ),
+                  ),
+                  child: _imgFile != null
+                      ? Image(image: FileImage(_imgFile!))
+                      : Container(
                           height: cardHeight,
                           width: cardWidth,
                           color: Theme.of(context).colorScheme.surface,
@@ -134,7 +161,7 @@ class _CreatePostState extends State<CreatePostPage> {
                             ],
                           ),
                         ),
-                      ),
+                ),
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 32),
@@ -164,16 +191,7 @@ class _CreatePostState extends State<CreatePostPage> {
               const SizedBox(height: 8),
               FilledButton.tonal(
                 onPressed: () {
-                  //TODO: remove this call to addPost once database is hooked up
-                  widget.addPost(
-                      "Jim de St Germain",
-                      "3 seconds ago",
-                      "Aaron",
-                      title.text == "" ? null : title.text,
-                      caption.text == "" ? null : caption.text,
-                      photoAdded
-                          ? "https://thumbs.dreamstime.com/b/sleeping-newborn-baby-blanket-59033149.jpg"
-                          : null);
+                  createPost();
                   Navigator.of(context).pop();
                 },
                 style: ButtonStyle(
