@@ -15,14 +15,17 @@ class UserDatabaseMethods {
         .add(userInfoMap);
   }
 
-  //This method gets the entries from the diaper collection and orders them so the most recent entry is document[0].
-  Future<QuerySnapshot> getLatestDiaperInfo() async {
+  Future<QuerySnapshot> getUser(String uid) async {
+    return await FirebaseFirestore.instance
+        .collection('Users')
+        .where('UID', isEqualTo: uid)
+        .get();
+  }
+
+  Future getBaby(String babyId) async {
     return await FirebaseFirestore.instance
         .collection('Babies')
-        .doc(
-            'IYyV2hqR7omIgeA4r7zQ') // TODO update to current user's document id
-        .collection('Diaper')
-        .orderBy('date', descending: true)
+        .doc(babyId)
         .get();
   }
 }

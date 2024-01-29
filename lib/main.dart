@@ -11,6 +11,8 @@ import 'package:babysteps/app/pages/tracking/tracking.dart';
 import 'package:babysteps/app/pages/tracking/weight/weight.dart';
 import 'package:babysteps/app/pages/user/add_baby.dart';
 import 'package:babysteps/app/pages/user/profile.dart';
+import 'package:babysteps/app/pages/user/user_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/theme.dart';
 import 'package:babysteps/app/pages/home/home.dart';
@@ -32,6 +34,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 //https://github.com/bizz84/nested_navigation_examples/blob/main/examples/gorouter/lib/main.dart
 
 bool loggedIn = false;
+SharedPreferences? prefs;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,18 +47,33 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  User? user = FirebaseAuth.instance.currentUser;
+
+  if (user != null) {
+    prefs = await SharedPreferences.getInstance();
+    prefs!.setString('name', user.displayName ?? '');
+    prefs!.setString('uid', user.uid);
+
+    QuerySnapshot snapshot = await UserDatabaseMethods().getUser(user.uid);
+    var doc = snapshot.docs;
+    print(doc);
+    prefs!.setString('babyDoc', doc[0]['baby']);
+    prefs!.setString('userDoc', doc[0].id);
+
+    DocumentSnapshot snapshot2 =
+        await UserDatabaseMethods().getBaby(doc[0]['baby']);
+    Map<String, dynamic> doc2 = snapshot2.data()! as Map<String, dynamic>;
+    prefs!.setString('childName', doc2['Name']);
+  }
+
   FirebaseAuth.instance.authStateChanges().listen((User? user) async {
     // Obtain shared preferences.
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (user == null) {
       loggedIn = false;
       print('User is currently signed out!');
     } else {
       loggedIn = true;
-      prefs.setString(
-          'name', user.displayName == null ? '' : user.displayName!);
-      prefs.setString('childName', 'baby');
-      prefs.setString('uid', user.uid);
+
       print('User is signed in!');
     }
   });
@@ -281,3 +299,7 @@ final goRouter = GoRouter(
     ),
   ],
 );
+
+SharedPreferences? getPreferences() {
+  return prefs;
+}

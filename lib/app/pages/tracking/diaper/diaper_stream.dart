@@ -1,3 +1,4 @@
+import 'package:babysteps/app/pages/time_since.dart';
 import 'package:babysteps/app/pages/tracking/diaper/diaper_database.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -32,8 +33,7 @@ class _DiaperStreamState extends State<DiaperStream> {
         var lastDiaperDoc = snapshot.data!.docs;
 
         DateTime date = DateTime.parse(lastDiaperDoc[0]['date'].toString());
-        String diff = DateTime.now().difference(date).inMinutes.toString();
-        String timeSinceChange = diff == '1' ? '$diff min' : '$diff mins';
+        String timeSinceChange = getTimeSince(date);
         String lastType = lastDiaperDoc[0]['type'];
 
         // Returns the FilledCard with read values for date, pounds, and ounces

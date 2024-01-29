@@ -1,3 +1,4 @@
+import 'package:babysteps/app/pages/time_since.dart';
 import 'package:babysteps/app/pages/tracking/diaper/diaper_database.dart';
 import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
 import 'package:babysteps/app/pages/tracking/sleep/sleep_database.dart';
@@ -130,14 +131,12 @@ class _TrackingPageState extends State<TrackingPage> {
 
                   // An array of documents, but our query only returns an array of one document
                   var lastDiaperDoc = snapshot.data!.docs;
-
-                  DateTime date =
-                      DateTime.parse(lastDiaperDoc[0]['date'].toString());
-                  String diff =
-                      DateTime.now().difference(date).inMinutes.toString();
-                  String timeSinceChange =
-                      diff == '1' ? '$diff min' : '$diff mins';
-
+                  String timeSinceChange = 'Never';
+                  if (lastDiaperDoc.isNotEmpty) {
+                    DateTime date =
+                        DateTime.parse(lastDiaperDoc[0]['date'].toString());
+                    timeSinceChange = getTimeSince(date);
+                  }
                   // Returns the FilledCard with read values for date, pounds, and ounces
                   // updated in real time.
                   return TrackingCard(
