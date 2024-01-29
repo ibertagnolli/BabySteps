@@ -1,7 +1,6 @@
 import 'package:babysteps/app/pages/notes/notes.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
-import 'package:go_router/go_router.dart';
 
 
 class NotesHomePage extends StatefulWidget {

@@ -2,7 +2,6 @@ import 'package:babysteps/app/pages/social/social_database.dart';
 import 'package:babysteps/app/widgets/social_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SocialStream extends StatefulWidget {
   const SocialStream({super.key});

@@ -57,7 +57,7 @@ void main() async {
     QuerySnapshot snapshot = await UserDatabaseMethods().getUser(user.uid);
     var doc = snapshot.docs;
     print(doc);
-    prefs!.setString('babyDoc', doc[0]['baby']);
+    prefs!.setString('babyDoc', 'IYyV2hqR7omIgeA4r7zQ');
     prefs!.setString('userDoc', doc[0].id);
 
     DocumentSnapshot snapshot2 =

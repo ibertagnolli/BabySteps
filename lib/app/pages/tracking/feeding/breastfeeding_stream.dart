@@ -1,33 +1,30 @@
-import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
-import 'package:babysteps/app/widgets/widgets.dart';
 import 'package:babysteps/app/widgets/feeding_widgets.dart';
+import 'package:babysteps/time_since.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
-import 'package:go_router/go_router.dart';
 
-
-// Streams for breastfeeding specific page 
+// Streams for breastfeeding specific page
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 
 /// The widget that reads realtime feeding updates for the breastfeeding button.
-class BreastFeedingStream extends StatefulWidget{
+class BreastFeedingStream extends StatefulWidget {
+  const BreastFeedingStream({super.key});
+
   @override
-  _BreastFeedingStreamState createState() => _BreastFeedingStreamState();
+  State<StatefulWidget> createState() => _BreastFeedingStreamState();
 }
 
 class _BreastFeedingStreamState extends State<BreastFeedingStream> {
-  final Stream<QuerySnapshot> _breastFeedingStream = db.collection('Babies')
-        .doc(
-            'IYyV2hqR7omIgeA4r7zQ') 
-        .collection('Feeding')
-        .where('type', isEqualTo: 'BreastFeeding')
-        .where('active', isEqualTo: false)
-        .orderBy('date', descending: true)
-        .limit(1)
-        .snapshots();
+  final Stream<QuerySnapshot> _breastFeedingStream = db
+      .collection('Babies')
+      .doc('IYyV2hqR7omIgeA4r7zQ')
+      .collection('Feeding')
+      .where('type', isEqualTo: 'BreastFeeding')
+      .where('active', isEqualTo: false)
+      .orderBy('date', descending: true)
+      .limit(1)
+      .snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -46,19 +43,18 @@ class _BreastFeedingStreamState extends State<BreastFeedingStream> {
         var lastFeedDoc = snapshot.data!.docs;
 
         DateTime date = DateTime.parse(lastFeedDoc[0]['date'].toString());
-        String diff = DateTime.now().difference(date).inMinutes.toString();
-        String timeSinceFed = diff == '1' ? '$diff min' : '$diff mins';
+        String timeSinceFed = getTimeSince(date);
         String lastBreastSide = lastFeedDoc[0]['side'];
 
         // Returns a breastfeeding info card
 
         return FeedingInfoCard(
-                timeSinceFed,
-                lastBreastSide,
-                "side",
-                Icon(Icons.sync_alt,
-                    size: 50, color: Theme.of(context).colorScheme.onSecondary),
-                Theme.of(context));
+            timeSinceFed,
+            lastBreastSide,
+            "side",
+            Icon(Icons.sync_alt,
+                size: 50, color: Theme.of(context).colorScheme.onSecondary),
+            Theme.of(context));
       },
     );
   }

@@ -1,19 +1,22 @@
+import 'package:babysteps/time_since.dart';
 import 'package:babysteps/app/pages/tracking/weight/weight_database.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 
 /// The widget that reads realtime weight updates for the FilledCard.
-class WeightStream extends StatefulWidget{
+class WeightStream extends StatefulWidget {
+  const WeightStream({super.key});
+
   @override
-  _WeightStreamState createState() => _WeightStreamState();
+  State<StatefulWidget> createState() => _WeightStreamState();
 }
 
 class _WeightStreamState extends State<WeightStream> {
-  final Stream<QuerySnapshot> _weightStream = WeightDatabaseMethods().getStream();
+  final Stream<QuerySnapshot> _weightStream =
+      WeightDatabaseMethods().getStream();
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +35,14 @@ class _WeightStreamState extends State<WeightStream> {
         var lastWeightDoc = snapshot.data!.docs;
 
         DateTime date = lastWeightDoc[0]['date'].toDate();
-        String dateStr = DateFormat('MM-dd hh:mm').format(date);
+        String dateStr = getTimeSince(date);
         String pounds = lastWeightDoc[0]['pounds'];
         String ounces = lastWeightDoc[0]['ounces'];
 
         // Returns the FilledCard with read values for date, pounds, and ounces
         // updated in real time.
-        return FilledCard(dateStr, "weight: $pounds lbs $ounces oz", Icon(Icons.scale));
+        return FilledCard(
+            dateStr, "weight: $pounds lbs $ounces oz", Icon(Icons.scale));
       },
     );
   }

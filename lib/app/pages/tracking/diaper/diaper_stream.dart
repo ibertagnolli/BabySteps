@@ -1,4 +1,4 @@
-import 'package:babysteps/app/pages/time_since.dart';
+import 'package:babysteps/time_since.dart';
 import 'package:babysteps/app/pages/tracking/diaper/diaper_database.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

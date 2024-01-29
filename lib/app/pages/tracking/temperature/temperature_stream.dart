@@ -1,20 +1,26 @@
-import 'package:babysteps/app/pages/tracking/temperature/temperature_database.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
+import 'package:babysteps/time_since.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 
 /// The widget that reads realtime temperature updates for the FilledCard.
-class TemperatureStream extends StatefulWidget{
+class TemperatureStream extends StatefulWidget {
+  const TemperatureStream({super.key});
+
   @override
-  _TemperatureStreamState createState() => _TemperatureStreamState();
+  State<StatefulWidget> createState() => _TemperatureStreamState();
 }
 
 class _TemperatureStreamState extends State<TemperatureStream> {
-  final Stream<QuerySnapshot> _temperatureStream = db.collection("Babies").doc("IYyV2hqR7omIgeA4r7zQ").collection("Temperature").orderBy('date', descending: true).limit(1).snapshots();
+  final Stream<QuerySnapshot> _temperatureStream = db
+      .collection("Babies")
+      .doc("IYyV2hqR7omIgeA4r7zQ")
+      .collection("Temperature")
+      .orderBy('date', descending: true)
+      .limit(1)
+      .snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -33,13 +39,13 @@ class _TemperatureStreamState extends State<TemperatureStream> {
         var lastTemperatureDoc = snapshot.data!.docs;
 
         DateTime date = lastTemperatureDoc[0]['date'].toDate();
-        String dateStr = DateFormat('MM-dd hh:mm').format(date);
+        String dateStr = getTimeSince(date);
         String temperature = lastTemperatureDoc[0]['temperature'];
- 
 
         // Returns the FilledCard with read values for temperature and date
         // updated in real time.
-        return FilledCard(dateStr, "Temperature: $temperature", Icon(Icons.scale));
+        return FilledCard(
+            dateStr, "Temperature: $temperature", Icon(Icons.scale));
       },
     );
   }
