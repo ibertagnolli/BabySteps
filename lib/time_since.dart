@@ -15,9 +15,9 @@ String getTimeSince(DateTime date) {
   } else if (diff.inDays < 7) {
     timeSince = diff.inDays == 1 ? '${diff.inDays} day' : '${diff.inDays} days';
   } else {
-    timeSince = diff.inDays / 7 == 1
-        ? '${diff.inDays / 7} week'
-        : '${diff.inDays / 7} weeks';
+    timeSince = diff.inDays ~/ 7 == 1
+        ? '${diff.inDays ~/ 7} week'
+        : '${diff.inDays ~/ 7} weeks';
   }
 
   return timeSince;

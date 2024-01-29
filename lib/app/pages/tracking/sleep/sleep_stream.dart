@@ -39,8 +39,8 @@ class _SleepStreamState extends State<SleepStream> {
 
         // Returns the FilledCard with read values for date, pounds, and ounces
         // updated in real time.
-        return FilledCard(
-            dateStr, "sleep: $length minutes", Icon(Icons.person_search_sharp));
+        return FilledCard("last nap: $dateStr", "sleep: $length minutes",
+            Icon(Icons.person_search_sharp));
       },
     );
   }

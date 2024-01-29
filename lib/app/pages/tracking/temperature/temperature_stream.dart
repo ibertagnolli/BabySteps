@@ -44,8 +44,8 @@ class _TemperatureStreamState extends State<TemperatureStream> {
 
         // Returns the FilledCard with read values for temperature and date
         // updated in real time.
-        return FilledCard(
-            dateStr, "Temperature: $temperature", Icon(Icons.scale));
+        return FilledCard("last temp: $dateStr", "Temperature: $temperature",
+            Icon(Icons.scale));
       },
     );
   }

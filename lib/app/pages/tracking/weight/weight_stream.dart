@@ -41,8 +41,8 @@ class _WeightStreamState extends State<WeightStream> {
 
         // Returns the FilledCard with read values for date, pounds, and ounces
         // updated in real time.
-        return FilledCard(
-            dateStr, "weight: $pounds lbs $ounces oz", Icon(Icons.scale));
+        return FilledCard("last weight: $dateStr",
+            "weight: $pounds lbs $ounces oz", Icon(Icons.scale));
       },
     );
   }
