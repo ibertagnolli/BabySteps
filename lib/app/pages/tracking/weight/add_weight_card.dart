@@ -129,9 +129,6 @@ class _AddWeightCardState extends State<AddWeightCard> {
                       icon: Icon(Icons.calendar_today_rounded),
                   ),
                   onTap: () async {
-                    // Don't show keyboard
-                    FocusScope.of(context).requestFocus(new FocusNode());
-
                     DateTime? pickeddate = await showDatePicker(
                       context: context,
                       initialDate: DateTime.now(),
@@ -155,6 +152,9 @@ class _AddWeightCardState extends State<AddWeightCard> {
 
                     return null;
                   },
+                  // Don't show the keyboard
+                  showCursor: true,
+                  readOnly: true,
                 ),
 
                 // Third row: Submit button
