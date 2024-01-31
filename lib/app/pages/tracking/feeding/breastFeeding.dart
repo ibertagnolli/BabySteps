@@ -2,8 +2,10 @@ import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/widgets/stopwatch.dart';
-import 'dart:core';
 import 'package:babysteps/app/pages/tracking/feeding/breastfeeding_stream.dart';
+import 'package:babysteps/app/pages/tracking/history_streams.dart';
+import 'package:babysteps/app/widgets/widgets.dart';
+import 'dart:core';
 
 class BreastFeedingPage extends StatefulWidget {
   const BreastFeedingPage({super.key});
@@ -273,6 +275,13 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
                   );
                 },
               ),
+
+              // History Card - in widgets
+              Padding(
+                padding: EdgeInsets.only(top:10),
+                child: HistoryDropdown(SleepHistoryStream()),
+              ),
+              
             ],
           ),
         ),
@@ -281,58 +290,3 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
   }
 }
 
-
-
-
-// // Displays time since and last side
-// class InfoCard extends StatelessWidget {
-//   const InfoCard(this.timeSince, this.lastSide, this.theme, {super.key});
-
-//   final String timeSince;
-//   final String lastSide;
-//   final ThemeData theme;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final screenWidth = MediaQuery.of(context).size.width;
-//     double width = screenWidth * 0.85;
-//     return Card(
-//       elevation: 0,
-//       color: theme.colorScheme.secondary,
-//       child: ConstrainedBox(
-//         constraints:
-//             BoxConstraints(minWidth: width, maxWidth: width, minHeight: 140),
-//         child: Column(
-//           children: [
-//             Padding(
-//               padding: const EdgeInsets.all(6.0),
-//               child: ListTile(
-//                 leading: Icon(Icons.access_alarm,
-//                     size: 50, color: theme.colorScheme.onSecondary),
-//                 title: Text(
-//                   'Time since last fed: $timeSince',
-//                   style: TextStyle(
-//                     fontSize: 20,
-//                     color: theme.colorScheme.onSecondary,
-//                   ),
-//                 ),
-//               ),
-//             ),
-//             Padding(
-//               padding: const EdgeInsets.all(6.0),
-//               child: ListTile(
-//                 leading: Icon(Icons.sync_alt,
-//                     size: 50, color: theme.colorScheme.onSecondary),
-//                 title: Text('Last side: $lastSide',
-//                     style: TextStyle(
-//                       fontSize: 20,
-//                       color: theme.colorScheme.onSecondary,
-//                     )),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

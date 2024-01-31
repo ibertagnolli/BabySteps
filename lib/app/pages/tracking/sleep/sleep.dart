@@ -1,6 +1,8 @@
 import 'package:babysteps/app/pages/tracking/sleep/sleep_database.dart';
 import 'package:babysteps/app/pages/tracking/sleep/sleep_stream.dart';
+import 'package:babysteps/app/pages/tracking/history_streams.dart';
 import 'package:babysteps/app/widgets/stopwatch.dart';
+import 'package:babysteps/app/widgets/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
@@ -178,9 +180,18 @@ class _SleepPageState extends State<SleepPage> {
           //TODO: pass time since strings to the stopwatch widget!!
           // NewStopWatch(timeSinceNap, buttonText, updateData, uploadData,
           //     timeSoFarInNap, timerAlreadyStarted),
+        
+        
+          // History Card - in widgets
+          Padding(
+            padding: EdgeInsets.only(top:30),
+            child: HistoryDropdown(SleepHistoryStream()),
+            ),
+          
         ]),
       ),
       ),
     );
   }
 }
+
