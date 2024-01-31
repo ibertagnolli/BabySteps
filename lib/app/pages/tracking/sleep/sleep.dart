@@ -3,7 +3,6 @@ import 'package:babysteps/app/pages/tracking/sleep/sleep_stream.dart';
 import 'package:babysteps/app/widgets/stopwatch.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:babysteps/app/widgets/widgets.dart';
 import 'dart:core';
 
 class SleepPage extends StatefulWidget {

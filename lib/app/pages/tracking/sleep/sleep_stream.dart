@@ -1,16 +1,15 @@
 import 'package:babysteps/app/pages/tracking/sleep/sleep_database.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
+import 'package:babysteps/time_since.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
-
-FirebaseFirestore db = FirebaseFirestore.instance;
 
 /// The widget that reads realtime weight updates for the FilledCard.
-class SleepStream extends StatefulWidget{
+class SleepStream extends StatefulWidget {
+  const SleepStream({super.key});
+
   @override
-  _SleepStreamState createState() => _SleepStreamState();
+  State<StatefulWidget> createState() => _SleepStreamState();
 }
 
 class _SleepStreamState extends State<SleepStream> {
@@ -31,14 +30,19 @@ class _SleepStreamState extends State<SleepStream> {
 
         // An array of documents, but our query only returns an array of one document
         var lastSleepDoc = snapshot.data!.docs;
+        String dateStr = 'Never';
+        String length = '';
 
-        DateTime date = lastSleepDoc[0]['date'].toDate();
-        String dateStr = DateFormat('MM-dd hh:mm').format(date);
-        String length = lastSleepDoc[0]['length'];
+        if (lastSleepDoc.isNotEmpty) {
+          DateTime date = lastSleepDoc[0]['date'].toDate();
+          dateStr = getTimeSince(date);
+          length = "${lastSleepDoc[0]['length']} minutes";
+        }
 
         // Returns the FilledCard with read values for date, pounds, and ounces
         // updated in real time.
-        return FilledCard(dateStr, "sleep: $length minutes", Icon(Icons.person_search_sharp));
+        return FilledCard("last nap: $dateStr", "sleep: $length",
+            Icon(Icons.person_search_sharp));
       },
     );
   }

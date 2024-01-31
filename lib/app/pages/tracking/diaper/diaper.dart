@@ -25,7 +25,7 @@ class _DiaperPageState extends State<DiaperPage> {
     Map<String, dynamic> uploaddata = {
       'type': activeButton,
       'rash': diaperRash,
-      'date': DateTime.now().toIso8601String(),
+      'date': DateTime.now(),
     };
 
     await DiaperDatabaseMethods().addDiaper(uploaddata);

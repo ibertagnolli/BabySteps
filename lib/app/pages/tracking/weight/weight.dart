@@ -1,9 +1,7 @@
 import 'package:babysteps/app/pages/tracking/weight/add_weight_card.dart';
 import 'package:babysteps/app/pages/tracking/weight/weight_database.dart';
 import 'package:babysteps/app/pages/tracking/weight/weight_stream.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:babysteps/app/widgets/widgets.dart';
 import 'dart:core';
 
 /// Holds the widgets for the Weight page.

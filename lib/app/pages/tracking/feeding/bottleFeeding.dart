@@ -74,7 +74,7 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
       'length': '--',
       'bottleType': activeButton,
       'active': true,
-      'date': DateTime.now().toIso8601String(),
+      'date': DateTime.now(),
     };
 
     await FeedingDatabaseMethods().addFeedingEntry(uploaddata);
@@ -104,7 +104,7 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
     });
   }
 
- void bottleDone(String bottleLength) {
+  void bottleDone(String bottleLength) {
     setState(() {
       timeSince = "0:00";
       // lastNap = napLength;
@@ -114,38 +114,44 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
 
   // Popup text window for bottle quantity
   Future openDialog() => showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      title: Text('How much did baby eat?', style: TextStyle(color: Theme.of(context).colorScheme.onSurface,)),
-      content: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              keyboardType: TextInputType.number,
-              autofocus: true, // Automatically enter the text field and pull up keyboard
-              decoration: InputDecoration(hintText: 'Enter quantity')
+      context: context,
+      builder: (context) => AlertDialog(
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              title: Text('How much did baby eat?',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  )),
+              content: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                        keyboardType: TextInputType.number,
+                        autofocus:
+                            true, // Automatically enter the text field and pull up keyboard
+                        decoration:
+                            InputDecoration(hintText: 'Enter quantity')),
+                  ),
+                  Text('oz',
+                      style: TextStyle(
+                          color:
+                              Theme.of(context).colorScheme.onSurfaceVariant))
+                ],
               ),
-          ),
-          Text('oz', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant))
-        ],
-      ),
-      actions: [
-        FilledButton(
-          child: Text('Skip'),
-          onPressed: skipQuantity,
-          ),
-        FilledButton(
-          child: Text('Save'),
-          onPressed: saveQuantity,
-        ),
-      ]
-    )
-  );
+              actions: [
+                FilledButton(
+                  child: Text('Skip'),
+                  onPressed: skipQuantity,
+                ),
+                FilledButton(
+                  child: Text('Save'),
+                  onPressed: saveQuantity,
+                ),
+              ]));
 
   void skipQuantity() {
     Navigator.of(context, rootNavigator: true).pop(); // Makes the popup go away
   }
+
   void saveQuantity() {
     // Store info in database
     Navigator.of(context, rootNavigator: true).pop(); // Makes the popup go away
@@ -164,82 +170,82 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
         ),
       ),
       body: SingleChildScrollView(
-      child:Center(
-        child: Column(children: <Widget>[
-          Padding(
-            padding: EdgeInsets.all(32),
-            child: Text('Bottle Feeding',
-                style: TextStyle(
-                    fontSize: 36,
-                    color: Theme.of(context).colorScheme.onBackground)),
-          ),
+        child: Center(
+          child: Column(children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(32),
+              child: Text('Bottle Feeding',
+                  style: TextStyle(
+                      fontSize: 36,
+                      color: Theme.of(context).colorScheme.onBackground)),
+            ),
 
-          // Top card with info
-          Padding(
-            padding: EdgeInsets.only(bottom: 16),
-            child: BottleFeedingStream(),
-          ),
+            // Top card with info
+            Padding(
+              padding: EdgeInsets.only(bottom: 16),
+              child: BottleFeedingStream(),
+            ),
 
-          // Buttons for bottle type
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              BottleTypeButton('Breast milk',
-                  activeButton.contains("Breast milk"), bottleTypeClicked),
-              BottleTypeButton('Formula', activeButton.contains("Formula"),
-                  bottleTypeClicked)
-            ],
-          ),
-          //Using a future builder (should we be using a stream builder?)
-          //This will ensure that we don't put up the stopwatch until we see if the stopwatch should still be going
-          //if we get a return from the Future async call, then we'll display the stopwatch,
-          //if there is any error, we'll display the message
-          //else we'll just show a progress indicator saying that we're retrieving data
-          FutureBuilder(
-            future: getData(),
-            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-              List<Widget> children;
-              if (snapshot.hasData) {
-                children = <Widget>[
-                  NewStopWatch(timeSince, buttonText, updateData, uploadData,
-                      timeSoFarInFeed, stopwatchGoing),
-                ];
-              } else if (snapshot.hasError) {
-                children = <Widget>[
-                  const Icon(
-                    Icons.error_outline,
-                    color: Color.fromRGBO(244, 67, 54, 1),
-                    size: 60,
+            // Buttons for bottle type
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                BottleTypeButton('Breast milk',
+                    activeButton.contains("Breast milk"), bottleTypeClicked),
+                BottleTypeButton('Formula', activeButton.contains("Formula"),
+                    bottleTypeClicked)
+              ],
+            ),
+            //Using a future builder (should we be using a stream builder?)
+            //This will ensure that we don't put up the stopwatch until we see if the stopwatch should still be going
+            //if we get a return from the Future async call, then we'll display the stopwatch,
+            //if there is any error, we'll display the message
+            //else we'll just show a progress indicator saying that we're retrieving data
+            FutureBuilder(
+              future: getData(),
+              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                List<Widget> children;
+                if (snapshot.hasData) {
+                  children = <Widget>[
+                    NewStopWatch(timeSince, buttonText, updateData, uploadData,
+                        timeSoFarInFeed, stopwatchGoing),
+                  ];
+                } else if (snapshot.hasError) {
+                  children = <Widget>[
+                    const Icon(
+                      Icons.error_outline,
+                      color: Color.fromRGBO(244, 67, 54, 1),
+                      size: 60,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: Text('Error: ${snapshot.error}'),
+                    ),
+                  ];
+                } else {
+                  children = const <Widget>[
+                    SizedBox(
+                      width: 60,
+                      height: 60,
+                      child: CircularProgressIndicator(),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 16),
+                      child: Text('Grabbing Data...'),
+                    ),
+                  ];
+                }
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: children,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16),
-                    child: Text('Error: ${snapshot.error}'),
-                  ),
-                ];
-              } else {
-                children = const <Widget>[
-                  SizedBox(
-                    width: 60,
-                    height: 60,
-                    child: CircularProgressIndicator(),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 16),
-                    child: Text('Grabbing Data...'),
-                  ),
-                ];
-              }
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: children,
-                ),
-              );
-            },
-          ),
-          // NewStopWatch(timeSince, buttonText, updateData, () => {}, 0, false)
-        ]),
-      ),
+                );
+              },
+            ),
+            // NewStopWatch(timeSince, buttonText, updateData, () => {}, 0, false)
+          ]),
+        ),
       ),
     );
   }
@@ -251,7 +257,7 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
 //   final String timeSince;
 
 //   @override
-//   
+//
 //   Widget build(BuildContext context) {
 //     final screenWidth = MediaQuery.of(context).size.width;
 //     double width = screenWidth * 0.9;

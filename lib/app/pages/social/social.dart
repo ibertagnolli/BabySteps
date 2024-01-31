@@ -1,3 +1,4 @@
+import 'package:babysteps/app/pages/social/social_database.dart';
 import 'package:babysteps/app/pages/social/social_stream.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
@@ -12,6 +13,12 @@ class SocialPage extends StatefulWidget {
 }
 
 class _SocialPageState extends State<SocialPage> {
+  @override
+  void initState() {
+    super.initState();
+    SocialDatabaseMethods().listenForSocialReads();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
