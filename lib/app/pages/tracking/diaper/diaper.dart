@@ -168,7 +168,10 @@ class _DiaperPageState extends State<DiaperPage> {
               ),
 
               // History card - in widgets
-              HistoryDropdown(SleepHistoryStream())
+              Padding(
+                padding: const EdgeInsets.only(top:30),
+                child: HistoryDropdown(SleepHistoryStream()),
+              )
             ],
           ),
         ),
