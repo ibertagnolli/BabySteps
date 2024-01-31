@@ -229,7 +229,7 @@ class HistoryDropdown extends StatelessWidget {
                           fontSize: 25,
                           color: Theme.of(context).colorScheme.onSurface,
                           fontWeight: FontWeight.bold)),
-                initiallyExpanded: true,
+                initiallyExpanded: false,
                 children: <Widget>[
                   SizedBox(
                     height: 300, // TODO edit this to be sized based on space, not set value
