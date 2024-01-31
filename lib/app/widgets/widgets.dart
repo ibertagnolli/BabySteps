@@ -211,3 +211,66 @@ class TrackingStream extends StatelessWidget {
     );
   }
 }
+
+class HistoryDropdown extends StatelessWidget {
+  HistoryDropdown(this.recentStream, {super.key});
+
+  var recentStream;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+              padding: const EdgeInsets.only(top: 50, right:20, left:20),
+              child: ExpansionTile(
+                backgroundColor: Theme.of(context).colorScheme.surface,
+                collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
+                title: Text('History',
+                    style: TextStyle(
+                        fontSize: 20,
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontWeight: FontWeight.bold)),
+                initiallyExpanded: true,
+                children: <Widget>[
+                  SizedBox(
+                    height: 300, // TODO edit this to be sized based on space, not set value
+                    child: HistoryTabs(recentStream)
+                  ),
+                ],
+              ),
+            );
+  }
+}
+
+
+// source: https://docs.flutter.dev/cookbook/design/tabs
+class HistoryTabs extends StatelessWidget {
+  HistoryTabs(this.recentStream, {super.key});
+
+  var recentStream;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            bottom: const TabBar( // Tabs
+              tabs: [
+                Tab(text: 'This week'),
+                Tab(text: 'All-time'),
+              ],
+            ),
+          ),
+          body: TabBarView( // The stuff displayed when the tab is selected
+            children: [
+              recentStream,
+              Icon(Icons.directions_transit),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

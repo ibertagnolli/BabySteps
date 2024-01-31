@@ -37,12 +37,65 @@ class _SleepHistoryStreamState extends State<SleepHistoryStream> {
         var lastSleepDoc = snapshot.data!.docs;
 
         DateTime date = lastSleepDoc[0]['date'].toDate();
-        String dateStr = DateFormat('MM-dd hh:mm').format(date);
+        String day = date.day.toString();
+        String time = date.hour.toString();
+        //String dateStr = DateFormat('MM-dd hh:mm').format(date);
         String length = lastSleepDoc[0]['length'];
 
         // Returns the FilledCard with read values for date, pounds, and ounces
         // updated in real time.
-        return FilledCard(dateStr, "sleep: $length minutes", Icon(Icons.person_search_sharp));
+        return DataTable(
+          columns: const <DataColumn>[
+            DataColumn(
+              label: Expanded(
+                child: Text(
+                  'Date',
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
+            ),
+            DataColumn(
+              label: Expanded(
+                child: Text(
+                  'Time',
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
+            ),
+            DataColumn(
+              label: Expanded(
+                child: Text(
+                  'Length',
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
+            ),
+          ],
+          //rows: const <DataRow>[
+          rows: <DataRow> [
+            DataRow(
+              cells: <DataCell>[
+                DataCell(Text('${day}')),
+                DataCell(Text('${time}')),
+                DataCell(Text('${length}')),
+              ],
+            ),
+            DataRow(
+              cells: <DataCell>[
+                DataCell(Text('${day}')),
+                DataCell(Text('${time}')),
+                DataCell(Text('${length}')),
+              ],
+            ),
+            DataRow(
+              cells: <DataCell>[
+                DataCell(Text('${day}')),
+                DataCell(Text('${time}')),
+                DataCell(Text('${length}')),
+              ],
+            ),
+          ],
+        );
       },
     );
   }
