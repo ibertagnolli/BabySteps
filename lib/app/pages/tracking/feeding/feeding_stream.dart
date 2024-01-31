@@ -1,30 +1,25 @@
 import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
 import 'package:babysteps/app/widgets/feeding_widgets.dart';
+import 'package:babysteps/time_since.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
 
-// Streams for the feeding landing page - has a filled card, a breast feeding button, and a 
-// bottle feeding button 
-
-FirebaseFirestore db = FirebaseFirestore.instance;
+// Streams for the feeding landing page - has a filled card, a breast feeding button, and a
+// bottle feeding button
 
 /// The widget that reads realtime feeding updates for the FilledCard.
-class FeedingStream extends StatefulWidget{
+class FeedingStream extends StatefulWidget {
+  const FeedingStream({super.key});
+
   @override
-  _FeedingStreamState createState() => _FeedingStreamState();
+  State<StatefulWidget> createState() => _FeedingStreamState();
 }
 
 class _FeedingStreamState extends State<FeedingStream> {
-  final Stream<QuerySnapshot> _feedingStream = db.collection("Babies")
-          .doc("IYyV2hqR7omIgeA4r7zQ")
-          .collection("Feeding")
-          .orderBy('date', descending: true)
-          .limit(1)
-          .snapshots();
+  final Stream<QuerySnapshot> _feedingStream =
+      FeedingDatabaseMethods().getFeedingStream();
 
   @override
   Widget build(BuildContext context) {
@@ -41,13 +36,15 @@ class _FeedingStreamState extends State<FeedingStream> {
 
         // An array of documents, but our query only returns an array of one document
         var lastFeedDoc = snapshot.data!.docs;
+        String timeSinceFed = 'Never';
+        String lastType = '';
+        if (lastFeedDoc.isNotEmpty) {
+          DateTime date = lastFeedDoc[0]['date'].toDate();
+          timeSinceFed = getTimeSince(date);
+          lastType = lastFeedDoc[0]['type'];
+        }
 
-        DateTime date = DateTime.parse(lastFeedDoc[0]['date'].toString());
-        String diff = DateTime.now().difference(date).inMinutes.toString();
-        String timeSinceFed = diff == '1' ? '$diff min' : '$diff mins';
-        String lastType = lastFeedDoc[0]['type'];
-
-        // Returns the FilledCard 
+        // Returns the FilledCard
 
         return FilledCard("last fed: $timeSinceFed", "type: $lastType",
             const Icon(Icons.edit));
@@ -57,21 +54,16 @@ class _FeedingStreamState extends State<FeedingStream> {
 }
 
 /// The widget that reads realtime feeding updates for the breast feeding button.
-class BreastFeedingStream extends StatefulWidget{
+class BreastFeedingStream extends StatefulWidget {
+  const BreastFeedingStream({super.key});
+
   @override
-  _BreastFeedingStreamState createState() => _BreastFeedingStreamState();
+  State<StatefulWidget> createState() => _BreastFeedingStreamState();
 }
 
 class _BreastFeedingStreamState extends State<BreastFeedingStream> {
-  final Stream<QuerySnapshot> _breastFeedingStream = db.collection('Babies')
-        .doc(
-            'IYyV2hqR7omIgeA4r7zQ') // TODO update to current user's document id
-        .collection('Feeding')
-        .where('type', isEqualTo: 'BreastFeeding')
-        .where('active', isEqualTo: false)
-        .orderBy('date', descending: true)
-        .limit(1)
-        .snapshots();
+  final Stream<QuerySnapshot> _breastFeedingStream =
+      FeedingDatabaseMethods().getBreastfeedingStream();
 
   @override
   Widget build(BuildContext context) {
@@ -88,40 +80,37 @@ class _BreastFeedingStreamState extends State<BreastFeedingStream> {
 
         // An array of documents, but our query only returns an array of one document
         var lastFeedDoc = snapshot.data!.docs;
+        String lastBreastSide = 'None';
 
-        String lastBreastSide = lastFeedDoc[0]['side'];
+        if (lastFeedDoc.isNotEmpty) {
+          lastBreastSide = lastFeedDoc[0]['side'];
+        }
 
-        // Returns the breast feeding card/button 
+        // Returns the breast feeding card/button
 
         return FeedingOptionCard(
-                Icon(Icons.water_drop,
-                    size: 40, color: Theme.of(context).colorScheme.onSecondary),
-                "Breast feeding",
-                "Last side: $lastBreastSide",
-                () => context.go('/tracking/feeding/breastFeeding'),
-                Theme.of(context));
+            Icon(Icons.water_drop,
+                size: 40, color: Theme.of(context).colorScheme.onSecondary),
+            "Breast feeding",
+            "Last side: $lastBreastSide",
+            () => context.go('/tracking/feeding/breastFeeding'),
+            Theme.of(context));
       },
     );
   }
 }
 
-
 /// The widget that reads realtime feeding updates for the bottle feeding button.
-class BottleFeedingStream extends StatefulWidget{
+class BottleFeedingStream extends StatefulWidget {
+  const BottleFeedingStream({super.key});
+
   @override
-  _BottleFeedingStreamState createState() => _BottleFeedingStreamState();
+  State<StatefulWidget> createState() => _BottleFeedingStreamState();
 }
 
 class _BottleFeedingStreamState extends State<BottleFeedingStream> {
-  final Stream<QuerySnapshot> _bottleFeedingStream = db.collection('Babies')
-        .doc(
-            'IYyV2hqR7omIgeA4r7zQ') // TODO update to current user's document id
-        .collection('Feeding')
-        .where('type', isEqualTo: 'Bottle')
-        .where('active', isEqualTo: false)
-        .orderBy('date', descending: true)
-        .limit(1)
-        .snapshots();
+  final Stream<QuerySnapshot> _bottleFeedingStream =
+      FeedingDatabaseMethods().getBottleFeedingStream();
 
   @override
   Widget build(BuildContext context) {
@@ -139,17 +128,21 @@ class _BottleFeedingStreamState extends State<BottleFeedingStream> {
         // An array of documents, but our query only returns an array of one document
         var lastFeedDoc = snapshot.data!.docs;
 
-        String lastBottleType = lastFeedDoc[0]['bottleType'];
+        String lastBottleType = '';
 
-        // Returns the bottle feeding card/button 
+        if (lastFeedDoc.isNotEmpty) {
+          lastBottleType = lastFeedDoc[0]['bottleType'];
+        }
+
+        // Returns the bottle feeding card/button
 
         return FeedingOptionCard(
-                Icon(Icons.local_drink,
-                    size: 40, color: Theme.of(context).colorScheme.onSecondary),
-                "Bottle feeding",
-                "Last type: $lastBottleType",   // TODO: last bottle amount would be more helpful
-                () => context.go('/tracking/feeding/bottleFeeding'),
-                Theme.of(context));
+            Icon(Icons.local_drink,
+                size: 40, color: Theme.of(context).colorScheme.onSecondary),
+            "Bottle feeding",
+            "Last type: $lastBottleType", // TODO: last bottle amount would be more helpful
+            () => context.go('/tracking/feeding/bottleFeeding'),
+            Theme.of(context));
       },
     );
   }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dart:core';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class NotesPage extends StatefulWidget {
   const NotesPage({super.key});
@@ -28,7 +27,7 @@ class _NotesPageState extends State<NotesPage> {
           )),
       body: Column(
         children: <Widget>[
-          //The text field and styling for adding the note title 
+          //The text field and styling for adding the note title
           Padding(
             padding: EdgeInsets.all(8.0),
             child: TextField(
@@ -51,7 +50,7 @@ class _NotesPageState extends State<NotesPage> {
             ),
           ),
 
-         //The text field and styling for writing the note contents.
+          //The text field and styling for writing the note contents.
           Padding(
             padding: EdgeInsets.all(8.0),
             child: Container(
@@ -88,7 +87,7 @@ class _NotesPageState extends State<NotesPage> {
                 alignment: FractionalOffset.bottomCenter,
                 child: ElevatedButton(
                   //TODO: connect to BE so when they save it adds note to DB
-                  onPressed:() {},
+                  onPressed: () {},
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(
                         Theme.of(context).colorScheme.tertiary),

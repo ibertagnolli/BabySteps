@@ -1,12 +1,8 @@
 import 'package:babysteps/app/pages/tracking/temperature/temperature_database.dart';
 import 'package:babysteps/app/pages/tracking/temperature/add_temperature_card.dart';
 import 'package:babysteps/app/pages/tracking/temperature/temperature_stream.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:babysteps/app/widgets/widgets.dart';
 import 'dart:core';
-
-import 'package:intl/intl.dart';
 
 class TemperaturePage extends StatefulWidget {
   const TemperaturePage({super.key});
