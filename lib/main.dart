@@ -25,6 +25,8 @@ import 'package:babysteps/app/pages/user/login_landing.dart';
 import 'package:babysteps/app/pages/user/login.dart';
 import 'package:babysteps/app/pages/user/signup.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 //Code for routing (most of this page) taken and adjusted from this tutorial and this github:
 //https://codewithandrea.com/articles/flutter-bottom-navigation-bar-nested-routes-gorouter/
 //https://github.com/bizz84/nested_navigation_examples/blob/main/examples/gorouter/lib/main.dart
@@ -42,12 +44,18 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  FirebaseAuth.instance.authStateChanges().listen((User? user) {
+  FirebaseAuth.instance.authStateChanges().listen((User? user) async {
+    // Obtain shared preferences.
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (user == null) {
       loggedIn = false;
       print('User is currently signed out!');
     } else {
       loggedIn = true;
+      prefs.setString(
+          'name', user.displayName == null ? '' : user.displayName!);
+      prefs.setString('childName', 'baby');
+      prefs.setString('uid', user.uid);
       print('User is signed in!');
     }
   });
@@ -244,11 +252,10 @@ final goRouter = GoRouter(
                 pageBuilder: (context, state) =>
                     const NoTransitionPage(child: NotesHomePage()),
                 routes: [
-                 GoRoute(
+                  GoRoute(
                       path: 'newnote',
                       builder: (context, state) => const NotesPage())
                 ]),
-            
           ],
         ),
         // fifth branch (Social)
@@ -264,17 +271,7 @@ final goRouter = GoRouter(
                   GoRoute(
                     path: 'newPost',
                     builder: (context, state) {
-                      //TODO: take this out once social is hooked up to database
-                      void Function(String userName, String time, String child,
-                              String? postTitle, String? cap, String? img)
-                          addPost = state.extra as void Function(
-                              String userName,
-                              String time,
-                              String child,
-                              String? postTitle,
-                              String? cap,
-                              String? img);
-                      return CreatePostPage(addPost: addPost);
+                      return const CreatePostPage();
                     },
                   ),
                 ]),
