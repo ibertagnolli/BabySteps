@@ -242,7 +242,8 @@ class HistoryDropdown extends StatelessWidget {
 }
 
 
-// source: https://docs.flutter.dev/cookbook/design/tabs
+// sources: https://docs.flutter.dev/cookbook/design/tabs
+// https://www.flutterbeads.com/change-tab-bar-color-in-flutter/
 class HistoryTabs extends StatelessWidget {
   HistoryTabs(this.recentStream, {super.key});
 
@@ -256,12 +257,21 @@ class HistoryTabs extends StatelessWidget {
         length: 2,
         child: Scaffold(
           appBar: AppBar(
-            bottom: const TabBar( // Tabs
-              tabs: [
-                Tab(text: 'This week'),
-                Tab(text: 'All-time'),
-              ],
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(0),
+              child: Material(
+                color: Theme.of(context).colorScheme.primary, 
+                child: TabBar(
+                  indicatorColor: Theme.of(context).colorScheme.secondary,
+                  labelColor: Theme.of(context).colorScheme.onPrimary,
+                  tabs: [
+                    Tab(text: 'This week'),
+                    Tab(text: 'All-time'),
+                  ],
+                ),
+              ),
             ),
+            backgroundColor: Theme.of(context).colorScheme.surface,
           ),
           body: TabBarView( // The stuff displayed when the tab is selected
             children: [
