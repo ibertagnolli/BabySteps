@@ -75,7 +75,7 @@ class _CalendarPageState extends State<CalendarPage> {
               child: TableCalendar(
                 firstDay: DateTime.utc(2020, 10, 16),
                 lastDay: DateTime.utc(2050, 3, 14),
-                focusedDay: DateTime.now(),
+                focusedDay:   _focusedDay,
                 eventLoader: _getEventsForDay,
                 selectedDayPredicate: (day) {
                   // Use `selectedDayPredicate` to determine which day is currently selected.
