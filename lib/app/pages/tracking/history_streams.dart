@@ -10,7 +10,7 @@ import 'package:intl/intl.dart';
 FirebaseFirestore db = FirebaseFirestore.instance;
 
 
-// SLEEP
+// SLEEP  ** SLEEP IS THE ONLY ONE WITH A TABLE RIGHT NOW
 
 class SleepHistoryStream extends StatefulWidget{
   @override
@@ -42,8 +42,7 @@ class _SleepHistoryStreamState extends State<SleepHistoryStream> {
         //String dateStr = DateFormat('MM-dd hh:mm').format(date);
         String length = lastSleepDoc[0]['length'];
 
-        // Returns the FilledCard with read values for date, pounds, and ounces
-        // updated in real time.
+        // Source: https://api.flutter.dev/flutter/material/DataTable-class.html
         return DataTable(
           columns: const <DataColumn>[
             DataColumn(
