@@ -95,7 +95,7 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
       'length': '--',
       'bottleType': '--',
       'active': true,
-      'date': DateTime.now().toIso8601String(),
+      'date': DateTime.now(),
     };
 
     await FeedingDatabaseMethods().addFeedingEntry(uploaddata);
@@ -120,7 +120,7 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
       'length': '--',
       'bottleType': '--',
       'active': true,
-      'date': DateTime.now().toIso8601String(),
+      'date': DateTime.now(),
     };
 
     await FeedingDatabaseMethods().addFeedingEntry(uploaddata);
@@ -184,139 +184,98 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
         ),
       ),
       body: SingleChildScrollView(
-      child: Center(
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(32),
-              child: Text('Breast Feeding',
-                  style: TextStyle(
-                      fontSize: 36,
-                      color: Theme.of(context).colorScheme.onBackground)),
-            ),
-
-            // Top card with info
-            Padding(
-              padding: EdgeInsets.only(bottom: 16),
-              child: BreastFeedingStream(),
-            ),
-
-            //Using a future builder (should we be using a stream builder?)
-            //This will ensure that we don't put up the stopwatch until we see if the stopwatch should still be going
-            //if we get a return from the Future async call, then we'll display the stopwatch,
-            //if there is any error, we'll display the message
-            //else we'll just show a progress indicator saying that we're retrieving data
-            FutureBuilder(
-              future: getData(),
-              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                List<Widget> children;
-                if (snapshot.hasData) {
-                  children = <Widget>[
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      SizedBox(
-                        height: 200,
-                        width: 195,
-                        child: NewStopWatch(
-                            timeSince,
-                            buttonTextL,
-                            updateLeftData,
-                            uploadLeftData,
-                            timeSoFarOnLeft,
-                            leftSideGoing),
-                      ),
-                      SizedBox(
-                        height: 200,
-                        width: 195,
-                        child: NewStopWatch(
-                            timeSince,
-                            buttonTextR,
-                            updateRightData,
-                            uploadRightData,
-                            timeSoFarOnRight,
-                            rightSideGoing),
-                      )
-                    ]),
-                  ];
-                } else if (snapshot.hasError) {
-                  children = <Widget>[
-                    const Icon(
-                      Icons.error_outline,
-                      color: Color.fromRGBO(244, 67, 54, 1),
-                      size: 60,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16),
-                      child: Text('Error: ${snapshot.error}'),
-                    ),
-                  ];
-                } else {
-                  children = const <Widget>[
-                    SizedBox(
-                      width: 60,
-                      height: 60,
-                      child: CircularProgressIndicator(),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 16),
-                      child: Text('Grabbing Data...'),
-                    ),
-                  ];
-                }
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: children,
-                  ),
-                );
-              },
-            ),
-
-            // History dropdown        **** wrap everything in padding
-            Padding(
-              padding: const EdgeInsets.all(15),
-              child: ExpansionTile(
-                backgroundColor: Theme.of(context).colorScheme.surface,
-                collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
-                title: Text('History',
+        child: Center(
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(32),
+                child: Text('Breast Feeding',
                     style: TextStyle(
-                        fontSize: 20,
-                        color: Theme.of(context).colorScheme.onSurface,
-                        fontWeight: FontWeight.bold)),
-                initiallyExpanded: true,
-                children: <Widget>[
-
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: HistoryTabs(),
-                  ),
-
-                  // List of events
-                  // SizedBox(
-                  //   height: 100, // TODO edit this to be sized based on space, not set value
-                  //   child: ValueListenableBuilder(
-                  //       valueListenable: _selectedEvents,
-                  //       builder: (context, value, _) {
-                  //         return ListView.builder(
-                  //             itemCount: value.length, //should this be events
-                  //             itemBuilder: (context, index) {
-                  //               return Container(
-                  //                 child: ListTile(
-                  //                     onTap: () => Text('$value'),
-                  //                     title: Text('${value[index]}')),
-                  //               );
-                  //             });
-                  //       }),
-                  // ),
-                
-
-                ],
+                        fontSize: 36,
+                        color: Theme.of(context).colorScheme.onBackground)),
               ),
-            ),
 
+              // Top card with info
+              Padding(
+                padding: EdgeInsets.only(bottom: 16),
+                child: BreastFeedingStream(),
+              ),
 
-          ],
+              //Using a future builder (should we be using a stream builder?)
+              //This will ensure that we don't put up the stopwatch until we see if the stopwatch should still be going
+              //if we get a return from the Future async call, then we'll display the stopwatch,
+              //if there is any error, we'll display the message
+              //else we'll just show a progress indicator saying that we're retrieving data
+              FutureBuilder(
+                future: getData(),
+                builder:
+                    (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                  List<Widget> children;
+                  if (snapshot.hasData) {
+                    children = <Widget>[
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: 200,
+                              width: 195,
+                              child: NewStopWatch(
+                                  timeSince,
+                                  buttonTextL,
+                                  updateLeftData,
+                                  uploadLeftData,
+                                  timeSoFarOnLeft,
+                                  leftSideGoing),
+                            ),
+                            SizedBox(
+                              height: 200,
+                              width: 195,
+                              child: NewStopWatch(
+                                  timeSince,
+                                  buttonTextR,
+                                  updateRightData,
+                                  uploadRightData,
+                                  timeSoFarOnRight,
+                                  rightSideGoing),
+                            )
+                          ]),
+                    ];
+                  } else if (snapshot.hasError) {
+                    children = <Widget>[
+                      const Icon(
+                        Icons.error_outline,
+                        color: Color.fromRGBO(244, 67, 54, 1),
+                        size: 60,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 16),
+                        child: Text('Error: ${snapshot.error}'),
+                      ),
+                    ];
+                  } else {
+                    children = const <Widget>[
+                      SizedBox(
+                        width: 60,
+                        height: 60,
+                        child: CircularProgressIndicator(),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 16),
+                        child: Text('Grabbing Data...'),
+                      ),
+                    ];
+                  }
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: children,
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
-      ),
       ),
     );
   }

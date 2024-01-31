@@ -1,33 +1,24 @@
 import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
-import 'package:babysteps/app/widgets/widgets.dart';
 import 'package:babysteps/app/widgets/feeding_widgets.dart';
+import 'package:babysteps/time_since.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
-import 'package:go_router/go_router.dart';
 
-
-// Streams for bottle feeding specific page 
+// Streams for bottle feeding specific page
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 
 /// The widget that reads realtime feeding updates for the bottle feeding info card.
-class BottleFeedingStream extends StatefulWidget{
+class BottleFeedingStream extends StatefulWidget {
+  const BottleFeedingStream({super.key});
+
   @override
-  _BottleFeedingStreamState createState() => _BottleFeedingStreamState();
+  State<StatefulWidget> createState() => _BottleFeedingStreamState();
 }
 
 class _BottleFeedingStreamState extends State<BottleFeedingStream> {
-  final Stream<QuerySnapshot> _bottleFeedingStream = db.collection('Babies')
-        .doc(
-            'IYyV2hqR7omIgeA4r7zQ') // TODO update to current user's document id
-        .collection('Feeding')
-        .where('type', isEqualTo: 'Bottle')
-        .where('active', isEqualTo: false)
-        .orderBy('date', descending: true)
-        .limit(1)
-        .snapshots();
+  final Stream<QuerySnapshot> _bottleFeedingStream =
+      FeedingDatabaseMethods().getBottleFeedingStream();
 
   @override
   Widget build(BuildContext context) {
@@ -44,21 +35,24 @@ class _BottleFeedingStreamState extends State<BottleFeedingStream> {
 
         // An array of documents, but our query only returns an array of one document
         var lastFeedDoc = snapshot.data!.docs;
+        String timeSinceFed = 'Never';
+        String lastBottleType = 'None';
 
-        DateTime date = DateTime.parse(lastFeedDoc[0]['date'].toString());
-        String diff = DateTime.now().difference(date).inMinutes.toString();
-        String timeSinceFed = diff == '1' ? '$diff min' : '$diff mins';
-        String lastBottleType = lastFeedDoc[0]['bottleType'];
+        if (lastFeedDoc.isNotEmpty) {
+          DateTime date = DateTime.parse(lastFeedDoc[0]['date'].toString());
+          timeSinceFed = getTimeSince(date);
+          lastBottleType = lastFeedDoc[0]['bottleType'];
+        }
 
         // Returns a bottle feeding info card
 
         return FeedingInfoCard(
-                timeSinceFed,
-                lastBottleType,
-                "bottle",
-                Icon(Icons.edit,
-                    size: 50, color: Theme.of(context).colorScheme.onSecondary),
-                Theme.of(context));
+            timeSinceFed,
+            lastBottleType,
+            "bottle",
+            Icon(Icons.edit,
+                size: 50, color: Theme.of(context).colorScheme.onSecondary),
+            Theme.of(context));
       },
     );
   }
