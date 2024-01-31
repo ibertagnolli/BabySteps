@@ -270,6 +270,50 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
                 );
               },
             ),
+
+            // History dropdown        **** wrap everything in padding
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: ExpansionTile(
+                backgroundColor: Theme.of(context).colorScheme.surface,
+                collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
+                title: Text('History',
+                    style: TextStyle(
+                        fontSize: 20,
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontWeight: FontWeight.bold)),
+                initiallyExpanded: true,
+                children: <Widget>[
+
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: HistoryTabs(),
+                  ),
+
+                  // List of events
+                  // SizedBox(
+                  //   height: 100, // TODO edit this to be sized based on space, not set value
+                  //   child: ValueListenableBuilder(
+                  //       valueListenable: _selectedEvents,
+                  //       builder: (context, value, _) {
+                  //         return ListView.builder(
+                  //             itemCount: value.length, //should this be events
+                  //             itemBuilder: (context, index) {
+                  //               return Container(
+                  //                 child: ListTile(
+                  //                     onTap: () => Text('$value'),
+                  //                     title: Text('${value[index]}')),
+                  //               );
+                  //             });
+                  //       }),
+                  // ),
+                
+
+                ],
+              ),
+            ),
+
+
           ],
         ),
       ),
@@ -279,57 +323,33 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
 }
 
 
+// source: https://docs.flutter.dev/cookbook/design/tabs
+class HistoryTabs extends StatelessWidget {
+  const HistoryTabs({super.key});
 
-
-// // Displays time since and last side
-// class InfoCard extends StatelessWidget {
-//   const InfoCard(this.timeSince, this.lastSide, this.theme, {super.key});
-
-//   final String timeSince;
-//   final String lastSide;
-//   final ThemeData theme;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final screenWidth = MediaQuery.of(context).size.width;
-//     double width = screenWidth * 0.85;
-//     return Card(
-//       elevation: 0,
-//       color: theme.colorScheme.secondary,
-//       child: ConstrainedBox(
-//         constraints:
-//             BoxConstraints(minWidth: width, maxWidth: width, minHeight: 140),
-//         child: Column(
-//           children: [
-//             Padding(
-//               padding: const EdgeInsets.all(6.0),
-//               child: ListTile(
-//                 leading: Icon(Icons.access_alarm,
-//                     size: 50, color: theme.colorScheme.onSecondary),
-//                 title: Text(
-//                   'Time since last fed: $timeSince',
-//                   style: TextStyle(
-//                     fontSize: 20,
-//                     color: theme.colorScheme.onSecondary,
-//                   ),
-//                 ),
-//               ),
-//             ),
-//             Padding(
-//               padding: const EdgeInsets.all(6.0),
-//               child: ListTile(
-//                 leading: Icon(Icons.sync_alt,
-//                     size: 50, color: theme.colorScheme.onSecondary),
-//                 title: Text('Last side: $lastSide',
-//                     style: TextStyle(
-//                       fontSize: 20,
-//                       color: theme.colorScheme.onSecondary,
-//                     )),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: DefaultTabController(
+        length: 3,
+        child: Scaffold(
+          appBar: AppBar(
+            bottom: const TabBar( // Tabs
+              tabs: [
+                Tab(text: 'This week'),
+                Tab(text: 'All-time'),
+              ],
+            ),
+            title: const Text('Tabs Demo'),
+          ),
+          body: const TabBarView( // The stuff displayed when the tab is selected
+            children: [
+              Icon(Icons.directions_car),
+              Icon(Icons.directions_transit),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
