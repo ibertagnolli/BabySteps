@@ -254,15 +254,17 @@ class HistoryTabs extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: DefaultTabController(
-        length: 2,
+        length: 2, // Number of tabs 
         child: Scaffold(
           appBar: AppBar(
-            bottom: PreferredSize(
-              preferredSize: Size.fromHeight(0),
+            bottom: PreferredSize( // Need this to let us set colors for some reason 
+              preferredSize: Size.fromHeight(0), // Size 0 gets rid of the gap between the top and the tabs
               child: Material(
                 color: Theme.of(context).colorScheme.primary, 
+                
+                // Tab bar
                 child: TabBar(
-                  indicatorColor: Theme.of(context).colorScheme.secondary,
+                  indicatorColor: Theme.of(context).colorScheme.secondary, // Color of selected tab
                   labelColor: Theme.of(context).colorScheme.onPrimary,
                   tabs: [
                     Tab(text: 'This week'),
@@ -273,8 +275,11 @@ class HistoryTabs extends StatelessWidget {
             ),
             backgroundColor: Theme.of(context).colorScheme.surface,
           ),
-          body: TabBarView( // The stuff displayed when the tab is selected
+
+          // The stuff displayed when the tab is selected
+          body: TabBarView( 
             children: [
+              // Goes in order - first goes with first tab, second with second
               recentStream,
               Icon(Icons.directions_transit),
             ],
