@@ -7,22 +7,22 @@ import 'package:intl/intl.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 
-/// The widget that reads realtime Event updates.
-class EventStream extends StatefulWidget{
+/// The widget that reads realtime Task updates.
+class TaskStream extends StatefulWidget{
   DateTime selectedDay;
-  EventStream({required this.selectedDay, super.key});
+  TaskStream({required this.selectedDay, super.key});
 
   @override
-  _EventStreamState createState() => _EventStreamState();
+  _TaskStreamState createState() => _TaskStreamState();
 }
 
-class _EventStreamState extends State<EventStream> {
+class _TaskStreamState extends State<TaskStream> {
   @override
   Widget build(BuildContext context) {
-    final Stream<QuerySnapshot> eventStream = CalendarDatabaseMethods().getEventStream(widget.selectedDay);
+    final Stream<QuerySnapshot> taskStream = CalendarDatabaseMethods().getTaskStream(widget.selectedDay);
 
     return StreamBuilder<QuerySnapshot>(
-      stream: eventStream,
+      stream: taskStream,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
           return const Text('Something went wrong');
@@ -32,25 +32,36 @@ class _EventStreamState extends State<EventStream> {
           return const Text("Loading");
         }
         
-        // An array of Event documents
-        var eventDocs = snapshot.data!.docs;
+        // An array of Task documents
+        var taskDocs = snapshot.data!.docs;
 
-        if(eventDocs.isEmpty) {
-          return const Text("No events today.");
+        if(taskDocs.isEmpty) {
+          return const Text("No tasks today.");
         } 
         else {
           return ListView(
             shrinkWrap: true, // TODO We can make this a SizedBox and it will scroll by default. But, the box is not obviously scrollable.
-            children: eventDocs
+            children: taskDocs
                 .map((DocumentSnapshot document) {
                   Map<String, dynamic> data =
                       document.data()! as Map<String, dynamic>;
-                  return ListTile(                      
+                  var docId = document.id;
+                  return CheckboxListTile(                      
                       title: Row(
                         children: [Text(data['name']), 
                                    const Text(" at "), 
                                    Text(DateFormat('hh:mm').format(data['dateTime'].toDate()))]
                       ),
+                      value: data['completed'],
+                      onChanged: (bool? value) async {
+                        // Write updated task data to database
+                        Map<String, dynamic> updateData = {
+                          'name': data['name'],
+                          'dateTime': data['dateTime'],
+                          'completed': !data['completed'],
+                        };
+                        await CalendarDatabaseMethods().updateTask(docId, updateData);
+                      },
                     );
                 })
                 .toList()

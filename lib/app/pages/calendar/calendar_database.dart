@@ -14,13 +14,14 @@ class CalendarDatabaseMethods {
         .add(userInfoMap);
   }
 
+  // TODO EMILY: Tasks is working without this method... why?
   // Sets up the snapshot to listen to changes in the Events collection.
   void listenForEventReads() {
     final docRef = db
         .collection('Users')
         .doc('2hUD5VwWZHXWRX3mJZOp')
         .collection('Events');
-    docRef.snapshots().listen(
+          docRef.snapshots().listen(
           (event) => print(
               "current data: ${event.size}"), // These are helpful for debugging, but we can remove them
           onError: (error) => print("Listen failed: $error"),
@@ -28,7 +29,7 @@ class CalendarDatabaseMethods {
   }
 
   Stream<QuerySnapshot> getEventStream(DateTime selectedDate) {
-    DateTime nextDay = DateTime(selectedDate.year, selectedDate.month, selectedDate.day + 1); //DateUtils.dateOnly(selectedDate); //selectedDate.copyWith(hour:23, minute: 59, second: 59);
+    DateTime nextDay = DateTime(selectedDate.year, selectedDate.month, selectedDate.day + 1);
 
     return db
         .collection('Users')
@@ -40,8 +41,6 @@ class CalendarDatabaseMethods {
         .snapshots();
   }
 
-
-
   // Adds a task to the Tasks collection
   Future addTask(Map<String, dynamic> userInfoMap) async {
     return await db
@@ -49,6 +48,29 @@ class CalendarDatabaseMethods {
         .doc('2hUD5VwWZHXWRX3mJZOp') // TODO update to current user's document id
         .collection('Tasks')
         .add(userInfoMap);
+  }
+
+  Stream<QuerySnapshot> getTaskStream(DateTime selectedDate) {
+    DateTime nextDay = DateTime(selectedDate.year, selectedDate.month, selectedDate.day + 1);
+
+    return db
+        .collection('Users')
+        .doc('2hUD5VwWZHXWRX3mJZOp')
+        .collection("Tasks")
+        // This range gets the tasks happening on selectedDate from 00:00-23:59
+        .where('dateTime', isGreaterThanOrEqualTo: Timestamp.fromDate(selectedDate))
+        .where('dateTime', isLessThanOrEqualTo: Timestamp.fromDate(nextDay))
+        .snapshots();
+  }
+
+  // Marks a task as completed/uncompleted
+  Future updateTask(var docId, Map<String, dynamic> updatedUserInfoMap) async {
+    return await db
+        .collection('Users')
+        .doc('2hUD5VwWZHXWRX3mJZOp') // TODO update to current user's document id
+        .collection('Tasks')
+        .doc(docId)
+        .set(updatedUserInfoMap);
   }
 
 

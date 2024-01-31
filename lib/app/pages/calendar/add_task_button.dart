@@ -39,6 +39,7 @@ class _AddTaskButtonState extends State<AddTaskButton> {
     Map<String, dynamic> uploaddata = {
       'name': nameController.text,
       'dateTime': taskDate,
+      'completed': false,
     };
     await CalendarDatabaseMethods().addTask(uploaddata);
     
