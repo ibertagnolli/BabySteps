@@ -29,8 +29,6 @@ class CalendarDatabaseMethods {
 
   Stream<QuerySnapshot> getEventStream(DateTime selectedDate) {
     DateTime nextDay = DateTime(selectedDate.year, selectedDate.month, selectedDate.day + 1); //DateUtils.dateOnly(selectedDate); //selectedDate.copyWith(hour:23, minute: 59, second: 59);
-    // print("selectedDate: $selectedDate");
-    // print("nextDay: $nextDay");
 
     return db
         .collection('Users')

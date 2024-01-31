@@ -19,11 +19,10 @@ class EventStream extends StatefulWidget{
 class _EventStreamState extends State<EventStream> {
   @override
   Widget build(BuildContext context) {
-    print("Selected Day ${widget.selectedDay}");
-    final Stream<QuerySnapshot> _eventStream = CalendarDatabaseMethods().getEventStream(widget.selectedDay);
+    final Stream<QuerySnapshot> eventStream = CalendarDatabaseMethods().getEventStream(widget.selectedDay);
 
     return StreamBuilder<QuerySnapshot>(
-      stream: _eventStream,
+      stream: eventStream,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
           return const Text('Something went wrong');
@@ -36,26 +35,28 @@ class _EventStreamState extends State<EventStream> {
         // An array of Event documents
         var eventDocs = snapshot.data!.docs;
 
-        if(eventDocs.length == 0) {
-          // TODO account for empty array - day with no events
-        } else {
-          
+        if(eventDocs.isEmpty) {
+          return const Text("No events today.");
+        } 
+        else {
+          return ListView(
+            shrinkWrap: true, // TODO We can make this a SizedBox and it will scroll by default. But, the box is not obviously scrollable.
+            children: eventDocs
+                .map((DocumentSnapshot document) {
+                  Map<String, dynamic> data =
+                      document.data()! as Map<String, dynamic>;
+                  return ListTile(                      
+                      title: Row(
+                        children: [Text(data['name']), 
+                                   const Text(" at "), 
+                                   Text(DateFormat('hh:mm').format(data['dateTime'].toDate()))]
+                      ),
+                    );
+                })
+                .toList()
+                .cast(),
+          );
         }
-
-        print("number of events: ${eventDocs.length}");
-
-        DateTime date = eventDocs[0]['dateTime'].toDate();
-        String dateStr = DateFormat('hh:mm').format(date);
-        String name = eventDocs[0]['name'];
-
-        /*
-        WHERE EMILY LEFT OFF
-
-        Data is being read! Need to update query to select by date, not just all the documents in the collection.
-        When reading from the correct date, return ExpansionTiles to Calendar.dart.
-        */
-
-        return Text("Time: $dateStr, Name: $name");
       },
     );
   }

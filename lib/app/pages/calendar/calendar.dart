@@ -121,26 +121,9 @@ class _CalendarPageState extends State<CalendarPage> {
                         color: Theme.of(context).colorScheme.onSurface,
                         fontWeight: FontWeight.bold)),
                 initiallyExpanded: true,
-                children: 
-                <Widget>[
+                children: <Widget>[
                   // List of events
                   EventStream(selectedDay: _selectedDay,),
-                  // SizedBox(
-                  //   height: 100, // TODO edit this to be sized based on space, not set value
-                  //   child: ValueListenableBuilder(
-                  //       valueListenable: _selectedEvents,
-                  //       builder: (context, value, _) {
-                  //         return ListView.builder(
-                  //             itemCount: value.length, //should this be events
-                  //             itemBuilder: (context, index) {
-                  //               return Container(
-                  //                 child: ListTile(
-                  //                     onTap: () => Text('$value'),
-                  //                     title: Text('${value[index]}')),
-                  //               );
-                  //             });
-                  //       }),
-                  // ),
                   
                   // Add event button
                   Padding(
