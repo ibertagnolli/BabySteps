@@ -182,8 +182,12 @@ class _SleepPageState extends State<SleepPage> {
           //     timeSoFarInNap, timerAlreadyStarted),
         
         
-          // History dropdown - in widgets
-            HistoryDropdown(SleepHistoryStream())
+          // History Card - in widgets
+          Padding(
+            padding: EdgeInsets.only(top:30),
+            child: HistoryDropdown(SleepHistoryStream()),
+            ),
+          
         ]),
       ),
       ),

@@ -1,6 +1,8 @@
 import 'package:babysteps/app/pages/tracking/temperature/temperature_database.dart';
 import 'package:babysteps/app/pages/tracking/temperature/add_temperature_card.dart';
 import 'package:babysteps/app/pages/tracking/temperature/temperature_stream.dart';
+import 'package:babysteps/app/pages/tracking/history_streams.dart';
+import 'package:babysteps/app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
 
@@ -66,26 +68,8 @@ class _TemperaturePageState extends State<TemperaturePage> {
                 child: AddTemperatureCard(),
               ),
 
-             // History Card
-              Padding(
-                padding: const EdgeInsets.all(15),
-                child: ExpansionTile(
-                  backgroundColor: Theme.of(context).colorScheme.surface,
-                  collapsedBackgroundColor:
-                      Theme.of(context).colorScheme.surface,
-                  title: Text('History',
-                      style: TextStyle(
-                          fontSize: 25,
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.bold)),
-                  children: <Widget>[
-                    Text('TODO Add chart of baby\'s Temperature history here:',
-                        style: TextStyle(
-                            fontSize: 20,
-                            color: Theme.of(context).colorScheme.onSurface)),
-                  ],
-                ),
-              ),
+              // History card - in widgets
+              HistoryDropdown(SleepHistoryStream())
             ],
           ),
         ),
