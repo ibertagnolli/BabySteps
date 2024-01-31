@@ -8,4 +8,13 @@ void main() {
       watch.start();
       expect(watch.isRunning, isTrue);
   });
+  test('timer value should start and stop', () {
+     Stopwatch watch = Stopwatch(); 
+     watch.start();
+      expect(watch.isRunning, isTrue);
+     watch.stop();
+     expect(watch.isRunning, isFalse);
+  });
+
+  
 }
