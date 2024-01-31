@@ -1,6 +1,7 @@
 import 'package:babysteps/app/pages/calendar/add_event_button.dart';
 import 'package:babysteps/app/pages/calendar/add_task_button.dart';
 import 'package:babysteps/app/pages/calendar/calendar_database.dart';
+import 'package:babysteps/app/pages/calendar/event_stream.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/widgets/checkList.dart';
 import 'package:intl/intl.dart';
@@ -21,8 +22,8 @@ class _CalendarPageState extends State<CalendarPage> {
   ///TODO: get these list items from the notes page!!!!!!!!!!!???????????????
   static List<String> items = ["Fold laundry", "Cook dinner", "Sweep floors"];
   CalendarFormat _calendarFormat = CalendarFormat.twoWeeks;
-  DateTime _focusedDay = DateTime.now(); // The current day
-  DateTime _selectedDay = DateTime.now(); // The day selected in the calendar
+  DateTime _focusedDay = DateUtils.dateOnly(DateTime.now()); //DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day); // The current day // DateTime.now()
+  DateTime _selectedDay = DateUtils.dateOnly(DateTime.now()); //DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day); // The day selected in the calendar
   DateTime kFirstDay = DateTime(
       DateTime.now().year, DateTime.now().month - 3, DateTime.now().day);
   DateTime kLastDay = DateTime(
@@ -40,7 +41,7 @@ class _CalendarPageState extends State<CalendarPage> {
     CalendarDatabaseMethods().listenForEventReads();
   }
 
-// TODO: this needs to pull the list of events from the database!!
+  /// Gets the events on a given day
   List<Event> _getEventsForDay(DateTime day) {
     //retrieve all events from the selected day.
     return events[day] ?? [];
@@ -48,6 +49,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Navigation Bar
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
@@ -60,16 +62,19 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
         ),
       ),
+
+      // Widgets
       body: Center(
         child: Padding(
           padding: EdgeInsets.only(top: 15, bottom: 15),
           child: ListView(children: <Widget>[      
-            // Calendar
+            
+            // Calendar Widget
             Padding(
               padding: EdgeInsets.only(bottom: 15),
               child: TableCalendar(
-                firstDay: DateTime.utc(2023, 10, 16),
-                lastDay: DateTime.utc(2025, 3, 14),
+                firstDay: DateTime.utc(2020, 10, 16),
+                lastDay: DateTime.utc(2050, 3, 14),
                 focusedDay: DateTime.now(),
                 eventLoader: _getEventsForDay,
                 selectedDayPredicate: (day) {
@@ -85,7 +90,7 @@ class _CalendarPageState extends State<CalendarPage> {
                     setState(() {
                       _selectedDay = selectedDay;
                       _focusedDay = focusedDay;
-                      _selectedEvents.value = _getEventsForDay(selectedDay);
+                      _selectedEvents.value = _getEventsForDay(selectedDay); // TODO does this draw the dots on dates with events?
                     });
                   }
                 },
@@ -106,7 +111,8 @@ class _CalendarPageState extends State<CalendarPage> {
             // Daily calendar events card
             Padding(
               padding: const EdgeInsets.all(15),
-              child: ExpansionTile(
+              child: 
+              ExpansionTile(
                 backgroundColor: Theme.of(context).colorScheme.surface,
                 collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
                 title: Text('Events on ${DateFormat.Md().format(_selectedDay)}',
@@ -117,22 +123,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 initiallyExpanded: true,
                 children: <Widget>[
                   // List of events
-                  SizedBox(
-                    height: 100, // TODO edit this to be sized based on space, not set value
-                    child: ValueListenableBuilder(
-                        valueListenable: _selectedEvents,
-                        builder: (context, value, _) {
-                          return ListView.builder(
-                              itemCount: value.length, //should this be events
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  child: ListTile(
-                                      onTap: () => Text('$value'),
-                                      title: Text('${value[index]}')),
-                                );
-                              });
-                        }),
-                  ),
+                  EventStream(selectedDay: _selectedDay,),
                   
                   // Add event button
                   Padding(
@@ -181,13 +172,7 @@ class _CalendarPageState extends State<CalendarPage> {
                   ),
               ],
             ),
-            ),
-
-            // // Add task button
-            // Padding(
-            //   padding: const EdgeInsets.all(15),
-            //   child: AddEventButton(selectedDay: _selectedDay,),
-            // ),           
+            ),     
           ]),
         )
       ),

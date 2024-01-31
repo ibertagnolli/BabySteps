@@ -15,8 +15,7 @@ class AddEventButton extends StatefulWidget {
 
 /// Stores the mutable data that can change over the lifetime of the AddEventButton.
 class _AddEventButtonState extends State<AddEventButton> {
-  // The global key uniquely identifies the Form widget and allows 
-  // validation of the form.
+  // The global key uniquely identifies the Form widget and allows validation of the form.
   final _formKey = GlobalKey<FormState>();
 
   // Store user input for database upload
@@ -32,10 +31,6 @@ class _AddEventButtonState extends State<AddEventButton> {
     timeController.dispose();
     dateController.dispose();
     super.dispose();
-  }
-
-  DateTime get selectedDay {
-    return widget.selectedDay;
   }
 
   /// Gets the user's selected event time.
@@ -124,9 +119,6 @@ class _AddEventButtonState extends State<AddEventButton> {
                           labelText: "Date",
                         ),
                         onTap: () async {
-                          // Don't show keyboard
-                          FocusScope.of(context).requestFocus(new FocusNode());
-
                           DateTime? pickeddate = await showDatePicker(
                             context: context,
                             initialDate: DateTime.now(),
@@ -146,6 +138,9 @@ class _AddEventButtonState extends State<AddEventButton> {
                           }
                           return null;
                         },
+                        // Don't show the keyboard
+                        showCursor: true,
+                        readOnly: true,
                       ),
 
                       // Event Start Time
@@ -161,6 +156,9 @@ class _AddEventButtonState extends State<AddEventButton> {
                           }
                           return null;
                         },
+                        // Don't show the keyboard
+                        showCursor: true,
+                        readOnly: true,
                       ),
 
                       // Submit button
@@ -175,7 +173,6 @@ class _AddEventButtonState extends State<AddEventButton> {
                       )
                     ],
                   )
-                  
                 ),
               ));
             }

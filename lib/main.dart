@@ -49,27 +49,16 @@ void main() async {
 
   FirebaseAuth.instance.authStateChanges().listen((User? user) async {
     // Obtain shared preferences.
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (user == null) {
       loggedIn = false;
       print('User is currently signed out!');
     } else {
       loggedIn = true;
-
-      prefs = await SharedPreferences.getInstance();
-      prefs!.setString('name', user.displayName ?? '');
-      prefs!.setString('uid', user.uid);
-
-      QuerySnapshot snapshot = await UserDatabaseMethods().getUser(user.uid);
-      var doc = snapshot.docs;
-      prefs!.setString('babyDoc', doc[0]['baby']);
-      // prefs!.setString('babyDoc', 'IYyV2hqR7omIgeA4r7zQ'); //This will access Theo's data (comment out the line above to use it)
-      prefs!.setString('userDoc', doc[0].id);
-
-      DocumentSnapshot snapshot2 =
-          await UserDatabaseMethods().getBaby(doc[0]['baby']);
-      Map<String, dynamic> doc2 = snapshot2.data()! as Map<String, dynamic>;
-      prefs!.setString('childName', doc2['Name']);
-
+      prefs.setString(
+          'name', user.displayName == null ? '' : user.displayName!);
+      prefs.setString('childName', 'baby');
+      prefs.setString('uid', user.uid);
       print('User is signed in!');
     }
   });
