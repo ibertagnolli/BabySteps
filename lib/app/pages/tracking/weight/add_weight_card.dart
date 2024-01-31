@@ -1,7 +1,5 @@
 import 'package:babysteps/app/pages/tracking/weight/weight_database.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 /// The widget that adds a weight measurement.
@@ -14,13 +12,15 @@ class AddWeightCard extends StatefulWidget {
 
 /// Stores the mutable data that can change over the lifetime of the AddWeightCard.
 class _AddWeightCardState extends State<AddWeightCard> {
-  // The global key uniquely identifies the Form widget and allows 
+  // The global key uniquely identifies the Form widget and allows
   // validation of the form.
   final _formKey = GlobalKey<FormState>();
 
   TextEditingController pounds = TextEditingController();
   TextEditingController ounces = TextEditingController();
-  TextEditingController date = TextEditingController(text: DateFormat("MM/dd/yyyy HH:mm").format(DateTime.now())); // TODO is 24hr time ok? this is hard-coded, so we would need a bool if user can customize it
+  TextEditingController date = TextEditingController(
+      text: DateFormat("MM/dd/yyyy HH:mm").format(DateTime
+          .now())); // TODO is 24hr time ok? this is hard-coded, so we would need a bool if user can customize it
 
   /// Saves a new weight entry in the Firestore database.
   saveNewWeight() async {
@@ -33,7 +33,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
       'date': savedDate,
     };
     await WeightDatabaseMethods().addWeight(uploaddata);
-    
+
     // Clear fields for next entry
     pounds.clear();
     ounces.clear();
@@ -48,31 +48,28 @@ class _AddWeightCardState extends State<AddWeightCard> {
     date.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
-      title: Text('Add Weight',
-          style: TextStyle(
-              fontSize: 25,
-              color: Theme.of(context).colorScheme.onSurface,
-              fontWeight: FontWeight.bold)),
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(15),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: <Widget>[
-
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
+        title: Text('Add Weight',
+            style: TextStyle(
+                fontSize: 25,
+                color: Theme.of(context).colorScheme.onSurface,
+                fontWeight: FontWeight.bold)),
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(15),
+            child: Form(
+              key: _formKey,
+              child: Column(children: <Widget>[
                 // First row: Weight inputs
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: Row(
                     children: <Widget>[
-
                       // Pounds input
                       Expanded(
                         child: Padding(
@@ -90,11 +87,9 @@ class _AddWeightCardState extends State<AddWeightCard> {
                         ),
                       ),
                       Text('lbs',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Theme.of(context).colorScheme.onSurface
-                        )
-                      ),
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: Theme.of(context).colorScheme.onSurface)),
 
                       // Ounces input
                       Expanded(
@@ -113,33 +108,32 @@ class _AddWeightCardState extends State<AddWeightCard> {
                         ),
                       ),
                       Text('oz',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Theme.of(context).colorScheme.onSurface
-                        )
-                      ),
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: Theme.of(context).colorScheme.onSurface)),
                     ],
                   ),
                 ),
 
                 // Second row: Date entry
-                TextFormField(                  
+                TextFormField(
                   controller: date,
                   decoration: const InputDecoration(
-                      icon: Icon(Icons.calendar_today_rounded),
+                    icon: Icon(Icons.calendar_today_rounded),
                   ),
                   onTap: () async {
                     DateTime? pickeddate = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2020),
-                      lastDate: DateTime(2101));
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2020),
+                        lastDate: DateTime(2101));
 
-                      if (pickeddate != null) {
-                        setState(() {
-                          date.text =  DateFormat.yMd().add_jm().format(pickeddate);
-                        });                      
-                      }
+                    if (pickeddate != null) {
+                      setState(() {
+                        date.text =
+                            DateFormat.yMd().add_jm().format(pickeddate);
+                      });
+                    }
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -168,8 +162,10 @@ class _AddWeightCardState extends State<AddWeightCard> {
                       }
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.tertiary),
-                      foregroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.onTertiary),
+                      backgroundColor: MaterialStateProperty.all(
+                          Theme.of(context).colorScheme.tertiary),
+                      foregroundColor: MaterialStateProperty.all(
+                          Theme.of(context).colorScheme.onTertiary),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0),
@@ -179,11 +175,9 @@ class _AddWeightCardState extends State<AddWeightCard> {
                     child: const Text('Save Weight'),
                   ),
                 ),
-              ]
+              ]),
             ),
-          ),
           )
-      ]
-    );
+        ]);
   }
 }
