@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 /// Contains the database methods to access Calendar information
 class CalendarDatabaseMethods {
@@ -27,11 +28,17 @@ class CalendarDatabaseMethods {
   }
 
   Stream<QuerySnapshot> getEventStream(DateTime selectedDate) {
+    DateTime nextDay = DateTime(selectedDate.year, selectedDate.month, selectedDate.day + 1); //DateUtils.dateOnly(selectedDate); //selectedDate.copyWith(hour:23, minute: 59, second: 59);
+    // print("selectedDate: $selectedDate");
+    // print("nextDay: $nextDay");
+
     return db
         .collection('Users')
         .doc('2hUD5VwWZHXWRX3mJZOp')
         .collection("Events")
-        // .where('date', isEqualTo: Timestamp.fromDate(selectedDate))
+        // This range gets the events happening on selectedDate from 00:00-23:59
+        .where('dateTime', isGreaterThanOrEqualTo: Timestamp.fromDate(selectedDate))
+        .where('dateTime', isLessThanOrEqualTo: Timestamp.fromDate(nextDay))
         .snapshots();
   }
 

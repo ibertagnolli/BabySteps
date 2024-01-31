@@ -34,8 +34,15 @@ class _EventStreamState extends State<EventStream> {
         }
         
         // An array of Event documents
-        // TODO account for empty array - day with no events
         var eventDocs = snapshot.data!.docs;
+
+        if(eventDocs.length == 0) {
+          // TODO account for empty array - day with no events
+        } else {
+          
+        }
+
+        print("number of events: ${eventDocs.length}");
 
         DateTime date = eventDocs[0]['dateTime'].toDate();
         String dateStr = DateFormat('hh:mm').format(date);
@@ -48,7 +55,7 @@ class _EventStreamState extends State<EventStream> {
         When reading from the correct date, return ExpansionTiles to Calendar.dart.
         */
 
-        return Text("Date: $dateStr, Name: $name");
+        return Text("Time: $dateStr, Name: $name");
       },
     );
   }

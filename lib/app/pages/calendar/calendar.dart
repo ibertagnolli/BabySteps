@@ -22,8 +22,8 @@ class _CalendarPageState extends State<CalendarPage> {
   ///TODO: get these list items from the notes page!!!!!!!!!!!???????????????
   static List<String> items = ["Fold laundry", "Cook dinner", "Sweep floors"];
   CalendarFormat _calendarFormat = CalendarFormat.twoWeeks;
-  DateTime _focusedDay = DateTime.now(); // The current day
-  DateTime _selectedDay = DateTime.now(); // The day selected in the calendar
+  DateTime _focusedDay = DateUtils.dateOnly(DateTime.now()); //DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day); // The current day // DateTime.now()
+  DateTime _selectedDay = DateUtils.dateOnly(DateTime.now()); //DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day); // The day selected in the calendar
   DateTime kFirstDay = DateTime(
       DateTime.now().year, DateTime.now().month - 3, DateTime.now().day);
   DateTime kLastDay = DateTime(
