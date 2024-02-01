@@ -267,7 +267,7 @@ class HistoryTabs extends StatelessWidget {
                   indicatorColor: Theme.of(context).colorScheme.secondary, // Color of selected tab
                   labelColor: Theme.of(context).colorScheme.onPrimary,
                   tabs: [
-                    Tab(text: 'This week'),
+                    Tab(text: 'Recent'),
                     Tab(text: 'All-time'),
                   ],
                 ),
