@@ -20,6 +20,8 @@ class _EventStreamState extends State<EventStream> {
   @override
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> eventStream = CalendarDatabaseMethods().getEventStream(widget.selectedDay);
+    
+    print("EventStream ${widget.selectedDay}");
 
     return StreamBuilder<QuerySnapshot>(
       stream: eventStream,

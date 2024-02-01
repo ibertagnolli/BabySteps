@@ -29,6 +29,10 @@ class CalendarDatabaseMethods {
 
   Stream<QuerySnapshot> getEventStream(DateTime selectedDate) {
     DateTime nextDay = DateTime(selectedDate.year, selectedDate.month, selectedDate.day + 1);
+    print("nextDay: ${Timestamp.fromDate(nextDay)}");
+    print(nextDay);
+    print("selectedDay: ${Timestamp.fromDate(selectedDate)}");
+    print(selectedDate);
 
     return db
         .collection('Users')
@@ -36,7 +40,7 @@ class CalendarDatabaseMethods {
         .collection("Events")
         // This range gets the events happening on selectedDate from 00:00-23:59
         .where('dateTime', isGreaterThanOrEqualTo: Timestamp.fromDate(selectedDate))
-        .where('dateTime', isLessThanOrEqualTo: Timestamp.fromDate(nextDay))
+        .where('dateTime', isLessThan: Timestamp.fromDate(nextDay)) // dateOnly() returns midnight
         .snapshots();
   }
 
