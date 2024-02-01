@@ -27,12 +27,9 @@ class CalendarDatabaseMethods {
         );
   }
 
+  // Returns a snapshot of all the Events on selectedDate
   Stream<QuerySnapshot> getEventStream(DateTime selectedDate) {
     DateTime nextDay = DateTime(selectedDate.year, selectedDate.month, selectedDate.day + 1);
-    print("nextDay: ${Timestamp.fromDate(nextDay)}");
-    print(nextDay);
-    print("selectedDay: ${Timestamp.fromDate(selectedDate)}");
-    print(selectedDate);
 
     return db
         .collection('Users')
@@ -40,7 +37,7 @@ class CalendarDatabaseMethods {
         .collection("Events")
         // This range gets the events happening on selectedDate from 00:00-23:59
         .where('dateTime', isGreaterThanOrEqualTo: Timestamp.fromDate(selectedDate))
-        .where('dateTime', isLessThan: Timestamp.fromDate(nextDay)) // dateOnly() returns midnight
+        .where('dateTime', isLessThan: Timestamp.fromDate(nextDay))
         .snapshots();
   }
 
@@ -66,6 +63,7 @@ class CalendarDatabaseMethods {
         );
   }
 
+  // Returns a snapshot of all the Tasks on selectedDate
   Stream<QuerySnapshot> getTaskStream(DateTime selectedDate) {
     return db
         .collection('Users')
@@ -83,21 +81,5 @@ class CalendarDatabaseMethods {
         .collection('Tasks')
         .doc(docId)
         .set(updatedUserInfoMap);
-  }
-
-
-
-
-
-
-  //This method gets the entries from the Calendar/event collection and orders them so the most recent entry is document[0].
-  Future<QuerySnapshot> getLatestEventInfo() async {
-    return await db
-        .collection('Babies')
-        .doc(
-            'IYyV2hqR7omIgeA4r7zQ') // TODO update to current user's document id
-        .collection('Calendar')
-        .orderBy('date', descending: true)
-        .get();
   }
 }
