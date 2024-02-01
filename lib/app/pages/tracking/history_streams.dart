@@ -6,11 +6,25 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:babysteps/main.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 
 
-// SLEEP  ** SLEEP IS THE ONLY ONE WITH A TABLE RIGHT NOW
+// SLEEP  ** SLEEP IS THE ONLY ONE IMPLEMENTED RIGHT NOW
+
+// BUG: Shows the accurate most recent 3 entries, then if I start a new nap it'll update the most 
+// recent one, but the 2 under it stay the same (it should always show the most recent 3, so every 
+// new nap should just shift them all down 1)
+
+// Class to represent data show in the sleep history table
+class SleepRowData<T1, T2, T3> {
+  T1 day;
+  T2 time;
+  T3 length;
+
+  SleepRowData(this.day, this.time, this.length);
+}
 
 class SleepHistoryStream extends StatefulWidget{
   @override
@@ -18,7 +32,15 @@ class SleepHistoryStream extends StatefulWidget{
 }
 
 class _SleepHistoryStreamState extends State<SleepHistoryStream> {
-  final Stream<QuerySnapshot> _sleepHistoryStream = SleepDatabaseMethods().getStream();
+  //final Stream<QuerySnapshot> _sleepHistoryStream = SleepDatabaseMethods().getStream();
+
+  final Stream<QuerySnapshot> _sleepHistoryStream = db
+        .collection("Babies")
+        .doc(prefs?.getString('babyDoc') ?? "IYyV2hqR7omIgeA4r7zQ")
+        .collection("Sleep")
+        .orderBy('date', descending: true)
+        .limit(3) // TODO: How many do we want? Specific number? Any from "this week"?
+        .snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -33,18 +55,27 @@ class _SleepHistoryStreamState extends State<SleepHistoryStream> {
           return const Text("Loading");
         }
 
-        // An array of documents, but our query only returns an array of one document
-        var lastSleepDoc = snapshot.data!.docs;
+        // An array of documents, but our query only returns an array of one document ** NOT THIS TIME, THIS IS ACTUALLY AN ARRAY NOW
+        var lastSleepDocs = snapshot.data!.docs;
 
-        DateTime date = lastSleepDoc[0]['date'].toDate();
-        String day = date.day.toString();
-        String time = date.hour.toString();
-        //String dateStr = DateFormat('MM-dd hh:mm').format(date);
-        String length = lastSleepDoc[0]['length'];
+        List<SleepRowData> rows = [];
+
+        // For however many most recent docs we have, build a row for it
+        lastSleepDocs.forEach((doc) {
+          DateTime date1 = doc['date'].toDate();
+          String dateStr1 = DateFormat('MM-dd hh:mm').format(date1);
+          var splitDate1 = dateStr1.split(' ');
+          String day = splitDate1[0];
+          String time = splitDate1[1];
+          String length = doc['length'];
+
+          rows.add(SleepRowData(day, time, length));
+        });
 
         // Source: https://api.flutter.dev/flutter/material/DataTable-class.html
         return DataTable(
           columns: const <DataColumn>[
+            // Table column titles
             DataColumn(
               label: Expanded(
                 child: Text(
@@ -70,29 +101,17 @@ class _SleepHistoryStreamState extends State<SleepHistoryStream> {
               ),
             ),
           ],
-          //rows: const <DataRow>[
+          // Table rows - dynamic - For each row we collected data for, create a DataCell for it
+          // TODO: Some sort of "no history yet" message if there are no entries 
           rows: <DataRow> [
-            DataRow(
-              cells: <DataCell>[
-                DataCell(Text('${day}')),
-                DataCell(Text('${time}')),
-                DataCell(Text('${length}')),
-              ],
-            ),
-            DataRow(
-              cells: <DataCell>[
-                DataCell(Text('${day}')),
-                DataCell(Text('${time}')),
-                DataCell(Text('${length}')),
-              ],
-            ),
-            DataRow(
-              cells: <DataCell>[
-                DataCell(Text('${day}')),
-                DataCell(Text('${time}')),
-                DataCell(Text('${length}')),
-              ],
-            ),
+            for (var row in rows)
+              DataRow(
+                cells: <DataCell>[
+                  DataCell(Text(row.day)),
+                  DataCell(Text(row.time)),
+                  DataCell(Text(row.length)),
+                ],
+              ),
           ],
         );
       },
