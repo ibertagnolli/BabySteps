@@ -1,7 +1,5 @@
 import 'package:babysteps/app/pages/calendar/calendar_database.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 /// The widget that adds a new task.
@@ -39,6 +37,7 @@ class _AddTaskButtonState extends State<AddTaskButton> {
     Map<String, dynamic> uploaddata = {
       'name': nameController.text,
       'dateTime': taskDate,
+      'completed': false,
     };
     await CalendarDatabaseMethods().addTask(uploaddata);
     

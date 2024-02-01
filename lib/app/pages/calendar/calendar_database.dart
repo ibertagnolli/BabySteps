@@ -20,15 +20,16 @@ class CalendarDatabaseMethods {
         .collection('Users')
         .doc('2hUD5VwWZHXWRX3mJZOp')
         .collection('Events');
-    docRef.snapshots().listen(
+          docRef.snapshots().listen(
           (event) => print(
               "current data: ${event.size}"), // These are helpful for debugging, but we can remove them
           onError: (error) => print("Listen failed: $error"),
         );
   }
 
+  // Returns a snapshot of all the Events on selectedDate
   Stream<QuerySnapshot> getEventStream(DateTime selectedDate) {
-    DateTime nextDay = DateTime(selectedDate.year, selectedDate.month, selectedDate.day + 1); //DateUtils.dateOnly(selectedDate); //selectedDate.copyWith(hour:23, minute: 59, second: 59);
+    DateTime nextDay = DateTime(selectedDate.year, selectedDate.month, selectedDate.day + 1);
 
     return db
         .collection('Users')
@@ -36,11 +37,9 @@ class CalendarDatabaseMethods {
         .collection("Events")
         // This range gets the events happening on selectedDate from 00:00-23:59
         .where('dateTime', isGreaterThanOrEqualTo: Timestamp.fromDate(selectedDate))
-        .where('dateTime', isLessThanOrEqualTo: Timestamp.fromDate(nextDay))
+        .where('dateTime', isLessThan: Timestamp.fromDate(nextDay))
         .snapshots();
   }
-
-
 
   // Adds a task to the Tasks collection
   Future addTask(Map<String, dynamic> userInfoMap) async {
@@ -51,19 +50,36 @@ class CalendarDatabaseMethods {
         .add(userInfoMap);
   }
 
+  // Sets up the snapshot to listen to changes in the Tasks collection.
+  void listenForTaskReads() {
+    final docRef = db
+        .collection('Users')
+        .doc('2hUD5VwWZHXWRX3mJZOp')
+        .collection('Tasks');
+          docRef.snapshots().listen(
+          (event) => print(
+              "current data: ${event.size}"), // These are helpful for debugging, but we can remove them
+          onError: (error) => print("Listen failed: $error"),
+        );
+  }
 
+  // Returns a snapshot of all the Tasks on selectedDate
+  Stream<QuerySnapshot> getTaskStream(DateTime selectedDate) {
+    return db
+        .collection('Users')
+        .doc('2hUD5VwWZHXWRX3mJZOp')
+        .collection("Tasks")
+        .where('dateTime', isEqualTo: Timestamp.fromDate(DateUtils.dateOnly(selectedDate)))
+        .snapshots();
+  }
 
-
-
-
-  //This method gets the entries from the Calendar/event collection and orders them so the most recent entry is document[0].
-  Future<QuerySnapshot> getLatestEventInfo() async {
+  // Marks a task as completed/uncompleted
+  Future updateTask(var docId, Map<String, dynamic> updatedUserInfoMap) async {
     return await db
-        .collection('Babies')
-        .doc(
-            'IYyV2hqR7omIgeA4r7zQ') // TODO update to current user's document id
-        .collection('Calendar')
-        .orderBy('date', descending: true)
-        .get();
+        .collection('Users')
+        .doc('2hUD5VwWZHXWRX3mJZOp') // TODO update to current user's document id
+        .collection('Tasks')
+        .doc(docId)
+        .set(updatedUserInfoMap);
   }
 }

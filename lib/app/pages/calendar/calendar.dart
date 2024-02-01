@@ -2,14 +2,11 @@ import 'package:babysteps/app/pages/calendar/add_event_button.dart';
 import 'package:babysteps/app/pages/calendar/add_task_button.dart';
 import 'package:babysteps/app/pages/calendar/calendar_database.dart';
 import 'package:babysteps/app/pages/calendar/event_stream.dart';
+import 'package:babysteps/app/pages/calendar/task_stream.dart';
 import 'package:flutter/material.dart';
-import 'package:babysteps/app/widgets/checkList.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:go_router/go_router.dart';
 import 'dart:core';
-
-import 'event.dart';
 
 class CalendarPage extends StatefulWidget {
  const CalendarPage({super.key});
@@ -19,32 +16,17 @@ class CalendarPage extends StatefulWidget {
 }
 
 class _CalendarPageState extends State<CalendarPage> {
-  ///TODO: get these list items from the notes page!!!!!!!!!!!???????????????
-  static List<String> items = ["Fold laundry", "Cook dinner", "Sweep floors"];
   CalendarFormat _calendarFormat = CalendarFormat.twoWeeks;
-  DateTime _focusedDay = DateUtils.dateOnly(DateTime.now()); //DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day); // The current day // DateTime.now()
-  DateTime _selectedDay = DateUtils.dateOnly(DateTime.now()); //DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day); // The day selected in the calendar
-  DateTime kFirstDay = DateTime(
-      DateTime.now().year, DateTime.now().month - 3, DateTime.now().day);
-  DateTime kLastDay = DateTime(
-      DateTime.now().year, DateTime.now().month + 3, DateTime.now().day);
-  //Variables for list of events/ event handling
-  late final ValueNotifier<List<Event>> _selectedEvents;
-  Map<DateTime, List<Event>> events = {};
+  DateTime _focusedDay = DateUtils.dateOnly(DateTime.now()); // The current day
+  DateTime _selectedDay = DateUtils.dateOnly(DateTime.now()); // The day selected in the calendar
 
 //Grab the data on page initialization
   @override
   void initState() {
     super.initState();
     _selectedDay = _focusedDay;
-    _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
     CalendarDatabaseMethods().listenForEventReads();
-  }
-
-  /// Gets the events on a given day
-  List<Event> _getEventsForDay(DateTime day) {
-    //retrieve all events from the selected day.
-    return events[day] ?? [];
+    CalendarDatabaseMethods().listenForTaskReads();
   }
 
   @override
@@ -66,17 +48,16 @@ class _CalendarPageState extends State<CalendarPage> {
       // Widgets
       body: Center(
         child: Padding(
-          padding: EdgeInsets.only(top: 15, bottom: 15),
+          padding: const EdgeInsets.only(top: 15, bottom: 15),
           child: ListView(children: <Widget>[      
             
             // Calendar Widget
             Padding(
-              padding: EdgeInsets.only(bottom: 15),
+              padding: const EdgeInsets.only(bottom: 15),
               child: TableCalendar(
                 firstDay: DateTime.utc(2020, 10, 16),
                 lastDay: DateTime.utc(2050, 3, 14),
                 focusedDay:   _focusedDay,
-                eventLoader: _getEventsForDay,
                 selectedDayPredicate: (day) {
                   // Use `selectedDayPredicate` to determine which day is currently selected.
                   // If this returns true, then `day` will be marked as selected.
@@ -88,9 +69,8 @@ class _CalendarPageState extends State<CalendarPage> {
                   if (!isSameDay(_selectedDay, selectedDay)) {
                     // Call `setState()` when updating the selected day
                     setState(() {
-                      _selectedDay = selectedDay;
-                      _focusedDay = focusedDay;
-                      _selectedEvents.value = _getEventsForDay(selectedDay); // TODO does this draw the dots on dates with events?
+                      _selectedDay = DateUtils.dateOnly(selectedDay);
+                      _focusedDay = DateUtils.dateOnly(focusedDay);
                     });
                   }
                 },
@@ -98,12 +78,11 @@ class _CalendarPageState extends State<CalendarPage> {
                 onFormatChanged: (format) {
                   setState(() {
                     _calendarFormat = format;
-                    // TODO update so displayed weeks are based on selected date as frame of reference
                   });
                 },
                 onPageChanged: (focusedDay) {
                   // No need to call `setState()` here
-                  _focusedDay = focusedDay;
+                  _focusedDay = DateUtils.dateOnly(focusedDay);
                 },
               ),
             ),
@@ -135,7 +114,7 @@ class _CalendarPageState extends State<CalendarPage> {
               ),
             ),
 
-            // To do list card
+            // Daily Calendar tasks card
             Padding(
               padding: const EdgeInsets.all(15),
               child: ExpansionTile(
@@ -149,21 +128,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 initiallyExpanded: true,
                 children: <Widget>[
                   // List of tasks
-                  CheckboxListTileExample(items),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 15),
-                    child: Align(
-                      alignment: Alignment.bottomRight,
-                      child: IconButton(
-                        icon: const Icon(Icons.note),
-                        tooltip: 'Go to To Do note',
-                        onPressed: () => context.go('/notes/organization/todo'),
-                        // setState(() {
-
-                      // });
-                      ),
-                    ),
-                  ),
+                  TaskStream(selectedDay: _selectedDay,),
 
                   // Add task button
                   Padding(
