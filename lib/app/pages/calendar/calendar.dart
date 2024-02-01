@@ -23,11 +23,7 @@ class _CalendarPageState extends State<CalendarPage> {
   CalendarFormat _calendarFormat = CalendarFormat.twoWeeks;
   DateTime _focusedDay = DateUtils.dateOnly(DateTime.now()); // The current day
   DateTime _selectedDay = DateUtils.dateOnly(DateTime.now()); // The day selected in the calendar
-  
-  // DateTime kFirstDay = DateTime(
-  //     DateTime.now().year, DateTime.now().month - 3, DateTime.now().day);
-  // DateTime kLastDay = DateTime(
-  //     DateTime.now().year, DateTime.now().month + 3, DateTime.now().day);
+
   //Variables for list of events/ event handling
   late final ValueNotifier<List<Event>> _selectedEvents;
   Map<DateTime, List<Event>> events = {};
@@ -39,6 +35,7 @@ class _CalendarPageState extends State<CalendarPage> {
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
     CalendarDatabaseMethods().listenForEventReads();
+    CalendarDatabaseMethods().listenForTaskReads();
   }
 
   // TODO EMILY: is this needed?

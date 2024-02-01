@@ -14,7 +14,6 @@ class CalendarDatabaseMethods {
         .add(userInfoMap);
   }
 
-  // TODO EMILY: Tasks is working without this method... why?
   // Sets up the snapshot to listen to changes in the Events collection.
   void listenForEventReads() {
     final docRef = db
@@ -50,16 +49,25 @@ class CalendarDatabaseMethods {
         .add(userInfoMap);
   }
 
-  Stream<QuerySnapshot> getTaskStream(DateTime selectedDate) {
-    DateTime nextDay = DateTime(selectedDate.year, selectedDate.month, selectedDate.day + 1);
+  // Sets up the snapshot to listen to changes in the Tasks collection.
+  void listenForTaskReads() {
+    final docRef = db
+        .collection('Users')
+        .doc('2hUD5VwWZHXWRX3mJZOp')
+        .collection('Tasks');
+          docRef.snapshots().listen(
+          (event) => print(
+              "current data: ${event.size}"), // These are helpful for debugging, but we can remove them
+          onError: (error) => print("Listen failed: $error"),
+        );
+  }
 
+  Stream<QuerySnapshot> getTaskStream(DateTime selectedDate) {
     return db
         .collection('Users')
         .doc('2hUD5VwWZHXWRX3mJZOp')
         .collection("Tasks")
-        // This range gets the tasks happening on selectedDate from 00:00-23:59
-        .where('dateTime', isGreaterThanOrEqualTo: Timestamp.fromDate(selectedDate))
-        .where('dateTime', isLessThanOrEqualTo: Timestamp.fromDate(nextDay))
+        .where('dateTime', isEqualTo: Timestamp.fromDate(DateUtils.dateOnly(selectedDate)))
         .snapshots();
   }
 
