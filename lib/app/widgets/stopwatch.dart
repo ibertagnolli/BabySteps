@@ -3,11 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class NewStopWatch extends StatefulWidget {
-  const NewStopWatch(this.timeSince, this.buttonText, this.stopwatchFinish,
-      this.stopwatchBegin, this.timeAlreadyElapsed, this.timerOngoing,
+  const NewStopWatch(this.buttonText, this.stopwatchFinish, this.stopwatchBegin,
+      this.timeAlreadyElapsed, this.timerOngoing,
       {super.key});
 
-  final String timeSince;
   //final String lastThing;
   final String buttonText;
   final void Function(String length) stopwatchFinish;
@@ -54,7 +53,6 @@ class _NewStopWatchState extends State<NewStopWatch> {
   @override
   Widget build(BuildContext context) {
     //access above variables using
-    //widget.timeSince;
     String buttonText = widget.buttonText;
     return Container(
       padding: EdgeInsets.all(1.0),
@@ -139,8 +137,6 @@ class _NewStopWatchState extends State<NewStopWatch> {
     if (mounted) {
       setState(() {
         elapsedTime = transformMilliSeconds(timeSoFar);
-        //timeSince = elapsedTime;
-        //lastThing = 0:00
       });
     }
   }
