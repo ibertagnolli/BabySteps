@@ -45,4 +45,18 @@ class NoteDatabaseMethods {
         .doc(docId)
         .set(updatedUserInfoMap);
   }
+
+  // Deletes the Note identified by docId
+  Future deleteNote(var docId) async {
+    return await db
+        .collection('Babies')
+        .doc('IYyV2hqR7omIgeA4r7zQ') // TODO update to current user's document id
+        .collection('Notes')
+        .doc(docId)
+        .delete()
+        .then(
+          (doc) => print("Document deleted"),
+          onError: (e) => print("Error deleting document $e"),
+        );
+  }
 }

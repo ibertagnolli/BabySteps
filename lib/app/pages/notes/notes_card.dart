@@ -1,3 +1,4 @@
+import 'package:babysteps/app/pages/notes/notes_database.dart';
 import 'package:babysteps/time_since.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -5,15 +6,19 @@ import 'package:go_router/go_router.dart';
 
 /// The cards on the Notes home page that a user clicks to open a note
 class NotesCard extends StatelessWidget {
-  const NotesCard(this.name, {super.key});
+  const NotesCard(this.name, this.docId, {super.key});
   final String name;
+  final docId;
 
-  void deleteNote() {
-
+  /// Deletes the selected Note from the database
+  Future<void> deleteNote() async {
+    await NoteDatabaseMethods().deleteNote(docId);
   }
 
+  /// Opens the Note for edits
   void editNote() {
-    
+    print("edit");
+
   }
 
   @override
@@ -57,14 +62,42 @@ class NotesCard extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
+                      
                       // Delete button
                       IconButton(
                         icon: const Icon(Icons.delete),
-                        onPressed: () => print("delete"), //deleteFunc(),
+                        onPressed: () => {
+                          showDialog(
+                            context: context, 
+                            builder: (context) {
+
+                              // Dialog confirming user wants to delete the note
+                              return AlertDialog(
+                                title: Text("Do you want to delete \"$name\"?"),
+                                actions: <Widget> [
+                                  TextButton(
+                                    child: const Text('Yes'),
+                                    onPressed: () {
+                                      deleteNote();
+                                      Navigator.of(context).pop();
+                                    }
+                                  ),
+                                  TextButton(
+                                    child: const Text('No'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    } 
+                                  )
+                                ]
+                              );
+                            }
+                          )
+                        }
                       ),
+                      
                       // Edit button
                       IconButton(
-                          icon: const Icon(Icons.edit), onPressed: () => print("edit"),//editFunc()),
+                          icon: const Icon(Icons.edit), onPressed: () => editNote(),
                       )
                     ],
                   ),

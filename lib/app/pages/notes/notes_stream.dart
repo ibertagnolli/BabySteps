@@ -34,7 +34,7 @@ class _NotesStreamState extends State<NotesStream> {
         var noteDocs = snapshot.data!.docs;
 
         if(noteDocs.isEmpty) {
-          return const Text("No events today.");
+          return const Text("No notes");
         } 
         else {
           return ListView(
@@ -43,7 +43,9 @@ class _NotesStreamState extends State<NotesStream> {
                 .map((DocumentSnapshot document) {
                   Map<String, dynamic> data =
                       document.data()! as Map<String, dynamic>;
-                  return NotesCard(data['title']);
+                  
+                  var docId = document.id;
+                  return NotesCard(data['title'], docId);
                 })
                 .toList()
                 .cast(),

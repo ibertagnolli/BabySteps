@@ -77,7 +77,7 @@ class _NotesPageState extends State<NotesPage> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter the note title';
+                    return 'Please enter the note title.';
                   }
                   return null;
                 },
@@ -113,7 +113,7 @@ class _NotesPageState extends State<NotesPage> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please write the note contents';
+                        return 'Please write the note contents.';
                       }
                       return null;
                     },
