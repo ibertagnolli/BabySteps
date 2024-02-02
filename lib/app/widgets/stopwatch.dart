@@ -21,7 +21,7 @@ class NewStopWatch extends StatefulWidget {
   _NewStopWatchState createState() => _NewStopWatchState(timeAlreadyElapsed);
 }
 
-class _NewStopWatchState extends State<NewStopWatch> {
+ class _NewStopWatchState extends State<NewStopWatch> {
   int initTime;
   _NewStopWatchState(this.initTime);
   Stopwatch watch = Stopwatch();
@@ -39,6 +39,13 @@ class _NewStopWatchState extends State<NewStopWatch> {
         });
       }
     }
+  }
+
+    @override
+  void dispose() {
+    // Cancel the timer to prevent 'A Timer is still pending' error
+    timer.cancel();
+    super.dispose();
   }
 
   @override

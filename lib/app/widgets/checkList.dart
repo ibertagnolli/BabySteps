@@ -1,22 +1,5 @@
 import 'package:flutter/material.dart';
 
-//void main() => runApp(const CheckboxListTileApp());
-
-// class CheckboxListTileApp extends StatelessWidget {
-//   const CheckboxListTileApp(this.item1, this.item2, this.item3, {super.key});
-
-//   final String item1;
-//   final String item2;
-//   final Icon item3;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       theme: ThemeData(useMaterial3: true),
-//       home: const CheckboxListTileExample(item1,item2,item3),
-//     );
-//   }
-// }
 
 class CheckboxListTileExample extends StatefulWidget {
   CheckboxListTileExample(this.items, {super.key});

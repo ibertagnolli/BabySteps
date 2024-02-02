@@ -102,8 +102,8 @@ class NotesCard extends StatelessWidget {
 }
 
 class TrackingCard extends StatelessWidget {
-  const TrackingCard(this.icon, this.name, this.hoursAgo, this.pageFunc,
-      {super.key});
+  const TrackingCard(//this.icon, this.name, this.hoursAgo, this.pageFunc,
+      {super.key, required this.icon, required this.name, required this.hoursAgo, required this.pageFunc});
   final Icon icon;
   final String name;
   final String hoursAgo;
@@ -111,7 +111,7 @@ class TrackingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+return Card(
       color: Theme.of(context).colorScheme.surface,
       child: InkWell(
         splashColor: Theme.of(context).colorScheme.surface,

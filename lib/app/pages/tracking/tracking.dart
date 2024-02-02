@@ -111,11 +111,11 @@ class _TrackingPageState extends State<TrackingPage> {
             children: [
               Padding(
                 padding: EdgeInsets.only(top: 32),
-                child: TrackingCard(const Icon(Icons.local_drink, size: 40),
-                    "Feeding", lastFeed, () => context.go('/tracking/feeding')),
+                child: TrackingCard(icon: const Icon(Icons.local_drink, size: 40),
+                    name:"Feeding", hoursAgo:lastFeed, pageFunc: () => context.go('/tracking/feeding')),
               ),
-              TrackingCard(const Icon(Icons.crib, size: 40), "Sleep", lastSleep,
-                  () => context.go('/tracking/sleep')),
+              TrackingCard(icon:const Icon(Icons.crib, size: 40), name:"Sleep",hoursAgo: lastSleep,
+                 pageFunc: () => context.go('/tracking/sleep')),
               StreamBuilder<QuerySnapshot>(
                 stream: _diaperStream,
                 builder: (BuildContext context,
@@ -141,19 +141,19 @@ class _TrackingPageState extends State<TrackingPage> {
                   // Returns the FilledCard with read values for date, pounds, and ounces
                   // updated in real time.
                   return TrackingCard(
-                      const Icon(Icons.baby_changing_station, size: 40),
-                      'Diaper Change',
-                      timeSinceChange,
-                      () => context.go('/tracking/diaper'));
+                      icon:const Icon(Icons.baby_changing_station, size: 40),
+                      name:'Diaper Change',
+                      hoursAgo:timeSinceChange,
+                      pageFunc: () => context.go('/tracking/diaper'));
                 },
               ),
-              TrackingCard(const Icon(Icons.scale, size: 40), "Weight",
-                  lastWeight, () => context.go('/tracking/weight')),
+              TrackingCard(icon:const Icon(Icons.scale, size: 40), name:"Weight",
+                 hoursAgo: lastWeight, pageFunc:  () => context.go('/tracking/weight')),
               TrackingCard(
-                  const Icon(Icons.thermostat, size: 40),
-                  "Temperature",
-                  lastTemp,
-                  () => context.go('/tracking/temperature')),
+                  icon: const Icon(Icons.thermostat, size: 40),
+                 name: "Temperature",
+                 hoursAgo: lastTemp,
+                pageFunc:   () => context.go('/tracking/temperature')),
             ],
           ),
         ),
