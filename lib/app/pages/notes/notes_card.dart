@@ -5,14 +5,16 @@ import 'package:go_router/go_router.dart';
 
 /// The cards on the Notes home page that a user clicks to open a note
 class NotesCard extends StatelessWidget {
-  const NotesCard(
-      this.name, this.lastEdited, this.index, this.editFunc, this.deleteFunc,
-      {super.key});
+  const NotesCard(this.name, {super.key});
   final String name;
-  final String lastEdited;
-  final int index;
-  final void Function() editFunc;
-  final void Function() deleteFunc;
+
+  void deleteNote() {
+
+  }
+
+  void editNote() {
+    
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,11 +60,12 @@ class NotesCard extends StatelessWidget {
                       // Delete button
                       IconButton(
                         icon: const Icon(Icons.delete),
-                        onPressed: () => deleteFunc(),
+                        onPressed: () => print("delete"), //deleteFunc(),
                       ),
                       // Edit button
                       IconButton(
-                          icon: const Icon(Icons.edit), onPressed: () => editFunc()),
+                          icon: const Icon(Icons.edit), onPressed: () => print("edit"),//editFunc()),
+                      )
                     ],
                   ),
                 ),

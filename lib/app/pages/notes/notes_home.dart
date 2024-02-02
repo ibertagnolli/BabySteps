@@ -1,5 +1,7 @@
 import 'package:babysteps/app/pages/notes/notes.dart';
 import 'package:babysteps/app/pages/notes/notes_card.dart';
+import 'package:babysteps/app/pages/notes/notes_database.dart';
+import 'package:babysteps/app/pages/notes/notes_stream.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
 
@@ -21,12 +23,19 @@ class _NotesHomePageState extends State<NotesHomePage> {
     "To Do List",
   ];
 
-//Navigate to next page if the user clicks a note in the list builder
+  //Navigate to next page if the user clicks a note in the list builder
   void _openNote() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const NotesPage()),
     );
+  }
+
+  //Grab the data on page initialization
+  @override
+  void initState() {
+    super.initState();
+    NoteDatabaseMethods().listenForNoteReads();
   }
 
 //TODO: remove selected note from the database and list
@@ -53,14 +62,8 @@ class _NotesHomePageState extends State<NotesHomePage> {
           Flexible(
             flex: 3,
             child: Padding(
-              padding: EdgeInsets.all(8),
-              child: ListView.builder(
-                  itemCount: notes.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    //look in widgets to see the note card. It takes in 2 functions for each of the icon buttons that need to be connected to BE
-                    return NotesCard(notes[index], lastEdited.hour.toString(),
-                        index, _openNote, _deleteNote);
-                  }),
+              padding: const EdgeInsets.all(8),
+              child: NotesStream(),
             ),
           ),
           //   Flexible(

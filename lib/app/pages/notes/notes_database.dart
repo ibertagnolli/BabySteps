@@ -17,9 +17,9 @@ class NoteDatabaseMethods {
   // Sets up the snapshot to listen to changes in the Notes collection.
   void listenForNoteReads() {
     final docRef = db
-        .collection('Users')
-        .doc('2hUD5VwWZHXWRX3mJZOp')
-        .collection('Tasks');
+        .collection('Babies')
+        .doc('IYyV2hqR7omIgeA4r7zQ')
+        .collection('Notes');
           docRef.snapshots().listen(
           (event) => print(
               "current data: ${event.size}"), // These are helpful for debugging, but we can remove them
@@ -28,12 +28,11 @@ class NoteDatabaseMethods {
   }
 
   // Returns a snapshot of all the user's Notes
-  Stream<QuerySnapshot> getNoteStream(DateTime selectedDate) {
+  Stream<QuerySnapshot> getNotesStream() {
     return db
-        .collection('Users')
-        .doc('2hUD5VwWZHXWRX3mJZOp')
-        .collection("Tasks")
-        .where('dateTime', isEqualTo: Timestamp.fromDate(DateUtils.dateOnly(selectedDate)))
+        .collection('Babies')
+        .doc('IYyV2hqR7omIgeA4r7zQ')
+        .collection("Notes")
         .snapshots();
   }
 
