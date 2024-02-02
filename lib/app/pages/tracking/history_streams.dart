@@ -1,7 +1,3 @@
-import 'package:babysteps/app/pages/tracking/sleep/sleep_database.dart';
-import 'package:babysteps/app/pages/tracking/weight/weight_database.dart';
-import 'package:babysteps/app/pages/tracking/diaper/diaper_database.dart';
-import 'package:babysteps/app/widgets/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,11 +6,15 @@ import 'package:babysteps/main.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 
-// BUG THAT ONLY HAPPENS ON SOME OF THEM: Shows the accurate most recent 3 entries, then if I make
-// a new entry it'll update the most recent one, but the 2 under it stay the same (it should always 
-// show the most recent 3 so they should shift down)
+// Sleep - first shows the accurate most recent entries, then if you make a new entry it'll overwrite the 
+// most recent one but the 2 under it stay the same (it should always show the most recent 3 so they should 
+// shift down)
+// Diaper - all good 
+// Weight - only autofills date for the first one, then the datepicker doesn't include a time so it's all 12:00
+// Temp - same as weight
 
-// Class to represent data show in the sleep history table
+
+// Represents the data shown in the history table when we only need 3 columns
 class RowData3Cols<T1, T2, T3> {
   T1 day;
   T2 time;
@@ -23,6 +23,7 @@ class RowData3Cols<T1, T2, T3> {
   RowData3Cols(this.day, this.time, this.data);
 }
 
+// Represents the data shown in the history table when we need 4 columns
 class RowData4Cols<T1, T2, T3, T4> {
   T1 day;
   T2 time;
@@ -31,6 +32,7 @@ class RowData4Cols<T1, T2, T3, T4> {
 
   RowData4Cols(this.day, this.time, this.data1, this.data2);
 }
+
 
 // BREASTFEEDING
 
@@ -65,6 +67,7 @@ class _BreastfeedingHistoryStreamState extends State<BreastfeedingHistoryStream>
         // An array of documents, but our query only returns an array of one document ** NOT THIS TIME, THIS IS ACTUALLY AN ARRAY NOW
         var lastBreastfeedingDocs = snapshot.data!.docs;
 
+        // List of RowData objects holding data for the table
         List<RowData4Cols> rows = [];
 
         // For however many most recent docs we have, build a row for it
@@ -80,6 +83,7 @@ class _BreastfeedingHistoryStreamState extends State<BreastfeedingHistoryStream>
           rows.add(RowData4Cols(day, time, length, side));
         });
 
+        // Make a table with the retrieved data
         return HistoryTable4Cols(rows, "Length", "Side");
       },
     );
@@ -134,6 +138,7 @@ class _BottleHistoryStreamState extends State<BottleHistoryStream> {
           rows.add(RowData4Cols(day, time, amount, bottleType));
         });
 
+        // Make a table with the retrieved data
         return HistoryTable4Cols(rows, "Amount", "Bottle Type");
       },
     );
@@ -148,7 +153,6 @@ class SleepHistoryStream extends StatefulWidget{
 }
 
 class _SleepHistoryStreamState extends State<SleepHistoryStream> {
-  //final Stream<QuerySnapshot> _sleepHistoryStream = SleepDatabaseMethods().getStream();
 
   final Stream<QuerySnapshot> _sleepHistoryStream = db
         .collection("Babies")
@@ -174,6 +178,7 @@ class _SleepHistoryStreamState extends State<SleepHistoryStream> {
         // An array of documents, but our query only returns an array of one document ** NOT THIS TIME, THIS IS ACTUALLY AN ARRAY NOW
         var lastSleepDocs = snapshot.data!.docs;
 
+        // List of RowData objects holding data for the table
         List<RowData3Cols> rows = [];
 
         // For however many most recent docs we have, build a row for it
@@ -188,12 +193,12 @@ class _SleepHistoryStreamState extends State<SleepHistoryStream> {
           rows.add(RowData3Cols(day, time, length));
         });
 
+        // Make a table with the retrieved data
         return HistoryTable3Cols(rows, "Length");
       },
     );
   }
 }
-
 
 // WEIGHT
 
@@ -227,6 +232,7 @@ class _WeightHistoryStreamState extends State<WeightHistoryStream> {
         // An array of documents, but our query only returns an array of one document ** NOT THIS TIME, THIS IS ACTUALLY AN ARRAY NOW
         var lastWeightDocs = snapshot.data!.docs;
 
+        // List of RowData objects holding data for the table
         List<RowData3Cols> rows = [];
 
         // For however many most recent docs we have, build a row for it
@@ -243,14 +249,14 @@ class _WeightHistoryStreamState extends State<WeightHistoryStream> {
           rows.add(RowData3Cols(day, time, weight));
         });
 
+        // Make a table with the retrieved data
         return HistoryTable3Cols(rows, "Weight");
       },
     );
   }
 }
 
-
-// TEMP
+// TEMPERATURE
 
 class TemperatureHistoryStream extends StatefulWidget{
   @override
@@ -282,6 +288,7 @@ class _TemperatureHistoryStreamState extends State<TemperatureHistoryStream> {
         // An array of documents, but our query only returns an array of one document ** NOT THIS TIME, THIS IS ACTUALLY AN ARRAY NOW
         var lastTemperatureDocs = snapshot.data!.docs;
 
+        // List of RowData objects holding data for the table
         List<RowData3Cols> rows = [];
 
         // For however many most recent docs we have, build a row for it
@@ -296,12 +303,12 @@ class _TemperatureHistoryStreamState extends State<TemperatureHistoryStream> {
           rows.add(RowData3Cols(day, time, temperature));
         });
 
+        // Make a table with the retrieved data
         return HistoryTable3Cols(rows, "Temperature");
       },
     );
   }
 }
-
 
 // DIAPER
 
@@ -337,6 +344,7 @@ class _DiaperHistoryStreamState extends State<DiaperHistoryStream> {
         // An array of documents, but our query only returns an array of one document ** NOT THIS TIME, THIS IS ACTUALLY AN ARRAY NOW
         var lastDiaperDocs = snapshot.data!.docs;
 
+        // List of RowData objects holding data for the table
         List<RowData4Cols> rows = [];
 
         // For however many most recent docs we have, build a row for it
@@ -353,6 +361,7 @@ class _DiaperHistoryStreamState extends State<DiaperHistoryStream> {
           rows.add(RowData4Cols(day, time, diaperType, diaperRash));
         });
 
+        // Make a table with the retrieved data
         return HistoryTable4Cols(rows, "Diaper Type", "Diaper Rash?");
       },
     );
@@ -360,6 +369,7 @@ class _DiaperHistoryStreamState extends State<DiaperHistoryStream> {
 }
 
 
+// Table with 3 columns, column titles, and rows of data filled in 
 class HistoryTable3Cols extends StatelessWidget {
   HistoryTable3Cols(this.rows, this.colName, {super.key});
 
@@ -413,6 +423,7 @@ class HistoryTable3Cols extends StatelessWidget {
   }
 }
 
+// Table with 4 columns, column titles, and data filled in 
 class HistoryTable4Cols extends StatelessWidget {
   HistoryTable4Cols(this.rows, this.col1Name, this.col2Name, {super.key});
 
