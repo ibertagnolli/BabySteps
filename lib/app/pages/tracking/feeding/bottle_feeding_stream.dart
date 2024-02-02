@@ -39,7 +39,7 @@ class _BottleFeedingStreamState extends State<BottleFeedingStream> {
         String lastBottleType = 'None';
 
         if (lastFeedDoc.isNotEmpty) {
-          DateTime date = DateTime.parse(lastFeedDoc[0]['date'].toString());
+          DateTime date = lastFeedDoc[0]['date'].toDate();
           timeSinceFed = getTimeSince(date);
           lastBottleType = lastFeedDoc[0]['bottleType'];
         }
