@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'dart:core';
 
 class NotesPage extends StatefulWidget {
-  const NotesPage({super.key});
+  final String title;
+  final String contents;
+  String noteTitle = "";
+
+  NotesPage(this.title, this.contents, {super.key});
 
   @override
   State<StatefulWidget> createState() => _NotesPageState();
@@ -11,10 +15,9 @@ class NotesPage extends StatefulWidget {
 
 /// The page where users write/edit Notes.
 class _NotesPageState extends State<NotesPage> {
-  //TODO: probably want to store the date/time the note is added, title and contents in DB
   DateTime date = DateTime.now();
-  final TextEditingController _noteController = TextEditingController();
-  final TextEditingController _titleController = TextEditingController();
+  late final TextEditingController _noteController = TextEditingController(text: widget.contents);
+  late final TextEditingController _titleController = TextEditingController(text: widget.title);
 
   // The global key uniquely identifies the Form widget and allows validation of the form.
   final _formKey = GlobalKey<FormState>();

@@ -29,10 +29,22 @@ class NoteDatabaseMethods {
 
   // Returns a snapshot of all the user's Notes
   Stream<QuerySnapshot> getNotesStream() {
+    // TODO maybe return in order of most recently edited?
     return db
         .collection('Babies')
         .doc('IYyV2hqR7omIgeA4r7zQ')
         .collection("Notes")
+        .snapshots();
+  }
+
+  // Returns a snapshot of all the user's Notes
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getSpecificNotesStream(var docId) {
+    // TODO maybe return in order of most recently edited?
+    return db
+        .collection('Babies')
+        .doc('IYyV2hqR7omIgeA4r7zQ')
+        .collection("Notes")
+        .doc(docId)
         .snapshots();
   }
 

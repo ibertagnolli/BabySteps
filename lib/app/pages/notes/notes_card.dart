@@ -1,3 +1,5 @@
+import 'package:babysteps/app/pages/notes/edit_notes_stream.dart';
+import 'package:babysteps/app/pages/notes/notes.dart';
 import 'package:babysteps/app/pages/notes/notes_database.dart';
 import 'package:babysteps/time_since.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,9 +8,12 @@ import 'package:go_router/go_router.dart';
 
 /// The cards on the Notes home page that a user clicks to open a note
 class NotesCard extends StatelessWidget {
-  const NotesCard(this.name, this.docId, {super.key});
   final String name;
   final docId;
+  final context; // TODO if we make this a Stateful widget, we'll have access to context outside of build()
+  // TODO EMILY LEFT OFF: make sure the context works!! I was working on editing the note. Just started the editNote() method
+  
+  const NotesCard(this.name, this.docId, {super.key, this.context}); // this.context
 
   /// Deletes the selected Note from the database
   Future<void> deleteNote() async {
@@ -17,8 +22,11 @@ class NotesCard extends StatelessWidget {
 
   /// Opens the Note for edits
   void editNote() {
-    print("edit");
-
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => EditNotesStream(docId)),
+    );
+    // print("edit");
   }
 
   @override

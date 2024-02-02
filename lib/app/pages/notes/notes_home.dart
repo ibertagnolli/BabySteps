@@ -14,32 +14,20 @@ class NotesHomePage extends StatefulWidget {
 
 /// Home landing page that displays all the notes
 class _NotesHomePageState extends State<NotesHomePage> {
-  String notename = "new note";
-  DateTime lastEdited = DateTime.now();
-  static List<String> notes = [
-    "Dr Appointment Questions",
-    "Allergies",
-    "Vaccines",
-    "To Do List",
-  ];
-
-  //Navigate to next page if the user clicks a note in the list builder
+  // Navigate to next page if the user clicks a note in the list builder
   void _openNote() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const NotesPage()),
+      MaterialPageRoute(builder: (context) => NotesPage("", "")),
     );
   }
 
-  //Grab the data on page initialization
+  // Grab the data on page initialization
   @override
   void initState() {
     super.initState();
     NoteDatabaseMethods().listenForNoteReads();
   }
-
-//TODO: remove selected note from the database and list
-  _deleteNote() {}
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +62,6 @@ class _NotesHomePageState extends State<NotesHomePage> {
                 // Add note button
                 // TODO have this button always float at the bottom, regardless of number of notes?
                 child: ElevatedButton(
-                  //TODO: connect to BE so when they save it adds note to DB
                   onPressed: _openNote,
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.tertiary),

@@ -268,7 +268,7 @@ final goRouter = GoRouter(
                 routes: [
                   GoRoute(
                       path: 'newnote',
-                      builder: (context, state) => const NotesPage())
+                      builder: (context, state) => NotesPage("", "")) // TODO Emily's update to pass data into the Notes page. Marking in case it's a bug.
                 ]),
           ],
         ),
