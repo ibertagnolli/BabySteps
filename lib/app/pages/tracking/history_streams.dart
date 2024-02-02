@@ -6,13 +6,15 @@ import 'package:babysteps/main.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 
+// Breastfeeding - first shows the accurate most recent entries, then doesn't always update the right
+// way when you make more entries
+// Bottle feeding - "amount" is currently hardcoded
 // Sleep - first shows the accurate most recent entries, then if you make a new entry it'll overwrite the 
 // most recent one but the 2 under it stay the same (it should always show the most recent 3 so they should 
 // shift down)
 // Diaper - all good 
 // Weight - only autofills date for the first one, then the datepicker doesn't include a time so it's all 12:00
 // Temp - same as weight
-
 
 // Represents the data shown in the history table when we only need 3 columns
 class RowData3Cols<T1, T2, T3> {
@@ -47,8 +49,10 @@ class _BreastfeedingHistoryStreamState extends State<BreastfeedingHistoryStream>
         .collection("Babies")
         .doc(prefs?.getString('babyDoc') ?? "IYyV2hqR7omIgeA4r7zQ")
         .collection("Feeding")
+        .where('type', isEqualTo: 'BreastFeeding')
+        .where('active', isEqualTo: false)
         .orderBy('date', descending: true)
-        .limit(3) // TODO: How many do we want? Specific number? Any from "this week"?
+        .limit(5) // TODO: How many do we want? Specific number? Any from "this week"?
         .snapshots();
 
   @override
@@ -103,8 +107,10 @@ class _BottleHistoryStreamState extends State<BottleHistoryStream> {
         .collection("Babies")
         .doc(prefs?.getString('babyDoc') ?? "IYyV2hqR7omIgeA4r7zQ")
         .collection("Feeding")
+        .where('type', isEqualTo: 'Bottle')
+        .where('active', isEqualTo: false)
         .orderBy('date', descending: true)
-        .limit(3) // TODO: How many do we want? Specific number? Any from "this week"?
+        .limit(5) // TODO: How many do we want? Specific number? Any from "this week"?
         .snapshots();
 
   @override
@@ -159,7 +165,7 @@ class _SleepHistoryStreamState extends State<SleepHistoryStream> {
         .doc(prefs?.getString('babyDoc') ?? "IYyV2hqR7omIgeA4r7zQ")
         .collection("Sleep")
         .orderBy('date', descending: true)
-        .limit(3) // TODO: How many do we want? Specific number? Any from "this week"?
+        .limit(5) // TODO: How many do we want? Specific number? Any from "this week"?
         .snapshots();
 
   @override
@@ -213,7 +219,7 @@ class _WeightHistoryStreamState extends State<WeightHistoryStream> {
         .doc(prefs?.getString('babyDoc') ?? "IYyV2hqR7omIgeA4r7zQ")
         .collection("Weight")
         .orderBy('date', descending: true)
-        .limit(3) // TODO: How many do we want? Specific number? Any from "this week"?
+        .limit(5) // TODO: How many do we want? Specific number? Any from "this week"?
         .snapshots();
 
   @override
@@ -269,7 +275,7 @@ class _TemperatureHistoryStreamState extends State<TemperatureHistoryStream> {
         .doc(prefs?.getString('babyDoc') ?? "IYyV2hqR7omIgeA4r7zQ")
         .collection("Temperature")
         .orderBy('date', descending: true)
-        .limit(3) // TODO: How many do we want? Specific number? Any from "this week"?
+        .limit(5) // TODO: How many do we want? Specific number? Any from "this week"?
         .snapshots();
 
   @override
@@ -325,7 +331,7 @@ class _DiaperHistoryStreamState extends State<DiaperHistoryStream> {
         .doc(prefs?.getString('babyDoc') ?? "IYyV2hqR7omIgeA4r7zQ")
         .collection("Diaper")
         .orderBy('date', descending: true)
-        .limit(3) // TODO: How many do we want? Specific number? Any from "this week"?
+        .limit(5) // TODO: How many do we want? Specific number? Any from "this week"?
         .snapshots();
 
   @override
