@@ -72,7 +72,7 @@ class _WeightPageState extends State<WeightPage> {
               ),
 
               // History card - in widgets
-              HistoryDropdown(SleepHistoryStream())
+              HistoryDropdown(WeightHistoryStream())
             ],
           ),
         ),
