@@ -250,7 +250,7 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
               // History Card - in widgets
               Padding(
                 padding: EdgeInsets.only(top:30),
-                child: HistoryDropdown(SleepHistoryStream()),
+                child: HistoryDropdown(BottleHistoryStream()),
               ),
           ]),
         ),

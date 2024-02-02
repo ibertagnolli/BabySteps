@@ -32,6 +32,116 @@ class RowData4Cols<T1, T2, T3, T4> {
   RowData4Cols(this.day, this.time, this.data1, this.data2);
 }
 
+// BREASTFEEDING
+
+class BreastfeedingHistoryStream extends StatefulWidget{
+  @override
+  _BreastfeedingHistoryStreamState createState() => _BreastfeedingHistoryStreamState();
+}
+
+class _BreastfeedingHistoryStreamState extends State<BreastfeedingHistoryStream> {
+
+  final Stream<QuerySnapshot> _breastfeedingHistoryStream = db
+        .collection("Babies")
+        .doc(prefs?.getString('babyDoc') ?? "IYyV2hqR7omIgeA4r7zQ")
+        .collection("Feeding")
+        .orderBy('date', descending: true)
+        .limit(3) // TODO: How many do we want? Specific number? Any from "this week"?
+        .snapshots();
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _breastfeedingHistoryStream,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return const Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Text("Loading");
+        }
+
+        // An array of documents, but our query only returns an array of one document ** NOT THIS TIME, THIS IS ACTUALLY AN ARRAY NOW
+        var lastBreastfeedingDocs = snapshot.data!.docs;
+
+        List<RowData4Cols> rows = [];
+
+        // For however many most recent docs we have, build a row for it
+        lastBreastfeedingDocs.forEach((doc) {
+          DateTime date1 = doc['date'].toDate();
+          String dateStr1 = DateFormat('MM-dd hh:mm').format(date1);
+          var splitDate1 = dateStr1.split(' ');
+          String day = splitDate1[0];
+          String time = splitDate1[1];
+          String length = doc['length'];
+          String side = doc['side'];
+
+          rows.add(RowData4Cols(day, time, length, side));
+        });
+
+        return HistoryTable4Cols(rows, "Length", "Side");
+      },
+    );
+  }
+}
+
+// BOTTLE FEEDING
+
+class BottleHistoryStream extends StatefulWidget{
+  @override
+  _BottleHistoryStreamState createState() => _BottleHistoryStreamState();
+}
+
+class _BottleHistoryStreamState extends State<BottleHistoryStream> {
+
+  final Stream<QuerySnapshot> _bottleHistoryStream = db
+        .collection("Babies")
+        .doc(prefs?.getString('babyDoc') ?? "IYyV2hqR7omIgeA4r7zQ")
+        .collection("Feeding")
+        .orderBy('date', descending: true)
+        .limit(3) // TODO: How many do we want? Specific number? Any from "this week"?
+        .snapshots();
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _bottleHistoryStream,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return const Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Text("Loading");
+        }
+
+        // An array of documents, but our query only returns an array of one document ** NOT THIS TIME, THIS IS ACTUALLY AN ARRAY NOW
+        var lastBottleDocs = snapshot.data!.docs;
+
+        List<RowData4Cols> rows = [];
+
+        // For however many most recent docs we have, build a row for it
+        lastBottleDocs.forEach((doc) {
+          DateTime date1 = doc['date'].toDate();
+          String dateStr1 = DateFormat('MM-dd hh:mm').format(date1);
+          var splitDate1 = dateStr1.split(' ');
+          String day = splitDate1[0];
+          String time = splitDate1[1];
+          String bottleType = doc['bottleType'];
+          String amount = "4 oz";
+
+          rows.add(RowData4Cols(day, time, amount, bottleType));
+        });
+
+        return HistoryTable4Cols(rows, "Amount", "Bottle Type");
+      },
+    );
+  }
+}
+
+// SLEEP
+
 class SleepHistoryStream extends StatefulWidget{
   @override
   _SleepHistoryStreamState createState() => _SleepHistoryStreamState();
