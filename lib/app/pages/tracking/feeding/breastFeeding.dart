@@ -15,7 +15,6 @@ class BreastFeedingPage extends StatefulWidget {
 }
 
 class _BreastFeedingPageState extends State<BreastFeedingPage> {
-  String timeSince = "--";
   String lastSide = "Left";
   String buttonTextL = "left";
   String buttonTextR = "right";
@@ -45,13 +44,6 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
       try {
         //update the last side from the finished breast feeding query
         lastSide = finishedBreastFeedingQuerySnapshot.docs[0]['side'];
-        //get the elapsed time between now and the time that the last information was logged
-        String diff = DateTime.now()
-            .difference(DateTime.parse(
-                finishedBreastFeedingQuerySnapshot.docs[0]['date'].toString()))
-            .inMinutes
-            .toString();
-        timeSince = diff == '1' ? '$diff min' : '$diff mins';
       } catch (error) {
         //If there's an error, print it to the output
         debugPrint(error.toString());
@@ -63,8 +55,8 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
       leftId = ongoingLeftBreastFeedingQuerySnapshot.docs[0].id;
       //calculate the time in miliseconds from the last time the left side was started
       timeSoFarOnLeft = DateTime.now()
-          .difference(DateTime.parse(
-              ongoingLeftBreastFeedingQuerySnapshot.docs[0]['date'].toString()))
+          .difference(
+              ongoingLeftBreastFeedingQuerySnapshot.docs[0]['date'].toDate())
           .inMilliseconds;
       //since ongoingLeft isn't empty, the timer is running so set flag accordingly
       leftSideGoing = true;
@@ -75,9 +67,8 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
       rightId = ongoingRightBreastFeedingQuerySnapshot.docs[0].id;
       //calculate the time in miliseconds from the last time the right side was started
       timeSoFarOnRight = DateTime.now()
-          .difference(DateTime.parse(ongoingRightBreastFeedingQuerySnapshot
-              .docs[0]['date']
-              .toString()))
+          .difference(
+              (ongoingRightBreastFeedingQuerySnapshot.docs[0]['date'].toDate()))
           .inMilliseconds;
       //since ongoingRight isn't empty, the timer is running so set flag accordingly
       rightSideGoing = true;
@@ -109,7 +100,6 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
     if (leftId != null) {
       await FeedingDatabaseMethods().updateFeedingEntry(feedingLength, leftId!);
       //once data has been added, update the card accordingly
-      leftFeedingDone(feedingLength);
     }
   }
 
@@ -135,7 +125,6 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
       await FeedingDatabaseMethods()
           .updateFeedingEntry(feedingLength, rightId!);
       //once data has been added, update the card accordingly
-      rightFeedingDone(feedingLength);
     }
   }
 
@@ -156,20 +145,6 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
       leftSideGoing = false;
       rightSideGoing = false;
       // Reset time since last feed
-    });
-  }
-
-  void leftFeedingDone(String feedingLength) {
-    setState(() {
-      timeSince = "0:00";
-      lastSide = "Left";
-    });
-  }
-
-  void rightFeedingDone(String feedingLength) {
-    setState(() {
-      timeSince = "0:00";
-      lastSide = "Right";
     });
   }
 
@@ -222,7 +197,6 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
                               height: 200,
                               width: 195,
                               child: NewStopWatch(
-                                  timeSince,
                                   buttonTextL,
                                   updateLeftData,
                                   uploadLeftData,
@@ -233,7 +207,6 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
                               height: 200,
                               width: 195,
                               child: NewStopWatch(
-                                  timeSince,
                                   buttonTextR,
                                   updateRightData,
                                   uploadRightData,
@@ -278,10 +251,9 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
 
               // History Card - in widgets
               Padding(
-                padding: EdgeInsets.only(top:10),
+                padding: EdgeInsets.only(top: 10),
                 child: HistoryDropdown(SleepHistoryStream()),
               ),
-              
             ],
           ),
         ),
@@ -289,4 +261,3 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
     );
   }
 }
-
