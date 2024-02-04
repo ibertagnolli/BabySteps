@@ -5,9 +5,10 @@ import 'dart:core';
 class NotesPage extends StatefulWidget {
   final String title;
   final String contents;
+  var docId;
   String noteTitle = "";
 
-  NotesPage(this.title, this.contents, {super.key});
+  NotesPage(this.docId, this.title, this.contents, {super.key});
 
   @override
   State<StatefulWidget> createState() => _NotesPageState();
@@ -15,15 +16,15 @@ class NotesPage extends StatefulWidget {
 
 /// The page where users write/edit Notes.
 class _NotesPageState extends State<NotesPage> {
-  DateTime date = DateTime.now();
   late final TextEditingController _noteController = TextEditingController(text: widget.contents);
   late final TextEditingController _titleController = TextEditingController(text: widget.title);
 
   // The global key uniquely identifies the Form widget and allows validation of the form.
   final _formKey = GlobalKey<FormState>();
 
-  /// Saves a new event entry in the Firestore database.
-  saveNewNote() async {
+  /// Saves a new event entry in the Firestore database if the entry does not already exist.
+  /// Otherwise, updates the existing entry
+  saveNote() async {
     // TODO add date if we want to tell the user last time they updated
 
     // Write Note data to database
@@ -31,7 +32,14 @@ class _NotesPageState extends State<NotesPage> {
       'title': _titleController.text,
       'contents': _noteController.text,
     };
-    await NoteDatabaseMethods().addNote(uploaddata);
+
+    // Add a new note if the docId isn't specified. Else, update the existing Document.
+    if(widget.docId == "") {
+      await NoteDatabaseMethods().addNote(uploaddata);
+    }
+    else {
+      await NoteDatabaseMethods().updateNote(widget.docId, uploaddata);
+    }
     
     // Clear fields for next entry (not date)
     _noteController.clear();
@@ -132,7 +140,7 @@ class _NotesPageState extends State<NotesPage> {
                   child: ElevatedButton(
                     onPressed: () {
                       if(_formKey.currentState!.validate()) {
-                        saveNewNote();
+                        saveNote();
                         Navigator.pop(context);
                       }
                     },

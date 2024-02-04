@@ -35,28 +35,15 @@ class _EditNotesStreamState extends State<EditNotesStream> {
         
         // The Note document
         var noteDoc = snapshot.data!;
+        var docId = noteDoc.id;
 
         if(!noteDoc.exists) {
           return const Text("Error: This note does not exist.");
         } 
         else {
           Map<String, dynamic> data = noteDoc.data()! as Map<String, dynamic>;
-
-          return NotesPage(data['title'], data['contents']);
           
-          // ListView(
-          //   shrinkWrap: true, // TODO We can make this a SizedBox and it will scroll by default. But, the box is not obviously scrollable.
-          //   children: noteDocs
-          //       .map((DocumentSnapshot document) {
-          //         Map<String, dynamic> data =
-          //             document.data()! as Map<String, dynamic>;
-                  
-          //         var docId = document.id;
-          //         return NotesCard(data['title'], docId, context: context); //, context: context);
-          //       })
-          //       .toList()
-          //       .cast(),
-          // );
+          return NotesPage(docId, data['title'], data['contents']);
         }
       },
     );

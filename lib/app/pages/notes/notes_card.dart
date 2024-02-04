@@ -11,7 +11,6 @@ class NotesCard extends StatelessWidget {
   final String name;
   final docId;
   final context; // TODO if we make this a Stateful widget, we'll have access to context outside of build()
-  // TODO EMILY LEFT OFF: make sure the context works!! I was working on editing the note. Just started the editNote() method
   
   const NotesCard(this.name, this.docId, {super.key, this.context}); // this.context
 
@@ -26,7 +25,6 @@ class NotesCard extends StatelessWidget {
       context,
       MaterialPageRoute(builder: (context) => EditNotesStream(docId)),
     );
-    // print("edit");
   }
 
   @override
@@ -35,7 +33,6 @@ class NotesCard extends StatelessWidget {
       color: Theme.of(context).colorScheme.surface,
       child: InkWell(
         splashColor: Theme.of(context).colorScheme.surface,
-        //onTap: pageFunc,
         child: SizedBox(
           width: 200,
           height: 80,

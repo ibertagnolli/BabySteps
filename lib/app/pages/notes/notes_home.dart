@@ -18,7 +18,7 @@ class _NotesHomePageState extends State<NotesHomePage> {
   void _openNote() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => NotesPage("", "")),
+      MaterialPageRoute(builder: (context) => NotesPage("", "", "")), // Open a new NotesPage
     );
   }
 

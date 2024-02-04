@@ -45,7 +45,7 @@ class _NotesStreamState extends State<NotesStream> {
                       document.data()! as Map<String, dynamic>;
                   
                   var docId = document.id;
-                  return NotesCard(data['title'], docId, context: context); //, context: context);
+                  return NotesCard(data['title'], docId, context: context);
                 })
                 .toList()
                 .cast(),

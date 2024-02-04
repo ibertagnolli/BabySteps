@@ -39,7 +39,6 @@ class NoteDatabaseMethods {
 
   // Returns a snapshot of all the user's Notes
   Stream<DocumentSnapshot<Map<String, dynamic>>> getSpecificNotesStream(var docId) {
-    // TODO maybe return in order of most recently edited?
     return db
         .collection('Babies')
         .doc('IYyV2hqR7omIgeA4r7zQ')
@@ -51,9 +50,9 @@ class NoteDatabaseMethods {
   // Updates a Note
   Future updateNote(var docId, Map<String, dynamic> updatedUserInfoMap) async {
     return await db
-        .collection('Users')
-        .doc('2hUD5VwWZHXWRX3mJZOp') // TODO update to current user's document id
-        .collection('Tasks')
+        .collection('Babies')
+        .doc('IYyV2hqR7omIgeA4r7zQ') // TODO update to current user's document id
+        .collection('Notes')
         .doc(docId)
         .set(updatedUserInfoMap);
   }
