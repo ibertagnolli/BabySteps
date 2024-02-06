@@ -34,7 +34,7 @@ class _PostState extends State<Post> {
     final screenWidth = MediaQuery.of(context).size.width;
     final cardWidth = screenWidth * 0.90; // 90% of screen width
     //Update this to actually grab the initials from the user in the database, also this has a potential to break if the name is ""
-    String initials = widget.usersName[0];
+    String initials = widget.usersName.isEmpty ? "A" : widget.usersName[0];
 
     return Card(
       child: Container(
