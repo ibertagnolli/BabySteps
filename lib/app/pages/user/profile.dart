@@ -1,54 +1,133 @@
-import 'package:flutter/material.dart';
-import 'dart:core';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class UserProfile {
+  final String? name;
+  final String? email;
+  final String? babyName;
+  final String? dateOfBirth;
+
+  UserProfile({
+    this.name,
+    this.email,
+    this.babyName,
+    this.dateOfBirth,
+  });
+}
+
+
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
-
   @override
-  State<StatefulWidget> createState() => _ProfilePageState();
+  _ProfilePageState createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  UserProfile? userProfile;
+  String? babyName;
+  String? dateOfBirth;
+
+ 
+
+ Future<void> fetchUserInfo() async {
+  if (FirebaseAuth.instance.currentUser != null) {
+    try {
+      final uid = FirebaseAuth.instance.currentUser!.uid;
+
+      // Fetch user document using UID
+      final userSnapshot = await FirebaseFirestore.instance
+          .collection('Users')
+          .where('UID', isEqualTo: uid)
+          .get();
+
+      if (userSnapshot.docs.isNotEmpty) {
+        final userData = userSnapshot.docs.first.data();
+        final babyId = userData['baby'];
+
+        // Fetch baby document using babyId
+        final babySnapshot = await FirebaseFirestore.instance
+            .collection('Babies')
+            .doc(babyId)
+            .get();
+
+        if (babySnapshot.exists) {
+          final babyData = babySnapshot.data();
+          babyName = babyData?['Name'];
+          dateOfBirth = babyData?['DOB'];
+        } else {
+          print('Baby document not found for babyId: $babyId');
+        }
+      } else {
+        print('User document not found for UID: $uid');
+      }
+
+      // Fetch user display name
+      final name = FirebaseAuth.instance.currentUser!.displayName;
+      final email = FirebaseAuth.instance.currentUser!.email;
+      // Simulate fetching additional user information from your backend
+      final userProfile = UserProfile(
+        name: name,
+        email: email,
+        babyName: babyName ?? 'N/A',
+        dateOfBirth: dateOfBirth ?? 'N/A', // Replace with actual date
+      );
+
+      // Update the UI to reflect the fetched information
+      setState(() {
+        this.userProfile = userProfile;
+      });
+    } catch (error) {
+      print('Error fetching user information: $error');
+    }
+  }
+}
+
+ @override
+  void initState() {
+    super.initState();
+    // Fetch user information when the page is initialized
+    fetchUserInfo();
+  }
+
   @override
   Widget build(BuildContext context) {
-    String? name;
-    if (FirebaseAuth.instance.currentUser != null) {
-      name = FirebaseAuth.instance.currentUser!.displayName;
-    }
-
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        title: const Text('Profile'),
-        leading: BackButton(
-          onPressed: () => context.go('/home'),
-          color: Theme.of(context).colorScheme.onSurface,
+        title: Text('Profile'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Center( child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Display user information
+            Text(
+              'Name: ${userProfile?.name ?? 'Loading...'}',
+              style: TextStyle(fontSize: 18),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Email: ${userProfile?.email ?? 'Loading...'}',
+              style: TextStyle(fontSize: 18),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Baby Name: ${userProfile?.babyName ?? 'Loading...'}',
+              style: TextStyle(fontSize: 18),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Date of Birth: ${userProfile?.dateOfBirth?.toString() ?? 'Loading...'}',
+              style: TextStyle(fontSize: 18),
+            ),
+          ],
         ),
       ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                'Welcome $name',
-                style: TextStyle(
-                    fontSize: 30.0,
-                    color: Theme.of(context).colorScheme.surface),
-              ),
-              FilledButton(
-                  onPressed: () {
-                    FirebaseAuth.instance.signOut();
-                    context.go('/login');
-                  },
-                  child: Text('Log out'))
-            ],
-          ),
-        ),
       ),
     );
   }
 }
+
+
