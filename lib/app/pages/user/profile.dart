@@ -23,8 +23,10 @@ class UserProfile {
 
 
 class ProfilePage extends StatefulWidget {
+   const ProfilePage({super.key});
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  State<ProfilePage> createState() => _ProfilePageState();
+  
 }
 
 class _ProfilePageState extends State<ProfilePage> {
@@ -108,6 +110,11 @@ class _ProfilePageState extends State<ProfilePage> {
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(10),
+        boxShadow:const[ BoxShadow(
+                        color: Colors.black26, 
+                      offset: Offset(2,2),
+                      blurRadius: 10 
+                      )],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -151,6 +158,8 @@ Widget buildInfoField(String label, String? value, Icon icon) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Profile'),
+        leading: BackButton(onPressed: () => context.go('/home'),
+        color:Theme.of(context).colorScheme.onSurface)
       ),
       body: SingleChildScrollView(
         child:Padding(
@@ -184,16 +193,18 @@ Widget buildInfoField(String label, String? value, Icon icon) {
               ]),
               //create children info box and put in fields
               //TODO: display multiple baby's info when caregivers have more than one
-            const SizedBox(height: 16),
-              buildInfoBox('Children', [
+            
+              buildInfoBox('', [
                 buildInfoField('Baby Name', userProfile?.babyName, const Icon(Icons.account_box)),
                 buildInfoField('Date of Birth', userProfile?.dateOfBirth?.toString(), const Icon(Icons.calendar_month_outlined)),
               //TODO: Grab Caregivers when that is in the database
               ]),
               //edit button 
                 const SizedBox(height: 16),
+               Align(alignment:Alignment.bottomCenter, 
+              child:
               ElevatedButton(
-                  onPressed: () => context.go('/login/edit'),
+                  onPressed: () => context.go('/profile/edit'),
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(
                         Theme.of(context).colorScheme.tertiary),
@@ -206,9 +217,10 @@ Widget buildInfoField(String label, String? value, Icon icon) {
                     ),
                   ),
                   child: const Text('Edit',
-                  style:  TextStyle(fontSize: 26) ),
+                  style:  TextStyle(fontSize: 26)),
                 ),
-        
+              ),
+           
           ],
               ),
 
