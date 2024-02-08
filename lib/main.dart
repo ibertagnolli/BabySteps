@@ -61,14 +61,16 @@ void main() async {
 
       QuerySnapshot snapshot = await UserDatabaseMethods().getUser(user.uid);
       var doc = snapshot.docs;
-      prefs!.setString('babyDoc', doc[0]['baby']);
-      // prefs!.setString('babyDoc', 'IYyV2hqR7omIgeA4r7zQ'); //This will access Theo's data (comment out the line above to use it)
-      prefs!.setString('userDoc', doc[0].id);
+      if (doc.isNotEmpty) {
+        prefs!.setString('babyDoc', doc[0]['baby']);
+        // prefs!.setString('babyDoc', 'IYyV2hqR7omIgeA4r7zQ'); //This will access Theo's data (comment out the line above to use it)
+        prefs!.setString('userDoc', doc[0].id);
 
-      DocumentSnapshot snapshot2 =
-          await UserDatabaseMethods().getBaby(doc[0]['baby']);
-      Map<String, dynamic> doc2 = snapshot2.data()! as Map<String, dynamic>;
-      prefs!.setString('childName', doc2['Name']);
+        DocumentSnapshot snapshot2 =
+            await UserDatabaseMethods().getBaby(doc[0]['baby']);
+        Map<String, dynamic> doc2 = snapshot2.data()! as Map<String, dynamic>;
+        prefs!.setString('childName', doc2['Name']);
+      }
 
       print('User is signed in!');
     }
