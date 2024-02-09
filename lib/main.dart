@@ -10,6 +10,7 @@ import 'package:babysteps/app/pages/tracking/temperature/temperature.dart';
 import 'package:babysteps/app/pages/tracking/tracking.dart';
 import 'package:babysteps/app/pages/tracking/weight/weight.dart';
 import 'package:babysteps/app/pages/user/add_baby.dart';
+import 'package:babysteps/app/pages/user/edit.dart';
 import 'package:babysteps/app/pages/user/profile.dart';
 import 'package:babysteps/app/pages/user/user_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -180,8 +181,18 @@ final goRouter = GoRouter(
         ]),
     GoRoute(
       path: '/profile',
-      pageBuilder: (context, state) => NoTransitionPage(child: ProfilePage()),
+      pageBuilder: (context, state) => const NoTransitionPage(child: ProfilePage()),
+       routes: [
+                GoRoute(
+                  path: 'edit',
+                  builder: (context, state) => const EditProfilePage(),
+                )
+       ],
     ),
+    //  GoRoute(
+    //   path: '/edit',
+    //   builder: (context, state) => const EditProfilePage()),
+    // ),
     // Stateful nested navigation based on:
     // https://github.com/flutter/packages/blob/main/packages/go_router/example/lib/stateful_shell_route.dart
     StatefulShellRoute.indexedStack(
