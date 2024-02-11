@@ -69,7 +69,7 @@ class _TemperaturePageState extends State<TemperaturePage> {
               ),
 
               // History card - in widgets
-              HistoryDropdown(SleepHistoryStream())
+              HistoryDropdown(TemperatureHistoryStream())
             ],
           ),
         ),

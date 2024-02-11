@@ -96,12 +96,12 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
             ),
 
             // NewStopWatch(timeSince, buttonText, updateData, () => {}, 0, false)
-
-            // History Card - in widgets
-            Padding(
-              padding: EdgeInsets.only(top: 30),
-              child: HistoryDropdown(SleepHistoryStream()),
-            ),
+          
+              // History Card - in widgets
+              Padding(
+                padding: EdgeInsets.only(top:30),
+                child: HistoryDropdown(BottleHistoryStream()),
+              ),
           ]),
         ),
       ),

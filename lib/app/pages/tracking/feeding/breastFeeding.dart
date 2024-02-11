@@ -251,8 +251,8 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
 
               // History Card - in widgets
               Padding(
-                padding: EdgeInsets.only(top: 10),
-                child: HistoryDropdown(SleepHistoryStream()),
+                padding: EdgeInsets.only(top:10),
+                child: HistoryDropdown(BreastfeedingHistoryStream()),
               ),
             ],
           ),
