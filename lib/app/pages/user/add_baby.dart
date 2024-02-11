@@ -6,6 +6,7 @@ import 'dart:core';
 
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddBabyPage extends StatefulWidget {
   const AddBabyPage({super.key});
@@ -18,6 +19,8 @@ class _AddBabyPageState extends State<AddBabyPage> {
   TextEditingController date = TextEditingController(
       text: DateFormat("MM-dd-yyyy").format(DateTime.now()));
   TextEditingController babyName = TextEditingController();
+
+  User? user = FirebaseAuth.instance.currentUser;
 
   uploadData() async {
     Map<String, dynamic> uploaddata = {
@@ -32,6 +35,21 @@ class _AddBabyPageState extends State<AddBabyPage> {
     };
 
     await UserDatabaseMethods().addBabyToUser(userData);
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    prefs.setString('name', user?.displayName ?? '');
+    prefs.setString('uid', user!.uid);
+
+    QuerySnapshot snapshot = await UserDatabaseMethods().getUser(user!.uid);
+    var doc = snapshot.docs;
+    if (doc.isNotEmpty) {
+      prefs.setString('babyDoc', doc[0]['baby']);
+      // prefs!.setString('babyDoc', 'IYyV2hqR7omIgeA4r7zQ'); //This will access Theo's data (comment out the line above to use it)
+      prefs.setString('userDoc', doc[0].id);
+
+      prefs.setString('childName', babyName.text);
+    }
   }
 
   @override

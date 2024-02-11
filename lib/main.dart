@@ -10,6 +10,7 @@ import 'package:babysteps/app/pages/tracking/temperature/temperature.dart';
 import 'package:babysteps/app/pages/tracking/tracking.dart';
 import 'package:babysteps/app/pages/tracking/weight/weight.dart';
 import 'package:babysteps/app/pages/user/add_baby.dart';
+import 'package:babysteps/app/pages/user/edit.dart';
 import 'package:babysteps/app/pages/user/profile.dart';
 import 'package:babysteps/app/pages/user/user_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -61,14 +62,16 @@ void main() async {
 
       QuerySnapshot snapshot = await UserDatabaseMethods().getUser(user.uid);
       var doc = snapshot.docs;
-      prefs!.setString('babyDoc', doc[0]['baby']);
-      // prefs!.setString('babyDoc', 'IYyV2hqR7omIgeA4r7zQ'); //This will access Theo's data (comment out the line above to use it)
-      prefs!.setString('userDoc', doc[0].id);
+      if (doc.isNotEmpty) {
+        prefs!.setString('babyDoc', doc[0]['baby']);
+        // prefs!.setString('babyDoc', 'IYyV2hqR7omIgeA4r7zQ'); //This will access Theo's data (comment out the line above to use it)
+        prefs!.setString('userDoc', doc[0].id);
 
-      DocumentSnapshot snapshot2 =
-          await UserDatabaseMethods().getBaby(doc[0]['baby']);
-      Map<String, dynamic> doc2 = snapshot2.data()! as Map<String, dynamic>;
-      prefs!.setString('childName', doc2['Name']);
+        DocumentSnapshot snapshot2 =
+            await UserDatabaseMethods().getBaby(doc[0]['baby']);
+        Map<String, dynamic> doc2 = snapshot2.data()! as Map<String, dynamic>;
+        prefs!.setString('childName', doc2['Name']);
+      }
 
       print('User is signed in!');
     }
@@ -178,8 +181,18 @@ final goRouter = GoRouter(
         ]),
     GoRoute(
       path: '/profile',
-      pageBuilder: (context, state) => NoTransitionPage(child: ProfilePage()),
+      pageBuilder: (context, state) => const NoTransitionPage(child: ProfilePage()),
+       routes: [
+                GoRoute(
+                  path: 'edit',
+                  builder: (context, state) => const EditProfilePage(),
+                )
+       ],
     ),
+    //  GoRoute(
+    //   path: '/edit',
+    //   builder: (context, state) => const EditProfilePage()),
+    // ),
     // Stateful nested navigation based on:
     // https://github.com/flutter/packages/blob/main/packages/go_router/example/lib/stateful_shell_route.dart
     StatefulShellRoute.indexedStack(
@@ -268,7 +281,7 @@ final goRouter = GoRouter(
                 routes: [
                   GoRoute(
                       path: 'newnote',
-                      builder: (context, state) => const NotesPage())
+                      builder: (context, state) => NotesPage("", "", "")) // Load a new NotesPage
                 ]),
           ],
         ),
