@@ -81,6 +81,7 @@ class _AddTaskButtonState extends State<AddTaskButton> {
                       // Task Name
                       TextFormField(
                         controller: nameController,
+                        maxLength: 30,
                         decoration: const InputDecoration(
                           labelText: "Task",
                         ),
