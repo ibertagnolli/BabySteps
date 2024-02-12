@@ -99,7 +99,7 @@ class _AddTemperatureCardState extends State<AddTemperatureCard> {
                         context: context,
                         initialDate: DateTime.now(),
                         firstDate: DateTime(2020),
-                        lastDate: DateTime(2101));
+                        lastDate:DateTime.now());
 
                     if (pickeddate != null) {
                       setState(() {

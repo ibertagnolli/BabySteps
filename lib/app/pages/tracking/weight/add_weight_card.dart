@@ -126,7 +126,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
                         context: context,
                         initialDate: DateTime.now(),
                         firstDate: DateTime(2020),
-                        lastDate: DateTime(2101));
+                        lastDate:DateTime.now());
 
                     if (pickeddate != null) {
                       setState(() {
