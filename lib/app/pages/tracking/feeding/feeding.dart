@@ -42,13 +42,14 @@ class _FeedingPageState extends State<FeedingPage> {
           ),
 
           // Top card with data
-          Padding(
+         const Padding(
             padding: EdgeInsets.only(bottom: 16),
             child:
-            SizedBox(
-              height: 200, 
-              child: FeedingStream(),
-              ) ,
+             Flexible(
+              fit:FlexFit.tight,
+                flex: 1,
+                child: FeedingStream(),
+              ),
           ),
 
           // Feeding option buttons - breast feeding or bottle feeding
