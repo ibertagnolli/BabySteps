@@ -32,7 +32,7 @@ class _FeedingPageState extends State<FeedingPage> {
       ),
       body: SingleChildScrollView(
      child: Center(
-        child: Column(children: <Widget>[
+        child: Flex(direction: Axis.vertical, children: <Widget>[
           Padding(
             padding: EdgeInsets.all(32),
             child: Text('Feeding',
@@ -44,13 +44,10 @@ class _FeedingPageState extends State<FeedingPage> {
           // Top card with data
          const Padding(
             padding: EdgeInsets.only(bottom: 16),
-            child:
-             Flexible(
-              fit:FlexFit.tight,
-                flex: 1,
+            child:SizedBox(
                 child: FeedingStream(),
               ),
-          ),
+         ),
 
           // Feeding option buttons - breast feeding or bottle feeding
           // Both have basic info displayed on them, using real time reads

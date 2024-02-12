@@ -66,8 +66,7 @@ class _DiaperPageState extends State<DiaperPage> {
               ),
               const Padding(
                 padding: EdgeInsets.only(bottom: 16),
-                child: Flexible(
-                flex: 1,
+                child:SizedBox(
                 child: DiaperStream(),
               ),
               ),

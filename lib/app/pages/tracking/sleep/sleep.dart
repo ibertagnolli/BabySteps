@@ -132,8 +132,7 @@ class _SleepPageState extends State<SleepPage> {
             // Filled Card reading data from SleepStream()
           const  Padding(
               padding: EdgeInsets.only(bottom: 16),
-              child: Flexible(
-                flex: 1,
+              child: SizedBox(
                 child: SleepStream(),
               ),
             ),

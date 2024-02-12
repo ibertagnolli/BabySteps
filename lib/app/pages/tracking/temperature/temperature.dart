@@ -56,8 +56,7 @@ class _TemperaturePageState extends State<TemperaturePage> {
               // (TemperatureStream returns the card with real time reads)
             const  Padding(
                 padding: const EdgeInsets.only(bottom: 15),
-                child:Flexible(
-                flex: 1,
+                child:SizedBox(
                   child: TemperatureStream(),
                 ),
               ),
