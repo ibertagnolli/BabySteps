@@ -61,7 +61,9 @@ class _NotesPageState extends State<NotesPage> {
           )),
       
       // Using a form to ensure all fields have data before saving
-      body: Form(
+      // Using single child scroll view to fix overflow error
+      body: SingleChildScrollView(
+          child: Form(
         key: _formKey,
         child: Column(
           children: <Widget> [
@@ -74,6 +76,7 @@ class _NotesPageState extends State<NotesPage> {
                 textAlign: TextAlign.center,
                 keyboardType: TextInputType.multiline,
                 maxLines: 1,
+                maxLength: 20,
                 style: TextStyle(
                     fontSize: 25,
                     color: Theme.of(context).colorScheme.onSecondary,
@@ -134,10 +137,7 @@ class _NotesPageState extends State<NotesPage> {
             ),
 
             //Elevated button to save the note
-            Expanded(
-              child: Align(
-                  alignment: FractionalOffset.bottomCenter,
-                  child: ElevatedButton(
+                   ElevatedButton(
                     onPressed: () {
                       if(_formKey.currentState!.validate()) {
                         saveNote();
@@ -154,10 +154,11 @@ class _NotesPageState extends State<NotesPage> {
                       ),
                     ),
                     child: const Text('Save Note'),
-                  )),
-            ),
+                  )
+               
           ]
         ),
+      ),
       ),
     );
   }
