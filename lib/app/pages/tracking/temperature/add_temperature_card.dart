@@ -1,5 +1,6 @@
 import 'package:babysteps/app/pages/tracking/temperature/temperature_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 /// The widget that adds a Temperature measurement.
@@ -71,6 +72,11 @@ class _AddTemperatureCardState extends State<AddTemperatureCard> {
                           padding: const EdgeInsets.only(left: 10, right: 10),
                           child: TextFormField(
                             controller: temp,
+                            maxLength: 5,
+                            decoration: const InputDecoration(counterText: ''),
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.digitsOnly
+                            ], // Only numbers can be entered
                             keyboardType: TextInputType.number,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -99,7 +105,7 @@ class _AddTemperatureCardState extends State<AddTemperatureCard> {
                         context: context,
                         initialDate: DateTime.now(),
                         firstDate: DateTime(2020),
-                        lastDate: DateTime(2101));
+                        lastDate: DateTime.now());
 
                     if (pickeddate != null) {
                       setState(() {
