@@ -5,12 +5,14 @@ import 'package:intl/intl.dart';
 import 'package:babysteps/main.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
+String? babyDoc = currentUser.babies[0].collectionId;
 
-// Breastfeeding - first shows the accurate most recent entries, then doesn't always update the right
-// way when you make more entries
-// Bottle feeding - "amount" is currently hardcoded
-// Sleep - first shows the accurate most recent entries, then if you make a new entry it'll overwrite the 
-// most recent one but the 2 under it stay the same (it should always show the most recent 3 so they should 
+// Breastfeeding - first shows the accurate most recent entries, and first entry of each side works correctly, 
+// then the next ones will overwrite the most recent entry on that side **** it's actually being overwritten 
+// in the database itself
+// Bottle feeding - all good except "amount" is currently hardcoded because it's not in the database
+// Sleep - first shows the accurate most recent entries, and first entry works correctly, then if you make 
+// a new entry it'll overwrite the most recent one ** actually being overwritten in the database itself
 // shift down)
 // Diaper - all good 
 // Weight - only autofills date for the first one, then the datepicker doesn't include a time so it's all 12:00
@@ -47,7 +49,7 @@ class _BreastfeedingHistoryStreamState extends State<BreastfeedingHistoryStream>
 
   final Stream<QuerySnapshot> _breastfeedingHistoryStream = db
         .collection("Babies")
-        .doc(prefs?.getString('babyDoc') ?? "IYyV2hqR7omIgeA4r7zQ")
+        .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
         .collection("Feeding")
         .where('type', isEqualTo: 'BreastFeeding')
         .where('active', isEqualTo: false)
@@ -105,7 +107,7 @@ class _BottleHistoryStreamState extends State<BottleHistoryStream> {
 
   final Stream<QuerySnapshot> _bottleHistoryStream = db
         .collection("Babies")
-        .doc(prefs?.getString('babyDoc') ?? "IYyV2hqR7omIgeA4r7zQ")
+        .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
         .collection("Feeding")
         .where('type', isEqualTo: 'Bottle')
         .where('active', isEqualTo: false)
@@ -162,7 +164,7 @@ class _SleepHistoryStreamState extends State<SleepHistoryStream> {
 
   final Stream<QuerySnapshot> _sleepHistoryStream = db
         .collection("Babies")
-        .doc(prefs?.getString('babyDoc') ?? "IYyV2hqR7omIgeA4r7zQ")
+        .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
         .collection("Sleep")
         .orderBy('date', descending: true)
         .limit(5) // TODO: How many do we want? Specific number? Any from "this week"?
@@ -216,7 +218,7 @@ class WeightHistoryStream extends StatefulWidget{
 class _WeightHistoryStreamState extends State<WeightHistoryStream> {
   final Stream<QuerySnapshot> _weightHistoryStream = db
         .collection("Babies")
-        .doc(prefs?.getString('babyDoc') ?? "IYyV2hqR7omIgeA4r7zQ")
+        .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
         .collection("Weight")
         .orderBy('date', descending: true)
         .limit(5) // TODO: How many do we want? Specific number? Any from "this week"?
@@ -272,7 +274,7 @@ class TemperatureHistoryStream extends StatefulWidget{
 class _TemperatureHistoryStreamState extends State<TemperatureHistoryStream> {
   final Stream<QuerySnapshot> _temperatureHistoryStream = db
         .collection("Babies")
-        .doc(prefs?.getString('babyDoc') ?? "IYyV2hqR7omIgeA4r7zQ")
+        .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
         .collection("Temperature")
         .orderBy('date', descending: true)
         .limit(5) // TODO: How many do we want? Specific number? Any from "this week"?
@@ -328,7 +330,7 @@ class DiaperHistoryStream extends StatefulWidget {
 class _DiaperHistoryStreamState extends State<DiaperHistoryStream> {
   final Stream<QuerySnapshot> _diaperHistoryStream = db
         .collection("Babies")
-        .doc(prefs?.getString('babyDoc') ?? "IYyV2hqR7omIgeA4r7zQ")
+        .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
         .collection("Diaper")
         .orderBy('date', descending: true)
         .limit(5) // TODO: How many do we want? Specific number? Any from "this week"?
