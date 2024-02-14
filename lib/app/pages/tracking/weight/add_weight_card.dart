@@ -1,5 +1,6 @@
 import 'package:babysteps/app/pages/tracking/weight/weight_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 /// The widget that adds a weight measurement.
@@ -77,6 +78,11 @@ class _AddWeightCardState extends State<AddWeightCard> {
                           child: TextFormField(
                             controller: pounds,
                             keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            maxLength: 5,
+                            decoration: const InputDecoration(counterText: ''),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter pounds';
@@ -97,7 +103,12 @@ class _AddWeightCardState extends State<AddWeightCard> {
                           padding: const EdgeInsets.only(left: 10, right: 10),
                           child: TextFormField(
                             controller: ounces,
+                            maxLength: 5,
+                            decoration: const InputDecoration(counterText: ''),
                             keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.digitsOnly
+                            ], // Only numbers can be entered
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter ounces';
@@ -126,7 +137,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
                         context: context,
                         initialDate: DateTime.now(),
                         firstDate: DateTime(2020),
-                        lastDate: DateTime(2101));
+                        lastDate: DateTime.now());
 
                     if (pickeddate != null) {
                       setState(() {

@@ -54,10 +54,9 @@ class _TemperaturePageState extends State<TemperaturePage> {
 
                // FilledCard Quick Temperature Info 
               // (TemperatureStream returns the card with real time reads)
-              Padding(
+            const  Padding(
                 padding: const EdgeInsets.only(bottom: 15),
-                child: SizedBox(
-                  height: 180,
+                child:SizedBox(
                   child: TemperatureStream(),
                 ),
               ),

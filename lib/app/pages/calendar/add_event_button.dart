@@ -68,7 +68,7 @@ class _AddEventButtonState extends State<AddEventButton> {
   @override
   Widget build(BuildContext context) {
     // Now that widget has the passed selectedDay, populate the dateController
-    dateController.text = DateFormat.yMd().format(widget.selectedDay);
+    //dateController.text = DateFormat.yMd().format(widget.selectedDay);
 
     return SizedBox(
       // Add Event Button
@@ -101,6 +101,7 @@ class _AddEventButtonState extends State<AddEventButton> {
                       // Event Name
                       TextFormField(
                         controller: nameController,
+                        maxLength: 30,
                         decoration: const InputDecoration(
                           labelText: "Event",
                         ),
@@ -126,10 +127,10 @@ class _AddEventButtonState extends State<AddEventButton> {
                             lastDate: DateTime(2050));
 
                           if (pickeddate != null) {
-                            setState(() {
+                          // setState(() {
                               widget.selectedDay = pickeddate;
-                              dateController.text =  DateFormat.yMd().add_jm().format(pickeddate);
-                            });                      
+                              dateController.text =  DateFormat.yMd().add_jm().format(widget.selectedDay);
+                           // });                      
                           }
                         },
                         validator: (value) {
