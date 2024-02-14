@@ -2,10 +2,10 @@
 import 'dart:io';
 
 import 'package:babysteps/app/pages/social/social_database.dart';
+import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class CreatePostPage extends StatefulWidget {
@@ -36,12 +36,11 @@ class _CreatePostState extends State<CreatePostPage> {
   }
 
   void createPost() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? filePath;
     DateTime now = DateTime.now();
     if (_imgFile != null) {
       final storageRef = FirebaseStorage.instance.ref();
-      final imagesRef = storageRef.child(prefs.getString("uid")!);
+      final imagesRef = storageRef.child(currentUser.uid!);
       final imageRef = imagesRef.child(now.toIso8601String());
 
       try {
@@ -53,11 +52,11 @@ class _CreatePostState extends State<CreatePostPage> {
     }
 
     Map<String, dynamic> uploaddata = {
-      'usersName': prefs.getString("name"),
+      'usersName':currentUser.uid,
       'date': now,
       'title': title.text == '' ? null : title.text,
       'caption': caption.text == '' ? null : caption.text,
-      'child': prefs.getString("childName"),
+      'child': currentUser.babies[0].name, //TODO: update this to be the baby you're posting
       'image': filePath,
     };
 
