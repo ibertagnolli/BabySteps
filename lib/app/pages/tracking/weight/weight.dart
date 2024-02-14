@@ -59,9 +59,7 @@ class _WeightPageState extends State<WeightPage> {
               // (WeightStream returns the card with real time reads)
              const Padding(
                 padding: const EdgeInsets.only(bottom: 15),
-                child:SizedBox(
                   child: WeightStream(),
-                ),
               ),
 
               // Add Weight Card

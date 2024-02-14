@@ -84,7 +84,7 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
             ),
 
             // Top card with info
-            Padding(
+           const Padding(
               padding: EdgeInsets.only(bottom: 16),
               child: BottleFeedingStream(),
             ),

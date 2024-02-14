@@ -44,9 +44,7 @@ class _FeedingPageState extends State<FeedingPage> {
           // Top card with data
          const Padding(
             padding: EdgeInsets.only(bottom: 16),
-            child:SizedBox(
                 child: FeedingStream(),
-              ),
          ),
 
           // Feeding option buttons - breast feeding or bottle feeding

@@ -75,14 +75,17 @@ class FeedingInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+     //screenWidth and screenHeight is for fixing overflow errors
     final screenWidth = MediaQuery.of(context).size.width;
+     final screenHeight = MediaQuery.of(context).size.width;
+    double height = screenHeight * 0.15;
     double width = screenWidth * 0.85;
     return Card(
       elevation: 0,
       color: theme.colorScheme.secondary,
       child: ConstrainedBox(
         constraints:
-            BoxConstraints(minWidth: width, maxWidth: width, minHeight: 140),
+            BoxConstraints(minWidth: width, maxWidth: width, minHeight: height),
         child: Column(
           children: [
             Padding(

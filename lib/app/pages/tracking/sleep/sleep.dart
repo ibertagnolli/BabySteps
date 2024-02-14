@@ -130,11 +130,9 @@ class _SleepPageState extends State<SleepPage> {
             ),
 
             // Filled Card reading data from SleepStream()
-          const  Padding(
+            const Padding(
               padding: EdgeInsets.only(bottom: 16),
-              child: SizedBox(
-                child: SleepStream(),
-              ),
+              child: SleepStream(),
             ),
             //Using a future builder (should we be using a stream builder?)
             //This will ensure that we don't put up the stopwatch until we see if the stopwatch should still be going

@@ -173,7 +173,7 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
               ),
 
               // Top card with info
-              Padding(
+             const Padding(
                 padding: EdgeInsets.only(bottom: 16),
                 child: BreastFeedingStream(),
               ),

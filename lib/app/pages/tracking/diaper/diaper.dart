@@ -66,9 +66,7 @@ class _DiaperPageState extends State<DiaperPage> {
               ),
               const Padding(
                 padding: EdgeInsets.only(bottom: 16),
-                child:SizedBox(
                 child: DiaperStream(),
-              ),
               ),
               Padding(
                 padding: const EdgeInsets.all(16),
@@ -168,7 +166,7 @@ class _DiaperPageState extends State<DiaperPage> {
 
               // History card - in widgets
               Padding(
-                padding: const EdgeInsets.only(top:30),
+                padding: const EdgeInsets.only(top: 30),
                 child: HistoryDropdown(SleepHistoryStream()),
               )
             ],
