@@ -1,16 +1,13 @@
 import 'package:babysteps/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 //Contains the database methods to access temperature information
 class TemperatureDatabaseMethods {
   FirebaseFirestore db = FirebaseFirestore.instance;
-  final SharedPreferences? prefs = getPreferences();
+  String? babyDoc = currentUser.babies[0].collectionId; //TODO: get current baby
 
   // Sets up the snapshot to listen to changes in the collection.
   void listenForTemperatureReads() {
-    String? babyDoc = prefs?.getString('babyDoc');
-
     final docRef = db
         .collection("Babies")
         .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
@@ -23,8 +20,6 @@ class TemperatureDatabaseMethods {
   }
 
   Stream<QuerySnapshot> getStream() {
-    String? babyDoc = prefs?.getString('babyDoc');
-
     return db
         .collection("Babies")
         .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
@@ -36,8 +31,6 @@ class TemperatureDatabaseMethods {
 
   //This methods adds an entry to the temperature collection
   Future addTemperature(Map<String, dynamic> userInfoMap) async {
-    String? babyDoc = prefs?.getString('babyDoc');
-
     return await FirebaseFirestore.instance
         .collection('Babies')
         .doc(babyDoc ??
@@ -48,8 +41,6 @@ class TemperatureDatabaseMethods {
 
   //This method gets the entries from the temperature collection and orders them so the most recent entry is document[0].
   Future<QuerySnapshot> getLatestTemperatureInfo() async {
-    String? babyDoc = prefs?.getString('babyDoc');
-
     return await FirebaseFirestore.instance
         .collection('Babies')
         .doc(babyDoc ??

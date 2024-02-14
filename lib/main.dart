@@ -13,6 +13,8 @@ import 'package:babysteps/app/pages/user/add_baby.dart';
 import 'package:babysteps/app/pages/user/edit.dart';
 import 'package:babysteps/app/pages/user/profile.dart';
 import 'package:babysteps/app/pages/user/user_database.dart';
+import 'package:babysteps/model/baby.dart';
+import 'package:babysteps/model/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/theme.dart';
@@ -28,14 +30,12 @@ import 'package:babysteps/app/pages/user/login_landing.dart';
 import 'package:babysteps/app/pages/user/login.dart';
 import 'package:babysteps/app/pages/user/signup.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
-
 //Code for routing (most of this page) taken and adjusted from this tutorial and this github:
 //https://codewithandrea.com/articles/flutter-bottom-navigation-bar-nested-routes-gorouter/
 //https://github.com/bizz84/nested_navigation_examples/blob/main/examples/gorouter/lib/main.dart
 
 bool loggedIn = false;
-SharedPreferences? prefs;
+UserProfile currentUser = UserProfile();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,28 +49,40 @@ void main() async {
   );
 
   FirebaseAuth.instance.authStateChanges().listen((User? user) async {
-    // Obtain shared preferences.
     if (user == null) {
       loggedIn = false;
       print('User is currently signed out!');
     } else {
       loggedIn = true;
 
-      prefs = await SharedPreferences.getInstance();
-      prefs!.setString('name', user.displayName ?? '');
-      prefs!.setString('uid', user.uid);
+      List<Baby> babies = [];
 
       QuerySnapshot snapshot = await UserDatabaseMethods().getUser(user.uid);
       var doc = snapshot.docs;
       if (doc.isNotEmpty) {
-        prefs!.setString('babyDoc', doc[0]['baby']);
-        // prefs!.setString('babyDoc', 'IYyV2hqR7omIgeA4r7zQ'); //This will access Theo's data (comment out the line above to use it)
-        prefs!.setString('userDoc', doc[0].id);
+        List<dynamic> babyList = doc[0]['baby'];
 
-        DocumentSnapshot snapshot2 =
-            await UserDatabaseMethods().getBaby(doc[0]['baby']);
-        Map<String, dynamic> doc2 = snapshot2.data()! as Map<String, dynamic>;
-        prefs!.setString('childName', doc2['Name']);
+        for (String babyId in babyList) {
+          if (babyId != '') {
+            DocumentSnapshot snapshot2 =
+                await UserDatabaseMethods().getBaby(babyId);
+            Map<String, dynamic> doc2 =
+                snapshot2.data()! as Map<String, dynamic>;
+
+            babies.add(Baby(
+                collectionId: babyId,
+                dob: (doc2['DOB'] as Timestamp).toDate(),
+                name: doc2['Name'],
+                caregivers: doc2['Caregivers']));
+          }
+        }
+
+        currentUser = UserProfile(
+            userDoc: doc[0].id,
+            uid: user.uid,
+            name: user.displayName,
+            email: user.email,
+            babies: babies);
       }
 
       print('User is signed in!');
@@ -181,13 +193,14 @@ final goRouter = GoRouter(
         ]),
     GoRoute(
       path: '/profile',
-      pageBuilder: (context, state) => const NoTransitionPage(child: ProfilePage()),
-       routes: [
-                GoRoute(
-                  path: 'edit',
-                  builder: (context, state) => const EditProfilePage(),
-                )
-       ],
+      pageBuilder: (context, state) =>
+          const NoTransitionPage(child: ProfilePage()),
+      routes: [
+        GoRoute(
+          path: 'edit',
+          builder: (context, state) => const EditProfilePage(),
+        )
+      ],
     ),
     //  GoRoute(
     //   path: '/edit',
@@ -308,7 +321,3 @@ final goRouter = GoRouter(
     ),
   ],
 );
-
-SharedPreferences? getPreferences() {
-  return prefs;
-}

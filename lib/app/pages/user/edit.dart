@@ -36,21 +36,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
           final userData = userSnapshot.docs.first.data();
           nameController.text = FirebaseAuth.instance.currentUser!.displayName!;
           emailController.text = FirebaseAuth.instance.currentUser!.email!;
-          
-          String babyId= userData['baby'];
-           // Fetch baby document using babyId
-        final babySnapshot = await FirebaseFirestore.instance
-            .collection('Babies')
-            .doc(babyId)
-            .get();
 
-        if (babySnapshot.exists) {
-          final babyData = babySnapshot.data();
-         babyNameController.text = babyData?['Name'];
-          dobController.text = babyData?['DOB'];
-        } else {
-          print('Baby document not found for baby: $babyId');
-        }
+          String babyId = userData['baby'];
+          // Fetch baby document using babyId
+          final babySnapshot = await FirebaseFirestore.instance
+              .collection('Babies')
+              .doc(babyId)
+              .get();
+
+          if (babySnapshot.exists) {
+            final babyData = babySnapshot.data();
+            babyNameController.text = babyData?['Name'];
+            dobController.text = babyData?['DOB'];
+          } else {
+            print('Baby document not found for baby: $babyId');
+          }
           dobController.text = userData['dateOfBirth'];
         }
       } catch (error) {

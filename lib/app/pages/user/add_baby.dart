@@ -1,4 +1,7 @@
 import 'package:babysteps/app/pages/user/user_database.dart';
+import 'package:babysteps/app/widgets/styles.dart';
+import 'package:babysteps/main.dart';
+import 'package:babysteps/model/baby.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +9,6 @@ import 'dart:core';
 
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AddBabyPage extends StatefulWidget {
   const AddBabyPage({super.key});
@@ -16,44 +18,55 @@ class AddBabyPage extends StatefulWidget {
 }
 
 class _AddBabyPageState extends State<AddBabyPage> {
-  TextEditingController date = TextEditingController(
-      text: DateFormat("MM-dd-yyyy").format(DateTime.now()));
+  TextEditingController date =
+      TextEditingController(text: DateFormat.yMd().format(DateTime.now()));
   TextEditingController babyName = TextEditingController();
 
   User? user = FirebaseAuth.instance.currentUser;
 
   uploadData() async {
     Map<String, dynamic> uploaddata = {
-      'DOB': date.text,
+      'DOB': DateFormat.yMd().parse(date.text),
       'Name': babyName.text,
     };
     DocumentReference babyRef = await UserDatabaseMethods().addBaby(uploaddata);
 
     Map<String, dynamic> userData = {
-      'baby': babyRef.id,
+      'baby': [babyRef.id],
       'UID': FirebaseAuth.instance.currentUser?.uid,
     };
 
     await UserDatabaseMethods().addBabyToUser(userData);
 
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    prefs.setString('name', user?.displayName ?? '');
-    prefs.setString('uid', user!.uid);
+    currentUser.name = user?.displayName ?? '';
+    currentUser.uid = user!.uid;
+    List<Baby> babies = [];
 
     QuerySnapshot snapshot = await UserDatabaseMethods().getUser(user!.uid);
     var doc = snapshot.docs;
     if (doc.isNotEmpty) {
-      prefs.setString('babyDoc', doc[0]['baby']);
-      // prefs!.setString('babyDoc', 'IYyV2hqR7omIgeA4r7zQ'); //This will access Theo's data (comment out the line above to use it)
-      prefs.setString('userDoc', doc[0].id);
+      List<dynamic> babyIds = doc[0]['baby'];
+      for (String babyId in babyIds) {
+        if (babyId != '') {
+          DocumentSnapshot snapshot2 =
+              await UserDatabaseMethods().getBaby(babyId);
+          Map<String, dynamic> doc2 = snapshot2.data()! as Map<String, dynamic>;
 
-      prefs.setString('childName', babyName.text);
+          babies.add(Baby(
+              collectionId: babyId,
+              dob: (doc2['DOB'] as Timestamp).toDate(),
+              name: doc2['Name'],
+              caregivers: doc2['Caregivers']));
+        }
+      }
+
+      currentUser.babies = babies;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController babyCode = TextEditingController();
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SingleChildScrollView(
@@ -137,6 +150,7 @@ class _AddBabyPageState extends State<AddBabyPage> {
                   ],
                 ),
               ),
+
               Padding(
                 padding: EdgeInsets.all(16),
                 child: FilledButton(
@@ -149,6 +163,96 @@ class _AddBabyPageState extends State<AddBabyPage> {
                             Theme.of(context).colorScheme.secondary),
                     child: Text(
                       'Next',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        color: Theme.of(context).colorScheme.surface,
+                      ),
+                    )),
+              ),
+              Text(
+                'Or click here to add a baby code',
+                style: TextStyle(
+                    fontSize: 20.0,
+                    color: Theme.of(context).colorScheme.surface),
+              ),
+              Padding(
+                padding: EdgeInsets.all(16),
+                child: FilledButton(
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Dialog(
+                                child: Padding(
+                                    padding: const EdgeInsets.all(16),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text("Baby Code:"),
+                                        TextField(
+                                          controller: babyCode,
+                                        ),
+                                        SizedBox(height: 8),
+                                        ElevatedButton(
+                                          onPressed: () async {
+                                            //TODO: make sure baby is actually in database
+
+                                            try {
+                                              Map<String, dynamic> userData = {
+                                                'baby': [babyCode.text],
+                                                'UID': FirebaseAuth
+                                                    .instance.currentUser?.uid,
+                                              };
+                                              UserDatabaseMethods()
+                                                  .addBabyToUser(userData);
+
+                                              DocumentSnapshot snapshot =
+                                                  await UserDatabaseMethods()
+                                                      .getBaby(babyCode.text);
+                                              Map<String, dynamic> doc =
+                                                  snapshot.data()!
+                                                      as Map<String, dynamic>;
+
+                                              List<dynamic> caregivers =
+                                                  doc['Caregivers'];
+
+                                              caregivers.add({
+                                                'name': currentUser.name,
+                                                'doc': currentUser.userDoc,
+                                                'uid': currentUser.uid
+                                              });
+
+                                              await UserDatabaseMethods()
+                                                  .updateBabyCaregiver(
+                                                      babyCode.text,
+                                                      caregivers);
+
+                                              currentUser.babies.add(Baby(
+                                                  collectionId: babyCode.text,
+                                                  dob: (doc['DOB'] as Timestamp).toDate(),
+                                                  name: doc['Name'],
+                                                  caregivers: caregivers
+                                                      as List<
+                                                          Map<String,
+                                                              String>>));
+                                              context.go('/home');
+                                            } catch (e) {
+                                              print(
+                                                  'invalid code ${e.toString()}');
+                                            }
+                                          },
+                                          style: blueButton(context),
+                                          child: const Text('Add baby'),
+                                        ),
+                                      ],
+                                    )));
+                          });
+                    },
+                    style: FilledButton.styleFrom(
+                        backgroundColor:
+                            Theme.of(context).colorScheme.secondary),
+                    child: Text(
+                      'Enter Code',
                       style: TextStyle(
                         fontSize: 20.0,
                         color: Theme.of(context).colorScheme.surface,
