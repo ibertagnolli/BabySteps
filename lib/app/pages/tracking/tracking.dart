@@ -1,11 +1,11 @@
 import 'package:babysteps/app/pages/tracking/diaper/diaper_database.dart';
 import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
+import 'package:babysteps/app/pages/tracking/tracking_widgets.dart';
 import 'package:babysteps/app/pages/tracking/sleep/sleep_database.dart';
 import 'package:babysteps/app/pages/tracking/temperature/temperature_database.dart';
 import 'package:babysteps/app/pages/tracking/weight/weight_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:babysteps/app/widgets/widgets.dart';
 
 class TrackingPage extends StatefulWidget {
   const TrackingPage({super.key});
@@ -28,6 +28,7 @@ class _TrackingPageState extends State<TrackingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Navigation Bar
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface,
         title: const Text('Tracking'),
@@ -38,16 +39,17 @@ class _TrackingPageState extends State<TrackingPage> {
           ),
         ),
       ),
+      // Clickable TrackingCards to each tracking page
       body: SingleChildScrollView(
         child: Center(
-          child: Column(
+          child: 
+          Padding(
+            padding: const EdgeInsets.only(top: 32),
+            child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 32),
-                child: TrackingStream(const Icon(Icons.local_drink, size: 40),
-                    "Feeding", '/tracking/feeding',
-                    stream: _feedingStream),
-              ),
+              TrackingStream(const Icon(Icons.local_drink, size: 40),
+                  "Feeding", '/tracking/feeding',
+                  stream: _feedingStream),
               TrackingStream(
                   const Icon(Icons.crib, size: 40), "Sleep", '/tracking/sleep',
                   stream: _sleepStream),
@@ -56,17 +58,16 @@ class _TrackingPageState extends State<TrackingPage> {
                   stream: _diaperStream),
               TrackingStream(
                 const Icon(Icons.scale, size: 40),
-                "Weight",
-                '/tracking/weight',
+                "Weight", '/tracking/weight',
                 stream: _weightStream,
               ),
               TrackingStream(
                 const Icon(Icons.thermostat, size: 40),
-                "Temperature",
-                '/tracking/temperature',
+                "Temperature", '/tracking/temperature',
                 stream: _tempStream,
               ),
             ],
+          ),
           ),
         ),
       ),
