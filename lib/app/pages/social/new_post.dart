@@ -96,7 +96,7 @@ class _CreatePostState extends State<CreatePostPage> {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.all(32),
+                padding: const EdgeInsets.all(32),
                 //If a photo has been added, show it, if not show the 'add photo' box
                 child: InkWell(
                   onTap: () => showDialog<String>(
@@ -163,7 +163,7 @@ class _CreatePostState extends State<CreatePostPage> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 32),
+                padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: TextField(
                   controller: title,
                   cursorColor: Theme.of(context).colorScheme.onPrimary,
@@ -176,7 +176,7 @@ class _CreatePostState extends State<CreatePostPage> {
               ),
               const SizedBox(height: 8),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 32),
+                padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: TextField(
                   controller: caption,
                   cursorColor: Theme.of(context).colorScheme.onPrimary,
@@ -197,7 +197,7 @@ class _CreatePostState extends State<CreatePostPage> {
                   backgroundColor: MaterialStateProperty.all(
                       Theme.of(context).colorScheme.surface),
                 ),
-                child: Text("Post", style: const TextStyle(fontSize: 18)),
+                child: const Text("Post", style: TextStyle(fontSize: 18)),
               ),
               const SizedBox(height: 16),
             ],

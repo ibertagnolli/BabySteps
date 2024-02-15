@@ -65,9 +65,9 @@ class TrackingCard extends StatelessWidget {
           height: 80,
           child: Row(
             children: [
-              Padding(padding: EdgeInsets.all(16), child: icon),
+              Padding(padding: const EdgeInsets.all(16), child: icon),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 10.0),
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -75,7 +75,7 @@ class TrackingCard extends StatelessWidget {
                     Text(
                       name,
                       style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                          const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                     ),
                     Text(
                       hoursAgo,
@@ -83,8 +83,8 @@ class TrackingCard extends StatelessWidget {
                   ],
                 ),
               ),
-              Expanded(child: SizedBox()),
-              Padding(
+              const Expanded(child: SizedBox()),
+              const Padding(
                 padding: EdgeInsets.all(16),
                 child: Align(
                     child: Icon(Icons.arrow_circle_right_outlined, size: 30)),
@@ -178,7 +178,7 @@ class HistoryTabs extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             bottom: PreferredSize( // Need this to let us set colors for some reason 
-              preferredSize: Size.fromHeight(0), // Size 0 gets rid of the gap between the top and the tabs
+              preferredSize: const Size.fromHeight(0), // Size 0 gets rid of the gap between the top and the tabs
               child: Material(
                 color: Theme.of(context).colorScheme.primary, 
                 
@@ -186,7 +186,7 @@ class HistoryTabs extends StatelessWidget {
                 child: TabBar(
                   indicatorColor: Theme.of(context).colorScheme.secondary, // Color of selected tab
                   labelColor: Theme.of(context).colorScheme.onPrimary,
-                  tabs: [
+                  tabs: const [
                     Tab(text: 'This week'),
                     Tab(text: 'All-time'),
                   ],
@@ -201,7 +201,7 @@ class HistoryTabs extends StatelessWidget {
             children: [
               // Goes in order - first goes with first tab, second with second
               recentStream,
-              Icon(Icons.directions_transit),
+              const Icon(Icons.directions_transit),
             ],
           ),
         ),

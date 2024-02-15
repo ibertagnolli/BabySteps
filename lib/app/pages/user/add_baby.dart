@@ -93,7 +93,7 @@ class _AddBabyPageState extends State<AddBabyPage> {
                     color: Theme.of(context).colorScheme.surface),
               ),
               Padding(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: TextField(
                   cursorColor: Theme.of(context).colorScheme.secondary,
                   controller: babyName,
@@ -114,11 +114,11 @@ class _AddBabyPageState extends State<AddBabyPage> {
               ),
               // Second row: Date entry
               Padding(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Date of birth:'),
+                    const Text('Date of birth:'),
                     TextFormField(
                       controller: date,
                       decoration: const InputDecoration(
@@ -126,7 +126,7 @@ class _AddBabyPageState extends State<AddBabyPage> {
                       ),
                       onTap: () async {
                         // Don't show keyboard
-                        FocusScope.of(context).requestFocus(new FocusNode());
+                        FocusScope.of(context).requestFocus(FocusNode());
 
                         DateTime? pickeddate = await showDatePicker(
                             context: context,
@@ -152,7 +152,7 @@ class _AddBabyPageState extends State<AddBabyPage> {
               ),
 
               Padding(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: FilledButton(
                     onPressed: () {
                       uploadData();
@@ -176,7 +176,7 @@ class _AddBabyPageState extends State<AddBabyPage> {
                     color: Theme.of(context).colorScheme.surface),
               ),
               Padding(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: FilledButton(
                     onPressed: () {
                       showDialog(
@@ -188,11 +188,11 @@ class _AddBabyPageState extends State<AddBabyPage> {
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Text("Baby Code:"),
+                                        const Text("Baby Code:"),
                                         TextField(
                                           controller: babyCode,
                                         ),
-                                        SizedBox(height: 8),
+                                        const SizedBox(height: 8),
                                         ElevatedButton(
                                           onPressed: () async {
                                             //TODO: make sure baby is actually in database

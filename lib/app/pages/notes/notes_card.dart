@@ -1,10 +1,6 @@
 import 'package:babysteps/app/pages/notes/edit_notes_stream.dart';
-import 'package:babysteps/app/pages/notes/notes.dart';
 import 'package:babysteps/app/pages/notes/notes_database.dart';
-import 'package:babysteps/time_since.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 /// The cards on the Notes home page that a user clicks to open a note
 class NotesCard extends StatelessWidget {

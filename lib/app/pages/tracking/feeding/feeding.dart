@@ -34,7 +34,7 @@ class _FeedingPageState extends State<FeedingPage> {
      child: Center(
         child: Flex(direction: Axis.vertical, children: <Widget>[
           Padding(
-            padding: EdgeInsets.all(32),
+            padding: const EdgeInsets.all(32),
             child: Text('Feeding',
                 style: TextStyle(
                     fontSize: 36,
@@ -51,11 +51,11 @@ class _FeedingPageState extends State<FeedingPage> {
 
           // Feeding option buttons - breast feeding or bottle feeding
           // Both have basic info displayed on them, using real time reads
-          Padding(
+          const Padding(
             padding: EdgeInsets.only(bottom: 16),
             child: BreastFeedingStream(),
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.only(bottom: 16),
             child: BottleFeedingStream(),
           ),

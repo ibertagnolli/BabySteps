@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 
 /// Contains the database methods to access Calendar information
 class NoteDatabaseMethods {

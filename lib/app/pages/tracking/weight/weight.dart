@@ -58,7 +58,7 @@ class _WeightPageState extends State<WeightPage> {
               // FilledCard Quick Weight Info 
               // (WeightStream returns the card with real time reads)
              const Padding(
-                padding: const EdgeInsets.only(bottom: 15),
+                padding: EdgeInsets.only(bottom: 15),
                 child:SizedBox(
                   child: WeightStream(),
                 ),
@@ -71,7 +71,7 @@ class _WeightPageState extends State<WeightPage> {
               ),
 
               // History card - in widgets
-              HistoryDropdown(SleepHistoryStream())
+              HistoryDropdown(const SleepHistoryStream())
             ],
           ),
         ),

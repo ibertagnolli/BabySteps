@@ -38,7 +38,7 @@ class _SocialPageState extends State<SocialPage> {
             Align(
                 alignment: Alignment.topRight,
                 child: IconButton(
-                  icon: Icon(Icons.add),
+                  icon: const Icon(Icons.add),
                   onPressed: () => context.go('/social/newPost'),
                 )),
             const SocialStream()

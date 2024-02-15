@@ -101,7 +101,7 @@ class _AddTaskButtonState extends State<AddTaskButton> {
                         ),
                         onTap: () async {
                           // Don't show keyboard
-                          FocusScope.of(context).requestFocus(new FocusNode());
+                          FocusScope.of(context).requestFocus(FocusNode());
 
                           DateTime? pickeddate = await showDatePicker(
                             context: context,

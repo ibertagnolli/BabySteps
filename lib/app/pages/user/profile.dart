@@ -124,7 +124,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text('Profile'),
+          title: const Text('Profile'),
           leading: BackButton(
               onPressed: () => context.go('/home'),
               color: Theme.of(context).colorScheme.onSurface)),
@@ -151,7 +151,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           blurRadius: 10)
                     ],
                     image: const DecorationImage(
-                        image: const AssetImage('assets/BabyStepsLogo.png')),
+                        image: AssetImage('assets/BabyStepsLogo.png')),
                   ),
                 ),
                 //create user info box and put in fields
@@ -177,7 +177,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
                 if (editing)
                   Padding(
-                    padding: EdgeInsets.only(top: 16),
+                    padding: const EdgeInsets.only(top: 16),
                     child: ElevatedButton(
                       onPressed: createBaby,
                       style: blueButton(context),
@@ -208,7 +208,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       context.go('/login');
                     },
                     style: blueButton(context),
-                    child: Text('Logout', style: const TextStyle(fontSize: 26)),
+                    child: const Text('Logout', style: TextStyle(fontSize: 26)),
                   ),
                 ),
               ],

@@ -26,7 +26,7 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
                   )),
               content: Row(
                 children: [
-                  Expanded(
+                  const Expanded(
                     child: TextField(
                         keyboardType: TextInputType.number,
                         autofocus:
@@ -42,12 +42,12 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
               ),
               actions: [
                 FilledButton(
-                  child: Text('Skip'),
                   onPressed: skipQuantity,
+                  child: const Text('Skip'),
                 ),
                 FilledButton(
-                  child: Text('Save'),
                   onPressed: saveQuantity,
+                  child: const Text('Save'),
                 ),
               ]));
 
@@ -76,7 +76,7 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
         child: Center(
           child: Column(children: <Widget>[
             Padding(
-              padding: EdgeInsets.all(32),
+              padding: const EdgeInsets.all(32),
               child: Text('Bottle Feeding',
                   style: TextStyle(
                       fontSize: 36,
@@ -84,7 +84,7 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
             ),
 
             // Top card with info
-            Padding(
+            const Padding(
               padding: EdgeInsets.only(bottom: 16),
               child: BottleFeedingStream(),
             ),
@@ -99,8 +99,8 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
 
             // History Card - in widgets
             Padding(
-              padding: EdgeInsets.only(top: 30),
-              child: HistoryDropdown(SleepHistoryStream()),
+              padding: const EdgeInsets.only(top: 30),
+              child: HistoryDropdown(const SleepHistoryStream()),
             ),
           ]),
         ),

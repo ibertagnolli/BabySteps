@@ -175,7 +175,7 @@ final goRouter = GoRouter(
     GoRoute(
         path: '/login',
         pageBuilder: (context, state) =>
-            NoTransitionPage(child: LoginLandingPage()),
+            const NoTransitionPage(child: LoginLandingPage()),
         routes: [
           GoRoute(
             path: 'loginPage',
@@ -221,7 +221,7 @@ final goRouter = GoRouter(
             // top route inside branch
             GoRoute(
               path: '/home',
-              pageBuilder: (context, state) => NoTransitionPage(
+              pageBuilder: (context, state) => const NoTransitionPage(
                   child: HomePage() //(label: 'A', detailsPath: '/a/details'),
                   ),
             ),

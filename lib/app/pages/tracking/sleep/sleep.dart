@@ -122,7 +122,7 @@ class _SleepPageState extends State<SleepPage> {
         child: Center(
           child: Column(children: <Widget>[
             Padding(
-              padding: EdgeInsets.all(32),
+              padding: const EdgeInsets.all(32),
               child: Text('Sleep',
                   style: TextStyle(
                       fontSize: 36,
@@ -189,8 +189,8 @@ class _SleepPageState extends State<SleepPage> {
 
             // History Card - in widgets
             Padding(
-              padding: EdgeInsets.only(top: 30),
-              child: HistoryDropdown(SleepHistoryStream()),
+              padding: const EdgeInsets.only(top: 30),
+              child: HistoryDropdown(const SleepHistoryStream()),
             ),
           ]),
         ),

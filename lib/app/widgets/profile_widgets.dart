@@ -54,7 +54,7 @@ class _BuildInfoLineState extends State<BuildInfoLine> {
         : Text(
             //placeholder is loading until it reads from database, updates on refresh
             widget.value ?? 'Loading...',
-            style: TextStyle(fontSize: 18),
+            style: const TextStyle(fontSize: 18),
           );
   }
 }
@@ -115,10 +115,10 @@ class BuildInfoBox extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         Container(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(10),
@@ -130,7 +130,7 @@ class BuildInfoBox extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               //add the inputed info fields
               ...fields,
             ],
@@ -197,11 +197,11 @@ class BabyBox extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                  "Enter the user's email and we will send them an invite\nAlternatively you can send them this code and have them add it on account creation: ${babyId}"),
+                                  "Enter the user's email and we will send them an invite\nAlternatively you can send them this code and have them add it on account creation: $babyId"),
                               TextField(
                                 controller: controller,
                               ),
-                              SizedBox(height: 8),
+                              const SizedBox(height: 8),
                               ElevatedButton(
                                 onPressed: () {
                                   //send email
@@ -209,7 +209,7 @@ class BabyBox extends StatelessWidget {
                                 style: blueButton(context),
                                 child: const Text('Send Email Invite'),
                               ),
-                              SizedBox(height: 8),
+                              const SizedBox(height: 8),
                               ElevatedButton(
                                 onPressed: () {
                                   Clipboard.setData(
@@ -224,7 +224,7 @@ class BabyBox extends StatelessWidget {
                 });
           },
           style: blueButton(context),
-          child: Text('Add Caregiver'),
+          child: const Text('Add Caregiver'),
         ),
     ]);
   }

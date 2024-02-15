@@ -55,13 +55,13 @@ class _NewStopWatchState extends State<NewStopWatch> {
     //access above variables using
     String buttonText = widget.buttonText;
     return Container(
-      padding: EdgeInsets.all(1.0),
+      padding: const EdgeInsets.all(1.0),
       child: Column(
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: Text(elapsedTime,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 35.0,
                   color: Color(0xFFFFFAF1),
                 )),
@@ -77,8 +77,8 @@ class _NewStopWatchState extends State<NewStopWatch> {
                   child: FilledButton(
                       style: FilledButton.styleFrom(
                         backgroundColor: startStop
-                            ? Color.fromARGB(255, 13, 60, 70)
-                            : Color(0xFFFFFAF1), // Background color
+                            ? const Color.fromARGB(255, 13, 60, 70)
+                            : const Color(0xFFFFFAF1), // Background color
                       ),
                       onPressed: startOrStop,
                       child: Text(
@@ -86,8 +86,8 @@ class _NewStopWatchState extends State<NewStopWatch> {
                           style: TextStyle(
                               fontSize: 18,
                               color: startStop
-                                  ? Color(0xFFFFFAF1)
-                                  : Color.fromARGB(255, 13, 60, 70)))),
+                                  ? const Color(0xFFFFFAF1)
+                                  : const Color.fromARGB(255, 13, 60, 70)))),
                 ),
               ),
             ],
@@ -115,7 +115,7 @@ class _NewStopWatchState extends State<NewStopWatch> {
       setState(() {
         startStop = false;
         watch.start();
-        timer = Timer.periodic(Duration(milliseconds: 100), updateTime);
+        timer = Timer.periodic(const Duration(milliseconds: 100), updateTime);
       });
     }
   }

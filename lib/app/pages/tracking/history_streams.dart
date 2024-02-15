@@ -4,7 +4,6 @@ import 'package:babysteps/app/pages/tracking/diaper/diaper_database.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
@@ -13,6 +12,8 @@ FirebaseFirestore db = FirebaseFirestore.instance;
 // SLEEP  ** SLEEP IS THE ONLY ONE WITH A TABLE RIGHT NOW
 
 class SleepHistoryStream extends StatefulWidget{
+  const SleepHistoryStream({super.key});
+
   @override
   _SleepHistoryStreamState createState() => _SleepHistoryStreamState();
 }
@@ -74,23 +75,23 @@ class _SleepHistoryStreamState extends State<SleepHistoryStream> {
           rows: <DataRow> [
             DataRow(
               cells: <DataCell>[
-                DataCell(Text('${day}')),
-                DataCell(Text('${time}')),
-                DataCell(Text('${length}')),
+                DataCell(Text(day)),
+                DataCell(Text(time)),
+                DataCell(Text(length)),
               ],
             ),
             DataRow(
               cells: <DataCell>[
-                DataCell(Text('${day}')),
-                DataCell(Text('${time}')),
-                DataCell(Text('${length}')),
+                DataCell(Text(day)),
+                DataCell(Text(time)),
+                DataCell(Text(length)),
               ],
             ),
             DataRow(
               cells: <DataCell>[
-                DataCell(Text('${day}')),
-                DataCell(Text('${time}')),
-                DataCell(Text('${length}')),
+                DataCell(Text(day)),
+                DataCell(Text(time)),
+                DataCell(Text(length)),
               ],
             ),
           ],
@@ -104,6 +105,8 @@ class _SleepHistoryStreamState extends State<SleepHistoryStream> {
 // WEIGHT
 
 class WeightHistoryStream extends StatefulWidget{
+  const WeightHistoryStream({super.key});
+
   @override
   _WeightHistoryStreamState createState() => _WeightHistoryStreamState();
 }
@@ -134,7 +137,7 @@ class _WeightHistoryStreamState extends State<WeightHistoryStream> {
 
         // Returns the FilledCard with read values for date, pounds, and ounces
         // updated in real time.
-        return FilledCard(dateStr, "weight: $pounds lbs $ounces oz", Icon(Icons.scale));
+        return FilledCard(dateStr, "weight: $pounds lbs $ounces oz", const Icon(Icons.scale));
       },
     );
   }
@@ -144,6 +147,8 @@ class _WeightHistoryStreamState extends State<WeightHistoryStream> {
 // TEMP
 
 class TemperatureHistoryStream extends StatefulWidget{
+  const TemperatureHistoryStream({super.key});
+
   @override
   _TemperatureHistoryStreamState createState() => _TemperatureHistoryStreamState();
 }
@@ -174,7 +179,7 @@ class _TemperatureHistoryStreamState extends State<TemperatureHistoryStream> {
 
         // Returns the FilledCard with read values for temperature and date
         // updated in real time.
-        return FilledCard(dateStr, "Temperature: $temperature", Icon(Icons.scale));
+        return FilledCard(dateStr, "Temperature: $temperature", const Icon(Icons.scale));
       },
     );
   }

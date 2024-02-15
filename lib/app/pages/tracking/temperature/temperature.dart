@@ -45,7 +45,7 @@ class _TemperaturePageState extends State<TemperaturePage> {
             children: [
               // temperature Title
               Padding(
-                padding: EdgeInsets.all(32),
+                padding: const EdgeInsets.all(32),
                 child: Text('Temperature',
                     style: TextStyle(
                         fontSize: 36,
@@ -55,7 +55,7 @@ class _TemperaturePageState extends State<TemperaturePage> {
                // FilledCard Quick Temperature Info 
               // (TemperatureStream returns the card with real time reads)
             const  Padding(
-                padding: const EdgeInsets.only(bottom: 15),
+                padding: EdgeInsets.only(bottom: 15),
                 child:SizedBox(
                   child: TemperatureStream(),
                 ),
@@ -68,7 +68,7 @@ class _TemperaturePageState extends State<TemperaturePage> {
               ),
 
               // History card - in widgets
-              HistoryDropdown(SleepHistoryStream())
+              HistoryDropdown(const SleepHistoryStream())
             ],
           ),
         ),

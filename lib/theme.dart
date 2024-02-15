@@ -23,16 +23,16 @@ import 'package:flutter/material.dart';
 // Note: You can't apply theme to const values (just get rid of const label to fix)
 
 
-Color lightGreen =  Color(0xFFB3BEB6);
-Color neutral = Color(0xFFFFFAF1);
-Color darkTeal = Color(0xFF0D4B5F);
-Color peach = Color(0xFFF2BB9B);
-Color darkGray = Color(0xFF4F646F);
-Color white = Color(0xFFFFFFFF); 
-Color black = Color(0xFF000000);
-Color lightGray = Color.fromARGB(115, 0, 0, 0); 
-Color darkRed = Color(0xFFB0413E);
-Color brightRed = Color(0xFFF00000);
+Color lightGreen =  const Color(0xFFB3BEB6);
+Color neutral = const Color(0xFFFFFAF1);
+Color darkTeal = const Color(0xFF0D4B5F);
+Color peach = const Color(0xFFF2BB9B);
+Color darkGray = const Color(0xFF4F646F);
+Color white = const Color(0xFFFFFFFF); 
+Color black = const Color(0xFF000000);
+Color lightGray = const Color.fromARGB(115, 0, 0, 0); 
+Color darkRed = const Color(0xFFB0413E);
+Color brightRed = const Color(0xFFF00000);
 
 class BabyStepsTheme {
 

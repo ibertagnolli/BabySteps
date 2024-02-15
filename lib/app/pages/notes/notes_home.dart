@@ -1,9 +1,7 @@
 import 'package:babysteps/app/pages/notes/notes.dart';
-import 'package:babysteps/app/pages/notes/notes_card.dart';
 import 'package:babysteps/app/pages/notes/notes_database.dart';
 import 'package:babysteps/app/pages/notes/notes_stream.dart';
 import 'package:flutter/material.dart';
-import 'package:babysteps/app/widgets/widgets.dart';
 
 class NotesHomePage extends StatefulWidget {
   const NotesHomePage({super.key});
@@ -47,10 +45,10 @@ class _NotesHomePageState extends State<NotesHomePage> {
       // List of notes
       body: Column(
         children: [
-          Flexible(
+          const Flexible(
             flex: 3,
             child: Padding(
-              padding: const EdgeInsets.all(8),
+              padding: EdgeInsets.all(8),
               child: NotesStream(),
             ),
           ),

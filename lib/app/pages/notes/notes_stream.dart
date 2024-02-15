@@ -2,13 +2,12 @@ import 'package:babysteps/app/pages/notes/notes_card.dart';
 import 'package:babysteps/app/pages/notes/notes_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 
 /// The widget that reads realtime Event updates.
 class NotesStream extends StatefulWidget{
-  NotesStream({super.key});
+  const NotesStream({super.key});
 
   @override
   _NotesStreamState createState() => _NotesStreamState();

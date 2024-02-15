@@ -53,7 +53,7 @@ class _SignupPageState extends State<SignupPage> {
                     color: Theme.of(context).colorScheme.surface),
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
                 child: TextField(
                   cursorColor: Theme.of(context).colorScheme.secondary,
                   controller: usersName,
@@ -73,7 +73,7 @@ class _SignupPageState extends State<SignupPage> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: TextField(
                   controller: email,
                   cursorColor: Theme.of(context).colorScheme.secondary,
@@ -93,7 +93,7 @@ class _SignupPageState extends State<SignupPage> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: TextField(
                   controller: password,
                   obscureText: true,
@@ -114,7 +114,7 @@ class _SignupPageState extends State<SignupPage> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: TextField(
                   obscureText: true,
                   controller: confirmPassword,
@@ -136,7 +136,7 @@ class _SignupPageState extends State<SignupPage> {
               ),
               if (errorMessage != null)
                 Padding(
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   child: Text(
                     errorMessage!,
                     style: TextStyle(
@@ -146,7 +146,7 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                 ),
               Padding(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: FilledButton(
                     onPressed: () async {
                       if (password.text == confirmPassword.text) {
@@ -175,7 +175,7 @@ class _SignupPageState extends State<SignupPage> {
                               setErrorMessage('Error creating account');
                               break;
                           }
-                        } catch (e) {}
+                        }
                       } else {
                         setErrorMessage("Passwords don't match!");
                       }
@@ -192,7 +192,7 @@ class _SignupPageState extends State<SignupPage> {
                     )),
               ),
               InkWell(
-                  child: Text('Already have an account? Login here'),
+                  child: const Text('Already have an account? Login here'),
                   onTap: () => context.go('/login/loginPage')),
             ],
           ),
