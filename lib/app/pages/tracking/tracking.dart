@@ -15,15 +15,11 @@ class TrackingPage extends StatefulWidget {
 }
 
 class _TrackingPageState extends State<TrackingPage> {
-  final Stream<QuerySnapshot> _feedingStream =
-      FeedingDatabaseMethods().getFeedingStream();
+  final Stream<QuerySnapshot> _feedingStream = FeedingDatabaseMethods().getFeedingStream();
   final Stream<QuerySnapshot> _sleepStream = SleepDatabaseMethods().getStream();
-  final Stream<QuerySnapshot> _diaperStream =
-      DiaperDatabaseMethods().getStream();
-  final Stream<QuerySnapshot> _weightStream =
-      WeightDatabaseMethods().getStream();
-  final Stream<QuerySnapshot> _tempStream =
-      TemperatureDatabaseMethods().getStream();
+  final Stream<QuerySnapshot> _diaperStream = DiaperDatabaseMethods().getStream();
+  final Stream<QuerySnapshot> _weightStream = WeightDatabaseMethods().getStream();
+  final Stream<QuerySnapshot> _tempStream = TemperatureDatabaseMethods().getStream();
 
   @override
   Widget build(BuildContext context) {
