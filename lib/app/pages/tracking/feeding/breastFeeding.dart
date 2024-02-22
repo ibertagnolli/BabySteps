@@ -20,71 +20,85 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
   String buttonTextR = "right";
   bool leftSideGoing = false;
   bool rightSideGoing = false;
+  bool timerGoing = false;
   //Ids for the update method so we know what documents we're updating
-  String? leftId;
-  String? rightId;
+  String? docId;
   //Inital time on the right and left
   int timeSoFarOnLeft = 0;
   int timeSoFarOnRight = 0;
+  Map<String, dynamic>? sideMap;
 
   //Get the data from the database
   Future getData() async {
-    //Get the most recent finished data
-    QuerySnapshot finishedBreastFeedingQuerySnapshot =
-        await FeedingDatabaseMethods().getLatestFinishedBreastFeedingEntry();
-    //Get the ongoing left side data
-    QuerySnapshot ongoingLeftBreastFeedingQuerySnapshot =
-        await FeedingDatabaseMethods().getLatestOngoingLeftBreastFeedingEntry();
-    //Get the ongoing right side data
-    QuerySnapshot ongoingRightBreastFeedingQuerySnapshot =
-        await FeedingDatabaseMethods()
-            .getLatestOngoingRightBreastFeedingEntry();
+    //Get the ongoing data
+    QuerySnapshot ongoingBreastFeeding =
+        await FeedingDatabaseMethods().getLatestOngoingBreastFeedingEntry();
     //make sure we don't try to access an index that doesn't exist
-    if (finishedBreastFeedingQuerySnapshot.docs.isNotEmpty) {
-      try {
-        //update the last side from the finished breast feeding query
-        lastSide = finishedBreastFeedingQuerySnapshot.docs[0]['side'];
-      } catch (error) {
-        //If there's an error, print it to the output
-        debugPrint(error.toString());
-      }
-    }
-    //make sure we don't try to access an index that doesn't exist
-    if (ongoingLeftBreastFeedingQuerySnapshot.docs.isNotEmpty) {
+    if (ongoingBreastFeeding.docs.isNotEmpty) {
       //get the document id so we can update it later
-      leftId = ongoingLeftBreastFeedingQuerySnapshot.docs[0].id;
+      docId = ongoingBreastFeeding.docs[0].id;
       //calculate the time in miliseconds from the last time the left side was started
-      timeSoFarOnLeft = DateTime.now()
-          .difference(
-              ongoingLeftBreastFeedingQuerySnapshot.docs[0]['date'].toDate())
-          .inMilliseconds;
+      timeSoFarOnLeft =
+          ongoingBreastFeeding.docs[0]['side']['left']['duration'];
+      timeSoFarOnRight =
+          ongoingBreastFeeding.docs[0]['side']['right']['duration'];
+
+      if (ongoingBreastFeeding.docs[0]['side']['left']['lastStart'] != null) {
+        timeSoFarOnLeft += DateTime.now()
+            .difference((ongoingBreastFeeding.docs[0]['side']['left']
+                    ['lastStart'] as Timestamp)
+                .toDate())
+            .inMilliseconds;
+      }
+      if (ongoingBreastFeeding.docs[0]['side']['right']['lastStart'] != null) {
+        timeSoFarOnRight += DateTime.now()
+            .difference((ongoingBreastFeeding.docs[0]['side']['right']
+                    ['lastStart'] as Timestamp)
+                .toDate())
+            .inMilliseconds;
+      }
+
+      sideMap = ongoingBreastFeeding.docs[0]['side'];
+
       //since ongoingLeft isn't empty, the timer is running so set flag accordingly
-      leftSideGoing = true;
-    }
-    //make sure we don't try to access an index that doesn't exist
-    if (ongoingRightBreastFeedingQuerySnapshot.docs.isNotEmpty) {
-      //get the document id so we can update it later
-      rightId = ongoingRightBreastFeedingQuerySnapshot.docs[0].id;
-      //calculate the time in miliseconds from the last time the right side was started
-      timeSoFarOnRight = DateTime.now()
-          .difference(
-              (ongoingRightBreastFeedingQuerySnapshot.docs[0]['date'].toDate()))
-          .inMilliseconds;
-      //since ongoingRight isn't empty, the timer is running so set flag accordingly
-      rightSideGoing = true;
+      leftSideGoing = ongoingBreastFeeding.docs[0]['side']['left']['active'];
+      rightSideGoing = ongoingBreastFeeding.docs[0]['side']['right']['active'];
+      timerGoing = ongoingBreastFeeding.docs[0]['active'];
     }
     if (mounted) {
       setState(() {});
     }
     //Have a return so that the FutureBuilder in the build knows we've finished
-    return finishedBreastFeedingQuerySnapshot;
+    return ongoingBreastFeeding;
   }
 
   //Upload the original data, this will be called once the stopwatch is started so we don't know the length yet
-  uploadLeftData() async {
+  uploadData(String side) async {
+    bool leftActive = false;
+    bool rightActive = false;
+    DateTime? lastLeftStart;
+    DateTime? lastRightStart;
+
+    side == 'left' ? leftActive = true : rightActive = true;
+    side == 'left'
+        ? lastLeftStart = DateTime.now()
+        : lastRightStart = DateTime.now();
+
     Map<String, dynamic> uploaddata = {
       'type': 'BreastFeeding',
-      'side': 'Left',
+      'side': {
+        'latest': side == 'left' ? 'left' : 'right',
+        'left': {
+          'duration': 0,
+          'active': leftActive,
+          'lastStart': lastLeftStart
+        },
+        'right': {
+          'duration': 0,
+          'active': rightActive,
+          'lastStart': lastRightStart
+        },
+      },
       'length': '--',
       'bottleType': '--',
       'active': true,
@@ -94,57 +108,122 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
     await FeedingDatabaseMethods().addFeedingEntry(uploaddata);
   }
 
-  //Update the left side data, this will happen once the stopwatch is stopped and we'll pass through the new
-  //feeding length. The updateFeedingEntry will also set active to false for this document
-  updateLeftData(String feedingLength) async {
-    if (leftId != null) {
-      await FeedingDatabaseMethods().updateFeedingEntry(feedingLength, leftId!);
-      //once data has been added, update the card accordingly
-    }
-  }
+  // 'type': 'BreastFeeding',
+  // 'side': {
+  //   'left': {'duration': 0, 'active': leftActive},
+  //   'right': {'duration': 0, 'active': rightActive}
+  // },
+  // 'length': '--',
+  // 'bottleType': '--',
+  // 'active': true,
+  // 'date': DateTime.now(),
 
-  //Upload the original data for the right side, this will be called once the stopwatch is started so we don't know the length yet
-  //TODO: use one method passing through "left" and "right" for the side to condense code
-  uploadRightData() async {
-    Map<String, dynamic> uploaddata = {
-      'type': 'BreastFeeding',
-      'side': 'Right',
-      'length': '--',
-      'bottleType': '--',
-      'active': true,
-      'date': DateTime.now(),
-    };
-
-    await FeedingDatabaseMethods().addFeedingEntry(uploaddata);
-  }
+  //When a stopwatch is clicked, we create entry in the database with the start time
+  //When the stopwatch is paused, we update the 'side' entry
+  //When the other stopwatch is clicked, we update the latest side to be the one just clicked
+  //When 'done' is clicked, we add left and right durations together to get the length (and set active for both to false)
 
   //Update the right side data, this will happen once the stopwatch is stopped and we'll pass through the new
   //feeding length. The updateFeedingEntry will also set active to false for this document
-  updateRightData(String feedingLength) async {
-    if (rightId != null) {
-      await FeedingDatabaseMethods()
-          .updateFeedingEntry(feedingLength, rightId!);
+  // updateEntry(int feedingLength, String side) async {
+  //   if (docId != null) {
+  //     Map<String, dynamic>? currentSide =
+  //         side == 'left' ? sideMap!['left'] : sideMap!['right'];
+
+  //     currentSide?['duration'] = feedingLength;
+  //     currentSide?['active'] = !currentSide['active'];
+
+  //     await FeedingDatabaseMethods().updateFeedingEntry(feedingLength.toString(), docId!);
+  //     //once data has been added, update the card accordingly
+  //   }
+  // }
+
+  updateLeftEntry(int feedingLength) async {
+    if (docId != null && sideMap != null) {
+      Map<String, dynamic> currentSide = sideMap!['left']!;
+
+      if (leftSideGoing) {
+        currentSide['duration'] = feedingLength;
+        currentSide['active'] = false;
+        currentSide['lastStart'] = null;
+      } else {
+        currentSide['active'] = true;
+        currentSide['lastStart'] = DateTime.now();
+        sideMap!['latest'] = 'left';
+      }
+
+      sideMap!['left'] = currentSide;
+
+      leftSideGoing = !leftSideGoing;
+
+      await FeedingDatabaseMethods().updateFeedingPauseEntry(sideMap, docId!);
       //once data has been added, update the card accordingly
     }
   }
 
-  void leftSideClicked() {
-    setState(() {
-      leftSideGoing = !leftSideGoing;
-    });
-  }
+  updateRightEntry(int feedingLength) async {
+    if (docId != null && sideMap != null) {
+      Map<String, dynamic> currentSide = sideMap!['right']!;
 
-  void rightSideClicked() {
-    setState(() {
+      if (rightSideGoing) {
+        currentSide['duration'] = feedingLength;
+        currentSide['active'] = false;
+        currentSide['lastStart'] = null;
+      } else {
+        currentSide['active'] = true;
+        currentSide['lastStart'] = DateTime.now();
+        sideMap!['latest'] = 'right';
+      }
+
+      sideMap!['right'] = currentSide;
+
       rightSideGoing = !rightSideGoing;
-    });
+
+      await FeedingDatabaseMethods().updateFeedingPauseEntry(sideMap, docId!);
+      //once data has been added, update the card accordingly
+    }
   }
 
-  void doneClicked() {
+  void doneClicked() async {
+    if (docId != null && sideMap != null) {
+      Map<String, dynamic> leftSide = sideMap!['left']!;
+      Map<String, dynamic> rightSide = sideMap!['right']!;
+
+      timeSoFarOnLeft = leftSide['duration'];
+      timeSoFarOnRight = rightSide['duration'];
+
+      if (leftSide['lastStart'] != null) {
+        timeSoFarOnLeft += DateTime.now()
+            .difference((leftSide['lastStart'] as Timestamp).toDate())
+            .inMilliseconds;
+      }
+
+      if (rightSide['lastStart'] != null) {
+        timeSoFarOnRight += DateTime.now()
+            .difference((rightSide['lastStart'] as Timestamp).toDate())
+            .inMilliseconds;
+      }
+
+      leftSide['active'] = false;
+      leftSide['lastStart'] = null;
+      rightSide['active'] = false;
+      rightSide['lastStart'] = null;
+
+      sideMap!['left'] = leftSide;
+      sideMap!['right'] = rightSide;
+
+      await FeedingDatabaseMethods().updateFeedingDoneEntry(
+          sideMap, (timeSoFarOnLeft + timeSoFarOnRight).toString(), docId!);
+      //once data has been added, update the card accordingly
+    }
+
     setState(() {
       leftSideGoing = false;
       rightSideGoing = false;
-      // Reset time since last feed
+      timerGoing = false;
+
+      timeSoFarOnLeft = 0;
+      timeSoFarOnRight = 0;
     });
   }
 
@@ -190,30 +269,49 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
                   List<Widget> children;
                   if (snapshot.hasData) {
                     children = <Widget>[
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              height: 200,
-                              width: 195,
-                              child: NewStopWatch(
-                                  buttonTextL,
-                                  updateLeftData,
-                                  uploadLeftData,
-                                  timeSoFarOnLeft,
-                                  leftSideGoing),
+                      Column(
+                        children: [
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  height: 200,
+                                  width: 195,
+                                  child: NewStopWatch(
+                                    buttonTextL,
+                                    updateLeftEntry,
+                                    uploadData,
+                                    timeSoFarOnLeft,
+                                    leftSideGoing,
+                                    sessionInProgress: timerGoing,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 200,
+                                  width: 195,
+                                  child: NewStopWatch(
+                                    buttonTextR,
+                                    updateRightEntry,
+                                    uploadData,
+                                    timeSoFarOnRight,
+                                    rightSideGoing,
+                                    sessionInProgress: timerGoing,
+                                  ),
+                                )
+                              ]),
+                          FilledButton(
+                            style: FilledButton.styleFrom(
+                                backgroundColor:
+                                    Color.fromARGB(255, 13, 60, 70)),
+                            onPressed: doneClicked,
+                            child: Text(
+                              'Done',
+                              style: TextStyle(
+                                  fontSize: 18, color: Color(0xFFFFFAF1)),
                             ),
-                            SizedBox(
-                              height: 200,
-                              width: 195,
-                              child: NewStopWatch(
-                                  buttonTextR,
-                                  updateRightData,
-                                  uploadRightData,
-                                  timeSoFarOnRight,
-                                  rightSideGoing),
-                            )
-                          ]),
+                          ),
+                        ],
+                      )
                     ];
                   } else if (snapshot.hasError) {
                     children = <Widget>[

@@ -3,16 +3,17 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class NewStopWatch extends StatefulWidget {
-  const NewStopWatch(this.buttonText, this.stopwatchFinish, this.stopwatchBegin,
+  const NewStopWatch(this.buttonText, this.stopwatchUpdate, this.stopwatchBegin,
       this.timeAlreadyElapsed, this.timerOngoing,
-      {super.key});
+      {this.sessionInProgress = false, super.key});
 
   //final String lastThing;
   final String buttonText;
-  final void Function(String length) stopwatchFinish;
-  final void Function() stopwatchBegin;
+  final void Function(int length) stopwatchUpdate;
+  final void Function(String side) stopwatchBegin;
   final int timeAlreadyElapsed;
   final bool timerOngoing;
+  final bool sessionInProgress;
 
 //TODO: figure out the better way to pass the inital timeAlreadyElapsed, if grabbed via
 //widget.timeAlreadyElapsed, it continues to increase making the time funky.
@@ -43,6 +44,11 @@ class _NewStopWatchState extends State<NewStopWatch> {
   @override
   void initState() {
     super.initState();
+
+    setState(() {
+      elapsedTime = transformMilliSeconds(initTime);
+    });
+
     //if we have an ongoing timer on intialization, start the timer
     //so it looks like its continuing from where it left off
     if (widget.timerOngoing) {
@@ -100,12 +106,16 @@ class _NewStopWatchState extends State<NewStopWatch> {
   startOrStop() {
     if (startStop) {
       //If the timer hasn't been started yet, call the passed through method to begin a timer
-      if (!widget.timerOngoing) widget.stopwatchBegin();
+      if (!widget.sessionInProgress) {
+        widget.stopwatchBegin(widget.buttonText);
+      } else if (!widget.timerOngoing) {
+        widget.stopwatchUpdate(watch.elapsedMilliseconds + initTime);
+      }
       startWatch();
     } else {
       //Or update filled card here?
-      widget.stopwatchFinish(elapsedTime);
-      watch.reset();
+      widget.stopwatchUpdate(watch.elapsedMilliseconds + initTime);
+      // watch.reset();
       stopWatch();
     }
   }
@@ -123,10 +133,10 @@ class _NewStopWatchState extends State<NewStopWatch> {
   stopWatch() {
     if (mounted) {
       setState(() {
-        watch.reset();
+        // watch.reset();
         startStop = true;
         watch.stop();
-        setTime();
+        // setTime();
         //TODO: Update filled card here
       });
     }

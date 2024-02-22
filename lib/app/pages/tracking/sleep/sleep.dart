@@ -76,7 +76,7 @@ class _SleepPageState extends State<SleepPage> {
 
   //Upload data to the database with default value for length.
   //This method will be called when the timer is started
-  uploadData() async {
+  uploadData(String side) async {
     Map<String, dynamic> uploaddata = {
       'length': '--',
       'active': true,
@@ -88,13 +88,13 @@ class _SleepPageState extends State<SleepPage> {
 
   //Update data with the actual nap length
   //This method will be called when the timer is ended
-  updateData(String napLength) async {
+  updateData(int napLength) async {
     if (id != null) {
-      await SleepDatabaseMethods()
-          .updateSleepEntry(napLength, DateTime.now(), id!);
+      // await SleepDatabaseMethods()
+      //     .updateSleepEntry(napLength, DateTime.now(), id!);
 
       //once data has been added, update the card accordingly
-      napDone(napLength);
+      // napDone(napLength);
     }
   }
 
@@ -130,7 +130,7 @@ class _SleepPageState extends State<SleepPage> {
             ),
 
             // Filled Card reading data from SleepStream()
-          const  Padding(
+            const Padding(
               padding: EdgeInsets.only(bottom: 16),
               child: SizedBox(
                 child: SleepStream(),
