@@ -1,11 +1,7 @@
 String getTimeSince(DateTime date, {bool ago = false}) {
   String timeSince = '';
   Duration diff = DateTime.now().difference(date);
-  if (diff.inSeconds < 60) {
-    timeSince = diff.inSeconds == 1
-        ? '${diff.inSeconds} second'
-        : '${diff.inSeconds} seconds';
-  } else if (diff.inMinutes < 60) {
+  if (diff.inMinutes < 60) {
     timeSince = diff.inMinutes == 1
         ? '${diff.inMinutes} minute'
         : '${diff.inMinutes} minutes';
