@@ -43,6 +43,10 @@ class CalendarDatabaseMethods {
         .snapshots();
   }
 
+  // Future<QuerySnapshot> getEvents(String uid) async {
+  //   return await db.collection('Users').where('UID', isEqualTo: uid).get();
+  // }
+
   // Adds a task to the Tasks collection
   Future addTask(Map<String, dynamic> userInfoMap) async {
     return await db

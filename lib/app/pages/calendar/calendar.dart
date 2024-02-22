@@ -1,8 +1,10 @@
 import 'package:babysteps/app/pages/calendar/add_event_button.dart';
 import 'package:babysteps/app/pages/calendar/add_task_button.dart';
 import 'package:babysteps/app/pages/calendar/calendar_database.dart';
+import 'package:babysteps/app/pages/calendar/event.dart';
 import 'package:babysteps/app/pages/calendar/event_stream.dart';
 import 'package:babysteps/app/pages/calendar/task_stream.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -19,7 +21,7 @@ class _CalendarPageState extends State<CalendarPage> {
   CalendarFormat _calendarFormat = CalendarFormat.twoWeeks;
   DateTime _focusedDay = DateUtils.dateOnly(DateTime.now()); // The current day
   DateTime _selectedDay = DateUtils.dateOnly(DateTime.now()); // The day selected in the calendar
-
+  late   Map<DateTime, List<Event>> events = {};
 //Grab the data on page initialization
   @override
   void initState() {
@@ -27,6 +29,13 @@ class _CalendarPageState extends State<CalendarPage> {
     _selectedDay = _focusedDay;
     CalendarDatabaseMethods().listenForEventReads();
     CalendarDatabaseMethods().listenForTaskReads();
+    //Implement database method to get the events for the day 
+     //events = CalendarDatabaseMethods().getEventStream(_selectedDay)
+  }
+
+   List<Event> _getEventsForDay(DateTime day) {
+    //retrieve all events from the selected day.
+    return events[day] ?? [];
   }
 
   @override
@@ -58,6 +67,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 firstDay: DateTime.utc(2020, 10, 16),
                 lastDay: DateTime.utc(2050, 3, 14),
                 focusedDay:   _focusedDay,
+                eventLoader: _getEventsForDay,
                 selectedDayPredicate: (day) {
                   // Use `selectedDayPredicate` to determine which day is currently selected.
                   // If this returns true, then `day` will be marked as selected.
