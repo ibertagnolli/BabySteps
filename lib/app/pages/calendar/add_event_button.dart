@@ -69,6 +69,7 @@ class _AddEventButtonState extends State<AddEventButton> {
   Widget build(BuildContext context) {
     // Now that widget has the passed selectedDay, populate the dateController
     dateController.text = DateFormat.yMd().format(widget.selectedDay);
+    print(dateController.text);
 
     return SizedBox(
       // Add Event Button
@@ -125,11 +126,13 @@ class _AddEventButtonState extends State<AddEventButton> {
                             initialDate: DateTime.now(),
                             firstDate: DateTime(2020),
                             lastDate: DateTime(2050));
+                            print(dateController.text);
 
                           if (pickeddate != null) {
                           // setState(() {
                               widget.selectedDay = pickeddate;
-                              dateController.text =  DateFormat.yMd().add_jm().format(widget.selectedDay);
+                              dateController.text =  DateFormat.yMd().format(widget.selectedDay);
+                              print(dateController.text);
                            // });                      
                           }
                         },
