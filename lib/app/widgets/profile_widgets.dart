@@ -26,7 +26,7 @@ class _BuildInfoLineState extends State<BuildInfoLine> {
     double width = MediaQuery.of(context).size.width;
     return widget.editing
         ? SizedBox(
-            width: width * 0.75,
+            width: width * 0.65,
             child: TextField(
                 controller: fieldController,
                 onChanged: (val) => widget.onChange(widget.babyId, val),
@@ -55,6 +55,7 @@ class _BuildInfoLineState extends State<BuildInfoLine> {
             //placeholder is loading until it reads from database, updates on refresh
             widget.value ?? 'Loading...',
             style: TextStyle(fontSize: 18),
+            softWrap: true,
           );
   }
 }
@@ -71,10 +72,16 @@ class BuildInfoField extends StatelessWidget {
   final Function(String? babyId, String newVal) onChange;
   final String? id;
 
+
   @override
   Widget build(BuildContext context) {
     List<Widget> values = List.empty(growable: true);
+ 
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    double width = screenWidth * 0.85;
 
+   
     for (String val in valueList) {
       values.add(BuildInfoLine(
         editing,
@@ -85,21 +92,20 @@ class BuildInfoField extends StatelessWidget {
         babyId: id,
       ));
     }
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
+    return Row( 
         children: [
           icon,
           const SizedBox(width: 16),
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Expanded(
+          child:Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(
               '$label:',
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            ...values
+              ...values
           ])
+          ),
         ],
-      ),
     );
   }
 }
