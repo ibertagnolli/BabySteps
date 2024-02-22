@@ -78,12 +78,16 @@ class _AddBottleCardState extends State<AddBottleCard> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Expanded(child:
                     BottleTypeButton(
                         'Breast milk',
                         activeButton.contains("Breast milk"),
                         bottleTypeClicked),
-                    BottleTypeButton('Formula',
+                    ),
+                    Expanded(
+                    child: BottleTypeButton('Formula',
                         activeButton.contains("Formula"), bottleTypeClicked)
+                    )
                   ],
                 ),
                 // First row: Weight inputs
