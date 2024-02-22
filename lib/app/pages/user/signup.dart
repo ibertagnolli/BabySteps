@@ -172,6 +172,7 @@ class _SignupPageState extends State<SignupPage> {
                               setErrorMessage(authError.message!);
                               break;
                             default:
+                              print(authError.message);
                               setErrorMessage('Error creating account');
                               break;
                           }
