@@ -1,6 +1,7 @@
 import 'package:babysteps/app/pages/tracking/feeding/add_bottle_card.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/pages/tracking/feeding/bottle_feeding_stream.dart';
+import 'package:babysteps/app/widgets/history_widgets.dart';
 import 'package:babysteps/app/pages/tracking/history_streams.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
 import 'dart:core';
@@ -96,12 +97,12 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
             ),
 
             // NewStopWatch(timeSince, buttonText, updateData, () => {}, 0, false)
-
-            // History Card - in widgets
-            Padding(
-              padding: EdgeInsets.only(top: 30),
-              child: HistoryDropdown(SleepHistoryStream()),
-            ),
+          
+              // History Card - in widgets
+              Padding(
+                padding: EdgeInsets.only(top:30),
+                child: HistoryDropdown("bottle"),
+              ),
           ]),
         ),
       ),
