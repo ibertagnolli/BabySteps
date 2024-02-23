@@ -68,7 +68,7 @@ class _AddEventButtonState extends State<AddEventButton> {
   @override
   Widget build(BuildContext context) {
     // Now that widget has the passed selectedDay, populate the dateController
-    //dateController.text = DateFormat.yMd().format(widget.selectedDay);
+    dateController.text = DateFormat.yMd().format(widget.selectedDay);
 
     return SizedBox(
       // Add Event Button

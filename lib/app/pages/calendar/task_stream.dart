@@ -44,12 +44,14 @@ class _TaskStreamState extends State<TaskStream> {
                   Map<String, dynamic> data =
                       document.data()! as Map<String, dynamic>;
                   var docId = document.id;
-                  return CheckboxListTile(                      
-                      title: Row(
-                        children: [Text(data['name']), 
-                                   const Text(" at "), 
-                                   Text(DateFormat('hh:mm').format(data['dateTime'].toDate()))]
-                      ),
+                  return CheckboxListTile(     
+                      // TODO add this back if we want Tasks to have associated times                 
+                      // title: Row(
+                      //   children: [Text(data['name']), 
+                      //              const Text(" at "), 
+                      //              Text(DateFormat('hh:mm').format(data['dateTime'].toDate()))]
+                      // ),
+                      title: Text(data['name']),
                       value: data['completed'],
                       onChanged: (bool? value) async {
                         // Write updated task data to database

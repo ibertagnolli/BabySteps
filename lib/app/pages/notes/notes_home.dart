@@ -54,14 +54,8 @@ class _NotesHomePageState extends State<NotesHomePage> {
               child: NotesStream(),
             ),
           ),
-          //   Flexible(
-          // flex: 1,
-          Expanded(
-            child: Align(
-                alignment: FractionalOffset.bottomCenter,
                 // Add note button
-                // TODO have this button always float at the bottom, regardless of number of notes?
-                child: ElevatedButton(
+                 ElevatedButton(
                   onPressed: _openNote,
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.tertiary),
@@ -73,7 +67,7 @@ class _NotesHomePageState extends State<NotesHomePage> {
                     ),
                   ),
                   child: const Text('New Note'),
-                )),
+             //   )),
           ),
           //  )
         ],
