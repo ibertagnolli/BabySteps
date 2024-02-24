@@ -52,7 +52,7 @@ class _CreatePostState extends State<CreatePostPage> {
     }
 
     Map<String, dynamic> uploaddata = {
-      'usersName':currentUser.uid,
+      'usersName':currentUser.name,
       'date': now,
       'title': title.text == '' ? null : title.text,
       'caption': caption.text == '' ? null : caption.text,
