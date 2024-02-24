@@ -1,13 +1,13 @@
 class Baby {
-  String? name;
-  DateTime? dob; //TODO: switch this to a datetime object
-  String? collectionId;
+  String name;
+  DateTime dob;
+  String collectionId;
   List<dynamic>? caregivers;
 
   Baby({
-    this.name,
-    this.dob,
-    this.collectionId,
+    required this.name,
+    required this.dob,
+    required this.collectionId,
     this.caregivers,
   });
 

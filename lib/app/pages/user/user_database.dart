@@ -37,6 +37,9 @@ class UserDatabaseMethods {
   }
 
   Future updateUserBabies(String userDoc, List<String> babies) async {
-    return await db.collection("Users").doc(userDoc).update({"baby": babies});
+    return await db
+    .collection("Users")
+    .doc(userDoc)
+    .update({"baby": babies});
   }
 }

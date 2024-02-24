@@ -196,10 +196,10 @@ final goRouter = GoRouter(
       pageBuilder: (context, state) =>
           const NoTransitionPage(child: ProfilePage()),
       routes: [
-        GoRoute(
-          path: 'edit',
-          builder: (context, state) => const EditProfilePage(),
-        )
+        // GoRoute(
+        //   path: 'edit',
+        //   builder: (context, state) => const EditProfilePage(),
+        // )
       ],
     ),
     //  GoRoute(

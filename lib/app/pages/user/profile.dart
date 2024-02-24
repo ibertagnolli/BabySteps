@@ -20,37 +20,38 @@ class _ProfilePageState extends State<ProfilePage> {
   UserProfile userProfile = currentUser;
   List<Baby> babyList = currentUser.babies;
 
+  // The user with updated info data after User edits their profile
   UserProfile updatedUser = UserProfile();
 
+  // True when User is editing their profile
   bool editing = false;
-  bool addingBaby = false;
 
-  void buttonClicked() async {
+/// Updates User and Baby Info
+  void editButtonClicked() async {
     if (editing) {
-      List<String> babyIds = [];
+      // Update the User's name
       FirebaseAuth.instance.currentUser?.updateDisplayName(updatedUser.name);
+      
+      List<String> babyIds = [];
 
-      // try {
-      //   FirebaseAuth.instance.currentUser?.updateEmail(updatedUser.email!);
-      // } catch (e) {
-      //   print(e);
-      // }
+      // Update each baby's info
       for (Baby baby in updatedUser.babies) {
-        print(baby.name);
-        print(baby.dob);
-        babyIds.add(baby.collectionId ?? '');
+        babyIds.add(baby.collectionId);
         await UserDatabaseMethods().updateBaby(
-            baby.collectionId ?? 'IYyV2hqR7omIgeA4r7zQ',
-            baby.name ?? 'Theo',
-            baby.dob ?? DateTime.now());
+            baby.collectionId,
+            baby.name,
+            baby.dob
+        );
       }
 
+      // Update User's list of connected babies, in case they added a baby
       await UserDatabaseMethods().updateUserBabies(
           updatedUser.userDoc ?? 'T6eKIIOFF6uf6GTSCSD7', babyIds);
     }
+    
+    // Update state of the app to represent the edited data 
     setState(() {
       editing = !editing;
-      addingBaby = false;
       currentUser = updatedUser;
     });
   }
@@ -63,6 +64,7 @@ class _ProfilePageState extends State<ProfilePage> {
     updatedUser.email = newVal;
   }
 
+  /// Creates a new baby and adds the baby to the database
   void createBaby() async {
     Map<String, dynamic> uploaddata = {
       'DOB': DateTime.now(),
@@ -75,9 +77,10 @@ class _ProfilePageState extends State<ProfilePage> {
         }
       ]
     };
+
     DocumentReference babyRef = await UserDatabaseMethods().addBaby(uploaddata);
     setState(() {
-      updatedUser.addBaby(Baby(collectionId: babyRef.id, caregivers: [
+      updatedUser.addBaby(Baby(name: "EmTest", dob: DateTime.now(), collectionId: babyRef.id, caregivers: [
         {
           'name': currentUser.name ?? '',
           'doc': currentUser.userDoc ?? '',
@@ -93,8 +96,7 @@ class _ProfilePageState extends State<ProfilePage> {
     if (updateBaby != null) {
       updateBaby.name = newVal;
     } else {
-      print(
-          'error finding baby in collection! $id ${updatedUser.babies.length}');
+      print('error finding baby in collection! $id ${updatedUser.babies.length}');
     }
   }
 
@@ -123,11 +125,16 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Nav Bar
       appBar: AppBar(
-          title: Text('Profile'),
+          title: const Text('Profile'),
           leading: BackButton(
               onPressed: () => context.go('/home'),
-              color: Theme.of(context).colorScheme.onSurface)),
+              color: Theme.of(context).colorScheme.onSurface
+          )
+      ),
+      
+      // Page Widgets         
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -136,7 +143,8 @@ class _ProfilePageState extends State<ProfilePage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                //container is for the placeholder profile image
+                
+                // Placeholder for Profile image (right now it's BabySteps logo)
                 Container(
                   height: 120,
                   width: 120,
@@ -148,57 +156,71 @@ class _ProfilePageState extends State<ProfilePage> {
                       BoxShadow(
                           color: Colors.black26,
                           offset: Offset(2, 2),
-                          blurRadius: 10)
+                          blurRadius: 10
+                      )
                     ],
                     image: const DecorationImage(
-                        image: const AssetImage('assets/BabyStepsLogo.png')),
+                        image: AssetImage('assets/BabyStepsLogo.png')
+                    ),
                   ),
                 ),
-                //create user info box and put in fields
-                BuildInfoBox(label: '', fields: [
-                  BuildInfoField('Name', [userProfile.name ?? ''],
-                      const Icon(Icons.account_box), editing, updateUserName),
-                  BuildInfoField('Email', [userProfile.email ?? ''],
-                      const Icon(Icons.email), editing, updateUserEmail),
-                  //buildInfoField('Date of Birth', userProfile?.dateOfBirth?.toString()),
+                
+                // User's info box
+                BuildInfoBox(
+                  label: '', 
+                  fields: [
+                    BuildInfoField(
+                      'Name', 
+                      [userProfile.name ?? ''],
+                      const Icon(Icons.account_box), 
+                      editing, 
+                      updateUserName
+                    ),
+                    BuildInfoField(
+                      'Email', 
+                      [userProfile.email ?? ''],
+                      const Icon(Icons.email), 
+                      editing, 
+                      updateUserEmail
+                    ),
                 ]),
-                //create children info box and put in fields
-                //TODO: display multiple baby's info when caregivers have more than one
-
+                
+                // Children's info boxes
                 for (Baby element in babyList)
                   BabyBox(
-                      element.name ?? '',
-                      element.dob ?? DateTime.now(),
+                      element.name,
+                      element.dob,
                       element.caregivers ?? [],
                       editing,
                       updateBabyName,
                       updateBabyDOB,
-                      element.collectionId ?? 'N/A'),
+                      element.collectionId
+                  ),
 
+                // "Add Baby" button - only displays if profile page is in editing mode
                 if (editing)
                   Padding(
-                    padding: EdgeInsets.only(top: 16),
+                    padding: const EdgeInsets.only(top: 16),
                     child: ElevatedButton(
                       onPressed: createBaby,
                       style: blueButton(context),
-                      child: const Text('Add Child',
-                          style: TextStyle(fontSize: 26)),
+                      child: const Text('Add Child', style: TextStyle(fontSize: 26)),
                     ),
                   ),
 
-                //edit button
+                // Edit button
                 const SizedBox(height: 16),
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: ElevatedButton(
-                    onPressed: buttonClicked,
+                    onPressed: editButtonClicked,
                     style: blueButton(context),
-                    child: Text(editing ? 'Save' : 'Edit',
-                        style: const TextStyle(fontSize: 26)),
+                    child: Text(editing ? 'Save' : 'Edit', style: const TextStyle(fontSize: 26)),
                   ),
                 ),
                 const SizedBox(height: 16),
 
+                // Logout button
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: ElevatedButton(
@@ -208,7 +230,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       context.go('/login');
                     },
                     style: blueButton(context),
-                    child: Text('Logout', style: const TextStyle(fontSize: 26)),
+                    child: const Text('Logout', style: TextStyle(fontSize: 26)),
                   ),
                 ),
               ],

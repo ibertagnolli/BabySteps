@@ -110,6 +110,7 @@ class BuildInfoField extends StatelessWidget {
   }
 }
 
+/// Info box of User, Children basic information
 class BuildInfoBox extends StatelessWidget {
   const BuildInfoBox({super.key, required this.label, required this.fields});
   final String label;
@@ -147,6 +148,7 @@ class BuildInfoBox extends StatelessWidget {
   }
 }
 
+/// Builds off BuildInfoBox specifically for a baby
 class BabyBox extends StatelessWidget {
   const BabyBox(
     this.babyName,
@@ -170,68 +172,92 @@ class BabyBox extends StatelessWidget {
   Widget build(BuildContext context) {
     TextEditingController controller = TextEditingController();
     List<String> caregiverNames = [];
+    
     for (Map<String, dynamic> caregiver in caregivers) {
       if (currentUser.uid != caregiver['uid']) {
         caregiverNames.add(caregiver['name'] ?? '');
       }
     }
-    return BuildInfoBox(label: '', fields: [
-      BuildInfoField(
-        'Baby Name',
-        [babyName],
-        const Icon(Icons.account_box),
-        editing,
-        updateName,
-        id: babyId,
-      ),
-      BuildInfoField('Date of Birth', [DateFormat.yMd().format(dateOfBirth)],
-          const Icon(Icons.calendar_month_outlined), editing, updateDOB,
-          date: true, id: babyId),
-      if (caregiverNames.isNotEmpty || editing)
-        BuildInfoField('Caregivers', caregiverNames, const Icon(Icons.people),
-            editing, (unused, unused2) => {}),
-      if (editing)
-        ElevatedButton(
-          onPressed: () {
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return Dialog(
-                      child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                  "Enter the user's email and we will send them an invite\nAlternatively you can send them this code and have them add it on account creation: ${babyId}"),
-                              TextField(
-                                controller: controller,
-                              ),
-                              SizedBox(height: 8),
-                              ElevatedButton(
-                                onPressed: () {
-                                  //send email
-                                },
-                                style: blueButton(context),
-                                child: const Text('Send Email Invite'),
-                              ),
-                              SizedBox(height: 8),
-                              ElevatedButton(
-                                onPressed: () {
-                                  Clipboard.setData(
-                                      ClipboardData(text: babyId));
-                                  //send email
-                                },
-                                style: blueButton(context),
-                                child: const Text('Save code to clipboard'),
-                              )
-                            ],
-                          )));
-                });
-          },
-          style: blueButton(context),
-          child: Text('Add Caregiver'),
+
+    /// Opens alert dialog for user to edit the Caregivers List
+    void editCaregiversList() {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+              child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text("Enter the user's email and we will send them an invite\n"
+                           "Alternatively, send them this code connect their account when they create it: $babyId"
+                      ),
+                      TextField(
+                        controller: controller,
+                      ),
+                      const SizedBox(height: 8),
+                      ElevatedButton(
+                        onPressed: () {
+                          //send email
+                        },
+                        style: blueButton(context),
+                        child: const Text('Send Email Invite'),
+                      ),
+                      const SizedBox(height: 8),
+                      ElevatedButton(
+                        onPressed: () {
+                          Clipboard.setData(
+                              ClipboardData(text: babyId));
+                          //send email
+                        },
+                        style: blueButton(context),
+                        child: const Text('Save code to clipboard'),
+                      )
+                    ],
+                  )));
+        });
+    }
+    
+    return BuildInfoBox(
+      label: '', 
+      fields: [
+        // Baby's Name
+        BuildInfoField(
+          'Baby Name',
+          [babyName],
+          const Icon(Icons.account_box),
+          editing,
+          updateName,
+          id: babyId,
         ),
-    ]);
+
+        // Baby's DOB
+        BuildInfoField(
+          'Date of Birth', 
+          [DateFormat.yMd().format(dateOfBirth)],
+          const Icon(Icons.calendar_month_outlined), editing, updateDOB,
+          date: true, id: babyId
+        ),
+        
+        // Caregivers List
+        if (caregiverNames.isNotEmpty || editing)
+          BuildInfoField(
+            'Caregivers', 
+            caregiverNames, 
+            const Icon(Icons.people),
+            editing, 
+            (unused, unused2) => {}
+          ),
+    
+        // Editing Caregivers List
+        if (editing)
+          ElevatedButton(
+            onPressed: editCaregiversList,
+            style: blueButton(context),
+            child: const Text('Add Caregiver'),
+          ),
+      ]
+      );
+    }
   }
-}
