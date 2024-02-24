@@ -35,6 +35,8 @@ class _AddTemperatureCardState extends State<AddTemperatureCard> {
     // Clear fields for next entry
     temp.clear();
     date.clear();
+    //add current date and time for autofill
+    date.text = DateFormat.yMd().add_jm().format(DateTime.now());
   }
 
   @override
