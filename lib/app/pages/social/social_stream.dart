@@ -17,12 +17,14 @@ class SocialStream extends StatefulWidget {
 class _SocialStreamState extends State<SocialStream> {
   final Stream<QuerySnapshot> _socialStream =
       SocialDatabaseMethods().getStream();
+  //final pw.Document pdf = pw.Document();
+  //late var pdf;
+  late var posts;
 
 
-
-Future<void> createPdf(userName, date, child, caption, title, imagePath) async {
+Future<pw.Document> createPdf(userName, date, child, caption, title, imagePath) async {
   final pw.Document pdf = pw.Document();
-  Image image = Image.file(File(imagePath));
+  //Image image = Image.file(File(imagePath));
     final page = pw.Page(
       pageFormat: PdfPageFormat.a4,
       build: (pw.Context context) {
@@ -39,13 +41,66 @@ Future<void> createPdf(userName, date, child, caption, title, imagePath) async {
       },
     );
     pdf.addPage(page);
-    // Save file
+    return pdf;
+  }
+
+
+
+Future<pw.Document> createMultiPdf(posts) async {
+  final pw.Document pdf = pw.Document();
+  //Image image = Image.file(File(imagePath));
+   late String userName;
+   late DateTime date;
+   late String? title;
+   late String? caption;
+   late String child;
+   late String? imagePath;
+
+  print(posts);
+   for (var post in posts) {
+            userName = post['usersName'];
+             date = post['date'].toDate();
+             title = post['title'];
+             caption = post['caption'];
+             child = post['child'];
+             imagePath = post['image'];
+    //pdf.editPage(index, page)
+    pdf.addPage(
+      pw.Page(
+      pageFormat: PdfPageFormat.a4,
+      build: (pw.Context context) {
+        return pw.Column(
+          children: [
+            pw.Text(userName),
+            pw.Text(date.toString()),
+            pw.Text(child),
+            pw.Text(caption!),
+            pw.Text(title!),
+            //pw.Image(image as pw.ImageProvider),
+          ],
+        );
+      },
+    ),
+    );
+    //pdf.addPage(page);
+    print(Page);
+   }
+    pw.Document save_pdf = await pdf;
     final output = await getTemporaryDirectory();
     var path = "${output.path}/test.pdf";
     final file = File(path);
-    await file.writeAsBytes(await pdf.save());
-  }
+    await file.writeAsBytes(await save_pdf.save());
+    return pdf;
+}
 
+// Future<void> savePdf(pdf) async{
+//      // Save file
+//     pw.Document save_pdf = await pdf;
+//     final output = await getTemporaryDirectory();
+//     var path = "${output.path}/test.pdf";
+//     final file = File(path);
+//     await file.writeAsBytes(await save_pdf.save());
+// }
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -61,7 +116,7 @@ Future<void> createPdf(userName, date, child, caption, title, imagePath) async {
         var postWidgets = List<Widget>.empty(growable: true);
 
         if (snapshot.data != null) {
-          var posts = snapshot.data!.docs;
+          posts = snapshot.data!.docs;
 
           for (var post in posts) {
             String userName = post['usersName'];
@@ -79,9 +134,8 @@ Future<void> createPdf(userName, date, child, caption, title, imagePath) async {
               caption: caption,
               image: imagePath,
             ));
-
-           var pdf = createPdf(userName, date, title, caption, child, imagePath);
           }
+        
         }
 
         return Column(
@@ -89,7 +143,7 @@ Future<void> createPdf(userName, date, child, caption, title, imagePath) async {
               Column( children: postWidgets.isNotEmpty
                 ? postWidgets
                 : [const Text("no posts")],),
-                ElevatedButton(onPressed: () => {}, child: const Text("save to pdf"))]);
+                ElevatedButton(onPressed: () => createMultiPdf(posts), child: const Text("save to pdf"))]);
       },
 
 
