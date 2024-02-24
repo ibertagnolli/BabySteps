@@ -1,5 +1,7 @@
 import 'package:babysteps/app/pages/user/user_database.dart';
-import 'package:babysteps/app/widgets/profile_widgets.dart';
+import 'package:babysteps/app/pages/user/user_widgets/baby_box.dart';
+import 'package:babysteps/app/pages/user/user_widgets/build_info_box.dart';
+import 'package:babysteps/app/pages/user/user_widgets/build_info_field.dart';
 import 'package:babysteps/app/widgets/styles.dart';
 import 'package:babysteps/main.dart';
 import 'package:babysteps/model/baby.dart';
