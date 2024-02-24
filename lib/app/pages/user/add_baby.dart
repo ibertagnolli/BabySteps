@@ -18,8 +18,7 @@ class AddBabyPage extends StatefulWidget {
 }
 
 class _AddBabyPageState extends State<AddBabyPage> {
-  TextEditingController date =
-      TextEditingController(text: DateFormat.yMd().format(DateTime.now()));
+  TextEditingController date = TextEditingController(text: DateFormat.yMd().format(DateTime.now()));
   TextEditingController babyName = TextEditingController();
 
   User? user = FirebaseAuth.instance.currentUser;

@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,12 +18,44 @@ class _SignupPageState extends State<SignupPage> {
   TextEditingController password = TextEditingController();
   TextEditingController confirmPassword = TextEditingController();
 
+  // The global key uniquely identifies the Form widget and allows validation of the form.
+  final _formKey = GlobalKey<FormState>();
+
   String? errorMessage;
 
   void setErrorMessage(String message) {
     setState(() {
       errorMessage = message;
     });
+  }
+
+  void createAccount() async {
+    try {
+      UserCredential user = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: email.text, password: password.text);
+      
+      await user.user?.updateDisplayName(usersName.text);
+      context.go('/login/signup/addBaby');
+    } 
+    on FirebaseAuthException catch (authError) {
+      switch (authError.code) {
+        case 'email-already-in-use':
+          setErrorMessage("Account already exists!");
+          break;
+        case 'invalid-email':
+          setErrorMessage('Email is not valid');
+          break;
+        case 'weak-password':
+          setErrorMessage(authError.message!);
+          break;
+        default:
+          setErrorMessage('Error creating account');
+          break;
+      }
+    } catch (e) {
+      print("Error creating user account: $e");
+    }
   }
 
   @override
@@ -35,6 +68,7 @@ class _SignupPageState extends State<SignupPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              // Header logo and welcome text
               SizedBox(
                   width: 200,
                   height: 200,
@@ -52,149 +86,159 @@ class _SignupPageState extends State<SignupPage> {
                     fontSize: 20.0,
                     color: Theme.of(context).colorScheme.surface),
               ),
+              // Form fields
               Padding(
-                padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
-                child: TextField(
-                  cursorColor: Theme.of(context).colorScheme.secondary,
-                  controller: usersName,
-                  decoration: InputDecoration(
-                      labelText: 'Full Name',
-                      labelStyle: TextStyle(
-                        color: Theme.of(context).colorScheme.secondary,
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                child: Form(
+                  key: _formKey,
+                  child: Column( children: <Widget> [
+                    // Full Name Field
+                    TextFormField(
+                      cursorColor: Theme.of(context).colorScheme.secondary,
+                      controller: usersName,
+                      maxLength: 60,
+                      decoration: InputDecoration(
+                          labelText: 'Full Name',
+                          labelStyle: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context).colorScheme.secondary)),
+                          focusColor: Theme.of(context).colorScheme.secondary,
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context).colorScheme.secondary)),
+                          hintText: 'Jon Doe'
                       ),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.secondary)),
-                      focusColor: Theme.of(context).colorScheme.secondary,
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.secondary)),
-                      hintText: 'Jon Doe'),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(16),
-                child: TextField(
-                  controller: email,
-                  cursorColor: Theme.of(context).colorScheme.secondary,
-                  decoration: InputDecoration(
-                      labelText: 'Email',
-                      labelStyle: TextStyle(
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.secondary)),
-                      focusColor: Theme.of(context).colorScheme.secondary,
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.secondary)),
-                      hintText: 'jon.doe@gmail.com'),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: TextField(
-                  controller: password,
-                  obscureText: true,
-                  cursorColor: Theme.of(context).colorScheme.secondary,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    labelStyle: TextStyle(
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.secondary)),
-                    focusColor: Theme.of(context).colorScheme.secondary,
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.secondary)),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(16),
-                child: TextField(
-                  obscureText: true,
-                  controller: confirmPassword,
-                  cursorColor: Theme.of(context).colorScheme.secondary,
-                  decoration: InputDecoration(
-                    labelText: 'Confirm Password',
-                    labelStyle: TextStyle(
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.secondary)),
-                    focusColor: Theme.of(context).colorScheme.secondary,
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.secondary)),
-                  ),
-                ),
-              ),
-              if (errorMessage != null)
-                Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Text(
-                    errorMessage!,
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      color: Theme.of(context).colorScheme.error,
-                    ),
-                  ),
-                ),
-              Padding(
-                padding: EdgeInsets.all(16),
-                child: FilledButton(
-                    onPressed: () async {
-                      if (password.text == confirmPassword.text) {
-                        try {
-                          UserCredential user = await FirebaseAuth.instance
-                              .createUserWithEmailAndPassword(
-                                  email: email.text, password: password.text);
-                          if (usersName.text != '') {
-                            await user.user?.updateDisplayName(usersName.text);
-                            context.go('/login/signup/addBaby');
-                          } else {
-                            setErrorMessage('Please provide a name!');
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                            return 'Please enter your name';
                           }
-                        } on FirebaseAuthException catch (authError) {
-                          switch (authError.code) {
-                            case 'email-already-in-use':
-                              setErrorMessage("Account already exists!");
-                              break;
-                            case 'invalid-email':
-                              setErrorMessage('Email is not valid');
-                              break;
-                            case 'weak-password':
-                              setErrorMessage(authError.message!);
-                              break;
-                            default:
-                              print(authError.message);
-                              setErrorMessage('Error creating account');
-                              break;
-                          }
-                        } catch (e) {}
-                      } else {
-                        setErrorMessage("Passwords don't match!");
-                      }
-                    },
-                    style: FilledButton.styleFrom(
-                        backgroundColor:
-                            Theme.of(context).colorScheme.secondary),
-                    child: Text(
-                      'Create Account',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        color: Theme.of(context).colorScheme.surface,
+                        return null;
+                      },
+                    ),
+                    
+                    // Email Field
+                    TextFormField(
+                      controller: email,
+                      cursorColor: Theme.of(context).colorScheme.secondary,
+                      maxLength: 25,
+                      decoration: InputDecoration(
+                          labelText: 'Email',
+                          labelStyle: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context).colorScheme.secondary)),
+                          focusColor: Theme.of(context).colorScheme.secondary,
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context).colorScheme.secondary)),
+                          hintText: 'jon.doe@gmail.com'
                       ),
-                    )),
+                      validator: (value) => EmailValidator.validate(value!) ? null : "Please enter a valid email",
+                    ),
+                    
+                    // Password Field
+                    TextFormField(
+                      controller: password,
+                      obscureText: true,
+                      cursorColor: Theme.of(context).colorScheme.secondary,
+                      maxLength: 25,
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        labelStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context).colorScheme.secondary)),
+                        focusColor: Theme.of(context).colorScheme.secondary,
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context).colorScheme.secondary)),
+                      ),
+                      validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your password';
+                          }
+                          return null;
+                      },
+                    ),
+                    
+                    // Confirm Password Field
+                    TextFormField(
+                      obscureText: true,
+                      controller: confirmPassword,
+                      cursorColor: Theme.of(context).colorScheme.secondary,
+                      maxLength: 25,
+                      decoration: InputDecoration(
+                        labelText: 'Confirm Password',
+                        labelStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context).colorScheme.secondary)),
+                        focusColor: Theme.of(context).colorScheme.secondary,
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context).colorScheme.secondary)),
+                      ),
+                      validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your password';
+                          }
+                          if (value != password.text) {
+                            return 'Passwords do not match';
+                          }
+                          return null;
+                      },
+                    ),
+
+                    // Error creating account
+                    if (errorMessage != null)
+                      Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Text(
+                          errorMessage!,
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            color: Theme.of(context).colorScheme.error,
+                          ),
+                        ),
+                      ),
+                
+                    // Create Account Button
+                    FilledButton(
+                      onPressed: () {
+                        // Validate returns true if the form is valid, or false otherwise.
+                        if (_formKey.currentState!.validate()) {
+                          createAccount();
+                        }
+                      },
+                      style: FilledButton.styleFrom(
+                          backgroundColor: Theme.of(context).colorScheme.secondary),
+                      child: Text(
+                          'Create Account',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            color: Theme.of(context).colorScheme.surface,
+                          ),
+                      )
+                    ),
+                    
+                    // Already have an account
+                    InkWell(
+                      child: const Text('Already have an account? Login here'),
+                      onTap: () => context.go('/login/loginPage')
+                    ),
+                  ],
+                  ),
+                ),
               ),
-              InkWell(
-                  child: Text('Already have an account? Login here'),
-                  onTap: () => context.go('/login/loginPage')),
             ],
           ),
         ),
