@@ -17,38 +17,13 @@ class SocialStream extends StatefulWidget {
 class _SocialStreamState extends State<SocialStream> {
   final Stream<QuerySnapshot> _socialStream =
       SocialDatabaseMethods().getStream();
-  //final pw.Document pdf = pw.Document();
-  //late var pdf;
-  late var posts;
-
-
-Future<pw.Document> createPdf(userName, date, child, caption, title, imagePath) async {
-  final pw.Document pdf = pw.Document();
-  //Image image = Image.file(File(imagePath));
-    final page = pw.Page(
-      pageFormat: PdfPageFormat.a4,
-      build: (pw.Context context) {
-        return pw.Column(
-          children: [
-            pw.Text(userName),
-            pw.Text(date.toString()),
-            pw.Text(child),
-            //pw.Text(caption!),
-            pw.Text(title!),
-            //pw.Image(image as pw.ImageProvider),
-          ],
-        );
-      },
-    );
-    pdf.addPage(page);
-    return pdf;
-  }
-
+      late var posts;
 
 
 Future<pw.Document> createMultiPdf(posts) async {
   final pw.Document pdf = pw.Document();
   //Image image = Image.file(File(imagePath));
+   
    late String userName;
    late DateTime date;
    late String? title;
@@ -66,7 +41,7 @@ Future<pw.Document> createMultiPdf(posts) async {
              imagePath = post['image'];
     //pdf.editPage(index, page)
     pdf.addPage(
-      pw.Page(
+      pw.Page(  
       pageFormat: PdfPageFormat.a4,
       build: (pw.Context context) {
         return pw.Column(
@@ -76,7 +51,7 @@ Future<pw.Document> createMultiPdf(posts) async {
             pw.Text(child),
             pw.Text(caption!),
             pw.Text(title!),
-            //pw.Image(image as pw.ImageProvider),
+           // pw.Image(pw.MemoryImage(File('test.webp').readAsBytesSync())),
           ],
         );
       },
@@ -93,14 +68,7 @@ Future<pw.Document> createMultiPdf(posts) async {
     return pdf;
 }
 
-// Future<void> savePdf(pdf) async{
-//      // Save file
-//     pw.Document save_pdf = await pdf;
-//     final output = await getTemporaryDirectory();
-//     var path = "${output.path}/test.pdf";
-//     final file = File(path);
-//     await file.writeAsBytes(await save_pdf.save());
-// }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
