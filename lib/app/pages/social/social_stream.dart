@@ -22,29 +22,25 @@ class _SocialStreamState extends State<SocialStream> {
 
 Future<pw.Document> createMultiPdf(posts) async {
   final pw.Document pdf = pw.Document();
+  //For loop over posts and turn them into pdf widgets 
   //Image image = Image.file(File(imagePath));
-   
    late String userName;
    late DateTime date;
    late String? title;
    late String? caption;
    late String child;
    late String? imagePath;
+   List<pw.Widget> widgets = [];
 
-  print(posts);
    for (var post in posts) {
-            userName = post['usersName'];
+             userName = post['usersName'];
              date = post['date'].toDate();
              title = post['title'];
              caption = post['caption'];
              child = post['child'];
              imagePath = post['image'];
-    //pdf.editPage(index, page)
-    pdf.addPage(
-      pw.Page(  
-      pageFormat: PdfPageFormat.a4,
-      build: (pw.Context context) {
-        return pw.Column(
+
+        widgets.add(pw.Column(
           children: [
             pw.Text(userName),
             pw.Text(date.toString()),
@@ -53,18 +49,20 @@ Future<pw.Document> createMultiPdf(posts) async {
             pw.Text(title!),
            // pw.Image(pw.MemoryImage(File('test.webp').readAsBytesSync())),
           ],
-        );
-      },
-    ),
-    );
-    //pdf.addPage(page);
-    print(Page);
+        ),
+      );
    }
-    pw.Document save_pdf = await pdf;
+    //then add pages from the widgets list
+        pdf.addPage(
+          pw.MultiPage(
+            pageFormat: PdfPageFormat.a4,
+            build: (context) => widgets,//here goes the widgets list
+          ),
+        );
     final output = await getTemporaryDirectory();
     var path = "${output.path}/test.pdf";
     final file = File(path);
-    await file.writeAsBytes(await save_pdf.save());
+    await file.writeAsBytes(await pdf.save());
     return pdf;
 }
 
