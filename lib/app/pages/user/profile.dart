@@ -21,7 +21,7 @@ class _ProfilePageState extends State<ProfilePage> {
   List<Baby> babyList = currentUser.babies;
 
   // The user with updated info data after User edits their profile
-  UserProfile updatedUser = UserProfile();
+  UserProfile updatedUser = UserProfile(name: "EmTestUser", email: "emtestuser@email.com", uid: "emTestUid", userDoc: "emTestUserDoc");
 
   // True when User is editing their profile
   bool editing = false;
@@ -46,7 +46,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
       // Update User's list of connected babies, in case they added a baby
       await UserDatabaseMethods().updateUserBabies(
-          updatedUser.userDoc ?? 'T6eKIIOFF6uf6GTSCSD7', babyIds);
+          updatedUser.userDoc, babyIds);
     }
     
     // Update state of the app to represent the edited data 
@@ -82,9 +82,9 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() {
       updatedUser.addBaby(Baby(name: "EmTest", dob: DateTime.now(), collectionId: babyRef.id, caregivers: [
         {
-          'name': currentUser.name ?? '',
-          'doc': currentUser.userDoc ?? '',
-          'uid': currentUser.uid ?? ''
+          'name': currentUser.name,
+          'doc': currentUser.userDoc,
+          'uid': currentUser.uid,
         }
       ]));
     });
@@ -171,14 +171,14 @@ class _ProfilePageState extends State<ProfilePage> {
                   fields: [
                     BuildInfoField(
                       'Name', 
-                      [userProfile.name ?? ''],
+                      [userProfile.name],
                       const Icon(Icons.account_box), 
                       editing, 
                       updateUserName
                     ),
                     BuildInfoField(
                       'Email', 
-                      [userProfile.email ?? ''],
+                      [userProfile.email],
                       const Icon(Icons.email), 
                       editing, 
                       updateUserEmail
@@ -226,7 +226,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: ElevatedButton(
                     onPressed: () {
                       FirebaseAuth.instance.signOut();
-                      currentUser = UserProfile();
+                      currentUser = UserProfile(name: "EmTestUser", email: "emtestuser@email.com", uid: "emTestUid", userDoc: "emTestUserDoc");
                       context.go('/login');
                     },
                     style: blueButton(context),

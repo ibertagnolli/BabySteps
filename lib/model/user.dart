@@ -1,17 +1,17 @@
 import 'package:babysteps/model/baby.dart';
 
 class UserProfile {
-  String? name;
-  String? email;
-  String? uid;
-  String? userDoc;
+  String name;
+  String email;
+  String uid;
+  String userDoc;
   List<Baby> babies;
 
   UserProfile({
-    this.name,
-    this.email,
-    this.uid,
-    this.userDoc,
+    required this.name,
+    required this.email,
+    required this.uid,
+    required this.userDoc,
     this.babies = const [],
   });
 

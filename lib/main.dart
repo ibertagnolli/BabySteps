@@ -35,7 +35,7 @@ import 'package:babysteps/app/pages/user/signup.dart';
 //https://github.com/bizz84/nested_navigation_examples/blob/main/examples/gorouter/lib/main.dart
 
 bool loggedIn = false;
-UserProfile currentUser = UserProfile();
+UserProfile currentUser = UserProfile(name: "EmTestUser", email: "emtestuser@email.com", uid: "emTestUid", userDoc: "emTestUserDoc");
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -80,8 +80,8 @@ void main() async {
         currentUser = UserProfile(
             userDoc: doc[0].id,
             uid: user.uid,
-            name: user.displayName,
-            email: user.email,
+            name: user.displayName ?? 'TestEmErrorName',
+            email: user.email ?? 'TestEmErrorEmail',
             babies: babies);
       }
 
