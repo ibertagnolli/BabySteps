@@ -38,31 +38,65 @@ class _UserInfoCardState extends State<UserInfoCard> {
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(10),
         boxShadow: const [
-          BoxShadow(
-              color: Colors.black26, offset: Offset(2, 2), blurRadius: 10)
+          BoxShadow(color: Colors.black26, offset: Offset(2, 2), blurRadius: 10)
         ],
       ),
       child: 
         Form(
           key: _formKey,
           child: Column(children: <Widget>[
-            // Name
+
+            Padding(
+              // Name
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Row(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(right: 8),
+                    child: Icon(Icons.account_box), 
+                  ),
+                  // Form field for editing profile mode
+                  if (widget.editing)
+                    SizedBox(
+                      width: textFieldWidth,
+                      child: TextFormField(
+                        controller: userNameController,
+                        maxLength: 25,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your name';
+                          }
+                          return null;
+                        },
+                      )
+                    ),
+                  // Normal text if not editing profile
+                  if (!widget.editing)
+                    Text(
+                      userNameController.text,
+                      style: const TextStyle(fontSize: 20),
+                    )
+                ],
+              ),
+            ),
+
+            // Email
             Row(
               children: [
                 const Padding(
                   padding: EdgeInsets.only(right: 8),
-                  child: Icon(Icons.account_box), 
+                  child: Icon(Icons.email), 
                 ),
                 // Form field for editing profile mode
                 if (widget.editing)
                   SizedBox(
                     width: textFieldWidth,
                     child: TextFormField(
-                      controller: userNameController,
+                      controller: userEmailController,
                       maxLength: 25,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your name';
+                          return 'Please enter your email';
                         }
                         return null;
                       },
@@ -71,61 +105,13 @@ class _UserInfoCardState extends State<UserInfoCard> {
                 // Normal text if not editing profile
                 if (!widget.editing)
                   Text(
-                    userNameController.text,
+                    userEmailController.text,
                     style: const TextStyle(fontSize: 20),
                   )
               ],
             ),
-            // Email
-              // Row(
-              //   children: [
-              //     const Icon(Icons.email), 
-              //     TextFormField(
-
-              //     ),
-              //   ],
-              // ),
           ])
-        ),      
+        ),
     );
   }
 }
-    
-    
-    
-    
-    
-    
-//     //  Column(
-//     //   children: [
-//     //     // Name Label
-//     //     Text(
-//     //       label,
-//     //       style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-//     //     ),
-        
-//     //     // 
-//     //     Container(
-//     //       padding: const EdgeInsets.all(16),
-//     //       decoration: BoxDecoration(
-//     //         color: Theme.of(context).colorScheme.surface,
-//     //         borderRadius: BorderRadius.circular(10),
-//     //         boxShadow: const [
-//     //           BoxShadow(
-//     //               color: Colors.black26, offset: Offset(2, 2), blurRadius: 10)
-//     //         ],
-//     //       ),
-//     //       child: Column(
-//     //         crossAxisAlignment: CrossAxisAlignment.start,
-//     //         children: [
-//     //           const SizedBox(height: 8),
-//     //           //add the inputed info fields
-//     //           ...fields,
-//     //         ],
-//     //       ),
-//     //     ),
-//     //   ],
-//     // );
-//   }
-
-// }
