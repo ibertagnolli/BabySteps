@@ -1,6 +1,6 @@
 import 'package:babysteps/app/pages/user/user_database.dart';
 import 'package:babysteps/app/pages/user/user_widgets/baby_box.dart';
-import 'package:babysteps/app/pages/user/user_widgets/build_info_box.dart';
+import 'package:babysteps/app/pages/user/user_widgets/user_info_card.dart';
 import 'package:babysteps/app/pages/user/user_widgets/build_info_field.dart';
 import 'package:babysteps/app/widgets/styles.dart';
 import 'package:babysteps/main.dart';
@@ -168,36 +168,37 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 
                 // User's info box
-                BuildInfoBox(
-                  label: '', 
-                  fields: [
-                    BuildInfoField(
-                      'Name', 
-                      [userProfile.name],
-                      const Icon(Icons.account_box), 
-                      editing, 
-                      updateUserName
-                    ),
-                    BuildInfoField(
-                      'Email', 
-                      [userProfile.email],
-                      const Icon(Icons.email), 
-                      editing, 
-                      updateUserEmail
-                    ),
-                ]),
+                UserInfoCard(editing: editing, userName: currentUser.name, userEmail: currentUser.email),
+                // UserInfoCard(
+                //   label: '', 
+                //   fields: [
+                //     BuildInfoField(
+                //       'Name', 
+                //       [userProfile.name],
+                //       const Icon(Icons.account_box), 
+                //       editing, 
+                //       updateUserName
+                //     ),
+                //     BuildInfoField(
+                //       'Email', 
+                //       [userProfile.email],
+                //       const Icon(Icons.email), 
+                //       editing, 
+                //       updateUserEmail
+                //     ),
+                // ]),
                 
                 // Children's info boxes
-                for (Baby element in babyList)
-                  BabyBox(
-                      element.name,
-                      element.dob,
-                      element.caregivers ?? [],
-                      editing,
-                      updateBabyName,
-                      updateBabyDOB,
-                      element.collectionId
-                  ),
+                // for (Baby element in babyList)
+                //   BabyBox(
+                //       element.name,
+                //       element.dob,
+                //       element.caregivers ?? [],
+                //       editing,
+                //       updateBabyName,
+                //       updateBabyDOB,
+                //       element.collectionId
+                //   ),
 
                 // "Add Baby" button - only displays if profile page is in editing mode
                 if (editing)
