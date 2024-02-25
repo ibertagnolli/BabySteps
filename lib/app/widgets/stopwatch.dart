@@ -4,7 +4,7 @@ import 'package:babysteps/app/pages/styles/stopwatch_styles.dart';
 import 'package:flutter/material.dart';
 
 class NewStopWatch extends StatefulWidget {
-  const NewStopWatch(this.buttonText, this.stopwatchFinish, this.stopwatchBegin,
+  NewStopWatch(this.buttonText, this.stopwatchFinish, this.stopwatchBegin,
       this.timeAlreadyElapsed, this.timerOngoing,
       {super.key});
 
@@ -13,7 +13,7 @@ class NewStopWatch extends StatefulWidget {
   final void Function(String length) stopwatchFinish;
   final void Function() stopwatchBegin;
   final int timeAlreadyElapsed;
-  final bool timerOngoing;
+  bool timerOngoing;
 
 //TODO: figure out the better way to pass the inital timeAlreadyElapsed, if grabbed via
 //widget.timeAlreadyElapsed, it continues to increase making the time funky.
@@ -27,6 +27,7 @@ class _NewStopWatchState extends State<NewStopWatch> {
   Stopwatch watch = Stopwatch();
   late Timer timer;
   bool timerStopped = true;
+  bool? timerOngoing;
 
   String elapsedTime = '00:00:00';
   updateTime(Timer timer) {
@@ -46,7 +47,8 @@ class _NewStopWatchState extends State<NewStopWatch> {
     super.initState();
     //if we have an ongoing timer on intialization, start the timer
     //so it looks like its continuing from where it left off
-    if (widget.timerOngoing) {
+    timerOngoing = widget.timerOngoing;
+    if (timerOngoing!) {
       startOrStop();
     }
   }
@@ -96,7 +98,7 @@ class _NewStopWatchState extends State<NewStopWatch> {
   startOrStop() {
     if (timerStopped) {
       //If the timer hasn't been started yet, call the passed through method to begin a timer
-      if (!widget.timerOngoing) widget.stopwatchBegin();
+      if (!timerOngoing!) widget.stopwatchBegin();
       startWatch();
     } else {
       //Or update filled card here?
@@ -109,6 +111,7 @@ class _NewStopWatchState extends State<NewStopWatch> {
   startWatch() {
     if (mounted) {
       setState(() {
+        timerOngoing = true;
         timerStopped = false;
         watch.start();
         timer = Timer.periodic(Duration(milliseconds: 100), updateTime);
@@ -121,10 +124,11 @@ class _NewStopWatchState extends State<NewStopWatch> {
       setState(() {
         // watch.reset();
         timerStopped = true;
+        timerOngoing = false;
         watch.stop();
         watch.reset();
 
-        // setTime();
+        setTime();
         //TODO: Update filled card here
       });
     }
