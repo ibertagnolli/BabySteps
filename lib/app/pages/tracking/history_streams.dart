@@ -10,9 +10,9 @@ String? babyDoc = currentUser.babies[0].collectionId; //TODO: get current baby
 // Breastfeeding - first shows the accurate most recent entries, then if you make a new entry it overwrites
 // the most recent entry on that same side
 // Bottle feeding - all good besides "amount" is currently hardcoded because it's not part of the database
-// Sleep - first shows the accurate most recent entries, then if you make a new entry it'll overwrite the 
-// most recent one -- it's actually getting overwritten in the database though???? 
-// Diaper - all good 
+// Sleep - first shows the accurate most recent entries, then if you make a new entry it'll overwrite the
+// most recent one -- it's actually getting overwritten in the database though????
+// Diaper - all good
 // Weight - only autofills date for the first one, then the datepicker doesn't include a time so it's all 12:00
 // Temp - same as weight
 
@@ -35,25 +35,26 @@ class RowData4Cols<T1, T2, T3, T4> {
   RowData4Cols(this.day, this.time, this.data1, this.data2);
 }
 
-
 // BREASTFEEDING
 
-class BreastfeedingHistoryStream extends StatefulWidget{
+class BreastfeedingHistoryStream extends StatefulWidget {
   @override
-  _BreastfeedingHistoryStreamState createState() => _BreastfeedingHistoryStreamState();
+  _BreastfeedingHistoryStreamState createState() =>
+      _BreastfeedingHistoryStreamState();
 }
 
-class _BreastfeedingHistoryStreamState extends State<BreastfeedingHistoryStream> {
-
+class _BreastfeedingHistoryStreamState
+    extends State<BreastfeedingHistoryStream> {
   final Stream<QuerySnapshot> _breastfeedingHistoryStream = db
-        .collection("Babies")
-        .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
-        .collection("Feeding")
-        .where('type', isEqualTo: 'BreastFeeding')
-        .where('active', isEqualTo: false)
-        .orderBy('date', descending: true)
-        .limit(5) // TODO: How many do we want? Specific number? Any from "this week"?
-        .snapshots();
+      .collection("Babies")
+      .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
+      .collection("Feeding")
+      .where('type', isEqualTo: 'BreastFeeding')
+      .where('active', isEqualTo: false)
+      .orderBy('date', descending: true)
+      .limit(
+          5) // TODO: How many do we want? Specific number? Any from "this week"?
+      .snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -96,22 +97,22 @@ class _BreastfeedingHistoryStreamState extends State<BreastfeedingHistoryStream>
 
 // BOTTLE FEEDING
 
-class BottleHistoryStream extends StatefulWidget{
+class BottleHistoryStream extends StatefulWidget {
   @override
   _BottleHistoryStreamState createState() => _BottleHistoryStreamState();
 }
 
 class _BottleHistoryStreamState extends State<BottleHistoryStream> {
-
   final Stream<QuerySnapshot> _bottleHistoryStream = db
-        .collection("Babies")
-        .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
-        .collection("Feeding")
-        .where('type', isEqualTo: 'Bottle')
-        .where('active', isEqualTo: false)
-        .orderBy('date', descending: true)
-        .limit(5) // TODO: How many do we want? Specific number? Any from "this week"?
-        .snapshots();
+      .collection("Babies")
+      .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
+      .collection("Feeding")
+      .where('type', isEqualTo: 'Bottle')
+      .where('active', isEqualTo: false)
+      .orderBy('date', descending: true)
+      .limit(
+          5) // TODO: How many do we want? Specific number? Any from "this week"?
+      .snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -153,20 +154,20 @@ class _BottleHistoryStreamState extends State<BottleHistoryStream> {
 
 // SLEEP
 
-class SleepHistoryStream extends StatefulWidget{
+class SleepHistoryStream extends StatefulWidget {
   @override
   _SleepHistoryStreamState createState() => _SleepHistoryStreamState();
 }
 
 class _SleepHistoryStreamState extends State<SleepHistoryStream> {
-
   final Stream<QuerySnapshot> _sleepHistoryStream = db
-        .collection("Babies")
-        .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
-        .collection("Sleep")
-        .orderBy('date', descending: true)
-        .limit(5) // TODO: How many do we want? Specific number? Any from "this week"?
-        .snapshots();
+      .collection("Babies")
+      .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
+      .collection("Sleep")
+      .orderBy('date', descending: true)
+      .limit(
+          5) // TODO: How many do we want? Specific number? Any from "this week"?
+      .snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -208,19 +209,20 @@ class _SleepHistoryStreamState extends State<SleepHistoryStream> {
 
 // WEIGHT
 
-class WeightHistoryStream extends StatefulWidget{
+class WeightHistoryStream extends StatefulWidget {
   @override
   _WeightHistoryStreamState createState() => _WeightHistoryStreamState();
 }
 
 class _WeightHistoryStreamState extends State<WeightHistoryStream> {
   final Stream<QuerySnapshot> _weightHistoryStream = db
-        .collection("Babies")
-        .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
-        .collection("Weight")
-        .orderBy('date', descending: true)
-        .limit(5) // TODO: How many do we want? Specific number? Any from "this week"?
-        .snapshots();
+      .collection("Babies")
+      .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
+      .collection("Weight")
+      .orderBy('date', descending: true)
+      .limit(
+          5) // TODO: How many do we want? Specific number? Any from "this week"?
+      .snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -264,19 +266,21 @@ class _WeightHistoryStreamState extends State<WeightHistoryStream> {
 
 // TEMPERATURE
 
-class TemperatureHistoryStream extends StatefulWidget{
+class TemperatureHistoryStream extends StatefulWidget {
   @override
-  _TemperatureHistoryStreamState createState() => _TemperatureHistoryStreamState();
+  _TemperatureHistoryStreamState createState() =>
+      _TemperatureHistoryStreamState();
 }
 
 class _TemperatureHistoryStreamState extends State<TemperatureHistoryStream> {
   final Stream<QuerySnapshot> _temperatureHistoryStream = db
-        .collection("Babies")
-        .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
-        .collection("Temperature")
-        .orderBy('date', descending: true)
-        .limit(5) // TODO: How many do we want? Specific number? Any from "this week"?
-        .snapshots();
+      .collection("Babies")
+      .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
+      .collection("Temperature")
+      .orderBy('date', descending: true)
+      .limit(
+          5) // TODO: How many do we want? Specific number? Any from "this week"?
+      .snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -327,12 +331,13 @@ class DiaperHistoryStream extends StatefulWidget {
 
 class _DiaperHistoryStreamState extends State<DiaperHistoryStream> {
   final Stream<QuerySnapshot> _diaperHistoryStream = db
-        .collection("Babies")
-        .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
-        .collection("Diaper")
-        .orderBy('date', descending: true)
-        .limit(5) // TODO: How many do we want? Specific number? Any from "this week"?
-        .snapshots();
+      .collection("Babies")
+      .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
+      .collection("Diaper")
+      .orderBy('date', descending: true)
+      .limit(
+          5) // TODO: How many do we want? Specific number? Any from "this week"?
+      .snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -374,8 +379,7 @@ class _DiaperHistoryStreamState extends State<DiaperHistoryStream> {
   }
 }
 
-
-// Table with 3 columns, column titles, and rows of data filled in 
+// Table with 3 columns, column titles, and rows of data filled in
 class HistoryTable3Cols extends StatelessWidget {
   HistoryTable3Cols(this.rows, this.colName, {super.key});
 
@@ -414,8 +418,8 @@ class HistoryTable3Cols extends StatelessWidget {
         ),
       ],
       // Table rows - dynamic - For each row we collected data for, create a DataCell for it
-      // TODO: Some sort of "no history yet" message if there are no entries 
-      rows: <DataRow> [
+      // TODO: Some sort of "no history yet" message if there are no entries
+      rows: <DataRow>[
         for (var row in rows)
           DataRow(
             cells: <DataCell>[
@@ -429,7 +433,7 @@ class HistoryTable3Cols extends StatelessWidget {
   }
 }
 
-// Table with 4 columns, column titles, and data filled in 
+// Table with 4 columns, column titles, and data filled in
 class HistoryTable4Cols extends StatelessWidget {
   HistoryTable4Cols(this.rows, this.col1Name, this.col2Name, {super.key});
 
@@ -477,8 +481,8 @@ class HistoryTable4Cols extends StatelessWidget {
         ),
       ],
       // Table rows - dynamic - For each row we collected data for, create a DataCell for it
-      // TODO: Some sort of "no history yet" message if there are no entries 
-      rows: <DataRow> [
+      // TODO: Some sort of "no history yet" message if there are no entries
+      rows: <DataRow>[
         for (var row in rows)
           DataRow(
             cells: <DataCell>[
@@ -492,4 +496,3 @@ class HistoryTable4Cols extends StatelessWidget {
     );
   }
 }
-
