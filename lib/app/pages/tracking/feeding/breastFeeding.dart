@@ -4,8 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/pages/tracking/feeding/breastfeeding_stream.dart';
 import 'package:babysteps/app/widgets/history_widgets.dart';
-import 'package:babysteps/app/pages/tracking/history_streams.dart';
-import 'package:babysteps/app/widgets/widgets.dart';
 import 'dart:core';
 
 class BreastFeedingPage extends StatefulWidget {
@@ -127,7 +125,7 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
 
               // History Card - in widgets
               Padding(
-                padding: EdgeInsets.only(top:10),
+                padding: EdgeInsets.only(top: 10),
                 child: HistoryDropdown("breastfeeding"),
               ),
             ],
