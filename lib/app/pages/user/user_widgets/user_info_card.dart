@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 
 /// The editable widget with User's info
 class UserInfoCard extends StatefulWidget {
-  const UserInfoCard({super.key, required this.editing, required this.userName, required this.userEmail});
+  const UserInfoCard({super.key, required this.editing, required this.userName, required this.userEmail, required this.formKey});
 
   // True if User is in editing mode and their info can be edited
   final bool editing;
   final String userName;
   final String userEmail;
+  final Key formKey;
 
   @override
   State<StatefulWidget> createState() => _UserInfoCardState();
@@ -15,10 +16,6 @@ class UserInfoCard extends StatefulWidget {
 
 /// Stores the mutable data that can change over the lifetime of the UserInfoCard.
 class _UserInfoCardState extends State<UserInfoCard> {
-  
-  // The global key uniquely identifies the Form widget and allows validation of the form.
-  final _formKey = GlobalKey<FormState>();
-
   TextEditingController userNameController = TextEditingController();
   TextEditingController userEmailController = TextEditingController();
   
@@ -43,7 +40,7 @@ class _UserInfoCardState extends State<UserInfoCard> {
       ),
       child: 
         Form(
-          key: _formKey,
+          key: widget.formKey,
           child: Column(children: <Widget>[
 
             Padding(

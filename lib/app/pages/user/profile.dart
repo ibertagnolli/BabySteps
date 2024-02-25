@@ -30,6 +30,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
 /// Updates User and Baby Info
   void editButtonClicked() async {
+    // Save the User and Baby info if editing ("Save" button was pressed)
     if (editing) {
       // Update the User's name
       FirebaseAuth.instance.currentUser?.updateDisplayName(updatedUser.name);
@@ -124,6 +125,9 @@ class _ProfilePageState extends State<ProfilePage> {
     // fetchUserInfo();
   }
 
+  // The global key uniquely identifies the Form widget and allows validation of the form.
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -168,26 +172,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 
                 // User's info box
-                UserInfoCard(editing: editing, userName: currentUser.name, userEmail: currentUser.email),
-                // UserInfoCard(
-                //   label: '', 
-                //   fields: [
-                //     BuildInfoField(
-                //       'Name', 
-                //       [userProfile.name],
-                //       const Icon(Icons.account_box), 
-                //       editing, 
-                //       updateUserName
-                //     ),
-                //     BuildInfoField(
-                //       'Email', 
-                //       [userProfile.email],
-                //       const Icon(Icons.email), 
-                //       editing, 
-                //       updateUserEmail
-                //     ),
-                // ]),
-                
+                UserInfoCard(editing: editing, userName: currentUser.name, userEmail: currentUser.email, formKey: _formKey,),
+
                 // Children's info boxes
                 // for (Baby element in babyList)
                 //   BabyBox(
@@ -216,7 +202,11 @@ class _ProfilePageState extends State<ProfilePage> {
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: ElevatedButton(
-                    onPressed: editButtonClicked,
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        editButtonClicked();
+                      }
+                    },
                     style: blueButton(context),
                     child: Text(editing ? 'Save' : 'Edit', style: const TextStyle(fontSize: 26)),
                   ),
