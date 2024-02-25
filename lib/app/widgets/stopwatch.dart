@@ -1,19 +1,19 @@
 import 'dart:async';
 
+import 'package:babysteps/app/pages/styles/stopwatch_styles.dart';
 import 'package:flutter/material.dart';
 
 class NewStopWatch extends StatefulWidget {
-  const NewStopWatch(this.buttonText, this.stopwatchUpdate, this.stopwatchBegin,
+  const NewStopWatch(this.buttonText, this.stopwatchFinish, this.stopwatchBegin,
       this.timeAlreadyElapsed, this.timerOngoing,
-      {this.sessionInProgress = false, super.key});
+      {super.key});
 
   //final String lastThing;
   final String buttonText;
-  final void Function(int length) stopwatchUpdate;
-  final void Function(String side) stopwatchBegin;
+  final void Function(String length) stopwatchFinish;
+  final void Function() stopwatchBegin;
   final int timeAlreadyElapsed;
   final bool timerOngoing;
-  final bool sessionInProgress;
 
 //TODO: figure out the better way to pass the inital timeAlreadyElapsed, if grabbed via
 //widget.timeAlreadyElapsed, it continues to increase making the time funky.
@@ -26,7 +26,7 @@ class _NewStopWatchState extends State<NewStopWatch> {
   _NewStopWatchState(this.initTime);
   Stopwatch watch = Stopwatch();
   late Timer timer;
-  bool startStop = true;
+  bool timerStopped = true;
 
   String elapsedTime = '00:00:00';
   updateTime(Timer timer) {
@@ -38,17 +38,14 @@ class _NewStopWatchState extends State<NewStopWatch> {
           elapsedTime = transformMilliSeconds(totalElapsed);
         });
       }
+    } else {
+      timer.cancel();
     }
   }
 
   @override
   void initState() {
     super.initState();
-
-    setState(() {
-      elapsedTime = transformMilliSeconds(initTime);
-    });
-
     //if we have an ongoing timer on intialization, start the timer
     //so it looks like its continuing from where it left off
     if (widget.timerOngoing) {
@@ -61,16 +58,15 @@ class _NewStopWatchState extends State<NewStopWatch> {
     //access above variables using
     String buttonText = widget.buttonText;
     return Container(
-      padding: EdgeInsets.all(1.0),
+      padding: const EdgeInsets.all(1.0),
       child: Column(
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Text(elapsedTime,
-                style: TextStyle(
-                  fontSize: 35.0,
-                  color: Color(0xFFFFFAF1),
-                )),
+            child: Text(
+              elapsedTime,
+              style: timerText(),
+            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -81,19 +77,15 @@ class _NewStopWatchState extends State<NewStopWatch> {
                   height: 60,
                   width: 180,
                   child: FilledButton(
-                      style: FilledButton.styleFrom(
-                        backgroundColor: startStop
-                            ? Color.fromARGB(255, 13, 60, 70)
-                            : Color(0xFFFFFAF1), // Background color
-                      ),
-                      onPressed: startOrStop,
-                      child: Text(
-                          startStop ? "Start $buttonText" : "Stop $buttonText",
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: startStop
-                                  ? Color(0xFFFFFAF1)
-                                  : Color.fromARGB(255, 13, 60, 70)))),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: buttonColor(!timerStopped),
+                    ),
+                    onPressed: startOrStop,
+                    child: Text(
+                      timerStopped ? "Start $buttonText" : "Stop $buttonText",
+                      style: buttonTextStyle(!timerStopped),
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -104,18 +96,14 @@ class _NewStopWatchState extends State<NewStopWatch> {
   }
 
   startOrStop() {
-    if (startStop) {
+    if (timerStopped) {
       //If the timer hasn't been started yet, call the passed through method to begin a timer
-      if (!widget.sessionInProgress) {
-        widget.stopwatchBegin(widget.buttonText);
-      } else if (!widget.timerOngoing) {
-        widget.stopwatchUpdate(watch.elapsedMilliseconds + initTime);
-      }
+      if (!widget.timerOngoing) widget.stopwatchBegin();
       startWatch();
     } else {
       //Or update filled card here?
-      widget.stopwatchUpdate(watch.elapsedMilliseconds + initTime);
-      // watch.reset();
+      widget.stopwatchFinish(elapsedTime);
+      watch.reset();
       stopWatch();
     }
   }
@@ -123,7 +111,7 @@ class _NewStopWatchState extends State<NewStopWatch> {
   startWatch() {
     if (mounted) {
       setState(() {
-        startStop = false;
+        timerStopped = false;
         watch.start();
         timer = Timer.periodic(Duration(milliseconds: 100), updateTime);
       });
@@ -133,10 +121,10 @@ class _NewStopWatchState extends State<NewStopWatch> {
   stopWatch() {
     if (mounted) {
       setState(() {
-        // watch.reset();
-        startStop = true;
+        watch.reset();
+        timerStopped = true;
         watch.stop();
-        // setTime();
+        setTime();
         //TODO: Update filled card here
       });
     }
@@ -150,17 +138,17 @@ class _NewStopWatchState extends State<NewStopWatch> {
       });
     }
   }
+}
 
-  transformMilliSeconds(int milliseconds) {
-    int hundreds = (milliseconds / 10).truncate();
-    int seconds = (hundreds / 100).truncate();
-    int minutes = (seconds / 60).truncate();
-    int hours = (minutes / 60).truncate();
+transformMilliSeconds(int milliseconds) {
+  int hundreds = (milliseconds / 10).truncate();
+  int seconds = (hundreds / 100).truncate();
+  int minutes = (seconds / 60).truncate();
+  int hours = (minutes / 60).truncate();
 
-    String hoursStr = (hours % 60).toString().padLeft(2, '0');
-    String minutesStr = (minutes % 60).toString().padLeft(2, '0');
-    String secondsStr = (seconds % 60).toString().padLeft(2, '0');
+  String hoursStr = (hours % 60).toString().padLeft(2, '0');
+  String minutesStr = (minutes % 60).toString().padLeft(2, '0');
+  String secondsStr = (seconds % 60).toString().padLeft(2, '0');
 
-    return "$hoursStr:$minutesStr:$secondsStr";
-  }
+  return "$hoursStr:$minutesStr:$secondsStr";
 }

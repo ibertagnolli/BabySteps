@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:babysteps/app/pages/styles/stopwatch_styles.dart';
 import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
+import 'package:babysteps/app/widgets/stopwatch.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
@@ -115,7 +117,7 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
       sideMap!['right'] = rightSide;
 
       await FeedingDatabaseMethods().updateFeedingDoneEntry(
-          sideMap, (timeSoFarOnLeft + timeSoFarOnRight).toString(), docId!);
+          sideMap, timeSoFarOnLeft + timeSoFarOnRight, docId!);
       //once data has been added, update the card accordingly
     }
 
@@ -146,6 +148,8 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
           leftElapsedTime = transformMilliSeconds(totalElapsed);
         });
       }
+    } else {
+      timer.cancel();
     }
   }
 
@@ -157,6 +161,8 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
           rightElapsedTime = transformMilliSeconds(totalElapsed);
         });
       }
+    } else {
+      timer.cancel();
     }
   }
 
@@ -173,37 +179,40 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
     }
   }
 
-  startSide(bool left) async {
-    left ? leftSideGoing = true : rightSideGoing = true;
+  startLeftSide() async {
+    leftSideGoing = true;
     if (!timerGoing) {
-      bool leftActive = false;
-      bool rightActive = false;
-      DateTime? lastLeftStart;
-      DateTime? lastRightStart;
-
-      left ? leftActive = true : rightActive = true;
-      left ? lastLeftStart = DateTime.now() : lastRightStart = DateTime.now();
-
-      docId = await uploadData(left);
       sideMap = {
-        'latest': left ? 'left' : 'right',
-        'left': {
-          'duration': 0,
-          'active': leftActive,
-          'lastStart': lastLeftStart
-        },
-        'right': {
-          'duration': 0,
-          'active': rightActive,
-          'lastStart': lastRightStart
-        },
+        'latest': 'left',
+        'left': {'duration': 0, 'active': true, 'lastStart': DateTime.now()},
+        'right': {'duration': 0, 'active': false, 'lastStart': null},
       };
-    } else if (left) {
+      docId = await uploadData(sideMap!);
+    } else {
       rightSideGoing = false;
       rightWatch.stop();
       updateLeftEntry(leftWatch.elapsedMilliseconds + timeSoFarOnLeft);
       updateRightEntry(rightWatch.elapsedMilliseconds + timeSoFarOnRight);
-    } else if (!left) {
+    }
+    if (mounted) {
+      setState(() {
+        timerGoing = true;
+        leftWatch.start();
+        Timer.periodic(const Duration(milliseconds: 100), updateLeftTime);
+      });
+    }
+  }
+
+  startRightSide() async {
+    rightSideGoing = true;
+    if (!timerGoing) {
+      sideMap = {
+        'latest': 'right',
+        'left': {'duration': 0, 'active': false, 'lastStart': null},
+        'right': {'duration': 0, 'active': true, 'lastStart': DateTime.now()},
+      };
+      docId = await uploadData(sideMap!);
+    } else {
       leftSideGoing = false;
       leftWatch.stop();
       updateLeftEntry(leftWatch.elapsedMilliseconds + timeSoFarOnLeft);
@@ -211,15 +220,9 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
     }
     if (mounted) {
       setState(() {
-        leftSideGoing;
-        rightSideGoing;
-        docId;
         timerGoing = true;
-        left ? leftWatch.start() : rightWatch.start();
-        left
-            ? Timer.periodic(const Duration(milliseconds: 100), updateLeftTime)
-            : Timer.periodic(
-                const Duration(milliseconds: 100), updateRightTime);
+        rightWatch.start();
+        Timer.periodic(const Duration(milliseconds: 100), updateRightTime);
       });
     }
   }
@@ -241,10 +244,10 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
       rightElapsedTime = transformMilliSeconds(timeSoFarOnRight);
 
       if (leftSideGoing) {
-        startSide(true);
+        startLeftSide();
       }
       if (rightSideGoing) {
-        startSide(false);
+        startRightSide();
       }
     });
   }
@@ -260,16 +263,15 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
               height: 200,
               width: 195,
               child: Container(
-                padding: EdgeInsets.all(1.0),
+                padding: const EdgeInsets.all(1.0),
                 child: Column(
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.all(20.0),
-                      child: Text(leftElapsedTime,
-                          style: TextStyle(
-                            fontSize: 35.0,
-                            color: Color(0xFFFFFAF1),
-                          )),
+                      child: Text(
+                        leftElapsedTime,
+                        style: timerText(),
+                      ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -280,22 +282,16 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
                             height: 60,
                             width: 180,
                             child: FilledButton(
-                                style: FilledButton.styleFrom(
-                                  backgroundColor: !leftSideGoing
-                                      ? Color.fromARGB(255, 13, 60, 70)
-                                      : Color(0xFFFFFAF1), // Background color
-                                ),
-                                onPressed: leftSideGoing
-                                    ? () => stopSide(true)
-                                    : () => startSide(true),
-                                child: Text(
-                                    leftSideGoing ? "Stop left" : "Start left",
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        color: !leftSideGoing
-                                            ? Color(0xFFFFFAF1)
-                                            : Color.fromARGB(
-                                                255, 13, 60, 70)))),
+                              style: FilledButton.styleFrom(
+                                  backgroundColor: buttonColor(leftSideGoing)),
+                              onPressed: leftSideGoing
+                                  ? () => stopSide(true)
+                                  : () => startLeftSide(),
+                              child: Text(
+                                leftSideGoing ? "Stop left" : "Start left",
+                                style: buttonTextStyle(leftSideGoing),
+                              ),
+                            ),
                           ),
                         ),
                       ],
@@ -308,16 +304,12 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
               height: 200,
               width: 195,
               child: Container(
-                padding: EdgeInsets.all(1.0),
+                padding: const EdgeInsets.all(1.0),
                 child: Column(
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.all(20.0),
-                      child: Text(rightElapsedTime,
-                          style: TextStyle(
-                            fontSize: 35.0,
-                            color: Color(0xFFFFFAF1),
-                          )),
+                      child: Text(rightElapsedTime, style: timerText()),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -328,24 +320,17 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
                             height: 60,
                             width: 180,
                             child: FilledButton(
-                                style: FilledButton.styleFrom(
-                                  backgroundColor: !rightSideGoing
-                                      ? Color.fromARGB(255, 13, 60, 70)
-                                      : Color(0xFFFFFAF1), // Background color
-                                ),
-                                onPressed: rightSideGoing
-                                    ? () => stopSide(false)
-                                    : () => startSide(false),
-                                child: Text(
-                                    rightSideGoing
-                                        ? "Stop right"
-                                        : "Start right",
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        color: !rightSideGoing
-                                            ? Color(0xFFFFFAF1)
-                                            : Color.fromARGB(
-                                                255, 13, 60, 70)))),
+                              style: FilledButton.styleFrom(
+                                backgroundColor: buttonColor(rightSideGoing),
+                              ),
+                              onPressed: rightSideGoing
+                                  ? () => stopSide(false)
+                                  : () => startRightSide(),
+                              child: Text(
+                                rightSideGoing ? "Stop right" : "Start right",
+                                style: buttonTextStyle(rightSideGoing),
+                              ),
+                            ),
                           ),
                         ),
                       ],
@@ -368,42 +353,12 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
   }
 }
 
-transformMilliSeconds(int milliseconds) {
-  int hundreds = (milliseconds / 10).truncate();
-  int seconds = (hundreds / 100).truncate();
-  int minutes = (seconds / 60).truncate();
-  int hours = (minutes / 60).truncate();
-
-  String hoursStr = (hours % 60).toString().padLeft(2, '0');
-  String minutesStr = (minutes % 60).toString().padLeft(2, '0');
-  String secondsStr = (seconds % 60).toString().padLeft(2, '0');
-
-  return "$hoursStr:$minutesStr:$secondsStr";
-}
-
-//Upload the original data, this will be called once the stopwatch is started so we don't know the length yet
-Future<String> uploadData(bool left) async {
-  bool leftActive = false;
-  bool rightActive = false;
-  DateTime? lastLeftStart;
-  DateTime? lastRightStart;
-
-  left ? leftActive = true : rightActive = true;
-  left ? lastLeftStart = DateTime.now() : lastRightStart = DateTime.now();
-
+//Upload the original data, this will be called once the session is started
+Future<String> uploadData(Map<String, dynamic> side) async {
   Map<String, dynamic> uploaddata = {
     'type': 'BreastFeeding',
-    'side': {
-      'latest': left ? 'left' : 'right',
-      'left': {'duration': 0, 'active': leftActive, 'lastStart': lastLeftStart},
-      'right': {
-        'duration': 0,
-        'active': rightActive,
-        'lastStart': lastRightStart
-      },
-    },
-    'length': '--',
-    'bottleType': '--',
+    'side': side,
+    'length': 0,
     'active': true,
     'date': DateTime.now(),
   };
@@ -413,3 +368,5 @@ Future<String> uploadData(bool left) async {
 
   return doc.id;
 }
+
+
