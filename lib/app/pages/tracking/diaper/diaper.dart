@@ -1,6 +1,7 @@
 import 'package:babysteps/app/pages/tracking/diaper/diaper_database.dart';
 import 'package:babysteps/app/pages/tracking/diaper/diaper_stream.dart';
 import 'package:babysteps/app/pages/tracking/history_streams.dart';
+import 'package:babysteps/app/widgets/history_widgets.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
@@ -169,7 +170,7 @@ class _DiaperPageState extends State<DiaperPage> {
               // History card - in widgets
               Padding(
                 padding: const EdgeInsets.only(top:30),
-                child: HistoryDropdown(SleepHistoryStream()),
+                child: HistoryDropdown("diaper"),
               )
             ],
           ),

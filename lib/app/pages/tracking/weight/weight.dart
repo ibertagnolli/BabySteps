@@ -2,7 +2,9 @@ import 'package:babysteps/app/pages/tracking/weight/add_weight_card.dart';
 import 'package:babysteps/app/pages/tracking/weight/weight_database.dart';
 import 'package:babysteps/app/pages/tracking/weight/weight_stream.dart';
 import 'package:babysteps/app/pages/tracking/history_streams.dart';
+import 'package:babysteps/app/pages/tracking/all_time_history_streams.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
+import 'package:babysteps/app/widgets/history_widgets.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
 
@@ -71,7 +73,7 @@ class _WeightPageState extends State<WeightPage> {
               ),
 
               // History card - in widgets
-              HistoryDropdown(SleepHistoryStream())
+              HistoryDropdown("weight")
             ],
           ),
         ),

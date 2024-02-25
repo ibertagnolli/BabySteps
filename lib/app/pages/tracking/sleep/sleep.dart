@@ -2,6 +2,7 @@ import 'package:babysteps/app/pages/tracking/sleep/sleep_database.dart';
 import 'package:babysteps/app/pages/tracking/sleep/sleep_stream.dart';
 import 'package:babysteps/app/pages/tracking/history_streams.dart';
 import 'package:babysteps/app/widgets/stopwatch.dart';
+import 'package:babysteps/app/widgets/history_widgets.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -190,7 +191,7 @@ class _SleepPageState extends State<SleepPage> {
             // History Card - in widgets
             Padding(
               padding: EdgeInsets.only(top: 30),
-              child: HistoryDropdown(SleepHistoryStream()),
+              child: HistoryDropdown("sleep"),
             ),
           ]),
         ),

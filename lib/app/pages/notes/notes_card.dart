@@ -32,6 +32,7 @@ class NotesCard extends StatelessWidget {
     return Card(
       color: Theme.of(context).colorScheme.surface,
       child: InkWell(
+        onTap: () => editNote(),
         splashColor: Theme.of(context).colorScheme.surface,
         child: SizedBox(
           width: 200,
