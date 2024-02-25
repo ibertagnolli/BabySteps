@@ -32,36 +32,31 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
     if (ongoingBreastFeeding.docs.isNotEmpty) {
       //get the document id so we can update it later
       docId = ongoingBreastFeeding.docs[0].id;
-      //calculate the time in miliseconds from the last time the left side was started
-      timeSoFarOnLeft =
-          ongoingBreastFeeding.docs[0]['side']['left']['duration'];
-      timeSoFarOnRight =
-          ongoingBreastFeeding.docs[0]['side']['right']['duration'];
+      Map<String, dynamic> left = ongoingBreastFeeding.docs[0]['side']['left'];
+      Map<String, dynamic> right =
+          ongoingBreastFeeding.docs[0]['side']['right'];
 
-      if (ongoingBreastFeeding.docs[0]['side']['left']['lastStart'] != null) {
+      timeSoFarOnLeft = left['duration'];
+      timeSoFarOnRight = right['duration'];
+
+      if (left['lastStart'] != null) {
         timeSoFarOnLeft += DateTime.now()
-            .difference((ongoingBreastFeeding.docs[0]['side']['left']
-                    ['lastStart'] as Timestamp)
-                .toDate())
+            .difference((left['lastStart'] as Timestamp).toDate())
             .inMilliseconds;
       }
-      if (ongoingBreastFeeding.docs[0]['side']['right']['lastStart'] != null) {
+      if (right['lastStart'] != null) {
         timeSoFarOnRight += DateTime.now()
-            .difference((ongoingBreastFeeding.docs[0]['side']['right']
-                    ['lastStart'] as Timestamp)
-                .toDate())
+            .difference((right['lastStart'] as Timestamp).toDate())
             .inMilliseconds;
       }
 
       sideMap = ongoingBreastFeeding.docs[0]['side'];
 
-      //since ongoingLeft isn't empty, the timer is running so set flag accordingly
-      leftSideGoing = ongoingBreastFeeding.docs[0]['side']['left']['active'];
-      rightSideGoing = ongoingBreastFeeding.docs[0]['side']['right']['active'];
+      leftSideGoing = left['active'];
+      rightSideGoing = right['active'];
       timerGoing = ongoingBreastFeeding.docs[0]['active'];
     }
 
-    //Have a return so that the FutureBuilder in the build knows we've finished
     return ongoingBreastFeeding;
   }
 

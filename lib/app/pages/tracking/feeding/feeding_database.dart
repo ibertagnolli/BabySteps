@@ -77,7 +77,7 @@ class FeedingDatabaseMethods {
   }
 
   Future updateFeedingDoneEntry(
-      Map<String, dynamic>? sideInfo, String feedingLength, String id) async {
+      Map<String, dynamic>? sideInfo, int feedingLength, String id) async {
     return await db
         .collection("Babies")
         .doc(babyDoc ?? 'IYyV2hqR7omIgeA4r7zQ')
@@ -109,4 +109,5 @@ class FeedingDatabaseMethods {
         .orderBy('date', descending: true)
         .get();
   }
+  
 }
