@@ -50,13 +50,16 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
     if (docId != null && sideMap != null) {
       Map<String, dynamic> currentSide = sideMap!['left']!;
 
+      Timestamp? lastStart =
+          leftSideGoing ? Timestamp.fromDate(DateTime.now()) : null;
+
       if (!leftSideGoing) {
         currentSide['duration'] = feedingLength;
         currentSide['active'] = false;
-        currentSide['lastStart'] = null;
+        currentSide['lastStart'] = lastStart;
       } else {
         currentSide['active'] = true;
-        currentSide['lastStart'] = DateTime.now();
+        currentSide['lastStart'] = lastStart;
         sideMap!['latest'] = 'left';
       }
 
@@ -71,13 +74,16 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
     if (docId != null && sideMap != null) {
       Map<String, dynamic> currentSide = sideMap!['right']!;
 
+      Timestamp? lastStart =
+          rightSideGoing ? Timestamp.fromDate(DateTime.now()) : null;
+
       if (!rightSideGoing) {
         currentSide['duration'] = feedingLength;
         currentSide['active'] = false;
-        currentSide['lastStart'] = null;
+        currentSide['lastStart'] = lastStart;
       } else {
         currentSide['active'] = true;
-        currentSide['lastStart'] = DateTime.now();
+        currentSide['lastStart'] = lastStart;
         sideMap!['latest'] = 'right';
       }
 
@@ -130,7 +136,7 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
 
       timeSoFarOnLeft = 0;
       timeSoFarOnRight = 0;
-      leftWatch.stop;
+      leftWatch.stop();
       leftWatch.reset();
       rightWatch.stop();
       rightWatch.reset();
@@ -148,8 +154,6 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
           leftElapsedTime = transformMilliSeconds(totalElapsed);
         });
       }
-    } else {
-      timer.cancel();
     }
   }
 
@@ -161,8 +165,6 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
           rightElapsedTime = transformMilliSeconds(totalElapsed);
         });
       }
-    } else {
-      timer.cancel();
     }
   }
 
@@ -184,7 +186,11 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
     if (!timerGoing) {
       sideMap = {
         'latest': 'left',
-        'left': {'duration': 0, 'active': true, 'lastStart': DateTime.now()},
+        'left': {
+          'duration': 0,
+          'active': true,
+          'lastStart': Timestamp.fromDate(DateTime.now())
+        },
         'right': {'duration': 0, 'active': false, 'lastStart': null},
       };
       docId = await uploadData(sideMap!);
@@ -209,7 +215,11 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
       sideMap = {
         'latest': 'right',
         'left': {'duration': 0, 'active': false, 'lastStart': null},
-        'right': {'duration': 0, 'active': true, 'lastStart': DateTime.now()},
+        'right': {
+          'duration': 0,
+          'active': true,
+          'lastStart': Timestamp.fromDate(DateTime.now())
+        },
       };
       docId = await uploadData(sideMap!);
     } else {
@@ -368,5 +378,3 @@ Future<String> uploadData(Map<String, dynamic> side) async {
 
   return doc.id;
 }
-
-

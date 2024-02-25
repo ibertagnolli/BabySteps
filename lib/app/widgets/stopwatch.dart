@@ -38,8 +38,6 @@ class _NewStopWatchState extends State<NewStopWatch> {
           elapsedTime = transformMilliSeconds(totalElapsed);
         });
       }
-    } else {
-      timer.cancel();
     }
   }
 
