@@ -42,9 +42,8 @@ class _UserInfoCardState extends State<UserInfoCard> {
         Form(
           key: widget.formKey,
           child: Column(children: <Widget>[
-
+            // Name
             Padding(
-              // Name
               padding: const EdgeInsets.only(bottom: 10),
               child: Row(
                 children: [
