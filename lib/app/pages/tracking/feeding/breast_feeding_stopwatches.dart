@@ -50,16 +50,13 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
     if (docId != null && sideMap != null) {
       Map<String, dynamic> currentSide = sideMap!['left']!;
 
-      Timestamp? lastStart =
-          leftSideGoing ? Timestamp.fromDate(DateTime.now()) : null;
-
       if (!leftSideGoing) {
         currentSide['duration'] = feedingLength;
         currentSide['active'] = false;
-        currentSide['lastStart'] = lastStart;
+        currentSide['lastStart'] = '';
       } else {
         currentSide['active'] = true;
-        currentSide['lastStart'] = lastStart;
+        currentSide['lastStart'] = Timestamp.fromDate(DateTime.now());
         sideMap!['latest'] = 'left';
       }
 
@@ -74,16 +71,13 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
     if (docId != null && sideMap != null) {
       Map<String, dynamic> currentSide = sideMap!['right']!;
 
-      Timestamp? lastStart =
-          rightSideGoing ? Timestamp.fromDate(DateTime.now()) : null;
-
       if (!rightSideGoing) {
         currentSide['duration'] = feedingLength;
         currentSide['active'] = false;
-        currentSide['lastStart'] = lastStart;
+        currentSide['lastStart'] = '';
       } else {
         currentSide['active'] = true;
-        currentSide['lastStart'] = lastStart;
+        currentSide['lastStart'] = Timestamp.fromDate(DateTime.now());
         sideMap!['latest'] = 'right';
       }
 
@@ -102,22 +96,22 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
       timeSoFarOnLeft = leftSide['duration'];
       timeSoFarOnRight = rightSide['duration'];
 
-      if (leftSide['lastStart'] != null) {
+      if (leftSide['lastStart'] != '') {
         timeSoFarOnLeft += DateTime.now()
             .difference((leftSide['lastStart'] as Timestamp).toDate())
             .inMilliseconds;
       }
 
-      if (rightSide['lastStart'] != null) {
+      if (rightSide['lastStart'] != '') {
         timeSoFarOnRight += DateTime.now()
             .difference((rightSide['lastStart'] as Timestamp).toDate())
             .inMilliseconds;
       }
 
       leftSide['active'] = false;
-      leftSide['lastStart'] = null;
+      leftSide['lastStart'] = '';
       rightSide['active'] = false;
-      rightSide['lastStart'] = null;
+      rightSide['lastStart'] = '';
 
       sideMap!['left'] = leftSide;
       sideMap!['right'] = rightSide;
@@ -189,9 +183,13 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
         'left': {
           'duration': 0,
           'active': true,
-          'lastStart': Timestamp.fromDate(DateTime.now())
+          'lastStart': Timestamp.fromDate(DateTime.now()),
         },
-        'right': {'duration': 0, 'active': false, 'lastStart': null},
+        'right': {
+          'duration': 0,
+          'active': false,
+          'lastStart': '',
+        },
       };
       docId = await uploadData(sideMap!);
     } else {
@@ -214,11 +212,15 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
     if (!timerGoing) {
       sideMap = {
         'latest': 'right',
-        'left': {'duration': 0, 'active': false, 'lastStart': null},
+        'left': {
+          'duration': 0,
+          'active': false,
+          'lastStart': '',
+        },
         'right': {
           'duration': 0,
           'active': true,
-          'lastStart': Timestamp.fromDate(DateTime.now())
+          'lastStart': Timestamp.fromDate(DateTime.now()),
         },
       };
       docId = await uploadData(sideMap!);

@@ -1,3 +1,4 @@
+import 'package:babysteps/app/widgets/stopwatch.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -82,8 +83,8 @@ class _BreastfeedingHistoryStreamState
           var splitDate1 = dateStr1.split(' ');
           String day = splitDate1[0];
           String time = splitDate1[1];
-          String length = doc['length'];
-          String side = doc['side'];
+          String length = transformMilliSeconds(doc['length']);
+          String side = doc['side']['latest'];
 
           rows.add(RowData4Cols(day, time, length, side));
         });

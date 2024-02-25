@@ -101,7 +101,7 @@ class _NewStopWatchState extends State<NewStopWatch> {
     } else {
       //Or update filled card here?
       widget.stopwatchFinish(elapsedTime);
-      watch.reset();
+      // watch.reset();
       stopWatch();
     }
   }
@@ -119,10 +119,12 @@ class _NewStopWatchState extends State<NewStopWatch> {
   stopWatch() {
     if (mounted) {
       setState(() {
-        watch.reset();
+        // watch.reset();
         timerStopped = true;
         watch.stop();
-        setTime();
+        watch.reset();
+
+        // setTime();
         //TODO: Update filled card here
       });
     }

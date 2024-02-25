@@ -1,3 +1,4 @@
+import 'package:babysteps/app/widgets/stopwatch.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,10 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:babysteps/main.dart';
 import 'package:babysteps/app/widgets/history_widgets.dart';
 
-
 FirebaseFirestore db = FirebaseFirestore.instance;
 String? babyDoc = currentUser.babies[0].collectionId; //TODO: get current baby
-
 
 // DIAPER
 
@@ -21,12 +20,11 @@ class DiaperAllTimeStream extends StatefulWidget {
 
 class _DiaperAllTimeStreamState extends State<DiaperAllTimeStream> {
   final Stream<QuerySnapshot> _diaperAllTimeStream = db
-        .collection("Babies")
-        .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
-        .collection("Diaper")
-        .orderBy('date', descending: true)
-        .snapshots();
-
+      .collection("Babies")
+      .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
+      .collection("Diaper")
+      .orderBy('date', descending: true)
+      .snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -54,19 +52,20 @@ class _DiaperAllTimeStreamState extends State<DiaperAllTimeStream> {
           var day = date.day;
           var year = date.year;
 
-          // Add one to the number of entries for that date, or set it to 1 if there were none 
-          entries.update(DateTime(year, month, day, 0), (v) => v+1, ifAbsent: () => 1);
+          // Add one to the number of entries for that date, or set it to 1 if there were none
+          entries.update(DateTime(year, month, day, 0), (v) => v + 1,
+              ifAbsent: () => 1);
         });
 
         // Make a graph with the retrieved data
-        return TimeSeriesWidget(entries, "Diapers Over Time", "Number of Diapers"); 
+        return TimeSeriesWidget(
+            entries, "Diapers Over Time", "Number of Diapers");
       },
     );
   }
 }
 
-
-// SLEEP 
+// SLEEP
 
 class SleepAllTimeStream extends StatefulWidget {
   const SleepAllTimeStream({super.key});
@@ -77,12 +76,12 @@ class SleepAllTimeStream extends StatefulWidget {
 
 class _SleepAllTimeStreamState extends State<SleepAllTimeStream> {
   final Stream<QuerySnapshot> _sleepAllTimeStream = db
-        .collection("Babies")
-        .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
-        .collection("Sleep")
-        .where('active', isEqualTo: false)
-        .orderBy('date', descending: true)
-        .snapshots();
+      .collection("Babies")
+      .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
+      .collection("Sleep")
+      .where('active', isEqualTo: false)
+      .orderBy('date', descending: true)
+      .snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -115,21 +114,26 @@ class _SleepAllTimeStreamState extends State<SleepAllTimeStream> {
           String timeString = "${doc['length']}"; // format: hh:mm:ss
           var splitTimeString = timeString.split(':');
           // Time slept = hours + minutes
-          double hoursSlept = double.parse(splitTimeString[0]) + double.parse(splitTimeString[1])/60; 
+          double hoursSlept = double.parse(splitTimeString[0]) +
+              double.parse(splitTimeString[1]) / 60;
 
-          // Add one to the number of entries for that date, or set it to 1 if there were none 
-          entriesNumberPerDay.update(DateTime(year, month, day, 0), (v) => v+1, ifAbsent: () => 1);
+          // Add one to the number of entries for that date, or set it to 1 if there were none
+          entriesNumberPerDay.update(
+              DateTime(year, month, day, 0), (v) => v + 1,
+              ifAbsent: () => 1);
           // Add the time to the current amount for that date, or set it to that time if there was nothing yet
-          entriesTotalTime.update(DateTime(year, month, day, 0), (v) => v+hoursSlept, ifAbsent: () => hoursSlept);
+          entriesTotalTime.update(
+              DateTime(year, month, day, 0), (v) => v + hoursSlept,
+              ifAbsent: () => hoursSlept);
         });
 
         // Make a graph with the retrieved data
-        return StackedTimeSeriesWidget(entriesNumberPerDay, entriesTotalTime, "Sleep Over Time", "Number of Sleeps", "Total Time Slept (hrs)"); 
+        return StackedTimeSeriesWidget(entriesNumberPerDay, entriesTotalTime,
+            "Sleep Over Time", "Number of Sleeps", "Total Time Slept (hrs)");
       },
     );
   }
 }
-
 
 // WEIGHT
 
@@ -142,14 +146,14 @@ class WeightAllTimeStream extends StatefulWidget {
 
 class _WeightAllTimeStreamState extends State<WeightAllTimeStream> {
   final Stream<QuerySnapshot> _weightAllTimeStream = db
-        .collection("Babies")
-        .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
-        .collection("Weight")
-        .orderBy('date', descending: false) // False because we'll go through them in
-        // order, and the last one for each day will be the one that's kept - we want 
-        // that to be the most recent one
-        .snapshots();
-
+      .collection("Babies")
+      .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
+      .collection("Weight")
+      .orderBy('date',
+          descending: false) // False because we'll go through them in
+      // order, and the last one for each day will be the one that's kept - we want
+      // that to be the most recent one
+      .snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -179,19 +183,19 @@ class _WeightAllTimeStreamState extends State<WeightAllTimeStream> {
           // Get weight
           double pounds = double.parse(doc['pounds']);
           double ounces = double.parse(doc['ounces']);
-          double weight = pounds + ounces/16; // in terms of pounds
+          double weight = pounds + ounces / 16; // in terms of pounds
 
           // TODO: This will only use the last entry for the day, do we want an average?
-          entries.update(DateTime(year, month, day, 0), (v) => weight, ifAbsent: () => weight);
+          entries.update(DateTime(year, month, day, 0), (v) => weight,
+              ifAbsent: () => weight);
         });
 
         // Make a graph with the retrieved data
-        return TimeSeriesWidget(entries, "Weight Over Time", "Pounds"); 
+        return TimeSeriesWidget(entries, "Weight Over Time", "Pounds");
       },
     );
   }
 }
-
 
 // TEMPERATURE
 
@@ -204,14 +208,14 @@ class TemperatureAllTimeStream extends StatefulWidget {
 
 class _TemperatureAllTimeStreamState extends State<TemperatureAllTimeStream> {
   final Stream<QuerySnapshot> _temperatureAllTimeStream = db
-        .collection("Babies")
-        .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
-        .collection("Temperature")
-        .orderBy('date', descending: false) // False because we'll go through them in
-        // order, and the last one for each day will be the one that's kept - we want 
-        // that to be the most recent one
-        .snapshots();
-
+      .collection("Babies")
+      .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
+      .collection("Temperature")
+      .orderBy('date',
+          descending: false) // False because we'll go through them in
+      // order, and the last one for each day will be the one that's kept - we want
+      // that to be the most recent one
+      .snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -240,20 +244,19 @@ class _TemperatureAllTimeStreamState extends State<TemperatureAllTimeStream> {
           var year = date.year;
           double temp = double.parse(doc['temperature']);
 
-
           // TODO: this will only use the last entry for each day, would an average be better?
-          entries.update(DateTime(year, month, day, 0), (v) => temp, ifAbsent: () => temp);
+          entries.update(DateTime(year, month, day, 0), (v) => temp,
+              ifAbsent: () => temp);
         });
 
         // Make a graph with the retrieved data
-        return TimeSeriesWidget(entries, "Temperature Over Time", "Degrees"); 
+        return TimeSeriesWidget(entries, "Temperature Over Time", "Degrees");
       },
     );
   }
 }
 
-
-// BREASTFEEDING 
+// BREASTFEEDING
 
 class BreastfeedingAllTimeStream extends StatefulWidget {
   const BreastfeedingAllTimeStream({super.key});
@@ -262,16 +265,16 @@ class BreastfeedingAllTimeStream extends StatefulWidget {
   State<StatefulWidget> createState() => _BreastfeedingAllTimeStreamState();
 }
 
-class _BreastfeedingAllTimeStreamState extends State<BreastfeedingAllTimeStream> {
+class _BreastfeedingAllTimeStreamState
+    extends State<BreastfeedingAllTimeStream> {
   final Stream<QuerySnapshot> _breastfeedingAllTimeStream = db
-        .collection("Babies")
-        .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
-        .collection("Feeding")
-        .where('type', isEqualTo: 'BreastFeeding')
-        .where('active', isEqualTo: false)
-        .orderBy('date', descending: true)
-        .snapshots();
-
+      .collection("Babies")
+      .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
+      .collection("Feeding")
+      .where('type', isEqualTo: 'BreastFeeding')
+      .where('active', isEqualTo: false)
+      .orderBy('date', descending: true)
+      .snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -301,27 +304,37 @@ class _BreastfeedingAllTimeStreamState extends State<BreastfeedingAllTimeStream>
           var day = date.day;
           var year = date.year;
 
-          String timeString = "${doc['length']}"; // format: hh:mm:ss
+          String timeString =
+              transformMilliSeconds(doc['length']); // format: hh:mm:ss
           var splitTimeString = timeString.split(':');
           // Time fed = hours + minutes
-          double hoursBreastfed = double.parse(splitTimeString[0]) + double.parse(splitTimeString[1])/60; 
+          double hoursBreastfed = double.parse(splitTimeString[0]) +
+              double.parse(splitTimeString[1]) / 60;
           // TODO: hrs or minutes better for breastfeeding?
 
-          // Add one to the number of entries for that date, or set it to 1 if there were none 
-          entriesNumberPerDate.update(DateTime(year, month, day, 0), (v) => v+1, ifAbsent: () => 1);
+          // Add one to the number of entries for that date, or set it to 1 if there were none
+          entriesNumberPerDate.update(
+              DateTime(year, month, day, 0), (v) => v + 1,
+              ifAbsent: () => 1);
           // Add the time to the current amount for that date, or set it to that time if there was nothing yet
-          entriesTotalTime.update(DateTime(year, month, day, 0), (v) => v+hoursBreastfed, ifAbsent: () => hoursBreastfed);
+          entriesTotalTime.update(
+              DateTime(year, month, day, 0), (v) => v + hoursBreastfed,
+              ifAbsent: () => hoursBreastfed);
         });
 
         // Make a graph with the retrieved data
-        return StackedTimeSeriesWidget(entriesNumberPerDate, entriesTotalTime, "Breastfeeding Over Time", "Number of Feeds", "Total Time Fed (hrs)"); 
+        return StackedTimeSeriesWidget(
+            entriesNumberPerDate,
+            entriesTotalTime,
+            "Breastfeeding Over Time",
+            "Number of Feeds",
+            "Total Time Fed (hrs)");
       },
     );
   }
 }
 
-
-// BOTTLE FEEDING 
+// BOTTLE FEEDING
 
 class BottleFeedingAllTimeStream extends StatefulWidget {
   const BottleFeedingAllTimeStream({super.key});
@@ -330,16 +343,16 @@ class BottleFeedingAllTimeStream extends StatefulWidget {
   State<StatefulWidget> createState() => _BottleFeedingAllTimeStreamState();
 }
 
-class _BottleFeedingAllTimeStreamState extends State<BottleFeedingAllTimeStream> {
+class _BottleFeedingAllTimeStreamState
+    extends State<BottleFeedingAllTimeStream> {
   final Stream<QuerySnapshot> _bottleFeedingAllTimeStream = db
-        .collection("Babies")
-        .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
-        .collection("Feeding")
-        .where('type', isEqualTo: 'Bottle')
-        .where('active', isEqualTo: false)
-        .orderBy('date', descending: true)
-        .snapshots();
-
+      .collection("Babies")
+      .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
+      .collection("Feeding")
+      .where('type', isEqualTo: 'Bottle')
+      .where('active', isEqualTo: false)
+      .orderBy('date', descending: true)
+      .snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -371,14 +384,23 @@ class _BottleFeedingAllTimeStreamState extends State<BottleFeedingAllTimeStream>
 
           double bottleAmount = 4; // TODO: fix to get actual amount data
 
-          // Add one to the number of entries for that date, or set it to 1 if there were none 
-          entriesNumberPerDate.update(DateTime(year, month, day, 0), (v) => v+1, ifAbsent: () => 1);
+          // Add one to the number of entries for that date, or set it to 1 if there were none
+          entriesNumberPerDate.update(
+              DateTime(year, month, day, 0), (v) => v + 1,
+              ifAbsent: () => 1);
           // Add the amount (in oz) to the current amount for that date, or set it to that amount if there was nothing yet
-          entriesTotalAmount.update(DateTime(year, month, day, 0), (v) => v+bottleAmount, ifAbsent: () => bottleAmount);
+          entriesTotalAmount.update(
+              DateTime(year, month, day, 0), (v) => v + bottleAmount,
+              ifAbsent: () => bottleAmount);
         });
 
         // Make a graph with the retrieved data
-        return StackedTimeSeriesWidget(entriesNumberPerDate, entriesTotalAmount, "Bottle Feeds Over Time", "Number of Feeds", "Total Amount Fed (oz)"); 
+        return StackedTimeSeriesWidget(
+            entriesNumberPerDate,
+            entriesTotalAmount,
+            "Bottle Feeds Over Time",
+            "Number of Feeds",
+            "Total Amount Fed (oz)");
       },
     );
   }
