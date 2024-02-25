@@ -27,6 +27,9 @@ class _UserInfoCardState extends State<UserInfoCard> {
     // Now that widget has the passed the User info, populate the controllers
     userNameController.text = widget.userName;
     userEmailController.text = widget.userEmail;
+
+    final screenWidth = MediaQuery.of(context).size.width;
+    double textFieldWidth = screenWidth * 0.75;
   
     return Container(
       // Card container
@@ -39,43 +42,51 @@ class _UserInfoCardState extends State<UserInfoCard> {
               color: Colors.black26, offset: Offset(2, 2), blurRadius: 10)
         ],
       ),
-      child: Form(
-        key: _formKey,
-        child: Column(children: <Widget>[
-          // Name
-          Row(
-            children: [
-              const Icon(Icons.account_box), 
-              TextFormField(
-                controller: userNameController,
-                maxLength: 25,
-                readOnly: !widget.editing,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your name';
-                  }
-                  return null;
-                },
-              ),
-            ],
-          ),
-          // // Email
-          // Row(
-          //   children: [
-          //     const Icon(Icons.email), 
-          //     TextFormField(
+      child: 
+        Form(
+          key: _formKey,
+          child: Column(children: <Widget>[
+            // Name
+            Row(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(right: 8),
+                  child: Icon(Icons.account_box), 
+                ),
+                // Form field for editing profile mode
+                if (widget.editing)
+                  SizedBox(
+                    width: textFieldWidth,
+                    child: TextFormField(
+                      controller: userNameController,
+                      maxLength: 25,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your name';
+                        }
+                        return null;
+                      },
+                    )
+                  ),
+                // Normal text if not editing profile
+                if (!widget.editing)
+                  Text(
+                    userNameController.text,
+                    style: const TextStyle(fontSize: 20),
+                  )
+              ],
+            ),
+            // Email
+              // Row(
+              //   children: [
+              //     const Icon(Icons.email), 
+              //     TextFormField(
 
-          //     ),
-          //   ],
-          // ),
-
-          
-
-
-
-
-        ]),
-      )
+              //     ),
+              //   ],
+              // ),
+          ])
+        ),      
     );
   }
 }
