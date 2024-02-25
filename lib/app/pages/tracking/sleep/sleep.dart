@@ -39,22 +39,6 @@ class _SleepPageState extends State<SleepPage> {
     QuerySnapshot ongoingSleepQuerySnapshot =
         await SleepDatabaseMethods().getLatestOngoingSleepEntry();
 
-    //As long as we have data for the most recent finished sleep time, we'll want to display the right information
-    if (finishedSleepQuerySnapshot.docs.isNotEmpty) {
-      try {
-        lastNap = finishedSleepQuerySnapshot.docs[0]['length'];
-
-        //Get the difference in time between now and when the last logged diaper was
-        String diff = DateTime.now()
-            .difference(finishedSleepQuerySnapshot.docs[0]['date'].toDate())
-            .inMinutes
-            .toString();
-        timeSinceNap = diff == '1' ? '$diff min' : '$diff mins';
-      } catch (error) {
-        //If there's an error, print it to the output
-        debugPrint(error.toString());
-      }
-    }
     //If there's an ongoing timer, update the information the stopwatch will need.
     if (ongoingSleepQuerySnapshot.docs.isNotEmpty) {
       //Grab the id so we can update later
@@ -148,8 +132,8 @@ class _SleepPageState extends State<SleepPage> {
                 List<Widget> children;
                 if (snapshot.hasData) {
                   children = <Widget>[
-                    NewStopWatch(buttonText, updateData, uploadData,
-                        timeSoFarInNap, timerAlreadyStarted),
+                    NewStopWatch("Nap", updateData, uploadData, timeSoFarInNap,
+                        timerAlreadyStarted),
                   ];
                 } else if (snapshot.hasError) {
                   children = <Widget>[
