@@ -2,13 +2,23 @@ import 'package:flutter/material.dart';
 
 /// The editable widget with User's info
 class UserInfoCard extends StatefulWidget {
-  const UserInfoCard({super.key, required this.editing, required this.userName, required this.userEmail, required this.formKey});
+  const UserInfoCard({
+    super.key, 
+    required this.editing, 
+    required this.userName, 
+    required this.userEmail, 
+    required this.formKey, 
+    required this.userNameController,
+    required this.userEmailController
+  });
 
   // True if User is in editing mode and their info can be edited
   final bool editing;
   final String userName;
   final String userEmail;
   final Key formKey;
+  final TextEditingController userNameController;
+  final TextEditingController userEmailController;
 
   @override
   State<StatefulWidget> createState() => _UserInfoCardState();
@@ -16,14 +26,12 @@ class UserInfoCard extends StatefulWidget {
 
 /// Stores the mutable data that can change over the lifetime of the UserInfoCard.
 class _UserInfoCardState extends State<UserInfoCard> {
-  TextEditingController userNameController = TextEditingController();
-  TextEditingController userEmailController = TextEditingController();
   
   @override
   Widget build(BuildContext context) {
     // Now that widget has the passed the User info, populate the controllers
-    userNameController.text = widget.userName;
-    userEmailController.text = widget.userEmail;
+    widget.userNameController.text = widget.userName;
+    widget.userEmailController.text = widget.userEmail;
 
     final screenWidth = MediaQuery.of(context).size.width;
     double textFieldWidth = screenWidth * 0.75;
@@ -42,6 +50,7 @@ class _UserInfoCardState extends State<UserInfoCard> {
         Form(
           key: widget.formKey,
           child: Column(children: <Widget>[
+            
             // Name
             Padding(
               padding: const EdgeInsets.only(bottom: 10),
@@ -56,7 +65,7 @@ class _UserInfoCardState extends State<UserInfoCard> {
                     SizedBox(
                       width: textFieldWidth,
                       child: TextFormField(
-                        controller: userNameController,
+                        controller: widget.userNameController,
                         maxLength: 25,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -69,7 +78,7 @@ class _UserInfoCardState extends State<UserInfoCard> {
                   // Normal text if not editing profile
                   if (!widget.editing)
                     Text(
-                      userNameController.text,
+                      widget.userNameController.text,
                       style: const TextStyle(fontSize: 20),
                     )
                 ],
@@ -88,7 +97,7 @@ class _UserInfoCardState extends State<UserInfoCard> {
                   SizedBox(
                     width: textFieldWidth,
                     child: TextFormField(
-                      controller: userEmailController,
+                      controller: widget.userEmailController,
                       maxLength: 25,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -101,7 +110,7 @@ class _UserInfoCardState extends State<UserInfoCard> {
                 // Normal text if not editing profile
                 if (!widget.editing)
                   Text(
-                    userEmailController.text,
+                    widget.userEmailController.text,
                     style: const TextStyle(fontSize: 20),
                   )
               ],
