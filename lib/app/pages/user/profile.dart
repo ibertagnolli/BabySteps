@@ -1,5 +1,5 @@
 import 'package:babysteps/app/pages/user/user_database.dart';
-import 'package:babysteps/app/pages/user/user_widgets/baby_box.dart';
+import 'package:babysteps/app/pages/user/user_widgets/baby_info_card.dart';
 import 'package:babysteps/app/pages/user/user_widgets/user_info_card.dart';
 import 'package:babysteps/app/pages/user/user_widgets/build_info_field.dart';
 import 'package:babysteps/app/widgets/styles.dart';
@@ -32,6 +32,8 @@ class _ProfilePageState extends State<ProfilePage> {
   // Controllers for form fields
   TextEditingController userNameController = TextEditingController();
   TextEditingController userEmailController = TextEditingController();
+  TextEditingController babyDOBController = TextEditingController();
+  TextEditingController babyNameController = TextEditingController();
 
 /// Enters Edit mode if "Edit" button was clicked from Display mode.
 /// Saves updated data if "Save" button was clicked from Edit mode.
@@ -138,7 +140,8 @@ class _ProfilePageState extends State<ProfilePage> {
   // }
 
   // The global key uniquely identifies the Form widget and allows validation of the form.
-  final _formKey = GlobalKey<FormState>();
+  final _userFormKey = GlobalKey<FormState>();
+  final _babyFormKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -188,22 +191,25 @@ class _ProfilePageState extends State<ProfilePage> {
                   editing: editing, 
                   userName: currentUser.name, 
                   userEmail: currentUser.email, 
-                  formKey: _formKey,
+                  formKey: _userFormKey,
                   userNameController: userNameController,
                   userEmailController: userEmailController,
                 ),
 
                 // Children's info boxes
-                // for (Baby element in babyList)
-                //   BabyBox(
-                //       element.name,
-                //       element.dob,
-                //       element.caregivers ?? [],
-                //       editing,
-                //       updateBabyName,
-                //       updateBabyDOB,
-                //       element.collectionId
-                //   ),
+                for (Baby element in babyList)
+                  BabyInfoCard(
+                      babyName: element.name,
+                      babyDOB: element.dob,
+                      // element.caregivers ?? [],
+                      editing: editing,
+                      formKey: _babyFormKey,
+                      babyDOBController: babyDOBController,
+                      babyNameController: babyNameController,
+                      // updateBabyName,
+                      // updateBabyDOB,
+                      // element.collectionId
+                  ),
 
                 // "Add Baby" button - only displays if profile page is in editing mode
                 // if (editing)
@@ -222,7 +228,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   alignment: Alignment.bottomCenter,
                   child: ElevatedButton(
                     onPressed: () {
-                      if (_formKey.currentState!.validate()) {
+                      if (_userFormKey.currentState!.validate() && _babyFormKey.currentState!.validate()) {
                         editOrSaveButtonClicked();
                       }
                     },

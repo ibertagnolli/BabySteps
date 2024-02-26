@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
 /// The editable widget with User's info
@@ -99,12 +100,7 @@ class _UserInfoCardState extends State<UserInfoCard> {
                     child: TextFormField(
                       controller: widget.userEmailController,
                       maxLength: 25,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your email';
-                        }
-                        return null;
-                      },
+                      validator: (value) => EmailValidator.validate(value!) ? null : "Please enter a valid email",
                     )
                   ),
                 // Normal text if not editing profile

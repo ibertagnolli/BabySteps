@@ -1,0 +1,305 @@
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+/// The editable widget with User's info
+class BabyInfoCard extends StatefulWidget {
+  const BabyInfoCard({
+    super.key, 
+    required this.babyName, 
+    required this.babyDOB, 
+    required this.editing, 
+    required this.formKey, 
+    required this.babyDOBController,
+    required this.babyNameController
+  });
+
+  // True if User is in editing mode and their info can be edited
+  final String babyName;
+  final DateTime babyDOB;
+  final bool editing;
+  final Key formKey;
+  final TextEditingController babyDOBController;
+  final TextEditingController babyNameController;
+
+  @override
+  State<StatefulWidget> createState() => _BabyInfoCardState();
+}
+
+/// Stores the mutable data that can change over the lifetime of the UserInfoCard.
+class _BabyInfoCardState extends State<BabyInfoCard> {
+  
+  @override
+  Widget build(BuildContext context) {
+    // Now that widget has the passed the User info, populate the controllers
+    widget.babyDOBController.text = DateFormat.yMd().format(widget.babyDOB);
+    widget.babyNameController.text = widget.babyName;
+
+    final screenWidth = MediaQuery.of(context).size.width;
+    double textFieldWidth = screenWidth * 0.75;
+  
+    return 
+    Padding(
+      padding: const EdgeInsets.only(top: 16),
+      child: Container(
+        // Card container
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: const [
+            BoxShadow(color: Colors.black26, offset: Offset(2, 2), blurRadius: 10)
+          ],
+        ),
+        child: 
+          Form(
+            key: widget.formKey,
+            child: Column(children: <Widget>[
+            
+              // Baby Name
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Row(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(right: 8),
+                      child: Icon(Icons.account_box), 
+                    ),
+                    // Form field for editing profile mode
+                    if (widget.editing)
+                      SizedBox(
+                        width: textFieldWidth,
+                        child: TextFormField(
+                          controller: widget.babyNameController,
+                          maxLength: 25,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter the baby\'s name';
+                            }
+                            return null;
+                          },
+                        )
+                      ),
+                    // Normal text if not editing profile
+                    if (!widget.editing)
+                      Text(
+                        widget.babyNameController.text,
+                        style: const TextStyle(fontSize: 20),
+                      )
+                  ],
+                ),
+              ),
+
+              // Baby's Date of Birth
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Row(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(right: 8),
+                      child: Icon(Icons.calendar_today_rounded), 
+                    ),
+                    // Form field for editing profile mode
+                    if (widget.editing)
+                      SizedBox(
+                        width: textFieldWidth,
+                        child: TextFormField(
+                          controller: widget.babyDOBController,
+                          onTap: () async {
+                            DateTime? pickeddate = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime(2020),
+                                lastDate: DateTime.now());
+
+                            if (pickeddate != null) {
+                              setState(() {
+                                widget.babyDOBController.text =
+                                    DateFormat.yMd().add_jm().format(pickeddate);
+                              });
+                            }
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a date';
+                            }
+
+                            return null;
+
+                            // ERROR -> THIS ISN'T WORKING!!! -> TODO: not sure if this is working or not
+                            // NOTE: If user picks a date after current date, it reverts to the previously picked date.
+                            // The entry field reflects this. No error checking, but doesn't let user input invalid data.
+                          },
+                    // Don't show the keyboard
+                    showCursor: true,
+                    readOnly: true,
+                        )
+                      ),
+                    // Normal text if not editing profile
+                    if (!widget.editing)
+                      Text(
+                        widget.babyDOBController.text, // TODO maybe format this to ymd format
+                        style: const TextStyle(fontSize: 20),
+                      )
+                  ],
+                ),
+              ),
+
+              // Email
+              // Row(
+              //   children: [
+              //     const Padding(
+              //       padding: EdgeInsets.only(right: 8),
+              //       child: Icon(Icons.email), 
+              //     ),
+              //     // Form field for editing profile mode
+              //     if (widget.editing)
+              //       SizedBox(
+              //         width: textFieldWidth,
+              //         child: TextFormField(
+              //           controller: widget.userEmailController,
+              //           maxLength: 25,
+              //           validator: (value) {
+              //             if (value == null || value.isEmpty) {
+              //               return 'Please enter your email';
+              //             }
+              //             return null;
+              //           },
+              //         )
+              //       ),
+              //     // Normal text if not editing profile
+              //     if (!widget.editing)
+              //       Text(
+              //         widget.userEmailController.text,
+              //         style: const TextStyle(fontSize: 20),
+              //       )
+              //   ],
+              // ),
+            ])
+          ),
+      )
+    );
+  }
+}
+
+// ///////////////
+// import 'package:babysteps/app/pages/user/user_widgets/user_info_card.dart';
+// import 'package:babysteps/app/pages/user/user_widgets/build_info_field.dart';
+// import 'package:babysteps/app/widgets/styles.dart';
+// import 'package:babysteps/main.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
+// import 'package:intl/intl.dart';
+
+// /// Builds off BuildInfoBox specifically for a baby
+// class BabyBox extends StatelessWidget {
+//   const BabyBox(
+//     this.babyName,
+//     this.dateOfBirth,
+//     this.caregivers,
+//     this.editing,
+//     this.updateName,
+//     this.updateDOB,
+//     this.babyId, {
+//     super.key,
+//   });
+//   final String babyName;
+//   final DateTime dateOfBirth;
+//   final List<dynamic> caregivers;
+//   final bool editing;
+//   final Function(String? id, String newVal) updateName;
+//   final Function(String? id, String newVal) updateDOB;
+//   final String babyId;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     TextEditingController controller = TextEditingController();
+//     List<String> caregiverNames = [];
+    
+//     for (Map<String, dynamic> caregiver in caregivers) {
+//       if (currentUser.uid != caregiver['uid']) {
+//         caregiverNames.add(caregiver['name'] ?? '');
+//       }
+//     }
+
+//     /// Opens alert dialog for user to edit the Caregivers List
+//     void editCaregiversList() {
+//       showDialog(
+//         context: context,
+//         builder: (context) {
+//           return Dialog(
+//               child: Padding(
+//                   padding: const EdgeInsets.all(16),
+//                   child: Column(
+//                     mainAxisSize: MainAxisSize.min,
+//                     children: [
+//                       Text("Enter the user's email and we will send them an invite\n"
+//                            "Alternatively, send them this code connect their account when they create it: $babyId"
+//                       ),
+//                       TextField(
+//                         controller: controller,
+//                       ),
+//                       const SizedBox(height: 8),
+//                       ElevatedButton(
+//                         onPressed: () {
+//                           //send email
+//                         },
+//                         style: blueButton(context),
+//                         child: const Text('Send Email Invite'),
+//                       ),
+//                       const SizedBox(height: 8),
+//                       ElevatedButton(
+//                         onPressed: () {
+//                           Clipboard.setData(
+//                               ClipboardData(text: babyId));
+//                           //send email
+//                         },
+//                         style: blueButton(context),
+//                         child: const Text('Save code to clipboard'),
+//                       )
+//                     ],
+//                   )));
+//         });
+//     }
+    
+//     // return UserInfoCard(
+//       // label: '', 
+//       // fields: [
+//       //   // Baby's Name
+//       //   BuildInfoField(
+//       //     'Baby Name',
+//       //     [babyName],
+//       //     const Icon(Icons.account_box),
+//       //     editing,
+//       //     updateName,
+//       //     id: babyId,
+//       //   ),
+
+//         // // Baby's DOB
+//         // BuildInfoField(
+//         //   'Date of Birth', 
+//         //   [DateFormat.yMd().format(dateOfBirth)],
+//         //   const Icon(Icons.calendar_month_outlined), editing, updateDOB,
+//         //   date: true, id: babyId
+//         // ),
+        
+//         // Caregivers List
+//         if (caregiverNames.isNotEmpty || editing)
+//           BuildInfoField(
+//             'Caregivers', 
+//             caregiverNames, 
+//             const Icon(Icons.people),
+//             editing, 
+//             (unused, unused2) => {}
+//           ),
+    
+//         // Editing Caregivers List
+//         if (editing)
+//           ElevatedButton(
+//             onPressed: editCaregiversList,
+//             style: blueButton(context),
+//             child: const Text('Add Caregiver'),
+//           ),
+//       ]
+//       );
+//     }
+//   }
