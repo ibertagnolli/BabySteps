@@ -2,6 +2,7 @@ import 'package:babysteps/app/pages/social/social_database.dart';
 import 'package:babysteps/app/widgets/social_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
@@ -18,6 +19,7 @@ class _SocialStreamState extends State<SocialStream> {
   final Stream<QuerySnapshot> _socialStream =
       SocialDatabaseMethods().getStream();
       late var posts;
+     // late ImageProvider flutterImageProvider;
 
 
 Future<pw.Document> createMultiPdf(posts) async {
@@ -30,6 +32,7 @@ Future<pw.Document> createMultiPdf(posts) async {
    late String? caption;
    late String child;
    late String? imagePath;
+   late Image? networkImage;
    List<pw.Widget> widgets = [];
 
    for (var post in posts) {
@@ -39,16 +42,26 @@ Future<pw.Document> createMultiPdf(posts) async {
              caption = post['caption'];
              child = post['child'];
              imagePath = post['image'];
+             networkImage = Image.network(imagePath!);
+             //http.Response response = await http.get( Uri.parse(imagePath!));
+             Uint8List bytes = (await NetworkAssetBundle(Uri.parse(imagePath!)).load(imagePath!))
+    .buffer
+    .asUint8List();
+        // NetworkImage(imagePath.toString()))
 
-        widgets.add(pw.Column(
+        widgets.add(
+           pw.Padding(padding: const pw.EdgeInsets.all(16),
+            child:pw.Column(
           children: [
             pw.Text(userName),
             pw.Text(date.toString()),
             pw.Text(child),
             pw.Text(caption!),
             pw.Text(title!),
-           // pw.Image(pw.MemoryImage(File('test.webp').readAsBytesSync())),
+            //pw.Image(networkImage as pw.ImageProvider)
+            pw.Image(pw.MemoryImage(bytes)),
           ],
+          ),
         ),
       );
    }
