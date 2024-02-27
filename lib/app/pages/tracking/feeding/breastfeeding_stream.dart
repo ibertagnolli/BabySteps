@@ -39,7 +39,7 @@ class _BreastFeedingStreamState extends State<BreastFeedingStream> {
         if (lastFeedDoc.isNotEmpty) {
           DateTime date = lastFeedDoc[0]['date'].toDate();
           timeSinceFed = getTimeSince(date);
-          lastBreastSide = lastFeedDoc[0]['side'];
+          lastBreastSide = lastFeedDoc[0]['side']['latest'];
         }
 
         // Returns a breastfeeding info card

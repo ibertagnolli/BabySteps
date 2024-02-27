@@ -83,7 +83,7 @@ class _BreastFeedingStreamState extends State<BreastFeedingStream> {
         String lastBreastSide = 'None';
 
         if (lastFeedDoc.isNotEmpty) {
-          lastBreastSide = lastFeedDoc[0]['side'];
+          lastBreastSide = lastFeedDoc[0]['side']['latest'];
         }
 
         // Returns the breast feeding card/button
