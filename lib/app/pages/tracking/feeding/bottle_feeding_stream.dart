@@ -37,19 +37,21 @@ class _BottleFeedingStreamState extends State<BottleFeedingStream> {
         var lastFeedDoc = snapshot.data!.docs;
         String timeSinceFed = 'Never';
         String lastBottleType = 'None';
+        String lastBottleAmount = 'None';
 
         if (lastFeedDoc.isNotEmpty) {
           DateTime date = lastFeedDoc[0]['date'].toDate();
           timeSinceFed = getTimeSince(date);
           lastBottleType = lastFeedDoc[0]['bottleType'];
+          lastBottleAmount = lastFeedDoc[0]['ounces'] + ' oz';
         }
 
         // Returns a bottle feeding info card
 
         return FeedingInfoCard(
             timeSinceFed,
-            lastBottleType,
-            "bottle",
+            lastBottleAmount,
+            "bottle amount",
             Icon(Icons.edit,
                 size: 50, color: Theme.of(context).colorScheme.onSecondary),
             Theme.of(context));
