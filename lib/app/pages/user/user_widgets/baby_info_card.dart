@@ -58,123 +58,103 @@ class _BabyInfoCardState extends State<BabyInfoCard> {
               // Baby Name
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
-                child: Row(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(right: 8),
-                      child: Icon(Icons.account_box), 
-                    ),
-                    // Form field for editing profile mode
-                    if (widget.editing)
-                      SizedBox(
-                        width: textFieldWidth,
-                        child: TextFormField(
-                          controller: widget.babyNameController,
-                          maxLength: 25,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter the baby\'s name';
-                            }
-                            return null;
-                          },
-                        )
+                child: 
+                Column(children: <Widget>[
+                  // Name Icon and Title
+                  const Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(right: 8),
+                        child: Icon(Icons.account_box), 
                       ),
-                    // Normal text if not editing profile
-                    if (!widget.editing)
                       Text(
-                        widget.babyNameController.text,
-                        style: const TextStyle(fontSize: 20),
+                        "Baby's Name",
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ]
+                  ),
+                  // Form field for editing profile mode
+                  if (widget.editing)
+                    SizedBox(
+                      width: textFieldWidth,
+                      child: TextFormField(
+                        controller: widget.babyNameController,
+                        maxLength: 25,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter the baby\'s name';
+                          }
+                          return null;
+                        },
                       )
-                  ],
-                ),
+                    ),
+                  // Normal text if not editing profile
+                  if (!widget.editing)
+                    Text(
+                      widget.babyNameController.text,
+                      style: const TextStyle(fontSize: 20),
+                    )
+                ]),
               ),
 
-              // Baby's Date of Birth
+              // DOB Icon and Title
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
-                child: Row(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(right: 8),
-                      child: Icon(Icons.calendar_today_rounded), 
-                    ),
-                    // Form field for editing profile mode
-                    if (widget.editing)
-                      SizedBox(
-                        width: textFieldWidth,
-                        child: TextFormField(
-                          controller: widget.babyDOBController,
-                          onTap: () async {
-                            DateTime? pickeddate = await showDatePicker(
-                                context: context,
-                                initialDate: DateTime.now(),
-                                firstDate: DateTime(2020),
-                                lastDate: DateTime.now());
-
-                            if (pickeddate != null) {
-                              setState(() {
-                                widget.babyDOBController.text =
-                                    DateFormat.yMd().add_jm().format(pickeddate);
-                              });
-                            }
-                          },
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter a date';
-                            }
-
-                            return null;
-
-                            // ERROR -> THIS ISN'T WORKING!!! -> TODO: not sure if this is working or not
-                            // NOTE: If user picks a date after current date, it reverts to the previously picked date.
-                            // The entry field reflects this. No error checking, but doesn't let user input invalid data.
-                          },
-                    // Don't show the keyboard
-                    showCursor: true,
-                    readOnly: true,
-                        )
+                child: 
+                Column(children: <Widget>[
+                  // Name Icon and Title
+                  const Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(right: 8),
+                        child: Icon(Icons.calendar_today_rounded), 
                       ),
-                    // Normal text if not editing profile
-                    if (!widget.editing)
                       Text(
-                        widget.babyDOBController.text, // TODO maybe format this to ymd format
-                        style: const TextStyle(fontSize: 20),
-                      )
-                  ],
-                ),
-              ),
+                        "Baby's Date of Birth",
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ]
+                  ),
+                  // Form field for editing profile mode
+                  if (widget.editing)
+                    SizedBox(
+                      width: textFieldWidth,
+                      child: TextFormField(
+                        controller: widget.babyDOBController,
+                        onTap: () async {
+                          DateTime? pickeddate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(2020),
+                              lastDate: DateTime.now());
 
-              // Email
-              // Row(
-              //   children: [
-              //     const Padding(
-              //       padding: EdgeInsets.only(right: 8),
-              //       child: Icon(Icons.email), 
-              //     ),
-              //     // Form field for editing profile mode
-              //     if (widget.editing)
-              //       SizedBox(
-              //         width: textFieldWidth,
-              //         child: TextFormField(
-              //           controller: widget.userEmailController,
-              //           maxLength: 25,
-              //           validator: (value) {
-              //             if (value == null || value.isEmpty) {
-              //               return 'Please enter your email';
-              //             }
-              //             return null;
-              //           },
-              //         )
-              //       ),
-              //     // Normal text if not editing profile
-              //     if (!widget.editing)
-              //       Text(
-              //         widget.userEmailController.text,
-              //         style: const TextStyle(fontSize: 20),
-              //       )
-              //   ],
-              // ),
-            ])
+                          if (pickeddate != null) {
+                            setState(() {
+                              widget.babyDOBController.text =
+                                  DateFormat.yMd().add_jm().format(pickeddate);
+                            });
+                          }
+                        },
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a date';
+                          }
+                          return null;
+                        },
+                        // Don't show the keyboard
+                        showCursor: true,
+                        readOnly: true,
+                      )
+                    ),
+                  // Normal text if not editing profile
+                  if (!widget.editing)
+                    Text(
+                      widget.babyDOBController.text, // TODO maybe format this to ymd format
+                      style: const TextStyle(fontSize: 20),
+                    )
+                ],),
+              ),
+            ],),
           ),
       )
     );
