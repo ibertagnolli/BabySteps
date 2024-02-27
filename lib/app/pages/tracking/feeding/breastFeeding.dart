@@ -88,6 +88,7 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
       'side': 'Left',
       'length': '--',
       'bottleType': '--',
+      'ounces': '--',
       'active': true,
       'date': DateTime.now(),
     };
@@ -112,6 +113,7 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
       'side': 'Right',
       'length': '--',
       'bottleType': '--',
+      'ounces': '--',
       'active': true,
       'date': DateTime.now(),
     };

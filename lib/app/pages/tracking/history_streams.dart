@@ -139,7 +139,7 @@ class _BottleHistoryStreamState extends State<BottleHistoryStream> {
           String day = splitDate1[0];
           String time = splitDate1[1];
           String bottleType = doc['bottleType'];
-          String amount = "4 oz";
+          String amount = doc['ounces'] + " oz";
 
           rows.add(RowData4Cols(day, time, amount, bottleType));
         });
