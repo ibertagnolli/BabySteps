@@ -34,6 +34,7 @@ class _ProfilePageState extends State<ProfilePage> {
   TextEditingController userEmailController = TextEditingController();
   TextEditingController babyDOBController = TextEditingController();
   TextEditingController babyNameController = TextEditingController();
+  TextEditingController caregiversController = TextEditingController();
 
 /// Enters Edit mode if "Edit" button was clicked from Display mode.
 /// Saves updated data if "Save" button was clicked from Edit mode.
@@ -201,14 +202,15 @@ class _ProfilePageState extends State<ProfilePage> {
                   BabyInfoCard(
                       babyName: element.name,
                       babyDOB: element.dob,
+                      babyId: element.collectionId,
                       caregivers: element.caregivers ?? [],
                       editing: editing,
                       formKey: _babyFormKey,
                       babyDOBController: babyDOBController,
                       babyNameController: babyNameController,
+                      caregiversController: caregiversController,
                       // updateBabyName,
                       // updateBabyDOB,
-                      // element.collectionId
                   ),
 
                 // "Add Baby" button - only displays if profile page is in editing mode
@@ -244,7 +246,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: ElevatedButton(
                     onPressed: () {
                       FirebaseAuth.instance.signOut();
-                      currentUser = UserProfile(name: "EmTestUser", email: "emtestuser@email.com", uid: "emTestUid", userDoc: "emTestUserDoc");
+                      currentUser = UserProfile(name: "FIX PROFILE", email: "FIXPROFILE@email.com", uid: "FIXPROFILE", userDoc: "FIXPROFILE");
                       context.go('/login');
                     },
                     style: blueButton(context),

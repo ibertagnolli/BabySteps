@@ -50,6 +50,7 @@ class _SignupPageState extends State<SignupPage> {
           setErrorMessage(authError.message!);
           break;
         default:
+        print("Error: ${authError.code}");
           setErrorMessage('Error creating account');
           break;
       }
