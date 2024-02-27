@@ -201,7 +201,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   BabyInfoCard(
                       babyName: element.name,
                       babyDOB: element.dob,
-                      // element.caregivers ?? [],
+                      caregivers: element.caregivers ?? [],
                       editing: editing,
                       formKey: _babyFormKey,
                       babyDOBController: babyDOBController,

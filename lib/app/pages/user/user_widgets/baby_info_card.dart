@@ -7,6 +7,7 @@ class BabyInfoCard extends StatefulWidget {
     super.key, 
     required this.babyName, 
     required this.babyDOB, 
+    required this.caregivers,
     required this.editing, 
     required this.formKey, 
     required this.babyDOBController,
@@ -16,6 +17,7 @@ class BabyInfoCard extends StatefulWidget {
   // True if User is in editing mode and their info can be edited
   final String babyName;
   final DateTime babyDOB;
+  final List<dynamic> caregivers;
   final bool editing;
   final Key formKey;
   final TextEditingController babyDOBController;
@@ -37,8 +39,7 @@ class _BabyInfoCardState extends State<BabyInfoCard> {
     final screenWidth = MediaQuery.of(context).size.width;
     double textFieldWidth = screenWidth * 0.75;
   
-    return 
-    Padding(
+    return Padding(
       padding: const EdgeInsets.only(top: 16),
       child: Container(
         // Card container
@@ -154,12 +155,83 @@ class _BabyInfoCardState extends State<BabyInfoCard> {
                     )
                 ],),
               ),
+
+              // Caregivers
+              if (widget.caregivers.isNotEmpty || widget.editing)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: 
+                  Column(children: <Widget>[
+                    // Name Icon and Title
+                    const Row(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(right: 8),
+                          child: Icon(Icons.people), 
+                        ),
+                        Text(
+                          "Other Caregivers",
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                      ]
+                    ),
+                    // List of Caregivers
+                    Text(
+                      // EMILY
+
+                    ),
+                    // Form field for editing profile mode
+                    if (widget.editing)
+                      SizedBox(
+                        width: textFieldWidth,
+                        child: TextFormField(
+                          controller: widget.babyDOBController,
+                          onTap: () async {
+                            DateTime? pickeddate = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime(2020),
+                                lastDate: DateTime.now());
+
+                            if (pickeddate != null) {
+                              setState(() {
+                                widget.babyDOBController.text =
+                                    DateFormat.yMd().add_jm().format(pickeddate);
+                              });
+                            }
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a date';
+                            }
+                            return null;
+                          },
+                          // Don't show the keyboard
+                          showCursor: true,
+                          readOnly: true,
+                        )
+                      ),
+                    // Normal text if not editing profile
+                    if (!widget.editing)
+                      Text(
+                        widget.babyDOBController.text, // TODO maybe format this to ymd format
+                        style: const TextStyle(fontSize: 20),
+                      )
+                  ],),
+                ),
+
+
+
             ],),
           ),
       )
     );
   }
 }
+
+// TODO EMILY LEFT OFF HERE
+// Update formatting to align name and DOB left
+// Add caregivers
 
 // ///////////////
 // import 'package:babysteps/app/pages/user/user_widgets/user_info_card.dart';
