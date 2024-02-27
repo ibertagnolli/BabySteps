@@ -372,6 +372,7 @@ Future<String> uploadData(Map<String, dynamic> side) async {
     'side': side,
     'length': 0,
     'active': true,
+    'ounces': '--',
     'date': DateTime.now(),
   };
 
