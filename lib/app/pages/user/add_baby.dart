@@ -19,53 +19,48 @@ class AddBabyPage extends StatefulWidget {
 }
 
 class _AddBabyPageState extends State<AddBabyPage> {
-  TextEditingController date = TextEditingController(text: DateFormat.yMd().format(DateTime.now()));
-  TextEditingController babyName = TextEditingController();
-
   User? user = FirebaseAuth.instance.currentUser;
+  
+  // Text field controllers
+  TextEditingController dateController = TextEditingController(text: DateFormat.yMd().format(DateTime.now()));
+  TextEditingController babyNameController = TextEditingController();
 
-  // The global key uniquely identifies the Form widget and allows validation of the form.
+  // Keys for form validation
   final _mainSignUpPageKey = GlobalKey<FormState>();
   final _alertAddBabyKey = GlobalKey<FormState>();
 
-  uploadData() async {
-    Map<String, dynamic> uploaddata = {
-      'DOB': DateFormat.yMd().parse(date.text),
-      'Name': babyName.text,
-    };
-    DocumentReference babyRef = await UserDatabaseMethods().addBaby(uploaddata);
+  List<dynamic> babyCaregivers = [];
+  String babyCollectionId = "";
 
-    Map<String, dynamic> userData = {
-      'baby': [babyRef.id],
+  /// Creates a new User with a new Baby. Or, associates the new User with an existing Baby if using a Baby add code.
+  void uploadData() async {
+    // Create a new Baby if necessary
+    if (babyCollectionId == "") { 
+      Map<String, dynamic> uploaddata = {
+        'DOB': DateFormat.yMd().parse(dateController.text),
+        'Name': babyNameController.text,
+      };
+      DocumentReference babyRef = await UserDatabaseMethods().addBaby(uploaddata);
+      babyCollectionId = babyRef.id;
+    }
+
+    // Create the new User, associated with the Baby
+    Map<String, dynamic> newUsersData = {
+      'baby': [babyCollectionId],
       'UID': FirebaseAuth.instance.currentUser?.uid,
     };
+    await UserDatabaseMethods().addUserWithItsBaby(newUsersData);
 
-    await UserDatabaseMethods().addBabyToUser(userData);
+    // Add the new User to the Baby's list of Caregivers
+    babyCaregivers.add({
+      'name': currentUser.name,
+      'doc': currentUser.userDoc,
+      'uid': currentUser.uid
+    });
 
-    currentUser.name = user?.displayName ?? '';
-    currentUser.uid = user!.uid;
-    List<Baby> babies = [];
+    await UserDatabaseMethods().updateBabyCaregiver(babyCollectionId, babyCaregivers);
 
-    QuerySnapshot snapshot = await UserDatabaseMethods().getUser(user!.uid);
-    var doc = snapshot.docs;
-    if (doc.isNotEmpty) {
-      List<dynamic> babyIds = doc[0]['baby'];
-      for (String babyId in babyIds) {
-        if (babyId != '') {
-          DocumentSnapshot snapshot2 =
-              await UserDatabaseMethods().getBaby(babyId);
-          Map<String, dynamic> doc2 = snapshot2.data()! as Map<String, dynamic>;
-
-          babies.add(Baby(
-              collectionId: babyId,
-              dob: (doc2['DOB'] as Timestamp).toDate(),
-              name: doc2['Name'],
-              caregivers: doc2['Caregivers']));
-        }
-      }
-
-      currentUser.babies = babies;
-    }
+    // Update currentUser?
   }
 
   /// Shows a dialog box for User to input the code to add a baby
@@ -104,44 +99,27 @@ class _AddBabyPageState extends State<AddBabyPage> {
                     // Code submit button
                     ElevatedButton(
                       onPressed: () async {
-                        //TODO: make sure baby is actually in database
+                        if (_alertAddBabyKey.currentState!.validate()) {
+                          try {
+                            // Get Baby's info
+                            DocumentSnapshot snapshot = await UserDatabaseMethods().getBaby(babyCode.text);
+                            Map<String, dynamic> doc = snapshot.data()! as Map<String, dynamic>;
 
-                        try {
-                          Map<String, dynamic> userData = {
-                            'baby': [babyCode.text],
-                            'UID': FirebaseAuth
-                                .instance.currentUser?.uid,
-                          };
-                          UserDatabaseMethods().addBabyToUser(userData);
+                            babyNameController.text = doc['Name'];
+                            dateController.text = DateFormat.yMd().format(doc['DOB'].toDate());
 
-                          DocumentSnapshot snapshot = await UserDatabaseMethods().getBaby(babyCode.text);
-                          Map<String, dynamic> doc = snapshot.data()! as Map<String, dynamic>;
-
-                          List<dynamic> caregivers = doc['Caregivers'];
-
-                          caregivers.add({
-                            'name': currentUser.name,
-                            'doc': currentUser.userDoc,
-                            'uid': currentUser.uid
-                          });
-
-                          await UserDatabaseMethods().updateBabyCaregiver(babyCode.text, caregivers);
-
-                          currentUser.babies.add(Baby(
-                              collectionId: babyCode.text,
-                              dob: (doc['DOB'] as Timestamp).toDate(),
-                              name: doc['Name'],
-                              caregivers: caregivers
-                                  as List<
-                                      Map<String,
-                                          String>>));
-                          context.go('/home');
+                            // Save these values for database updates in uploadData()
+                            babyCaregivers = doc['Caregivers'];
+                            babyCollectionId = babyCode.text;
+                            
+                            Navigator.pop(context);
                         } catch (e) {
                           print('invalid code ${e.toString()}');
-                        }
-                      },
-                      style: blueButton(context),
-                      child: const Text('Add baby'),
+                        }     
+                      }        
+                    },                
+                    style: blueButton(context),
+                    child: const Text('Add baby'),
                     ),
                 ],)  
             )
@@ -195,7 +173,7 @@ class _AddBabyPageState extends State<AddBabyPage> {
                       // Form field for Baby's name
                       TextFormField(
                         cursorColor: Theme.of(context).colorScheme.secondary,
-                        controller: babyName,
+                        controller: babyNameController,
                         maxLength: 25,
                         decoration: InputDecoration(
                           labelText: 'Baby\'s first name',
@@ -217,7 +195,7 @@ class _AddBabyPageState extends State<AddBabyPage> {
                       // Form field for Baby's DOB entry
                       // const Text('Date of birth:'),
                       TextFormField(
-                        controller: date,
+                        controller: dateController,
                         decoration: const InputDecoration(
                           icon: Icon(Icons.calendar_today_rounded),
                           labelText: 'Date of birth:',
@@ -234,7 +212,7 @@ class _AddBabyPageState extends State<AddBabyPage> {
 
                           if (pickeddate != null) {
                             setState(() {
-                              date.text = DateFormat.yMd().format(pickeddate);
+                              dateController.text = DateFormat.yMd().format(pickeddate);
                             });
                           }
                         },
@@ -293,7 +271,6 @@ class _AddBabyPageState extends State<AddBabyPage> {
                               ),
                             )),
                       ),
-
                     ],
                   ),
                 )

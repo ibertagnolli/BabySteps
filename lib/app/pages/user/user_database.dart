@@ -9,7 +9,8 @@ class UserDatabaseMethods {
     return await db.collection('Babies').add(userInfoMap);
   }
 
-  Future addBabyToUser(Map<String, dynamic> userInfoMap) async {
+  /// Creates a new user connected to an existing baby
+  Future addUserWithItsBaby(Map<String, dynamic> userInfoMap) async {
     return await db.collection('Users').add(userInfoMap);
   }
 
@@ -17,6 +18,7 @@ class UserDatabaseMethods {
     return await db.collection('Users').where('UID', isEqualTo: uid).get();
   }
 
+  /// Gets the baby recognized by babyId
   Future getBaby(String babyId) async {
     return await db.collection('Babies').doc(babyId).get();
   }
@@ -28,8 +30,8 @@ class UserDatabaseMethods {
         .update({"Name": name, "DOB": date});
   }
 
-  Future updateBabyCaregiver(
-      String currBabyDoc, List<dynamic> caregivers) async {
+  /// Updates the baby's list of caregivers
+  Future updateBabyCaregiver(String currBabyDoc, List<dynamic> caregivers) async {
     return await db
         .collection("Babies")
         .doc(currBabyDoc)
