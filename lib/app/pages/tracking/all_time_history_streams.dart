@@ -382,7 +382,7 @@ class _BottleFeedingAllTimeStreamState
           var day = date.day;
           var year = date.year;
 
-          double bottleAmount = 4; // TODO: fix to get actual amount data
+          double bottleAmount = double.parse(doc['ounces']); 
 
           // Add one to the number of entries for that date, or set it to 1 if there were none
           entriesNumberPerDate.update(
