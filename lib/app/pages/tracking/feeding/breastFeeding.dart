@@ -30,102 +30,33 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
     //make sure we don't try to access an index that doesn't exist
     if (ongoingBreastFeeding.docs.isNotEmpty) {
       //get the document id so we can update it later
-      leftId = ongoingLeftBreastFeedingQuerySnapshot.docs[0].id;
-      //calculate the time in miliseconds from the last time the left side was started
-      timeSoFarOnLeft = DateTime.now()
-          .difference(
-              ongoingLeftBreastFeedingQuerySnapshot.docs[0]['date'].toDate())
-          .inMilliseconds;
-      //since ongoingLeft isn't empty, the timer is running so set flag accordingly
-      leftSideGoing = true;
+      docId = ongoingBreastFeeding.docs[0].id;
+      Map<String, dynamic> left = ongoingBreastFeeding.docs[0]['side']['left'];
+      Map<String, dynamic> right =
+          ongoingBreastFeeding.docs[0]['side']['right'];
+
+      timeSoFarOnLeft = left['duration'];
+      timeSoFarOnRight = right['duration'];
+
+      if (left['lastStart'] != null) {
+        timeSoFarOnLeft += DateTime.now()
+            .difference((left['lastStart'] as Timestamp).toDate())
+            .inMilliseconds;
+      }
+      if (right['lastStart'] != null) {
+        timeSoFarOnRight += DateTime.now()
+            .difference((right['lastStart'] as Timestamp).toDate())
+            .inMilliseconds;
+      }
+
+      sideMap = ongoingBreastFeeding.docs[0]['side'];
+
+      leftSideGoing = left['active'];
+      rightSideGoing = right['active'];
+      timerGoing = ongoingBreastFeeding.docs[0]['active'];
     }
-    //make sure we don't try to access an index that doesn't exist
-    if (ongoingRightBreastFeedingQuerySnapshot.docs.isNotEmpty) {
-      //get the document id so we can update it later
-      rightId = ongoingRightBreastFeedingQuerySnapshot.docs[0].id;
-      //calculate the time in miliseconds from the last time the right side was started
-      timeSoFarOnRight = DateTime.now()
-          .difference(
-              (ongoingRightBreastFeedingQuerySnapshot.docs[0]['date'].toDate()))
-          .inMilliseconds;
-      //since ongoingRight isn't empty, the timer is running so set flag accordingly
-      rightSideGoing = true;
-    }
-    if (mounted) {
-      setState(() {});
-    }
-    //Have a return so that the FutureBuilder in the build knows we've finished
-    return finishedBreastFeedingQuerySnapshot;
-  }
 
-  //Upload the original data, this will be called once the stopwatch is started so we don't know the length yet
-  uploadLeftData() async {
-    Map<String, dynamic> uploaddata = {
-      'type': 'BreastFeeding',
-      'side': 'Left',
-      'length': '--',
-      'bottleType': '--',
-      'ounces': '--',
-      'active': true,
-      'date': DateTime.now(),
-    };
-
-    await FeedingDatabaseMethods().addFeedingEntry(uploaddata);
-  }
-
-  //Update the left side data, this will happen once the stopwatch is stopped and we'll pass through the new
-  //feeding length. The updateFeedingEntry will also set active to false for this document
-  updateLeftData(String feedingLength) async {
-    if (leftId != null) {
-      await FeedingDatabaseMethods().updateFeedingEntry(feedingLength, leftId!);
-      //once data has been added, update the card accordingly
-    }
-  }
-
-  //Upload the original data for the right side, this will be called once the stopwatch is started so we don't know the length yet
-  //TODO: use one method passing through "left" and "right" for the side to condense code
-  uploadRightData() async {
-    Map<String, dynamic> uploaddata = {
-      'type': 'BreastFeeding',
-      'side': 'Right',
-      'length': '--',
-      'bottleType': '--',
-      'ounces': '--',
-      'active': true,
-      'date': DateTime.now(),
-    };
-
-    await FeedingDatabaseMethods().addFeedingEntry(uploaddata);
-  }
-
-  //Update the right side data, this will happen once the stopwatch is stopped and we'll pass through the new
-  //feeding length. The updateFeedingEntry will also set active to false for this document
-  updateRightData(String feedingLength) async {
-    if (rightId != null) {
-      await FeedingDatabaseMethods()
-          .updateFeedingEntry(feedingLength, rightId!);
-      //once data has been added, update the card accordingly
-    }
-  }
-
-  void leftSideClicked() {
-    setState(() {
-      leftSideGoing = !leftSideGoing;
-    });
-  }
-
-  void rightSideClicked() {
-    setState(() {
-      rightSideGoing = !rightSideGoing;
-    });
-  }
-
-  void doneClicked() {
-    setState(() {
-      leftSideGoing = false;
-      rightSideGoing = false;
-      // Reset time since last feed
-    });
+    return ongoingBreastFeeding;
   }
 
   @override
