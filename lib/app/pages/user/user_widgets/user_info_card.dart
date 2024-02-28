@@ -93,22 +93,23 @@ class _UserInfoCardState extends State<UserInfoCard> {
                   padding: EdgeInsets.only(right: 8),
                   child: Icon(Icons.email), 
                 ),
+                // This is the code for editing a user's email. We'll implement this
+                // later with email validation if we have time.
                 // Form field for editing profile mode
-                if (widget.editing)
-                  SizedBox(
-                    width: textFieldWidth,
-                    child: TextFormField(
-                      controller: widget.userEmailController,
-                      maxLength: 25,
-                      validator: (value) => EmailValidator.validate(value!) ? null : "Please enter a valid email",
-                    )
-                  ),
-                // Normal text if not editing profile
-                if (!widget.editing)
-                  Text(
-                    widget.userEmailController.text,
-                    style: const TextStyle(fontSize: 20),
-                  )
+                // if (widget.editing)
+                //   SizedBox(
+                //     width: textFieldWidth,
+                //     child: TextFormField(
+                //       controller: widget.userEmailController,
+                //       maxLength: 25,
+                //       validator: (value) => EmailValidator.validate(value!) ? null : "Please enter a valid email",
+                //     )
+                //   ),
+                // Normal text, can't edit email
+                Text(
+                  widget.userEmailController.text,
+                  style: const TextStyle(fontSize: 20),
+                )
               ],
             ),
           ])

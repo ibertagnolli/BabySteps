@@ -33,9 +33,9 @@ class _ProfilePageState extends State<ProfilePage> {
   void editOrSaveButtonClicked() async {
     if (editing) {
       // Update the User's Info
-      await FirebaseAuth.instance.currentUser!.updateDisplayName(userNameController.text); // TODO this isn't updating User's name
+      await FirebaseAuth.instance.currentUser!.updateDisplayName(userNameController.text);
       currentUser.name = userNameController.text;
-
+      // This would be the start to updating user email. We'll implement that later if we have time.
       // await FirebaseAuth.instance.currentUser?.verifyBeforeUpdateEmail(userEmailController.text);
 
 
