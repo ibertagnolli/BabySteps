@@ -42,13 +42,19 @@ class _AddBabyPageState extends State<AddBabyPage> {
         'baby': [babyCollectionId],
         'UID': FirebaseAuth.instance.currentUser?.uid,
       };
-      UserDatabaseMethods().addUserWithBaby(userData);
+      DocumentReference userDoc = await UserDatabaseMethods().addUserWithBaby(userData);
+
+      // Update the current user's User info
+      currentUser.name = user?.displayName ?? '';
+      currentUser.uid = user!.uid;
+      currentUser.userDoc = userDoc.id;
+      currentUser.email = user!.email ?? '';
 
       // Add the user to the baby's list of caregivers
       DocumentSnapshot snapshot = await UserDatabaseMethods().getBaby(babyCollectionId);
       Map<String, dynamic> doc = snapshot.data()! as Map<String, dynamic>;
-      
-      List<dynamic> caregivers = doc['Caregivers'];
+
+      List<dynamic> caregivers = doc['Caregivers'] ?? [];
       caregivers.add({
         'name': currentUser.name,
         'doc': currentUser.userDoc,
@@ -56,18 +62,17 @@ class _AddBabyPageState extends State<AddBabyPage> {
       });
       await UserDatabaseMethods().updateBabyCaregiver(babyCollectionId, caregivers);
 
-      // Update current user
-      currentUser.babies.add(
-        Baby(
+      // Update the current user's baby info
+      Baby newBaby = Baby(
           collectionId: babyCollectionId,
           dob: (doc['DOB'] as Timestamp).toDate(),
           name: doc['Name'],
-          caregivers: caregivers as List<Map<String, String>>
-        )
+          caregivers: caregivers
       );
+      currentUser.babies = [...currentUser.babies, newBaby]; // ... is Spread operator (Stack Overflow Question #66550202)
     } catch (e) {
       print(
-          'invalid code ${e.toString()}');
+          'invalid code in upload secondary ${e.toString()}');
     }
   }
 
@@ -90,6 +95,7 @@ class _AddBabyPageState extends State<AddBabyPage> {
     // Update the current user
     currentUser.name = user?.displayName ?? '';
     currentUser.uid = user!.uid;
+    currentUser.email = user!.email ?? '';
     List<Baby> babies = [];
 
     QuerySnapshot snapshot = await UserDatabaseMethods().getUser(user!.uid);
@@ -159,13 +165,14 @@ class _AddBabyPageState extends State<AddBabyPage> {
                             dateController.text = DateFormat.yMd().format(doc['DOB'].toDate());
 
                             // Save these values for database updates in uploadData()
-                            babyCaregivers = doc['Caregivers'];
+                            babyCaregivers = doc['Caregivers'] ?? [];
                             babyCollectionId = babyCode.text;
+                            print("babyCollecId in alert: $babyCollectionId");
                             
                             secondaryCaregiver = true;
-                            Navigator.pop(context);
+                            Navigator.pop(context); // TODO alert doesn't go away
                         } catch (e) {
-                          print('invalid code ${e.toString()}');
+                          print('invalid code in alert ${e.toString()}');
                         }     
                       }        
                     },                

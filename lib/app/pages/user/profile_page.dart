@@ -146,15 +146,17 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
 
                 // "Add Baby" button - only displays if profile page is in editing mode
-                // if (editing)
-                //   Padding(
-                //     padding: const EdgeInsets.only(top: 16),
-                //     child: ElevatedButton(
-                //       onPressed: createBaby,
-                //       style: blueButton(context),
-                //       child: const Text('Add Child', style: TextStyle(fontSize: 26)),
-                //     ),
-                //   ),
+                if (editing)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        context.go('/login/signup/addBaby');
+                      },
+                      style: blueButton(context),
+                      child: const Text('Add Child', style: TextStyle(fontSize: 26)),
+                    ),
+                  ),
 
                 // Edit/Save button
                 const SizedBox(height: 16),

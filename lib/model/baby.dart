@@ -2,7 +2,7 @@ class Baby {
   String name;
   DateTime dob;
   String collectionId;
-  List<dynamic>? caregivers;
+  List<dynamic>? caregivers = [];
 
   Baby({
     required this.name,

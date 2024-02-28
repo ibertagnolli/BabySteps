@@ -5,7 +5,7 @@ class UserProfile {
   String email;
   String uid;
   String userDoc;
-  List<Baby> babies;
+  List<Baby> babies = [];
 
   UserProfile({
     required this.name,
