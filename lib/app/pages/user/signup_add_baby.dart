@@ -2,6 +2,7 @@ import 'package:babysteps/app/pages/user/user_database.dart';
 import 'package:babysteps/app/widgets/styles.dart';
 import 'package:babysteps/main.dart';
 import 'package:babysteps/model/baby.dart';
+import 'package:babysteps/model/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -31,36 +32,85 @@ class _AddBabyPageState extends State<AddBabyPage> {
 
   List<dynamic> babyCaregivers = [];
   String babyCollectionId = "";
+  bool secondaryCaregiver = false;
 
-  /// Creates a new User with a new Baby. Or, associates the new User with an existing Baby if using a Baby add code.
-  void uploadData() async {
-    // Create a new Baby if necessary
-    if (babyCollectionId == "") { 
-      Map<String, dynamic> uploaddata = {
-        'DOB': DateFormat.yMd().parse(dateController.text),
-        'Name': babyNameController.text,
+  /// Connects the secondary caregiver to the baby
+  void uploadDataSecondaryCaregiver() async {
+    try {
+      // Create the new user connected to the baby
+      Map<String, dynamic> userData = {
+        'baby': [babyCollectionId],
+        'UID': FirebaseAuth.instance.currentUser?.uid,
       };
-      DocumentReference babyRef = await UserDatabaseMethods().addBaby(uploaddata);
-      babyCollectionId = babyRef.id;
-    }
+      UserDatabaseMethods().addUserWithBaby(userData);
 
-    // Create the new User, associated with the Baby
-    Map<String, dynamic> newUsersData = {
-      'baby': [babyCollectionId],
+      // Add the user to the baby's list of caregivers
+      DocumentSnapshot snapshot = await UserDatabaseMethods().getBaby(babyCollectionId);
+      Map<String, dynamic> doc = snapshot.data()! as Map<String, dynamic>;
+      
+      List<dynamic> caregivers = doc['Caregivers'];
+      caregivers.add({
+        'name': currentUser.name,
+        'doc': currentUser.userDoc,
+        'uid': currentUser.uid
+      });
+      await UserDatabaseMethods().updateBabyCaregiver(babyCollectionId, caregivers);
+
+      // Update current user
+      currentUser.babies.add(
+        Baby(
+          collectionId: babyCollectionId,
+          dob: (doc['DOB'] as Timestamp).toDate(),
+          name: doc['Name'],
+          caregivers: caregivers as List<Map<String, String>>
+        )
+      );
+    } catch (e) {
+      print(
+          'invalid code ${e.toString()}');
+    }
+  }
+
+  /// Creates a new baby and adds it to the primary caregiver
+  void uploadDataPrimaryCaregiver() async {
+    // Create the new baby
+    Map<String, dynamic> babyData = {
+      'DOB': DateFormat.yMd().parse(dateController.text),
+      'Name': babyNameController.text,
+    };
+    DocumentReference babyRef = await UserDatabaseMethods().addBaby(babyData);
+
+    // Create the new user, connected to the baby
+    Map<String, dynamic> userData = {
+      'baby': [babyRef.id],
       'UID': FirebaseAuth.instance.currentUser?.uid,
     };
-    await UserDatabaseMethods().addUserWithItsBaby(newUsersData);
+    await UserDatabaseMethods().addUserWithBaby(userData);
 
-    // Add the new User to the Baby's list of Caregivers
-    babyCaregivers.add({
-      'name': currentUser.name,
-      'doc': currentUser.userDoc,
-      'uid': currentUser.uid
-    });
+    // Update the current user
+    currentUser.name = user?.displayName ?? '';
+    currentUser.uid = user!.uid;
+    List<Baby> babies = [];
 
-    await UserDatabaseMethods().updateBabyCaregiver(babyCollectionId, babyCaregivers);
+    QuerySnapshot snapshot = await UserDatabaseMethods().getUser(user!.uid);
+    var doc = snapshot.docs;
+    if (doc.isNotEmpty) {
+      List<dynamic> babyIds = doc[0]['baby'];
+      for (String babyId in babyIds) {
+        if (babyId != '') {
+          DocumentSnapshot snapshot2 =
+              await UserDatabaseMethods().getBaby(babyId);
+          Map<String, dynamic> doc2 = snapshot2.data()! as Map<String, dynamic>;
 
-    // Update currentUser?
+          babies.add(Baby(
+              collectionId: babyId,
+              dob: (doc2['DOB'] as Timestamp).toDate(),
+              name: doc2['Name'],
+              caregivers: doc2['Caregivers']));
+        }
+      }
+      currentUser.babies = babies;
+    }
   }
 
   /// Shows a dialog box for User to input the code to add a baby
@@ -112,6 +162,7 @@ class _AddBabyPageState extends State<AddBabyPage> {
                             babyCaregivers = doc['Caregivers'];
                             babyCollectionId = babyCode.text;
                             
+                            secondaryCaregiver = true;
                             Navigator.pop(context);
                         } catch (e) {
                           print('invalid code ${e.toString()}');
@@ -231,7 +282,11 @@ class _AddBabyPageState extends State<AddBabyPage> {
                             onPressed: () {
                               // Validate returns true if the form is valid, or false otherwise.
                               if (_mainSignUpPageKey.currentState!.validate()) {
-                                uploadData();
+                                if(secondaryCaregiver) {
+                                  uploadDataSecondaryCaregiver();
+                                } else {
+                                  uploadDataPrimaryCaregiver();
+                                }
                                 context.go('/home');
                               }                              
                             },

@@ -9,11 +9,12 @@ class UserDatabaseMethods {
     return await db.collection('Babies').add(userInfoMap);
   }
 
-  /// Creates a new user connected to an existing baby
-  Future addUserWithItsBaby(Map<String, dynamic> userInfoMap) async {
+  /// Creates a new user connected to a baby
+  Future addUserWithBaby(Map<String, dynamic> userInfoMap) async {
     return await db.collection('Users').add(userInfoMap);
   }
 
+  /// Returns the user with uid
   Future<QuerySnapshot> getUser(String uid) async {
     return await db.collection('Users').where('UID', isEqualTo: uid).get();
   }

@@ -70,75 +70,9 @@ class _ProfilePageState extends State<ProfilePage> {
     // Update the page to toggle between Editing mode and Display mode
     setState(() {
       editing = !editing;
-      // currentUser = updatedUser;
     });
   }
 
-  // void updateUserName(String? _, String newVal) {
-  //   updatedUser.name = newVal;
-  // }
-
-  // void updateUserEmail(String? _, String newVal) {
-  //   updatedUser.email = newVal;
-  // }
-
-  /// Creates a new baby and adds the baby to the database
-  // void createBaby() async {
-  //   Map<String, dynamic> uploaddata = {
-  //     'DOB': DateTime.now(),
-  //     'Name': '',
-  //     'Caregivers': [
-  //       {
-  //         'name': currentUser.name,
-  //         'doc': currentUser.userDoc,
-  //         'uid': currentUser.uid
-  //       }
-  //     ]
-  //   };
-
-  //   DocumentReference babyRef = await UserDatabaseMethods().addBaby(uploaddata);
-  //   setState(() {
-  //     updatedUser.addBaby(Baby(name: "EmTest", dob: DateTime.now(), collectionId: babyRef.id, caregivers: [
-  //       {
-  //         'name': currentUser.name,
-  //         'doc': currentUser.userDoc,
-  //         'uid': currentUser.uid,
-  //       }
-  //     ]));
-  //   });
-  // }
-
-  // void updateBabyName(String? id, String newVal) {
-  //   Baby? updateBaby =
-  //       updatedUser.babies.where((baby) => baby.collectionId == id).firstOrNull;
-  //   if (updateBaby != null) {
-  //     updateBaby.name = newVal;
-  //   } else {
-  //     print('error finding baby in collection! $id ${updatedUser.babies.length}');
-  //   }
-  // }
-
-  // void updateBabyDOB(String? id, String newVal) {
-  //   Baby? updateBaby =
-  //       updatedUser.babies.where((baby) => baby.collectionId == id).firstOrNull;
-  //   if (updateBaby != null) {
-  //     updateBaby.dob = DateFormat.yMd().parse(newVal);
-  //   } else {
-  //     print('error finding baby in collection!');
-  //   }
-  // }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   updatedUser.babies = userProfile.babies;
-  //   updatedUser.email = userProfile.email;
-  //   updatedUser.name = userProfile.name;
-  //   updatedUser.uid = userProfile.uid;
-  //   updatedUser.userDoc = userProfile.userDoc;
-  //   // Fetch user information when the page is initialized
-  //   // fetchUserInfo();
-  // }
 
   // The global key uniquely identifies the Form widget and allows validation of the form.
   final _userFormKey = GlobalKey<FormState>();
@@ -209,8 +143,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       babyDOBController: babyDOBController,
                       babyNameController: babyNameController,
                       caregiversController: caregiversController,
-                      // updateBabyName,
-                      // updateBabyDOB,
                   ),
 
                 // "Add Baby" button - only displays if profile page is in editing mode
@@ -246,7 +178,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: ElevatedButton(
                     onPressed: () {
                       FirebaseAuth.instance.signOut();
-                      currentUser = UserProfile(name: "FIX PROFILE", email: "FIXPROFILE@email.com", uid: "FIXPROFILE", userDoc: "FIXPROFILE");
+                      currentUser = UserProfile(name: "FIX", email: "FIX", uid: "FIX", userDoc: "FIX"); // TODO try nulls
                       context.go('/login');
                     },
                     style: blueButton(context),

@@ -9,9 +9,8 @@ import 'package:babysteps/app/pages/tracking/sleep/sleep.dart';
 import 'package:babysteps/app/pages/tracking/temperature/temperature.dart';
 import 'package:babysteps/app/pages/tracking/tracking.dart';
 import 'package:babysteps/app/pages/tracking/weight/weight.dart';
-import 'package:babysteps/app/pages/user/add_baby.dart';
-import 'package:babysteps/app/pages/user/edit.dart';
-import 'package:babysteps/app/pages/user/profile.dart';
+import 'package:babysteps/app/pages/user/signup_add_baby.dart';
+import 'package:babysteps/app/pages/user/profile_page.dart';
 import 'package:babysteps/app/pages/user/user_database.dart';
 import 'package:babysteps/model/baby.dart';
 import 'package:babysteps/model/user.dart';
@@ -64,10 +63,8 @@ void main() async {
 
         for (String babyId in babyList) {
           if (babyId != '') {
-            DocumentSnapshot snapshot2 =
-                await UserDatabaseMethods().getBaby(babyId);
-            Map<String, dynamic> doc2 =
-                snapshot2.data()! as Map<String, dynamic>;
+            DocumentSnapshot snapshot2 = await UserDatabaseMethods().getBaby(babyId);
+            Map<String, dynamic> doc2 = snapshot2.data()! as Map<String, dynamic>;
 
             babies.add(Baby(
                 collectionId: babyId,

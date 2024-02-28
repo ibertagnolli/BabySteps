@@ -31,8 +31,7 @@ class _SignupPageState extends State<SignupPage> {
 
   void createAccount() async {
     try {
-      UserCredential user = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
+      UserCredential user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
               email: email.text, password: password.text);
       
       await user.user?.updateDisplayName(usersName.text);
