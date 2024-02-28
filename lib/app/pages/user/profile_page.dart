@@ -33,10 +33,9 @@ class _ProfilePageState extends State<ProfilePage> {
   void editOrSaveButtonClicked() async {
     if (editing) {
       // Update the User's Info
-      // TODO the user's updated name is not displayed. The email is also not updating correctly. Hangs on verification.
-      // print("Updated user's name: ${userNameController.text}");
-      // await FirebaseAuth.instance.currentUser?.updateDisplayName(userNameController.text); // TODO this isn't updating User's name
-      // await FirebaseAuth.instance.currentUser?.reload(); // TOOD probably not needed
+      await FirebaseAuth.instance.currentUser!.updateDisplayName(userNameController.text); // TODO this isn't updating User's name
+      currentUser.name = userNameController.text;
+
       // await FirebaseAuth.instance.currentUser?.verifyBeforeUpdateEmail(userEmailController.text);
 
 
