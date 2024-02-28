@@ -201,7 +201,7 @@ class _SignupPageState extends State<SignupPage> {
                     // Error creating account
                     if (errorMessage != null)
                       Padding(
-                        padding: EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(16),
                         child: Text(
                           errorMessage!,
                           style: TextStyle(

@@ -1,17 +1,12 @@
-import 'package:babysteps/app/pages/user/user_database.dart';
 import 'package:babysteps/app/pages/user/user_widgets/baby_info_card.dart';
 import 'package:babysteps/app/pages/user/user_widgets/user_info_card.dart';
-import 'package:babysteps/app/pages/user/user_widgets/build_info_field.dart';
 import 'package:babysteps/app/widgets/styles.dart';
 import 'package:babysteps/main.dart';
 import 'package:babysteps/model/baby.dart';
 import 'package:babysteps/model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -22,9 +17,6 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   // UserProfile userProfile = currentUser;
   List<Baby> babyList = currentUser.babies;
-
-  // The user with updated info data after User edits their profile
-  // UserProfile updatedUser = currentUser;
 
   // True when User is editing their profile
   bool editing = false;
