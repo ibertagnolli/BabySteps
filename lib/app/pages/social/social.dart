@@ -41,10 +41,14 @@ class _SocialPageState extends State<SocialPage> {
                   icon: Icon(Icons.add),
                   onPressed: () => context.go('/social/newPost'),
                 )),
-            const SocialStream()
+            const SocialStream(),
+            // ElevatedButton(onPressed:PdfCreator.createPdf(),
+            //  child: const Text("Save to PDF"))
+
           ],
         ),
       ),
     );
   }
 }
+
