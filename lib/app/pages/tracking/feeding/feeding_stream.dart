@@ -83,7 +83,7 @@ class _BreastFeedingStreamState extends State<BreastFeedingStream> {
         String lastBreastSide = 'None';
 
         if (lastFeedDoc.isNotEmpty) {
-          lastBreastSide = lastFeedDoc[0]['side'];
+          lastBreastSide = lastFeedDoc[0]['side']['latest'];
         }
 
         // Returns the breast feeding card/button
@@ -128,10 +128,10 @@ class _BottleFeedingStreamState extends State<BottleFeedingStream> {
         // An array of documents, but our query only returns an array of one document
         var lastFeedDoc = snapshot.data!.docs;
 
-        String lastBottleType = '';
+        String lastBottleAmount = 'None';
 
         if (lastFeedDoc.isNotEmpty) {
-          lastBottleType = lastFeedDoc[0]['bottleType'];
+          lastBottleAmount = lastFeedDoc[0]['ounces'] + ' oz';
         }
 
         // Returns the bottle feeding card/button
@@ -140,7 +140,7 @@ class _BottleFeedingStreamState extends State<BottleFeedingStream> {
             Icon(Icons.local_drink,
                 size: 40, color: Theme.of(context).colorScheme.onSecondary),
             "Bottle feeding",
-            "Last type: $lastBottleType", // TODO: last bottle amount would be more helpful
+            "Last amount: $lastBottleAmount", // TODO: last bottle amount would be more helpful
             () => context.go('/tracking/feeding/bottleFeeding'),
             Theme.of(context));
       },

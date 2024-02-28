@@ -1,9 +1,7 @@
 import 'package:babysteps/app/pages/tracking/sleep/sleep_database.dart';
 import 'package:babysteps/app/pages/tracking/sleep/sleep_stream.dart';
-import 'package:babysteps/app/pages/tracking/history_streams.dart';
 import 'package:babysteps/app/widgets/stopwatch.dart';
 import 'package:babysteps/app/widgets/history_widgets.dart';
-import 'package:babysteps/app/widgets/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
@@ -39,22 +37,6 @@ class _SleepPageState extends State<SleepPage> {
     QuerySnapshot ongoingSleepQuerySnapshot =
         await SleepDatabaseMethods().getLatestOngoingSleepEntry();
 
-    //As long as we have data for the most recent finished sleep time, we'll want to display the right information
-    if (finishedSleepQuerySnapshot.docs.isNotEmpty) {
-      try {
-        lastNap = finishedSleepQuerySnapshot.docs[0]['length'];
-
-        //Get the difference in time between now and when the last logged diaper was
-        String diff = DateTime.now()
-            .difference(finishedSleepQuerySnapshot.docs[0]['date'].toDate())
-            .inMinutes
-            .toString();
-        timeSinceNap = diff == '1' ? '$diff min' : '$diff mins';
-      } catch (error) {
-        //If there's an error, print it to the output
-        debugPrint(error.toString());
-      }
-    }
     //If there's an ongoing timer, update the information the stopwatch will need.
     if (ongoingSleepQuerySnapshot.docs.isNotEmpty) {
       //Grab the id so we can update later
@@ -84,7 +66,9 @@ class _SleepPageState extends State<SleepPage> {
       'date': DateTime.now(),
     };
 
-    await SleepDatabaseMethods().addSleepEntry(uploaddata);
+    DocumentReference doc =
+        await SleepDatabaseMethods().addSleepEntry(uploaddata);
+    id = doc.id;
   }
 
   //Update data with the actual nap length
@@ -104,6 +88,7 @@ class _SleepPageState extends State<SleepPage> {
       timeSinceNap = "0:00";
       lastNap = napLength;
       timeSoFarInNap = 0;
+      id = null;
     });
   }
 
@@ -131,7 +116,7 @@ class _SleepPageState extends State<SleepPage> {
             ),
 
             // Filled Card reading data from SleepStream()
-          const  Padding(
+            const Padding(
               padding: EdgeInsets.only(bottom: 16),
               child: SizedBox(
                 child: SleepStream(),
@@ -148,8 +133,8 @@ class _SleepPageState extends State<SleepPage> {
                 List<Widget> children;
                 if (snapshot.hasData) {
                   children = <Widget>[
-                    NewStopWatch(buttonText, updateData, uploadData,
-                        timeSoFarInNap, timerAlreadyStarted),
+                    NewStopWatch("Nap", updateData, uploadData, timeSoFarInNap,
+                        timerAlreadyStarted),
                   ];
                 } else if (snapshot.hasError) {
                   children = <Widget>[
@@ -184,9 +169,6 @@ class _SleepPageState extends State<SleepPage> {
                 );
               },
             ),
-            //TODO: pass time since strings to the stopwatch widget!!
-            // NewStopWatch(timeSinceNap, buttonText, updateData, uploadData,
-            //     timeSoFarInNap, timerAlreadyStarted),
 
             // History Card - in widgets
             Padding(

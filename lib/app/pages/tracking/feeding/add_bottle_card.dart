@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
-/// The widget that adds a weight measurement.
+/// The widget that adds a bottle.
 class AddBottleCard extends StatefulWidget {
   const AddBottleCard({super.key});
 
@@ -27,12 +27,14 @@ class _AddBottleCardState extends State<AddBottleCard> {
 
   uploadData() async {
     DateTime savedDate = DateFormat("MM/dd/yyyy hh:mm a").parse(date.text);
+    String savedOz = ounces.text;
 
     Map<String, dynamic> uploaddata = {
       'type': 'Bottle',
       'side': '--',
       'length': '--',
       'bottleType': activeButton,
+      'ounces': savedOz,
       'active': false,
       'date': savedDate,
     };
