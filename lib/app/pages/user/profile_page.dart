@@ -37,25 +37,21 @@ class _ProfilePageState extends State<ProfilePage> {
       currentUser.name = userNameController.text;
       // This would be the start to updating user email. We'll implement that later if we have time.
       // await FirebaseAuth.instance.currentUser?.verifyBeforeUpdateEmail(userEmailController.text);
-
-
-      // EMILY LEFT OFF HERE
-      // User updates aren't reflected in DB. Maybe move on and get baby FE and DB connected. Probably easier than User's DB.
       
-      // List<String> babyIds = [];
+      List<String> babyIds = [];
 
       // Update each baby's info
-      // for (Baby baby in updatedUser.babies) {
-      //   babyIds.add(baby.collectionId);
-      //   await UserDatabaseMethods().updateBaby(
-      //       baby.collectionId,
-      //       baby.name,
-      //       baby.dob
-      //   );
-      // }
+      for (Baby baby in updatedUser.babies) {
+        babyIds.add(baby.collectionId);
+        await UserDatabaseMethods().updateBaby(
+            baby.collectionId,
+            baby.name,
+            baby.dob
+        );
+      }
 
       // Update User's list of connected babies, in case they added a baby
-      // await UserDatabaseMethods().updateUserBabies(updatedUser.userDoc, babyIds);
+      await UserDatabaseMethods().updateUserBabies(updatedUser.userDoc, babyIds);
     }
     
     // Update the page to toggle between Editing mode and Display mode
