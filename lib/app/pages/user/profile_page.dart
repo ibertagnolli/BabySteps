@@ -32,35 +32,35 @@ class _ProfilePageState extends State<ProfilePage> {
   TextEditingController caregiversController = TextEditingController();
 
   /// Adds a new baby to this user
-  void createBaby() async {
-    // Add data for new baby in DB
-    Map<String, dynamic> newBabyData = {
-      'DOB': DateTime.now(),
-      'Name': '',
-      'Caregivers': [
-        {
-          'name': currentUser.name,
-          'doc': currentUser.userDoc,
-          'uid': currentUser.uid
-        }
-      ]
-    };
-    DocumentReference babyRef = await UserDatabaseMethods().addBaby(newBabyData);
+  // void createBaby() async {
+  //   // Add data for new baby in DB
+  //   Map<String, dynamic> newBabyData = {
+  //     'DOB': DateTime.now(),
+  //     'Name': '',
+  //     'Caregivers': [
+  //       {
+  //         'name': currentUser.name,
+  //         'doc': currentUser.userDoc,
+  //         'uid': currentUser.uid
+  //       }
+  //     ]
+  //   };
+  //   DocumentReference babyRef = await UserDatabaseMethods().addBaby(newBabyData);
     
-    print("***baby count before: ${currentUser.babies.length}");
-    // Adding the new baby to the currentUser creates an editable baby card
-    setState(() {
-      Baby newBaby = Baby(name: "", dob: DateTime.now(), collectionId: babyRef.id, caregivers: [
-        {
-          'name': currentUser.name,
-          'doc': currentUser.userDoc,
-          'uid': currentUser.uid,
-        }
-      ]);
-      currentUser.babies = [...currentUser.babies, newBaby];
-    });
-    print("***baby count after: ${currentUser.babies.length}");
-  }
+  //   print("***baby count before: ${currentUser.babies.length}");
+  //   // Adding the new baby to the currentUser creates an editable baby card
+  //   setState(() {
+  //     Baby newBaby = Baby(name: "", dob: DateTime.now(), collectionId: babyRef.id, caregivers: [
+  //       {
+  //         'name': currentUser.name,
+  //         'doc': currentUser.userDoc,
+  //         'uid': currentUser.uid,
+  //       }
+  //     ]);
+  //     currentUser.babies = [...currentUser.babies, newBaby];
+  //   });
+  //   print("***baby count after: ${currentUser.babies.length}");
+  // }
 
   /// Enters Edit mode if "Edit" button was clicked from Display mode.
   /// Saves updated data if "Save" button was clicked from Edit mode.
@@ -72,11 +72,11 @@ class _ProfilePageState extends State<ProfilePage> {
       // This would be the start to updating user email. We'll implement that later if we have time.
       // await FirebaseAuth.instance.currentUser?.verifyBeforeUpdateEmail(userEmailController.text);
 
-      // JUST ONE BABY
-      await UserDatabaseMethods().updateBaby(currentUser.babies[0].collectionId, babyNameController.text, DateFormat("MM/dd/yyyy").parse(babyDOBController.text));
-      await UserDatabaseMethods().updateUserBabies(currentUser.userDoc, [currentUser.babies[0].collectionId]);
-      currentUser.babies[0].name = babyNameController.text;
-      currentUser.babies[0].dob = DateFormat("MM/dd/yyyy").parse(babyDOBController.text);
+      // JUST ONE BABY -> working, except for date
+      // await UserDatabaseMethods().updateBaby(currentUser.babies[0].collectionId, babyNameController.text, DateFormat("MM/dd/yyyy").parse(babyDOBController.text));
+      // await UserDatabaseMethods().updateUserBabies(currentUser.userDoc, [currentUser.babies[0].collectionId]);
+      // currentUser.babies[0].name = babyNameController.text;
+      // currentUser.babies[0].dob = DateFormat("MM/dd/yyyy").parse(babyDOBController.text);
 
       // List<String> babyIds = [];
 
@@ -161,7 +161,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
                 // Children's info boxes
                 for (Baby element in babyList)
-                  BabyInfoCard(
+                  // TODO make new controller for each BabyInfoCard?
+                  // TODO use a ListView to generate baby cards
+                    BabyInfoCard(
                       babyName: element.name,
                       babyDOB: element.dob,
                       babyId: element.collectionId,
@@ -171,17 +173,29 @@ class _ProfilePageState extends State<ProfilePage> {
                       babyDOBController: babyDOBController,
                       babyNameController: babyNameController,
                       caregiversController: caregiversController,
-                  ),
+                    ),
+
+                  // BabyInfoCard(
+                  //     babyName: element.name,
+                  //     babyDOB: element.dob,
+                  //     babyId: element.collectionId,
+                  //     caregivers: element.caregivers ?? [],
+                  //     editing: editing,
+                  //     formKey: _babyFormKey,
+                  //     babyDOBController: babyDOBController,
+                  //     babyNameController: babyNameController,
+                  //     caregiversController: caregiversController,
+                  // ),
 
                 // "Add Baby" button - only displays if profile page is in editing mode
                 if (editing)
                   Padding(
                     padding: const EdgeInsets.only(top: 16),
                     child: ElevatedButton(
-                      onPressed: createBaby,
-                      // () {
-                      //   context.go('/login/signup/addBaby');
-                      // },
+                      // onPressed: createBaby,
+                      onPressed: () {
+                        context.go('/login/signup/addBaby');
+                      },
                       style: blueButton(context),
                       child: const Text('Add Child', style: TextStyle(fontSize: 26)),
                     ),

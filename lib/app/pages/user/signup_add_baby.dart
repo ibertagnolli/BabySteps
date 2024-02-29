@@ -293,6 +293,7 @@ class _AddBabyPageState extends State<AddBabyPage> {
                                 } else {
                                   uploadDataPrimaryCaregiver();
                                 }
+                                
                                 context.go('/home');
                               }                              
                             },
