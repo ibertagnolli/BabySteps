@@ -5,6 +5,7 @@ class UserProfile {
   String? email;
   String? uid;
   String? userDoc;
+  int currBabyIndex;
   List<Baby> babies;
 
   UserProfile({
@@ -12,6 +13,7 @@ class UserProfile {
     this.email,
     this.uid,
     this.userDoc,
+    this.currBabyIndex = 0,
     this.babies = const [],
   });
 

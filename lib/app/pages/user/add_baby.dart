@@ -18,7 +18,8 @@ class AddBabyPage extends StatefulWidget {
 }
 
 class _AddBabyPageState extends State<AddBabyPage> {
-  TextEditingController date = TextEditingController(text: DateFormat.yMd().format(DateTime.now()));
+  TextEditingController date =
+      TextEditingController(text: DateFormat.yMd().format(DateTime.now()));
   TextEditingController babyName = TextEditingController();
 
   User? user = FirebaseAuth.instance.currentUser;
@@ -155,7 +156,8 @@ class _AddBabyPageState extends State<AddBabyPage> {
                 child: FilledButton(
                     onPressed: () {
                       uploadData();
-                      context.go('/home');
+                      context.go('/tracking');
+                      // context.go('/home');
                     },
                     style: FilledButton.styleFrom(
                         backgroundColor:
@@ -228,13 +230,15 @@ class _AddBabyPageState extends State<AddBabyPage> {
 
                                               currentUser.babies.add(Baby(
                                                   collectionId: babyCode.text,
-                                                  dob: (doc['DOB'] as Timestamp).toDate(),
+                                                  dob: (doc['DOB'] as Timestamp)
+                                                      .toDate(),
                                                   name: doc['Name'],
                                                   caregivers: caregivers
                                                       as List<
                                                           Map<String,
                                                               String>>));
-                                              context.go('/home');
+                                              context.go('/tracking');
+                                              // context.go('/home');
                                             } catch (e) {
                                               print(
                                                   'invalid code ${e.toString()}');

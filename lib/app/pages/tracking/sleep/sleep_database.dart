@@ -4,7 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 //This contains all of the methods needed for sleep
 class SleepDatabaseMethods {
   FirebaseFirestore db = FirebaseFirestore.instance;
-  String? babyDoc = currentUser.babies[0].collectionId; //TODO: get current baby
+  String? babyDoc = currentUser
+      .babies[currentUser.currBabyIndex].collectionId; //TODO: get current baby
 
   // Sets up the snapshot to listen to changes in the collection.
   void listenForSleepReads() {
