@@ -118,8 +118,11 @@ class _ProfilePageState extends State<ProfilePage> {
           )
       ),
 
+
+
       // Page Widgets
-      body: Padding(
+      body: SingleChildScrollView(
+      child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Center(
           child: Column(
@@ -158,30 +161,47 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
 
               // Children's info boxes
-              Expanded(
+              Form(
+                key: _babyFormKey,
                 child: ListView.builder(
-                  padding: const EdgeInsets.all(8),
-                  itemCount: babyList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return BabyInfoCard(
-                      babyName: babyList[index].name, 
-                      babyDOB: babyList[index].dob, 
-                      babyId: babyList[index].collectionId, 
-                      caregivers: babyList[index].caregivers ?? [], 
-                      editing: editing, 
-                      formKey: _babyFormKey, 
-                      babyDOBController: babyDOBController, 
-                      babyNameController: babyNameController, 
-                      caregiversController: caregiversController
-                    );
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: babyList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return BabyInfoCard(
+                        babyName: babyList[index].name, 
+                        babyDOB: babyList[index].dob, 
+                        babyId: babyList[index].collectionId, 
+                        caregivers: babyList[index].caregivers ?? [], 
+                        editing: editing, 
+                        formKey: _babyFormKey, 
+                        // babyDOBController: babyDOBController, 
+                        // babyNameController: babyNameController, 
+                        // caregiversController: caregiversController
+                      );
+                    }
+                  ),
 
-                    // WORKS!!! YAY!!
-                    // return Card(
-                    //   child: Text("${babyList[index].name}"),
-                    // );
-                  }
-                ),
               ),
+              // Expanded(
+              //   child: ListView.builder(
+              //     padding: const EdgeInsets.all(8),
+              //     itemCount: babyList.length,
+              //     itemBuilder: (BuildContext context, int index) {
+              //       return BabyInfoCard(
+              //         babyName: babyList[index].name, 
+              //         babyDOB: babyList[index].dob, 
+              //         babyId: babyList[index].collectionId, 
+              //         caregivers: babyList[index].caregivers ?? [], 
+              //         // editing: editing, 
+              //         // formKey: _babyFormKey, 
+              //         // babyDOBController: babyDOBController, 
+              //         // babyNameController: babyNameController, 
+              //         // caregiversController: caregiversController
+              //       );
+              //     }
+              //   ),
+              // ),
 
               // "Add Baby" button - only displays if profile page is in editing mode
               if (editing)
@@ -229,6 +249,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ],
           )
         ),
+      ),
       ),
     );
   }

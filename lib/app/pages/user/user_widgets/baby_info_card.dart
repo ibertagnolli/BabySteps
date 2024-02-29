@@ -13,9 +13,9 @@ class BabyInfoCard extends StatefulWidget {
     required this.caregivers,
     required this.editing, 
     required this.formKey, 
-    required this.babyDOBController,
-    required this.babyNameController,
-    required this.caregiversController,
+    // required this.babyDOBController,
+    // required this.babyNameController,
+    // required this.caregiversController,
   });
 
   // True if User is in editing mode and their info can be edited
@@ -25,9 +25,9 @@ class BabyInfoCard extends StatefulWidget {
   final List<dynamic> caregivers;
   final bool editing;
   final Key formKey;
-  final TextEditingController babyDOBController;
-  final TextEditingController babyNameController;
-  final TextEditingController caregiversController;
+  // final TextEditingController babyDOBController;
+  // final TextEditingController babyNameController;
+  // final TextEditingController caregiversController;
 
   @override
   State<StatefulWidget> createState() => _BabyInfoCardState();
@@ -35,6 +35,9 @@ class BabyInfoCard extends StatefulWidget {
 
 /// Stores the mutable data that can change over the lifetime of the UserInfoCard.
 class _BabyInfoCardState extends State<BabyInfoCard> {
+  TextEditingController babyDOBController = TextEditingController();
+  TextEditingController babyNameController = TextEditingController();
+  TextEditingController caregiversController = TextEditingController();
 
 // TODO EMILY implement editCaregiversList functionality
   void editCaregiversList() {
@@ -51,7 +54,7 @@ class _BabyInfoCardState extends State<BabyInfoCard> {
                           "Alternatively, send them this code connect their account when they create it: ${widget.babyId}"
                     ),
                     TextField(
-                      controller: widget.caregiversController,
+                      controller: caregiversController,
                     ),
                     const SizedBox(height: 8),
                     ElevatedButton(
@@ -79,8 +82,8 @@ class _BabyInfoCardState extends State<BabyInfoCard> {
   @override
   Widget build(BuildContext context) {
     // Now that widget has the passed the User info, populate the controllers
-    widget.babyDOBController.text = DateFormat.yMd().format(widget.babyDOB).toString();
-    widget.babyNameController.text = widget.babyName;
+    babyDOBController.text = DateFormat.yMd().format(widget.babyDOB).toString();
+    babyNameController.text = widget.babyName;
 
     final screenWidth = MediaQuery.of(context).size.width;
     double textFieldWidth = screenWidth * 0.75;
@@ -98,9 +101,10 @@ class _BabyInfoCardState extends State<BabyInfoCard> {
           ],
         ),
         child: 
-          Form(
-            key: widget.formKey,
-            child: Column(children: <Widget>[
+          // Form(
+          //   key: widget.formKey,
+          //   child: 
+            Column(children: <Widget>[
             
               // Baby Name
               Padding(
@@ -125,7 +129,7 @@ class _BabyInfoCardState extends State<BabyInfoCard> {
                     SizedBox(
                       width: textFieldWidth,
                       child: TextFormField(
-                        controller: widget.babyNameController,
+                        controller: babyNameController,
                         maxLength: 25,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -138,7 +142,7 @@ class _BabyInfoCardState extends State<BabyInfoCard> {
                   // Normal text if not editing profile
                   if (!widget.editing)
                     Text(
-                      widget.babyNameController.text,
+                      babyNameController.text,
                       style: const TextStyle(fontSize: 20),
                     )
                 ]),
@@ -167,7 +171,7 @@ class _BabyInfoCardState extends State<BabyInfoCard> {
                     SizedBox(
                       width: textFieldWidth,
                       child: TextFormField(
-                        controller: widget.babyDOBController,
+                        controller: babyDOBController,
                         onTap: () async {
                           DateTime? pickeddate = await showDatePicker(
                               context: context,
@@ -178,10 +182,8 @@ class _BabyInfoCardState extends State<BabyInfoCard> {
                           if (pickeddate != null) {
                             setState(() {
                               // widget.babyDOBController.clear();
-                              widget.babyDOBController.text =
-                                  DateFormat.yMd().format(pickeddate).toString(); // TODO controller text is updated, but its update doesn't show
+                              babyDOBController.text = DateFormat.yMd().format(pickeddate).toString(); // TODO controller text is updated, but its update doesn't show
                               // print("***controller text: ${widget.babyDOBController.text}");
-                              
                             });
                           }
                         },
@@ -199,7 +201,7 @@ class _BabyInfoCardState extends State<BabyInfoCard> {
                   // Normal text if not editing profile
                   if (!widget.editing)
                     Text(
-                      widget.babyDOBController.text, // TODO maybe format this to ymd format
+                      babyDOBController.text, // TODO maybe format this to ymd format
                       style: const TextStyle(fontSize: 20),
                     )
                 ],),
@@ -239,7 +241,7 @@ class _BabyInfoCardState extends State<BabyInfoCard> {
                 ),
             ],),
           ),
-      )
+      // )
     );
   }
 }
