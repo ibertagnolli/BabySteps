@@ -82,15 +82,16 @@ class _ProfilePageState extends State<ProfilePage> {
 
       // // Update each baby's info
       // print("***babyController: ${babyNameController.text}");
-      // for (Baby baby in currentUser.babies) {
-      //   print("***baby name: ${baby.name}");
-      //   babyIds.add(baby.collectionId);
-      //   await UserDatabaseMethods().updateBaby(
-      //       baby.collectionId,
-      //       baby.name,
-      //       baby.dob
-      //   );
-      // }
+      List<String> babyIds = [];
+      for (Baby baby in currentUser.babies) {
+        print("***baby name: ${baby.name}");
+        babyIds.add(baby.collectionId);
+        await UserDatabaseMethods().updateBaby(
+            baby.collectionId,
+            baby.name,
+            baby.dob
+        );
+      }
 
       // Update User's list of connected babies, in case they added a baby
       // await UserDatabaseMethods().updateUserBabies(currentUser.userDoc, babyIds);
@@ -183,25 +184,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
 
               ),
-              // Expanded(
-              //   child: ListView.builder(
-              //     padding: const EdgeInsets.all(8),
-              //     itemCount: babyList.length,
-              //     itemBuilder: (BuildContext context, int index) {
-              //       return BabyInfoCard(
-              //         babyName: babyList[index].name, 
-              //         babyDOB: babyList[index].dob, 
-              //         babyId: babyList[index].collectionId, 
-              //         caregivers: babyList[index].caregivers ?? [], 
-              //         // editing: editing, 
-              //         // formKey: _babyFormKey, 
-              //         // babyDOBController: babyDOBController, 
-              //         // babyNameController: babyNameController, 
-              //         // caregiversController: caregiversController
-              //       );
-              //     }
-              //   ),
-              // ),
 
               // "Add Baby" button - only displays if profile page is in editing mode
               if (editing)
