@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 
 /// The editable widget with User's info
 class BabyInfoCard extends StatefulWidget {
-  BabyInfoCard({
+  const BabyInfoCard({
     super.key, 
     required this.babyName, 
     required this.babyDOB, 
@@ -25,7 +25,7 @@ class BabyInfoCard extends StatefulWidget {
   final List<dynamic> caregivers;
   final bool editing;
   final Key formKey;
-  TextEditingController babyDOBController;
+  final TextEditingController babyDOBController;
   final TextEditingController babyNameController;
   final TextEditingController caregiversController;
 
@@ -35,8 +35,6 @@ class BabyInfoCard extends StatefulWidget {
 
 /// Stores the mutable data that can change over the lifetime of the UserInfoCard.
 class _BabyInfoCardState extends State<BabyInfoCard> {
-
-  TextEditingController localDOBController = TextEditingController();
 
 // TODO EMILY implement editCaregiversList functionality
   void editCaregiversList() {
@@ -77,21 +75,12 @@ class _BabyInfoCardState extends State<BabyInfoCard> {
                 )));
       });
   }
-  
-  @override
-  void dispose() {
-    // Clean up the controller when the widget is disposed.
-    localDOBController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     // Now that widget has the passed the User info, populate the controllers
-    widget.babyDOBController = TextEditingController(text: DateFormat.yMd().format(widget.babyDOB).toString());
+    widget.babyDOBController.text = DateFormat.yMd().format(widget.babyDOB).toString();
     widget.babyNameController.text = widget.babyName;
-
-    localDOBController.text = DateFormat.yMd().format(widget.babyDOB).toString();
 
     final screenWidth = MediaQuery.of(context).size.width;
     double textFieldWidth = screenWidth * 0.75;
@@ -178,8 +167,7 @@ class _BabyInfoCardState extends State<BabyInfoCard> {
                     SizedBox(
                       width: textFieldWidth,
                       child: TextFormField(
-                        // controller: widget.babyDOBController,
-                        controller: localDOBController,
+                        controller: widget.babyDOBController,
                         onTap: () async {
                           DateTime? pickeddate = await showDatePicker(
                               context: context,
@@ -190,12 +178,10 @@ class _BabyInfoCardState extends State<BabyInfoCard> {
                           if (pickeddate != null) {
                             setState(() {
                               // widget.babyDOBController.clear();
-                              // widget.babyDOBController.text =
-                              //     DateFormat.yMd().format(pickeddate).toString(); // TODO controller text is updated, but its update doesn't show
+                              widget.babyDOBController.text =
+                                  DateFormat.yMd().format(pickeddate).toString(); // TODO controller text is updated, but its update doesn't show
                               // print("***controller text: ${widget.babyDOBController.text}");
-                              localDOBController.clear();
-                              localDOBController.text =
-                                  DateFormat.yMd().format(pickeddate).toString();
+                              
                             });
                           }
                         },
