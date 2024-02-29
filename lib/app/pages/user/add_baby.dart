@@ -156,8 +156,7 @@ class _AddBabyPageState extends State<AddBabyPage> {
                 child: FilledButton(
                     onPressed: () {
                       uploadData();
-                      context.go('/tracking');
-                      // context.go('/home');
+                      context.go('/home');
                     },
                     style: FilledButton.styleFrom(
                         backgroundColor:
@@ -237,8 +236,7 @@ class _AddBabyPageState extends State<AddBabyPage> {
                                                       as List<
                                                           Map<String,
                                                               String>>));
-                                              context.go('/tracking');
-                                              // context.go('/home');
+                                              context.go('/home');
                                             } catch (e) {
                                               print(
                                                   'invalid code ${e.toString()}');
