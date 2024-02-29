@@ -117,63 +117,176 @@ class _ProfilePageState extends State<ProfilePage> {
               color: Theme.of(context).colorScheme.onSurface
           )
       ),
-      
-      // Page Widgets         
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                
-                // Placeholder for Profile image (right now it's BabySteps logo)
-                Container(
-                  height: 120,
-                  width: 120,
-                  margin: const EdgeInsets.only(top: 0, bottom: 20),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Theme.of(context).colorScheme.surface,
-                    boxShadow: const [
-                      BoxShadow(
-                          color: Colors.black26,
-                          offset: Offset(2, 2),
-                          blurRadius: 10
-                      )
-                    ],
-                    image: const DecorationImage(
-                        image: AssetImage('assets/BabyStepsLogo.png')
-                    ),
+
+      // Page Widgets
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              // Placeholder for Profile image (right now it's BabySteps logo)
+              Container(
+                height: 120,
+                width: 120,
+                margin: const EdgeInsets.only(top: 0, bottom: 20),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Theme.of(context).colorScheme.surface,
+                  boxShadow: const [
+                    BoxShadow(
+                        color: Colors.black26,
+                        offset: Offset(2, 2),
+                        blurRadius: 10
+                    )
+                  ],
+                  image: const DecorationImage(
+                      image: AssetImage('assets/BabyStepsLogo.png')
                   ),
                 ),
-                
-                // User's info box
-                UserInfoCard(
-                  editing: editing, 
-                  userName: currentUser.name, 
-                  userEmail: currentUser.email, 
-                  formKey: _userFormKey,
-                  userNameController: userNameController,
-                  userEmailController: userEmailController,
+              ),
+
+              // User's info box
+              UserInfoCard(
+                editing: editing, 
+                userName: currentUser.name, 
+                userEmail: currentUser.email, 
+                formKey: _userFormKey,
+                userNameController: userNameController,
+                userEmailController: userEmailController,
+              ),
+
+              // Children's info boxes
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(8),
+                  itemCount: babyList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return BabyInfoCard(
+                      babyName: babyList[index].name, 
+                      babyDOB: babyList[index].dob, 
+                      babyId: babyList[index].collectionId, 
+                      caregivers: babyList[index].caregivers ?? [], 
+                      editing: editing, 
+                      formKey: _babyFormKey, 
+                      babyDOBController: babyDOBController, 
+                      babyNameController: babyNameController, 
+                      caregiversController: caregiversController
+                    );
+
+                    // WORKS!!! YAY!!
+                    // return Card(
+                    //   child: Text("${babyList[index].name}"),
+                    // );
+                  }
+                ),
+              ),
+
+              // "Add Baby" button - only displays if profile page is in editing mode
+              if (editing)
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: ElevatedButton(
+                    // onPressed: createBaby,
+                    onPressed: () {
+                      context.go('/login/signup/addBaby');
+                    },
+                    style: blueButton(context),
+                    child: const Text('Add Child', style: TextStyle(fontSize: 26)),
+                  ),
                 ),
 
+              // Edit/Save button
+              const SizedBox(height: 16),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_userFormKey.currentState!.validate() && _babyFormKey.currentState!.validate()) {
+                      editOrSaveButtonClicked();
+                    }
+                  },
+                  style: blueButton(context),
+                  child: Text(editing ? 'Save' : 'Edit', style: const TextStyle(fontSize: 26)),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Logout button
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: ElevatedButton(
+                  onPressed: () {
+                    FirebaseAuth.instance.signOut();
+                    currentUser = UserProfile(name: "FIX", email: "FIX", uid: "FIX", userDoc: "FIX"); // TODO try nulls
+                    context.go('/login');
+                  },
+                  style: blueButton(context),
+                  child: const Text('Logout', style: TextStyle(fontSize: 26)),
+                ),
+              ),
+            ],
+          )
+        ),
+      ),
+    );
+  }
+}
+      
+
+
+      // body: SingleChildScrollView(
+      //   child: Padding(
+      //   // Padding(
+      //     padding: const EdgeInsets.all(16.0),
+      //     child: Center(
+      //       child: Column(
+      //         crossAxisAlignment: CrossAxisAlignment.center,
+      //         mainAxisAlignment: MainAxisAlignment.center,
+      //         children: [
+                
+                // Placeholder for Profile image (right now it's BabySteps logo)
+                // Container(
+                //   height: 120,
+                //   width: 120,
+                //   margin: const EdgeInsets.only(top: 0, bottom: 20),
+                //   decoration: BoxDecoration(
+                //     borderRadius: BorderRadius.circular(20),
+                //     color: Theme.of(context).colorScheme.surface,
+                //     boxShadow: const [
+                //       BoxShadow(
+                //           color: Colors.black26,
+                //           offset: Offset(2, 2),
+                //           blurRadius: 10
+                //       )
+                //     ],
+                //     image: const DecorationImage(
+                //         image: AssetImage('assets/BabyStepsLogo.png')
+                //     ),
+                //   ),
+                // ),
+                
+                // User's info box
+                // UserInfoCard(
+                //   editing: editing, 
+                //   userName: currentUser.name, 
+                //   userEmail: currentUser.email, 
+                //   formKey: _userFormKey,
+                //   userNameController: userNameController,
+                //   userEmailController: userEmailController,
+                // ),
+
+                // // Children's info boxes
+                // ListView.builder(
+                //   padding: const EdgeInsets.all(8),
+                //   itemCount: babyList.length,
+                //   itemBuilder: (BuildContext context, int index) {
+                //     return const Text("Baby test");
+                //   }
+                // ),
+
                 // Children's info boxes
-                for (Baby element in babyList)
-                  // TODO make new controller for each BabyInfoCard?
-                  // TODO use a ListView to generate baby cards
-                    BabyInfoCard(
-                      babyName: element.name,
-                      babyDOB: element.dob,
-                      babyId: element.collectionId,
-                      caregivers: element.caregivers ?? [],
-                      editing: editing,
-                      formKey: _babyFormKey,
-                      babyDOBController: babyDOBController,
-                      babyNameController: babyNameController,
-                      caregiversController: caregiversController,
-                    ),
 
                   // BabyInfoCard(
                   //     babyName: element.name,
@@ -188,53 +301,52 @@ class _ProfilePageState extends State<ProfilePage> {
                   // ),
 
                 // "Add Baby" button - only displays if profile page is in editing mode
-                if (editing)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16),
-                    child: ElevatedButton(
-                      // onPressed: createBaby,
-                      onPressed: () {
-                        context.go('/login/signup/addBaby');
-                      },
-                      style: blueButton(context),
-                      child: const Text('Add Child', style: TextStyle(fontSize: 26)),
-                    ),
-                  ),
+                // if (editing)
+                //   Padding(
+                //     padding: const EdgeInsets.only(top: 16),
+                //     child: ElevatedButton(
+                //       // onPressed: createBaby,
+                //       onPressed: () {
+                //         context.go('/login/signup/addBaby');
+                //       },
+                //       style: blueButton(context),
+                //       child: const Text('Add Child', style: TextStyle(fontSize: 26)),
+                //     ),
+                //   ),
 
                 // Edit/Save button
-                const SizedBox(height: 16),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (_userFormKey.currentState!.validate() && _babyFormKey.currentState!.validate()) {
-                        editOrSaveButtonClicked();
-                      }
-                    },
-                    style: blueButton(context),
-                    child: Text(editing ? 'Save' : 'Edit', style: const TextStyle(fontSize: 26)),
-                  ),
-                ),
-                const SizedBox(height: 16),
+                // const SizedBox(height: 16),
+                // Align(
+                //   alignment: Alignment.bottomCenter,
+                //   child: ElevatedButton(
+                //     onPressed: () {
+                //       if (_userFormKey.currentState!.validate() && _babyFormKey.currentState!.validate()) {
+                //         editOrSaveButtonClicked();
+                //       }
+                //     },
+                //     style: blueButton(context),
+                //     child: Text(editing ? 'Save' : 'Edit', style: const TextStyle(fontSize: 26)),
+                //   ),
+                // ),
+                // const SizedBox(height: 16),
 
                 // Logout button
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      FirebaseAuth.instance.signOut();
-                      currentUser = UserProfile(name: "FIX", email: "FIX", uid: "FIX", userDoc: "FIX"); // TODO try nulls
-                      context.go('/login');
-                    },
-                    style: blueButton(context),
-                    child: const Text('Logout', style: TextStyle(fontSize: 26)),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+                // Align(
+                //   alignment: Alignment.bottomCenter,
+                //   child: ElevatedButton(
+                //     onPressed: () {
+                //       FirebaseAuth.instance.signOut();
+                //       currentUser = UserProfile(name: "FIX", email: "FIX", uid: "FIX", userDoc: "FIX"); // TODO try nulls
+                //       context.go('/login');
+                //     },
+                //     style: blueButton(context),
+                //     child: const Text('Logout', style: TextStyle(fontSize: 26)),
+                //   ),
+                // ),
+//               ],
+//             ),
+//           ),
+//         ),
+//     );
+//   }
+// }
