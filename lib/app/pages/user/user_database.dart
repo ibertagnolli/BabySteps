@@ -24,11 +24,24 @@ class UserDatabaseMethods {
     return await db.collection('Babies').doc(babyId).get();
   }
 
+  /// Updates the baby's information to reflect User's edits
+  Future updateBaby(String currBabyDoc, String name, DateTime date) async {
+    return await db
+        .collection("Babies")
+        .doc(currBabyDoc)
+        .update({"Name": name, "DOB": date});
+  }
+
   /// Updates the baby's list of caregivers
   Future updateBabyCaregiver(String currBabyDoc, List<dynamic> caregivers) async {
     return await db
         .collection("Babies")
         .doc(currBabyDoc)
         .update({"Caregivers": caregivers});
+  }
+
+  /// Updates a User's list of babies to reflect User's edits
+  Future updateUserBabies(String userDoc, List<String> babies) async {
+    return await db.collection("Users").doc(userDoc).update({"baby": babies});
   }
 }

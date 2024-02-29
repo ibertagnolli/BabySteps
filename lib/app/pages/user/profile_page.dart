@@ -1,12 +1,15 @@
+import 'package:babysteps/app/pages/user/user_database.dart';
 import 'package:babysteps/app/pages/user/user_widgets/baby_info_card.dart';
 import 'package:babysteps/app/pages/user/user_widgets/user_info_card.dart';
 import 'package:babysteps/app/widgets/styles.dart';
 import 'package:babysteps/main.dart';
 import 'package:babysteps/model/baby.dart';
 import 'package:babysteps/model/user.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -28,8 +31,39 @@ class _ProfilePageState extends State<ProfilePage> {
   TextEditingController babyNameController = TextEditingController();
   TextEditingController caregiversController = TextEditingController();
 
-/// Enters Edit mode if "Edit" button was clicked from Display mode.
-/// Saves updated data if "Save" button was clicked from Edit mode.
+  /// Adds a new baby to this user
+  void createBaby() async {
+    // Add data for new baby in DB
+    Map<String, dynamic> newBabyData = {
+      'DOB': DateTime.now(),
+      'Name': '',
+      'Caregivers': [
+        {
+          'name': currentUser.name,
+          'doc': currentUser.userDoc,
+          'uid': currentUser.uid
+        }
+      ]
+    };
+    DocumentReference babyRef = await UserDatabaseMethods().addBaby(newBabyData);
+    
+    print("***baby count before: ${currentUser.babies.length}");
+    // Adding the new baby to the currentUser creates an editable baby card
+    setState(() {
+      Baby newBaby = Baby(name: "", dob: DateTime.now(), collectionId: babyRef.id, caregivers: [
+        {
+          'name': currentUser.name,
+          'doc': currentUser.userDoc,
+          'uid': currentUser.uid,
+        }
+      ]);
+      currentUser.babies = [...currentUser.babies, newBaby];
+    });
+    print("***baby count after: ${currentUser.babies.length}");
+  }
+
+  /// Enters Edit mode if "Edit" button was clicked from Display mode.
+  /// Saves updated data if "Save" button was clicked from Edit mode.
   void editOrSaveButtonClicked() async {
     if (editing) {
       // Update the User's Info
@@ -37,21 +71,29 @@ class _ProfilePageState extends State<ProfilePage> {
       currentUser.name = userNameController.text;
       // This would be the start to updating user email. We'll implement that later if we have time.
       // await FirebaseAuth.instance.currentUser?.verifyBeforeUpdateEmail(userEmailController.text);
-      
-      List<String> babyIds = [];
 
-      // Update each baby's info
-      for (Baby baby in updatedUser.babies) {
-        babyIds.add(baby.collectionId);
-        await UserDatabaseMethods().updateBaby(
-            baby.collectionId,
-            baby.name,
-            baby.dob
-        );
-      }
+      // JUST ONE BABY
+      await UserDatabaseMethods().updateBaby(currentUser.babies[0].collectionId, babyNameController.text, DateFormat("MM/dd/yyyy").parse(babyDOBController.text));
+      await UserDatabaseMethods().updateUserBabies(currentUser.userDoc, [currentUser.babies[0].collectionId]);
+      currentUser.babies[0].name = babyNameController.text;
+      currentUser.babies[0].dob = DateFormat("MM/dd/yyyy").parse(babyDOBController.text);
+
+      // List<String> babyIds = [];
+
+      // // Update each baby's info
+      // print("***babyController: ${babyNameController.text}");
+      // for (Baby baby in currentUser.babies) {
+      //   print("***baby name: ${baby.name}");
+      //   babyIds.add(baby.collectionId);
+      //   await UserDatabaseMethods().updateBaby(
+      //       baby.collectionId,
+      //       baby.name,
+      //       baby.dob
+      //   );
+      // }
 
       // Update User's list of connected babies, in case they added a baby
-      await UserDatabaseMethods().updateUserBabies(updatedUser.userDoc, babyIds);
+      // await UserDatabaseMethods().updateUserBabies(currentUser.userDoc, babyIds);
     }
     
     // Update the page to toggle between Editing mode and Display mode
@@ -59,7 +101,6 @@ class _ProfilePageState extends State<ProfilePage> {
       editing = !editing;
     });
   }
-
 
   // The global key uniquely identifies the Form widget and allows validation of the form.
   final _userFormKey = GlobalKey<FormState>();
@@ -137,9 +178,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   Padding(
                     padding: const EdgeInsets.only(top: 16),
                     child: ElevatedButton(
-                      onPressed: () {
-                        context.go('/login/signup/addBaby');
-                      },
+                      onPressed: createBaby,
+                      // () {
+                      //   context.go('/login/signup/addBaby');
+                      // },
                       style: blueButton(context),
                       child: const Text('Add Child', style: TextStyle(fontSize: 26)),
                     ),
