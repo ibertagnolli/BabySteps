@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 /// Contains the database methods to access Calendar information
 class CalendarDatabaseMethods {
   FirebaseFirestore db = FirebaseFirestore.instance;
-  String? babyDoc = currentUser.userDoc;
+  String? userDoc = currentUser.userDoc;
 
   // Adds an event to the Events collection
   Future addEvent(Map<String, dynamic> userInfoMap) async {
     return await db
         .collection('Users')
-        .doc(babyDoc ?? '2hUD5VwWZHXWRX3mJZOp')
+        .doc(userDoc ?? '2hUD5VwWZHXWRX3mJZOp')
         .collection('Events')
         .add(userInfoMap);
   }
@@ -20,7 +20,7 @@ class CalendarDatabaseMethods {
   void listenForEventReads() {
     final docRef = db
         .collection('Users')
-        .doc(babyDoc ?? '2hUD5VwWZHXWRX3mJZOp')
+        .doc(userDoc ?? '2hUD5VwWZHXWRX3mJZOp')
         .collection('Events');
           docRef.snapshots().listen(
           (event) => print(
@@ -35,7 +35,7 @@ class CalendarDatabaseMethods {
 
     return db
         .collection('Users')
-        .doc(babyDoc ?? '2hUD5VwWZHXWRX3mJZOp')
+        .doc(userDoc ?? '2hUD5VwWZHXWRX3mJZOp')
         .collection("Events")
         // This range gets the events happening on selectedDate from 00:00-23:59
         .where('dateTime', isGreaterThanOrEqualTo: Timestamp.fromDate(selectedDate))
@@ -47,7 +47,7 @@ class CalendarDatabaseMethods {
   Future addTask(Map<String, dynamic> userInfoMap) async {
     return await db
         .collection('Users')
-        .doc(babyDoc ?? '2hUD5VwWZHXWRX3mJZOp')
+        .doc(userDoc ?? '2hUD5VwWZHXWRX3mJZOp')
         .collection('Tasks')
         .add(userInfoMap);
   }
@@ -56,7 +56,7 @@ class CalendarDatabaseMethods {
   void listenForTaskReads() {
     final docRef = db
         .collection('Users')
-        .doc(babyDoc ?? '2hUD5VwWZHXWRX3mJZOp')
+        .doc(userDoc ?? '2hUD5VwWZHXWRX3mJZOp')
         .collection('Tasks');
           docRef.snapshots().listen(
           (event) => print(
@@ -69,7 +69,7 @@ class CalendarDatabaseMethods {
   Stream<QuerySnapshot> getTaskStream(DateTime selectedDate) {
     return db
         .collection('Users')
-        .doc(babyDoc ?? '2hUD5VwWZHXWRX3mJZOp')
+        .doc(userDoc ?? '2hUD5VwWZHXWRX3mJZOp')
         .collection("Tasks")
         .where('dateTime', isEqualTo: Timestamp.fromDate(DateUtils.dateOnly(selectedDate)))
         .snapshots();
@@ -79,7 +79,7 @@ class CalendarDatabaseMethods {
   Future updateTask(var docId, Map<String, dynamic> updatedUserInfoMap) async {
     return await db
         .collection('Users')
-        .doc(babyDoc ?? '2hUD5VwWZHXWRX3mJZOp')
+        .doc(userDoc ?? '2hUD5VwWZHXWRX3mJZOp')
         .collection('Tasks')
         .doc(docId)
         .set(updatedUserInfoMap);
