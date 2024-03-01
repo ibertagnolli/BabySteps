@@ -4,13 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 /// Contains the database methods to access Calendar information
 class NoteDatabaseMethods {
   FirebaseFirestore db = FirebaseFirestore.instance;
-  String? userDoc = currentUser.userDoc;
+  String? babyDoc = currentUser.babies[currentUser.currBabyIndex].collectionId;
 
   // Adds a note to the Note collection
   Future addNote(Map<String, dynamic> userInfoMap) async {
     return await db
         .collection('Babies')
-        .doc(userDoc ??
+        .doc(babyDoc ??
             'IYyV2hqR7omIgeA4r7zQ') // TODO update to current user's document id
         .collection('Notes')
         .add(userInfoMap);
@@ -20,7 +20,7 @@ class NoteDatabaseMethods {
   void listenForNoteReads() {
     final docRef = db
         .collection('Babies')
-        .doc(userDoc ?? 'IYyV2hqR7omIgeA4r7zQ')
+        .doc(babyDoc ?? 'IYyV2hqR7omIgeA4r7zQ')
         .collection('Notes');
     docRef.snapshots().listen(
           (event) => print(
@@ -34,7 +34,7 @@ class NoteDatabaseMethods {
     // TODO maybe return in order of most recently edited?
     return db
         .collection('Babies')
-        .doc(userDoc ?? 'IYyV2hqR7omIgeA4r7zQ')
+        .doc(babyDoc ?? 'IYyV2hqR7omIgeA4r7zQ')
         .collection("Notes")
         .snapshots();
   }
@@ -44,7 +44,7 @@ class NoteDatabaseMethods {
       var docId) {
     return db
         .collection('Babies')
-        .doc(userDoc ?? 'IYyV2hqR7omIgeA4r7zQ')
+        .doc(babyDoc ?? 'IYyV2hqR7omIgeA4r7zQ')
         .collection("Notes")
         .doc(docId)
         .snapshots();
@@ -54,7 +54,7 @@ class NoteDatabaseMethods {
   Future updateNote(var docId, Map<String, dynamic> updatedUserInfoMap) async {
     return await db
         .collection('Babies')
-        .doc(userDoc ??
+        .doc(babyDoc ??
             'IYyV2hqR7omIgeA4r7zQ') // TODO update to current user's document id
         .collection('Notes')
         .doc(docId)
@@ -65,7 +65,7 @@ class NoteDatabaseMethods {
   Future deleteNote(var docId) async {
     return await db
         .collection('Babies')
-        .doc(userDoc ??
+        .doc(babyDoc ??
             'IYyV2hqR7omIgeA4r7zQ') // TODO update to current user's document id
         .collection('Notes')
         .doc(docId)
