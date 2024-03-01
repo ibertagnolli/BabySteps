@@ -7,7 +7,8 @@ import 'package:babysteps/main.dart';
 import 'package:babysteps/app/widgets/history_widgets.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
-String? babyDoc = currentUser.babies[0].collectionId; //TODO: get current baby
+String? babyDoc = currentUser
+    .babies[currentUser.currBabyIndex].collectionId; //TODO: get current baby
 
 // DIAPER
 
@@ -382,7 +383,7 @@ class _BottleFeedingAllTimeStreamState
           var day = date.day;
           var year = date.year;
 
-          double bottleAmount = double.parse(doc['ounces']); 
+          double bottleAmount = double.parse(doc['ounces']);
 
           // Add one to the number of entries for that date, or set it to 1 if there were none
           entriesNumberPerDate.update(

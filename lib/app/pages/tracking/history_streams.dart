@@ -6,7 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:babysteps/main.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
-String? babyDoc = currentUser.babies[0].collectionId; //TODO: get current baby
+String? babyDoc = currentUser
+    .babies[currentUser.currBabyIndex].collectionId; //TODO: get current baby
 
 // Breastfeeding - first shows the accurate most recent entries, then if you make a new entry it overwrites
 // the most recent entry on that same side

@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 //Contains the database methods to access diaper information
 class DiaperDatabaseMethods {
   FirebaseFirestore db = FirebaseFirestore.instance;
-  String? babyDoc = currentUser.babies[0].collectionId;
+  String? babyDoc = currentUser.babies[currentUser.currBabyIndex].collectionId;
 
   // Sets up the snapshot to listen to changes in the collection.
   void listenForDiaperReads() {

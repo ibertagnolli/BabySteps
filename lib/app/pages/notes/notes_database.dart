@@ -1,15 +1,17 @@
+import 'package:babysteps/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 
 /// Contains the database methods to access Calendar information
 class NoteDatabaseMethods {
   FirebaseFirestore db = FirebaseFirestore.instance;
+  String? babyDoc = currentUser.babies[currentUser.currBabyIndex].collectionId;
 
   // Adds a note to the Note collection
   Future addNote(Map<String, dynamic> userInfoMap) async {
     return await db
         .collection('Babies')
-        .doc('IYyV2hqR7omIgeA4r7zQ') // TODO update to current user's document id
+        .doc(babyDoc ??
+            'IYyV2hqR7omIgeA4r7zQ') // TODO update to current user's document id
         .collection('Notes')
         .add(userInfoMap);
   }
@@ -18,9 +20,9 @@ class NoteDatabaseMethods {
   void listenForNoteReads() {
     final docRef = db
         .collection('Babies')
-        .doc('IYyV2hqR7omIgeA4r7zQ')
+        .doc(babyDoc ?? 'IYyV2hqR7omIgeA4r7zQ')
         .collection('Notes');
-          docRef.snapshots().listen(
+    docRef.snapshots().listen(
           (event) => print(
               "current data: ${event.size}"), // These are helpful for debugging, but we can remove them
           onError: (error) => print("Listen failed: $error"),
@@ -32,16 +34,17 @@ class NoteDatabaseMethods {
     // TODO maybe return in order of most recently edited?
     return db
         .collection('Babies')
-        .doc('IYyV2hqR7omIgeA4r7zQ')
+        .doc(babyDoc ?? 'IYyV2hqR7omIgeA4r7zQ')
         .collection("Notes")
         .snapshots();
   }
 
   // Returns a snapshot of all the user's Notes
-  Stream<DocumentSnapshot<Map<String, dynamic>>> getSpecificNotesStream(var docId) {
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getSpecificNotesStream(
+      var docId) {
     return db
         .collection('Babies')
-        .doc('IYyV2hqR7omIgeA4r7zQ')
+        .doc(babyDoc ?? 'IYyV2hqR7omIgeA4r7zQ')
         .collection("Notes")
         .doc(docId)
         .snapshots();
@@ -51,7 +54,8 @@ class NoteDatabaseMethods {
   Future updateNote(var docId, Map<String, dynamic> updatedUserInfoMap) async {
     return await db
         .collection('Babies')
-        .doc('IYyV2hqR7omIgeA4r7zQ') // TODO update to current user's document id
+        .doc(babyDoc ??
+            'IYyV2hqR7omIgeA4r7zQ') // TODO update to current user's document id
         .collection('Notes')
         .doc(docId)
         .set(updatedUserInfoMap);
@@ -61,7 +65,8 @@ class NoteDatabaseMethods {
   Future deleteNote(var docId) async {
     return await db
         .collection('Babies')
-        .doc('IYyV2hqR7omIgeA4r7zQ') // TODO update to current user's document id
+        .doc(babyDoc ??
+            'IYyV2hqR7omIgeA4r7zQ') // TODO update to current user's document id
         .collection('Notes')
         .doc(docId)
         .delete()

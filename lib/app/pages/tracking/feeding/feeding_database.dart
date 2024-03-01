@@ -4,8 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 //This contains all of the methods needed for feeding
 class FeedingDatabaseMethods {
   FirebaseFirestore db = FirebaseFirestore.instance;
-  String? babyDoc =
-      currentUser.babies[0].collectionId; //TODO get the current baby
+  String? babyDoc = currentUser.babies[currentUser.currBabyIndex]
+      .collectionId; //TODO get the current baby
 
   // Sets up the snapshot to listen to changes in the collection.
   void listenForFeedingReads() {
@@ -109,5 +109,4 @@ class FeedingDatabaseMethods {
         .orderBy('date', descending: true)
         .get();
   }
-  
 }
