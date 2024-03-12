@@ -201,7 +201,7 @@ final pickedDirectory = await FlutterFileDialog.pickDirectory();
 final bytes = await pdf.save();
 if (pickedDirectory != null) {
   final bytes = await pdf.save();
-  FlutterFileDialog.saveFileToDirectory(directory: pickedDirectory, data: bytes, fileName: "$userName.pdf", replace: true);
+  FlutterFileDialog.saveFileToDirectory(directory: pickedDirectory, data: bytes, fileName: "$userName.pdf", replace: true, mimeType:"application/pdf" );
   print(pickedDirectory);
   print(bytes);
 }
