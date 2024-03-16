@@ -26,20 +26,24 @@ class _AddBabyPageState extends State<AddBabyPage> {
   // The global key uniquely identifies the Form widget and allows validation of the form.
   final _formKey = GlobalKey<FormState>();
 
+  /// Adds a new baby to the DB and connects the baby and user
   uploadData() async {
+    // Add the baby to the DB
     Map<String, dynamic> uploaddata = {
       'DOB': DateFormat.yMd().parse(date.text),
       'Name': babyName.text,
+      'PrimaryCaregiverUID': FirebaseAuth.instance.currentUser?.uid,
     };
     DocumentReference babyRef = await UserDatabaseMethods().addBaby(uploaddata);
 
+    // Add the user to the DB (user is currently only in Auth)
     Map<String, dynamic> userData = {
       'baby': [babyRef.id],
       'UID': FirebaseAuth.instance.currentUser?.uid,
     };
-
     await UserDatabaseMethods().addBabyToUser(userData);
 
+    // EMILY LEFT OFF HERE: What does this code do?
     currentUser.name = user?.displayName ?? '';
     currentUser.uid = user!.uid;
     List<Baby> babies = [];
