@@ -42,7 +42,7 @@ class _AddBabyPageState extends State<AddBabyPage> {
       'baby': [babyRef.id],
       'UID': user?.uid,
     };
-    await UserDatabaseMethods().addBabyToUser(userData);
+    await UserDatabaseMethods().addBabyToNewUser(userData);
 
     // Update currentUser
     currentUser.name = user?.displayName ?? '';
@@ -71,50 +71,50 @@ class _AddBabyPageState extends State<AddBabyPage> {
 
   /// Creates a new caregiver user associated with an existing baby
   uploadBabyToCaregiver(TextEditingController babyCode) async {
-    // Get the baby
-    // Add the new caregiver user with the baby
-    // Add the caregiver to the baby's list of caregivers
-
-
-    //TODO: make sure baby is actually in database
+    // TODO do we need to update currentUser?
 
     try {
+      // Create the caregiver user associated with existing baby
       Map<String, dynamic> userData = {
         'baby': [babyCode.text],
         'UID': currentUser.uid,
       };
-      UserDatabaseMethods().addBabyToUser(userData);
+      UserDatabaseMethods().addBabyToNewUser(userData);
 
-      DocumentSnapshot snapshot =
-          await UserDatabaseMethods()
-              .getBaby(babyCode.text);
-      Map<String, dynamic> doc =
-          snapshot.data()!
-              as Map<String, dynamic>;
-
-      List<dynamic> caregivers =
-          doc['Caregivers'];
-
+      // Add the caregiver user to the baby's list of caregivers
+      DocumentSnapshot snapshot = await UserDatabaseMethods().getBaby(babyCode.text);
+      Map<String, dynamic> doc = snapshot.data()! as Map<String, dynamic>;
+      List<dynamic> caregivers = doc['Caregivers'];
       caregivers.add({
         'name': currentUser.name,
         'doc': currentUser.userDoc,
         'uid': currentUser.uid
       });
+      await UserDatabaseMethods().updateBabyCaregiver(babyCode.text, caregivers);
 
-      await UserDatabaseMethods()
-          .updateBabyCaregiver(
-              babyCode.text,
-              caregivers);
+      // Update currentUser
+      currentUser.name = user?.displayName ?? '';
+      currentUser.uid = user!.uid;
+      
+      List<Baby> babies = [];
+      QuerySnapshot userSnapshot = await UserDatabaseMethods().getUser(user!.uid);
+      var userDoc = userSnapshot.docs;
+      if (userDoc.isNotEmpty) {
+        List<dynamic> babyIds = userDoc[0]['baby'];
+        for (String babyId in babyIds) {
+          if (babyId != '') {
+            DocumentSnapshot snapshot2 = await UserDatabaseMethods().getBaby(babyId);
+            Map<String, dynamic> doc2 = snapshot2.data()! as Map<String, dynamic>;
 
-      currentUser.babies.add(Baby(
-          collectionId: babyCode.text,
-          dob: (doc['DOB'] as Timestamp)
-              .toDate(),
-          name: doc['Name'],
-          caregivers: caregivers
-              as List<
-                  Map<String,
-                      String>>));
+            babies.add(Baby(
+                collectionId: babyId,
+                dob: (doc2['DOB'] as Timestamp).toDate(),
+                name: doc2['Name'],
+                caregivers: doc2['Caregivers']));
+          }
+        }
+        currentUser.babies = babies;
+      }
       context.go('/home');
     } catch (e) {
       print(
