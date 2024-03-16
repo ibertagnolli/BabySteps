@@ -21,8 +21,9 @@ class _SignupPageState extends State<SignupPage> {
   // The global key uniquely identifies the Form widget and allows validation of the form.
   final _formKey = GlobalKey<FormState>();
 
-  String? errorMessage;
+  String errorMessage = "";
 
+  /// Sets error message from Firestore Auth
   void setErrorMessage(String message) {
     setState(() {
       errorMessage = message;
