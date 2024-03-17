@@ -4,19 +4,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class UserDatabaseMethods {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
-  //This methods adds an entry to the diaper collection
+  /// Creates a new baby
   Future addBaby(Map<String, dynamic> userInfoMap) async {
     return await db.collection('Babies').add(userInfoMap);
   }
 
-  Future addBabyToUser(Map<String, dynamic> userInfoMap) async {
+  /// Creates a new user with an existing baby in its baby array
+  Future addBabyToNewUser(Map<String, dynamic> userInfoMap) async {
     return await db.collection('Users').add(userInfoMap);
   }
 
+  /// Returns the user with uid
   Future<QuerySnapshot> getUser(String uid) async {
     return await db.collection('Users').where('UID', isEqualTo: uid).get();
   }
 
+  /// Returns the baby with babyId
   Future getBaby(String babyId) async {
     return await db.collection('Babies').doc(babyId).get();
   }
@@ -28,8 +31,8 @@ class UserDatabaseMethods {
         .update({"Name": name, "DOB": date});
   }
 
-  Future updateBabyCaregiver(
-      String currBabyDoc, List<dynamic> caregivers) async {
+  /// Updates the baby at currBabyDoc with the list of caregivers
+  Future updateBabyCaregiver(String currBabyDoc, List<dynamic> caregivers) async {
     return await db
         .collection("Babies")
         .doc(currBabyDoc)

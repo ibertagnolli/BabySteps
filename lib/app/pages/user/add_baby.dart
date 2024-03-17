@@ -26,32 +26,36 @@ class _AddBabyPageState extends State<AddBabyPage> {
   // The global key uniquely identifies the Form widget and allows validation of the form.
   final _formKey = GlobalKey<FormState>();
 
-  uploadData() async {
+  /// Creates a new primary user associated with a new baby
+  uploadFirstBaby() async {
+    // Add the baby to the DB
     Map<String, dynamic> uploaddata = {
       'DOB': DateFormat.yMd().parse(date.text),
       'Name': babyName.text,
+      'PrimaryCaregiverUID': user?.uid,
+      'Caregivers': [],
     };
     DocumentReference babyRef = await UserDatabaseMethods().addBaby(uploaddata);
 
+    // Add the primary user to the DB (user is currently only in Auth)
     Map<String, dynamic> userData = {
       'baby': [babyRef.id],
-      'UID': FirebaseAuth.instance.currentUser?.uid,
+      'UID': user?.uid,
     };
+    await UserDatabaseMethods().addBabyToNewUser(userData);
 
-    await UserDatabaseMethods().addBabyToUser(userData);
-
+    // Update currentUser
     currentUser.name = user?.displayName ?? '';
     currentUser.uid = user!.uid;
+    
     List<Baby> babies = [];
-
     QuerySnapshot snapshot = await UserDatabaseMethods().getUser(user!.uid);
     var doc = snapshot.docs;
     if (doc.isNotEmpty) {
       List<dynamic> babyIds = doc[0]['baby'];
       for (String babyId in babyIds) {
         if (babyId != '') {
-          DocumentSnapshot snapshot2 =
-              await UserDatabaseMethods().getBaby(babyId);
+          DocumentSnapshot snapshot2 = await UserDatabaseMethods().getBaby(babyId);
           Map<String, dynamic> doc2 = snapshot2.data()! as Map<String, dynamic>;
 
           babies.add(Baby(
@@ -61,8 +65,61 @@ class _AddBabyPageState extends State<AddBabyPage> {
               caregivers: doc2['Caregivers']));
         }
       }
-
       currentUser.babies = babies;
+    }
+  }
+
+  /// Creates a new caregiver user associated with an existing baby
+  uploadBabyToCaregiver(TextEditingController babyCode) async {
+    // Update currentUser
+    currentUser.name = user?.displayName ?? '';
+    currentUser.uid = user!.uid;
+
+    try {
+      // Create the caregiver user associated with existing baby
+      Map<String, dynamic> userData = {
+        'baby': [babyCode.text],
+        'UID': currentUser.uid,
+      };
+      UserDatabaseMethods().addBabyToNewUser(userData);
+
+      // Now that the caregiver user has been created, update currentUser's userDoc
+      QuerySnapshot userSnapshot = await UserDatabaseMethods().getUser(user!.uid);
+      var userDoc = userSnapshot.docs;
+      currentUser.userDoc = userDoc[0].id;
+
+      // Add the caregiver user to the baby's list of caregivers
+      DocumentSnapshot snapshot = await UserDatabaseMethods().getBaby(babyCode.text);
+      Map<String, dynamic> doc = snapshot.data()! as Map<String, dynamic>;
+      List<dynamic> caregivers = doc['Caregivers'];
+      caregivers.add({
+        'name': currentUser.name,
+        'doc': currentUser.userDoc,
+        'uid': currentUser.uid
+      });
+      await UserDatabaseMethods().updateBabyCaregiver(babyCode.text, caregivers);
+      
+      // Finish updating currentUser with their updated list of babies
+      List<Baby> babies = [];
+      if (userDoc.isNotEmpty) {
+        List<dynamic> babyIds = userDoc[0]['baby'];
+        for (String babyId in babyIds) {
+          if (babyId != '') {
+            DocumentSnapshot snapshot2 = await UserDatabaseMethods().getBaby(babyId);
+            Map<String, dynamic> doc2 = snapshot2.data()! as Map<String, dynamic>;
+
+            babies.add(Baby(
+                collectionId: babyId,
+                dob: (doc2['DOB'] as Timestamp).toDate(),
+                name: doc2['Name'],
+                caregivers: doc2['Caregivers']));
+          }
+        }
+        currentUser.babies = babies;
+      }
+      context.go('/home');
+    } catch (e) {
+      print('invalid code ${e.toString()}');
     }
   }
 
@@ -83,53 +140,8 @@ class _AddBabyPageState extends State<AddBabyPage> {
                     ),
                     const SizedBox(height: 8),
                     ElevatedButton(
-                      onPressed: () async {
-                        //TODO: make sure baby is actually in database
-
-                        try {
-                          Map<String, dynamic> userData = {
-                            'baby': [babyCode.text],
-                            'UID': FirebaseAuth
-                                .instance.currentUser?.uid,
-                          };
-                          UserDatabaseMethods()
-                              .addBabyToUser(userData);
-
-                          DocumentSnapshot snapshot =
-                              await UserDatabaseMethods()
-                                  .getBaby(babyCode.text);
-                          Map<String, dynamic> doc =
-                              snapshot.data()!
-                                  as Map<String, dynamic>;
-
-                          List<dynamic> caregivers =
-                              doc['Caregivers'];
-
-                          caregivers.add({
-                            'name': currentUser.name,
-                            'doc': currentUser.userDoc,
-                            'uid': currentUser.uid
-                          });
-
-                          await UserDatabaseMethods()
-                              .updateBabyCaregiver(
-                                  babyCode.text,
-                                  caregivers);
-
-                          currentUser.babies.add(Baby(
-                              collectionId: babyCode.text,
-                              dob: (doc['DOB'] as Timestamp)
-                                  .toDate(),
-                              name: doc['Name'],
-                              caregivers: caregivers
-                                  as List<
-                                      Map<String,
-                                          String>>));
-                          context.go('/home');
-                        } catch (e) {
-                          print(
-                              'invalid code ${e.toString()}');
-                        }
+                      onPressed: () {
+                        uploadBabyToCaregiver(babyCode);
                       },
                       style: blueButton(context),
                       child: const Text('Add baby'),
@@ -137,7 +149,6 @@ class _AddBabyPageState extends State<AddBabyPage> {
                   ],
                 )));
       });
-
   }
 
   @override
@@ -244,7 +255,7 @@ class _AddBabyPageState extends State<AddBabyPage> {
                       onPressed: () {
                         // Validate returns true if the form is valid, or false otherwise.
                         if (_formKey.currentState!.validate()) {
-                          uploadData();
+                          uploadFirstBaby();
                           context.go('/home');
                         }
                       },
