@@ -119,7 +119,6 @@ class _AddBabyPageState extends State<AddBabyPage> {
         }
         currentUser.babies = babies;
       }
-      context.go('/home');
     } catch (e) {
       print('invalid code ${e.toString()}');
     }
@@ -144,6 +143,7 @@ class _AddBabyPageState extends State<AddBabyPage> {
                     ElevatedButton(
                       onPressed: () {
                         uploadBabyToCaregiver(babyCode);
+                        context.go('/home');
                       },
                       style: blueButton(context),
                       child: const Text('Add baby'),
