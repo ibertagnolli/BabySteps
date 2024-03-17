@@ -30,10 +30,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void buttonClicked() async {
     if (editing) {
       List<String> babyIds = [];
-      print("current name: ${FirebaseAuth.instance.currentUser?.displayName}");
-      print("proposed new user name: ${updatedUser.name}");
       await FirebaseAuth.instance.currentUser?.updateDisplayName(updatedUser.name);
-      print("actual new user name: ${FirebaseAuth.instance.currentUser?.displayName}");
 
       // try {
       //   FirebaseAuth.instance.currentUser?.updateEmail(updatedUser.email!);
@@ -103,8 +100,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void updateBabyDOB(String? id, String newVal) {
-    Baby? updateBaby =
-        updatedUser.babies.where((baby) => baby.collectionId == id).firstOrNull;
+    Baby? updateBaby = updatedUser.babies.where((baby) => baby.collectionId == id).firstOrNull;
     if (updateBaby != null) {
       updateBaby.dob = DateFormat.yMd().parse(newVal);
     } else {
