@@ -21,14 +21,16 @@ class _SignupPageState extends State<SignupPage> {
   // The global key uniquely identifies the Form widget and allows validation of the form.
   final _formKey = GlobalKey<FormState>();
 
-  String? errorMessage;
+  String errorMessage = "";
 
+  /// Sets error message from Firestore Auth
   void setErrorMessage(String message) {
     setState(() {
       errorMessage = message;
     });
   }
 
+  /// Creates a User account
   void createAccount() async {
     try {
       UserCredential user = await FirebaseAuth.instance
@@ -68,6 +70,7 @@ class _SignupPageState extends State<SignupPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              
               // Header logo and welcome text
               SizedBox(
                   width: 200,
@@ -86,12 +89,14 @@ class _SignupPageState extends State<SignupPage> {
                     fontSize: 20.0,
                     color: Theme.of(context).colorScheme.surface),
               ),
+              
               // Form fields
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
                 child: Form(
                   key: _formKey,
                   child: Column( children: <Widget> [
+                    
                     // Full Name Field
                     TextFormField(
                       cursorColor: Theme.of(context).colorScheme.secondary,
@@ -201,7 +206,7 @@ class _SignupPageState extends State<SignupPage> {
                     // Error creating account
                     if (errorMessage != null)
                       Padding(
-                        padding: EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(16),
                         child: Text(
                           errorMessage!,
                           style: TextStyle(
