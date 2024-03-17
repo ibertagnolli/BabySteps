@@ -71,7 +71,9 @@ class _AddBabyPageState extends State<AddBabyPage> {
 
   /// Creates a new caregiver user associated with an existing baby
   uploadBabyToCaregiver(TextEditingController babyCode) async {
-    // TODO do we need to update currentUser?
+    // Update currentUser
+    currentUser.name = user?.displayName ?? '';
+    currentUser.uid = user!.uid;
 
     try {
       // Create the caregiver user associated with existing baby
@@ -80,6 +82,11 @@ class _AddBabyPageState extends State<AddBabyPage> {
         'UID': currentUser.uid,
       };
       UserDatabaseMethods().addBabyToNewUser(userData);
+
+      // Now that the caregiver user has been created, update currentUser's userDoc
+      QuerySnapshot userSnapshot = await UserDatabaseMethods().getUser(user!.uid);
+      var userDoc = userSnapshot.docs;
+      currentUser.userDoc = userDoc[0].id;
 
       // Add the caregiver user to the baby's list of caregivers
       DocumentSnapshot snapshot = await UserDatabaseMethods().getBaby(babyCode.text);
@@ -91,14 +98,9 @@ class _AddBabyPageState extends State<AddBabyPage> {
         'uid': currentUser.uid
       });
       await UserDatabaseMethods().updateBabyCaregiver(babyCode.text, caregivers);
-
-      // Update currentUser
-      currentUser.name = user?.displayName ?? '';
-      currentUser.uid = user!.uid;
       
+      // Finish updating currentUser with their updated list of babies
       List<Baby> babies = [];
-      QuerySnapshot userSnapshot = await UserDatabaseMethods().getUser(user!.uid);
-      var userDoc = userSnapshot.docs;
       if (userDoc.isNotEmpty) {
         List<dynamic> babyIds = userDoc[0]['baby'];
         for (String babyId in babyIds) {
@@ -117,10 +119,8 @@ class _AddBabyPageState extends State<AddBabyPage> {
       }
       context.go('/home');
     } catch (e) {
-      print(
-          'invalid code ${e.toString()}');
+      print('invalid code ${e.toString()}');
     }
-
   }
 
   /// Shows the dialog box where users can add a baby via an add code
