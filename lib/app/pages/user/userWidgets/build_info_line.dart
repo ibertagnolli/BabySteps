@@ -18,8 +18,7 @@ class BuildInfoLine extends StatefulWidget {
 class _BuildInfoLineState extends State<BuildInfoLine> {
   @override
   Widget build(BuildContext context) {
-    TextEditingController fieldController =
-        TextEditingController(text: widget.value);
+    TextEditingController fieldController = TextEditingController(text: widget.value);
     double width = MediaQuery.of(context).size.width;
     return widget.editing
         ? SizedBox(
