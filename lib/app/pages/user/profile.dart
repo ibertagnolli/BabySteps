@@ -123,8 +123,9 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Nav bar
       appBar: AppBar(
-          title: Text('Profile'),
+          title: const Text('Profile'),
           leading: BackButton(
               onPressed: () => context.go('/home'),
               color: Theme.of(context).colorScheme.onSurface)),
@@ -136,7 +137,8 @@ class _ProfilePageState extends State<ProfilePage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                //container is for the placeholder profile image
+
+                // Profile Image
                 Container(
                   height: 120,
                   width: 120,
@@ -151,9 +153,10 @@ class _ProfilePageState extends State<ProfilePage> {
                           blurRadius: 10)
                     ],
                     image: const DecorationImage(
-                        image: const AssetImage('assets/BabyStepsLogo.png')),
+                        image: AssetImage('assets/BabyStepsLogo.png')),
                   ),
                 ),
+                
                 //create user info box and put in fields
                 BuildInfoBox(label: '', fields: [
                   BuildInfoField('Name', [userProfile.name ?? ''],
@@ -162,6 +165,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       const Icon(Icons.email), editing, updateUserEmail),
                   //buildInfoField('Date of Birth', userProfile?.dateOfBirth?.toString()),
                 ]),
+                
                 //create children info box and put in fields
                 //TODO: display multiple baby's info when caregivers have more than one
 
@@ -177,7 +181,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
                 if (editing)
                   Padding(
-                    padding: EdgeInsets.only(top: 16),
+                    padding: const EdgeInsets.only(top: 16),
                     child: ElevatedButton(
                       onPressed: createBaby,
                       style: blueButton(context),
@@ -208,7 +212,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       context.go('/login');
                     },
                     style: blueButton(context),
-                    child: Text('Logout', style: const TextStyle(fontSize: 26)),
+                    child: const Text('Logout', style: TextStyle(fontSize: 26)),
                   ),
                 ),
               ],
