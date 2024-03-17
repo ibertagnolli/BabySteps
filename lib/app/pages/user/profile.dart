@@ -1,5 +1,7 @@
+import 'package:babysteps/app/pages/user/userWidgets/baby_box.dart';
+import 'package:babysteps/app/pages/user/userWidgets/build_info_box.dart';
+import 'package:babysteps/app/pages/user/userWidgets/build_info_field.dart';
 import 'package:babysteps/app/pages/user/user_database.dart';
-import 'package:babysteps/app/widgets/profile_widgets.dart';
 import 'package:babysteps/app/widgets/styles.dart';
 import 'package:babysteps/main.dart';
 import 'package:babysteps/model/baby.dart';
@@ -157,14 +159,16 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 
-                //create user info box and put in fields
-                BuildInfoBox(label: '', fields: [
-                  BuildInfoField('Name', [userProfile.name ?? ''],
-                      const Icon(Icons.account_box), editing, updateUserName),
-                  BuildInfoField('Email', [userProfile.email ?? ''],
-                      const Icon(Icons.email), editing, updateUserEmail),
-                  //buildInfoField('Date of Birth', userProfile?.dateOfBirth?.toString()),
-                ]),
+                // User's profile info box
+                BuildInfoBox(
+                  label: '', 
+                  fields: [
+                    BuildInfoField('Name', [userProfile.name ?? ''],
+                    const Icon(Icons.account_box), editing, updateUserName),
+                    BuildInfoField('Email', [userProfile.email ?? ''], // TODO make this just a text field, not editable
+                    const Icon(Icons.email), editing, updateUserEmail),
+                  ]
+                ),
                 
                 //create children info box and put in fields
                 //TODO: display multiple baby's info when caregivers have more than one
