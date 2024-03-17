@@ -30,7 +30,10 @@ class _ProfilePageState extends State<ProfilePage> {
   void buttonClicked() async {
     if (editing) {
       List<String> babyIds = [];
-      FirebaseAuth.instance.currentUser?.updateDisplayName(updatedUser.name);
+      print("current name: ${FirebaseAuth.instance.currentUser?.displayName}");
+      print("proposed new user name: ${updatedUser.name}");
+      await FirebaseAuth.instance.currentUser?.updateDisplayName(updatedUser.name);
+      print("actual new user name: ${FirebaseAuth.instance.currentUser?.displayName}");
 
       // try {
       //   FirebaseAuth.instance.currentUser?.updateEmail(updatedUser.email!);
@@ -95,8 +98,7 @@ class _ProfilePageState extends State<ProfilePage> {
     if (updateBaby != null) {
       updateBaby.name = newVal;
     } else {
-      print(
-          'error finding baby in collection! $id ${updatedUser.babies.length}');
+      print('error finding baby in collection! $id ${updatedUser.babies.length}');
     }
   }
 
@@ -162,11 +164,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 // User's profile info box
                 BuildInfoBox(
                   label: '', 
-                  fields: [
-                    BuildInfoField('Name', [userProfile.name ?? ''],
-                    const Icon(Icons.account_box), editing, updateUserName),
-                    BuildInfoField('Email', [userProfile.email ?? ''], // TODO make this just a text field, not editable
-                    const Icon(Icons.email), editing, updateUserEmail),
+                  fields: [ 
+                    BuildInfoField('Name', [currentUser.name ?? ''], const Icon(Icons.account_box), editing, updateUserName),
+                    BuildInfoField('Email', [userProfile.email ?? ''], const Icon(Icons.email), editing, updateUserEmail), // TODO make this just a text field, not editable
                   ]
                 ),
                 
