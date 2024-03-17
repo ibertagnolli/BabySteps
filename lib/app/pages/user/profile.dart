@@ -1,5 +1,7 @@
+import 'package:babysteps/app/pages/user/userWidgets/baby_box.dart';
+import 'package:babysteps/app/pages/user/userWidgets/build_info_box.dart';
+import 'package:babysteps/app/pages/user/userWidgets/build_info_field.dart';
 import 'package:babysteps/app/pages/user/user_database.dart';
-import 'package:babysteps/app/widgets/profile_widgets.dart';
 import 'package:babysteps/app/widgets/styles.dart';
 import 'package:babysteps/main.dart';
 import 'package:babysteps/model/baby.dart';
@@ -28,7 +30,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void buttonClicked() async {
     if (editing) {
       List<String> babyIds = [];
-      FirebaseAuth.instance.currentUser?.updateDisplayName(updatedUser.name);
+      await FirebaseAuth.instance.currentUser?.updateDisplayName(updatedUser.name);
 
       // try {
       //   FirebaseAuth.instance.currentUser?.updateEmail(updatedUser.email!);
@@ -93,14 +95,12 @@ class _ProfilePageState extends State<ProfilePage> {
     if (updateBaby != null) {
       updateBaby.name = newVal;
     } else {
-      print(
-          'error finding baby in collection! $id ${updatedUser.babies.length}');
+      print('error finding baby in collection! $id ${updatedUser.babies.length}');
     }
   }
 
   void updateBabyDOB(String? id, String newVal) {
-    Baby? updateBaby =
-        updatedUser.babies.where((baby) => baby.collectionId == id).firstOrNull;
+    Baby? updateBaby = updatedUser.babies.where((baby) => baby.collectionId == id).firstOrNull;
     if (updateBaby != null) {
       updateBaby.dob = DateFormat.yMd().parse(newVal);
     } else {
@@ -123,8 +123,9 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Nav bar
       appBar: AppBar(
-          title: Text('Profile'),
+          title: const Text('Profile'),
           leading: BackButton(
               onPressed: () => context.go('/home'),
               color: Theme.of(context).colorScheme.onSurface)),
@@ -136,7 +137,8 @@ class _ProfilePageState extends State<ProfilePage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                //container is for the placeholder profile image
+
+                // Profile Image
                 Container(
                   height: 120,
                   width: 120,
@@ -151,17 +153,19 @@ class _ProfilePageState extends State<ProfilePage> {
                           blurRadius: 10)
                     ],
                     image: const DecorationImage(
-                        image: const AssetImage('assets/BabyStepsLogo.png')),
+                        image: AssetImage('assets/BabyStepsLogo.png')),
                   ),
                 ),
-                //create user info box and put in fields
-                BuildInfoBox(label: '', fields: [
-                  BuildInfoField('Name', [userProfile.name ?? ''],
-                      const Icon(Icons.account_box), editing, updateUserName),
-                  BuildInfoField('Email', [userProfile.email ?? ''],
-                      const Icon(Icons.email), editing, updateUserEmail),
-                  //buildInfoField('Date of Birth', userProfile?.dateOfBirth?.toString()),
-                ]),
+                
+                // User's profile info box
+                BuildInfoBox(
+                  label: '', 
+                  fields: [ 
+                    BuildInfoField('Name', [currentUser.name ?? ''], const Icon(Icons.account_box), editing, updateUserName),
+                    BuildInfoField('Email', [userProfile.email ?? ''], const Icon(Icons.email), editing, updateUserEmail), // TODO make this just a text field, not editable
+                  ]
+                ),
+                
                 //create children info box and put in fields
                 //TODO: display multiple baby's info when caregivers have more than one
 
@@ -177,7 +181,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
                 if (editing)
                   Padding(
-                    padding: EdgeInsets.only(top: 16),
+                    padding: const EdgeInsets.only(top: 16),
                     child: ElevatedButton(
                       onPressed: createBaby,
                       style: blueButton(context),
@@ -208,7 +212,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       context.go('/login');
                     },
                     style: blueButton(context),
-                    child: Text('Logout', style: const TextStyle(fontSize: 26)),
+                    child: const Text('Logout', style: TextStyle(fontSize: 26)),
                   ),
                 ),
               ],

@@ -47,6 +47,7 @@ class _AddBabyPageState extends State<AddBabyPage> {
     // Update currentUser
     currentUser.name = user?.displayName ?? '';
     currentUser.uid = user!.uid;
+    currentUser.email = user!.email;
     
     List<Baby> babies = [];
     QuerySnapshot snapshot = await UserDatabaseMethods().getUser(user!.uid);
@@ -74,6 +75,7 @@ class _AddBabyPageState extends State<AddBabyPage> {
     // Update currentUser
     currentUser.name = user?.displayName ?? '';
     currentUser.uid = user!.uid;
+    currentUser.email = user!.email;
 
     try {
       // Create the caregiver user associated with existing baby
