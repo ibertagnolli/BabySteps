@@ -3,10 +3,14 @@ import 'package:babysteps/app/pages/calendar/add_task_button.dart';
 import 'package:babysteps/app/pages/calendar/calendar_database.dart';
 import 'package:babysteps/app/pages/calendar/event_stream.dart';
 import 'package:babysteps/app/pages/calendar/task_stream.dart';
+import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:babysteps/app/pages/calendar/milestones.dart';
+//import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'dart:core';
+
 
 class CalendarPage extends StatefulWidget {
  const CalendarPage({super.key});
@@ -19,6 +23,8 @@ class _CalendarPageState extends State<CalendarPage> {
   CalendarFormat _calendarFormat = CalendarFormat.twoWeeks;
   DateTime _focusedDay = DateUtils.dateOnly(DateTime.now()); // The current day
   DateTime _selectedDay = DateUtils.dateOnly(DateTime.now()); // The day selected in the calendar
+  DateTime? dob = currentUser.babies[currentUser.currBabyIndex].dob;
+  late int monthsAlive;
 
 //Grab the data on page initialization
   @override
@@ -27,6 +33,7 @@ class _CalendarPageState extends State<CalendarPage> {
     _selectedDay = _focusedDay;
     CalendarDatabaseMethods().listenForEventReads();
     CalendarDatabaseMethods().listenForTaskReads();
+    monthsAlive =(_selectedDay.difference(dob!).inDays / 30).floor();
   }
 
   @override
@@ -137,9 +144,47 @@ class _CalendarPageState extends State<CalendarPage> {
                   ),
               ],
             ),
-            ),     
-          ]),
-        )
+            ), 
+            // Daily calendar milestones card
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: ExpansionTile(
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  collapsedBackgroundColor:
+                      Theme.of(context).colorScheme.surface,
+                  title: Text(
+                    'Milestones for ${DateFormat.Md().format(_selectedDay)}',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  initiallyExpanded: true,
+                  children: <Widget>[
+                    // List of milestones
+                 
+                   
+                    ListTile(
+                      title: Text(
+                        'Month $monthsAlive Milestones',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          
+                          for (String milestone in Milestones.milestonesByMonth[monthsAlive]!)
+                            Text('• $milestone'),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
