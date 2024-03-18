@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
@@ -190,11 +191,27 @@ class _SocialStreamState extends State<SocialStream> {
         build: (context) => widgets, //here goes the widgets list
       ),
     );
-    final output = await getTemporaryDirectory();
-    print(output.path);
-    var path = "${output.path}/test.pdf";
-    final file = File(path);
-    await file.writeAsBytes(await pdf.save());
+    //TODO have a file picker pop up here
+    if (!await FlutterFileDialog.isPickDirectorySupported()) {
+  print("Picking directory not supported");
+  return pdf;
+}
+
+final pickedDirectory = await FlutterFileDialog.pickDirectory();
+final bytes = await pdf.save();
+if (pickedDirectory != null) {
+  final bytes = await pdf.save();
+  FlutterFileDialog.saveFileToDirectory(directory: pickedDirectory, data: bytes, fileName: "$child.pdf", replace: true, mimeType:"application/pdf" );
+  print(pickedDirectory);
+  print(bytes);
+}
+  
+
+    // final output = await getDownloadsDirectory();
+    // print(output?.path);
+    // var path = "${output?.path}/test.pdf";
+    // final file = File(path);
+    // await file.writeAsBytes(await pdf.save());
     return pdf;
   }
 
