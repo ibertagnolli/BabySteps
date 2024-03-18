@@ -446,55 +446,62 @@ class HistoryTable4Cols extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Source: https://api.flutter.dev/flutter/material/DataTable-class.html
-    return DataTable(
-      columns: <DataColumn>[
-        // Table column titles
-        DataColumn(
-          label: Expanded(
-            child: Text(
-              'Date',
-              style: TextStyle(fontStyle: FontStyle.italic),
+    return Align(
+      alignment: Alignment.topCenter,
+      child: SingleChildScrollView( // shouldn't need to scroll but just in case of small screen
+        scrollDirection: Axis.horizontal,
+        child: DataTable(
+          columnSpacing: 30,
+          columns: <DataColumn>[
+            // Table column titles
+            DataColumn(
+              label: Expanded(
+                child: Text(
+                  'Date',
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
             ),
-          ),
-        ),
-        DataColumn(
-          label: Expanded(
-            child: Text(
-              'Time',
-              style: TextStyle(fontStyle: FontStyle.italic),
+            DataColumn(
+              label: Expanded(
+                child: Text(
+                  'Time',
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
             ),
-          ),
-        ),
-        DataColumn(
-          label: Expanded(
-            child: Text(
-              '$col1Name',
-              style: TextStyle(fontStyle: FontStyle.italic),
+            DataColumn(
+              label: Expanded(
+                child: Text(
+                  '$col1Name',
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
             ),
-          ),
-        ),
-        DataColumn(
-          label: Expanded(
-            child: Text(
-              '$col2Name',
-              style: TextStyle(fontStyle: FontStyle.italic),
+            DataColumn(
+              label: Expanded(
+                child: Text(
+                  '$col2Name',
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
             ),
-          ),
+          ],
+          // Table rows - dynamic - For each row we collected data for, create a DataCell for it
+          // TODO: Some sort of "no history yet" message if there are no entries
+          rows: <DataRow>[
+            for (var row in rows)
+              DataRow(
+                cells: <DataCell>[
+                  DataCell(Text(row.day)),
+                  DataCell(Text(row.time)),
+                  DataCell(Text(row.data1)),
+                  DataCell(Text(row.data2))
+                ],
+              ),
+          ],
         ),
-      ],
-      // Table rows - dynamic - For each row we collected data for, create a DataCell for it
-      // TODO: Some sort of "no history yet" message if there are no entries
-      rows: <DataRow>[
-        for (var row in rows)
-          DataRow(
-            cells: <DataCell>[
-              DataCell(Text(row.day)),
-              DataCell(Text(row.time)),
-              DataCell(Text(row.data1)),
-              DataCell(Text(row.data2))
-            ],
-          ),
-      ],
+      ),
     );
   }
 }
