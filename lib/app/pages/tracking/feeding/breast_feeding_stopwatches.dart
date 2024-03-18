@@ -100,10 +100,16 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
         timeSoFarOnLeft += DateTime.now()
             .difference((leftSide['lastStart'] as Timestamp).toDate())
             .inMilliseconds;
+        leftSide['duration'] += DateTime.now() // Lexie added so side time is updated when done clicked
+            .difference((leftSide['lastStart'] as Timestamp).toDate())
+            .inMilliseconds;
       }
 
       if (rightSide['lastStart'] != '') {
         timeSoFarOnRight += DateTime.now()
+            .difference((rightSide['lastStart'] as Timestamp).toDate())
+            .inMilliseconds;
+        rightSide['duration'] += DateTime.now() // Lexie added so side time is updated when done clicked
             .difference((rightSide['lastStart'] as Timestamp).toDate())
             .inMilliseconds;
       }

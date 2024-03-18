@@ -4,38 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:babysteps/main.dart';
+import 'package:babysteps/app/widgets/history_widgets.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 String? babyDoc = currentUser
     .babies[currentUser.currBabyIndex].collectionId; //TODO: get current baby
 
-// Breastfeeding - first shows the accurate most recent entries, then if you make a new entry it overwrites
-// the most recent entry on that same side
-// Bottle feeding - all good besides "amount" is currently hardcoded because it's not part of the database
-// Sleep - first shows the accurate most recent entries, then if you make a new entry it'll overwrite the
-// most recent one -- it's actually getting overwritten in the database though????
-// Diaper - all good
-// Weight - only autofills date for the first one, then the datepicker doesn't include a time so it's all 12:00
-// Temp - same as weight
-
-// Represents the data shown in the history table when we only need 3 columns
-class RowData3Cols<T1, T2, T3> {
-  T1 day;
-  T2 time;
-  T3 data;
-
-  RowData3Cols(this.day, this.time, this.data);
-}
-
-// Represents the data shown in the history table when we need 4 columns
-class RowData4Cols<T1, T2, T3, T4> {
-  T1 day;
-  T2 time;
-  T3 data1;
-  T4 data2;
-
-  RowData4Cols(this.day, this.time, this.data1, this.data2);
-}
 
 // BREASTFEEDING
 
@@ -75,23 +49,28 @@ class _BreastfeedingHistoryStreamState
         var lastBreastfeedingDocs = snapshot.data!.docs;
 
         // List of RowData objects to hold data for the table
-        List<RowData4Cols> rows = [];
+        List<RowData6Cols> rows = [];
+        //List<RowData4Cols> rows = [];
 
         // For however many most recent docs we have, get relevant info and build a row for it
         lastBreastfeedingDocs.forEach((doc) {
-          DateTime date1 = doc['date'].toDate();
-          String dateStr1 = DateFormat('MM-dd hh:mm').format(date1);
-          var splitDate1 = dateStr1.split(' ');
-          String day = splitDate1[0];
-          String time = splitDate1[1];
-          String length = transformMilliSeconds(doc['length']);
-          String side = doc['side']['latest'];
+          DateTime date = doc['date'].toDate();
+          String dateStr = DateFormat('MM-dd hh:mm a').format(date);
+          var splitDate = dateStr.split(' '); // needed to get am/pm 
+          String day = splitDate[0];
+          String time = splitDate[1] + splitDate[2];
+          String totalLength = transformMilliSeconds(doc['length']);
+          String lastSide = doc['side']['latest'];
+          String leftLength = transformMilliSeconds(doc['side']['left']['duration']);
+          String rightLength = transformMilliSeconds(doc['side']['right']['duration']);
 
-          rows.add(RowData4Cols(day, time, length, side));
+          rows.add(RowData6Cols(day, time, leftLength, rightLength, totalLength, lastSide));
+          //rows.add(RowData4Cols(day, time, leftLength, rightLength));
         });
 
         // Make a table with the retrieved data
-        return HistoryTable4Cols(rows, "Length", "Side");
+        return HistoryTable6Cols(rows, "Left Length", "Right Length", "Total Time", "Ended On");
+        //return HistoryTable4Cols(rows, "Left Length", "Right Length");
       },
     );
   }
@@ -136,11 +115,11 @@ class _BottleHistoryStreamState extends State<BottleHistoryStream> {
 
         // For however many most recent docs we have, build a row for it
         lastBottleDocs.forEach((doc) {
-          DateTime date1 = doc['date'].toDate();
-          String dateStr1 = DateFormat('MM-dd hh:mm').format(date1);
-          var splitDate1 = dateStr1.split(' ');
-          String day = splitDate1[0];
-          String time = splitDate1[1];
+          DateTime date = doc['date'].toDate();
+          String dateStr = DateFormat('MM-dd hh:mm a').format(date);
+          var splitDate = dateStr.split(' ');
+          String day = splitDate[0];
+          String time = splitDate[1] + splitDate[2];
           String bottleType = doc['bottleType'];
           String amount = doc['ounces'] + " oz";
 
@@ -192,11 +171,11 @@ class _SleepHistoryStreamState extends State<SleepHistoryStream> {
 
         // For however many most recent docs we have, build a row for it
         lastSleepDocs.forEach((doc) {
-          DateTime date1 = doc['date'].toDate();
-          String dateStr1 = DateFormat('MM-dd hh:mm').format(date1);
-          var splitDate1 = dateStr1.split(' ');
-          String day = splitDate1[0];
-          String time = splitDate1[1];
+          DateTime date = doc['date'].toDate();
+          String dateStr = DateFormat('MM-dd hh:mm a').format(date);
+          var splitDate = dateStr.split(' ');
+          String day = splitDate[0];
+          String time = splitDate[1] + splitDate[2];
           String length = doc['length'];
 
           rows.add(RowData3Cols(day, time, length));
@@ -247,11 +226,11 @@ class _WeightHistoryStreamState extends State<WeightHistoryStream> {
 
         // For however many most recent docs we have, build a row for it
         lastWeightDocs.forEach((doc) {
-          DateTime date1 = doc['date'].toDate();
-          String dateStr1 = DateFormat('MM-dd hh:mm').format(date1);
-          var splitDate1 = dateStr1.split(' ');
-          String day = splitDate1[0];
-          String time = splitDate1[1];
+          DateTime date = doc['date'].toDate();
+          String dateStr = DateFormat('MM-dd hh:mm a').format(date);
+          var splitDate = dateStr.split(' ');
+          String day = splitDate[0];
+          String time = splitDate[1] + splitDate[2];
           String pounds = doc['pounds'];
           String ounces = doc['ounces'];
           String weight = '$pounds lbs $ounces oz';
@@ -305,11 +284,11 @@ class _TemperatureHistoryStreamState extends State<TemperatureHistoryStream> {
 
         // For however many most recent docs we have, build a row for it
         lastTemperatureDocs.forEach((doc) {
-          DateTime date1 = doc['date'].toDate();
-          String dateStr1 = DateFormat('MM-dd hh:mm').format(date1);
-          var splitDate1 = dateStr1.split(' ');
-          String day = splitDate1[0];
-          String time = splitDate1[1];
+          DateTime date = doc['date'].toDate();
+          String dateStr = DateFormat('MM-dd hh:mm a').format(date);
+          var splitDate = dateStr.split(' ');
+          String day = splitDate[0];
+          String time = splitDate[1] + splitDate[2];
           String temperature = doc['temperature'];
 
           rows.add(RowData3Cols(day, time, temperature));
@@ -362,11 +341,11 @@ class _DiaperHistoryStreamState extends State<DiaperHistoryStream> {
 
         // For however many most recent docs we have, build a row for it
         lastDiaperDocs.forEach((doc) {
-          DateTime date1 = doc['date'].toDate();
-          String dateStr1 = DateFormat('MM-dd hh:mm').format(date1);
-          var splitDate1 = dateStr1.split(' ');
-          String day = splitDate1[0];
-          String time = splitDate1[1];
+          DateTime date = doc['date'].toDate();
+          String dateStr = DateFormat('MM-dd hh:mm a').format(date);
+          var splitDate = dateStr.split(' ');
+          String day = splitDate[0];
+          String time = splitDate[1] + splitDate[2];
           String diaperType = doc['type'];
           bool diaperRashBool = doc['rash'];
           String diaperRash = diaperRashBool ? "Yes" : "No";
@@ -381,127 +360,3 @@ class _DiaperHistoryStreamState extends State<DiaperHistoryStream> {
   }
 }
 
-// Table with 3 columns, column titles, and rows of data filled in
-class HistoryTable3Cols extends StatelessWidget {
-  HistoryTable3Cols(this.rows, this.colName, {super.key});
-
-  var rows;
-  String colName;
-
-  @override
-  Widget build(BuildContext context) {
-    // Source: https://api.flutter.dev/flutter/material/DataTable-class.html
-    return DataTable(
-      columns: <DataColumn>[
-        // Table column titles
-        DataColumn(
-          label: Expanded(
-            child: Text(
-              'Date',
-              style: TextStyle(fontStyle: FontStyle.italic),
-            ),
-          ),
-        ),
-        DataColumn(
-          label: Expanded(
-            child: Text(
-              'Time',
-              style: TextStyle(fontStyle: FontStyle.italic),
-            ),
-          ),
-        ),
-        DataColumn(
-          label: Expanded(
-            child: Text(
-              '$colName',
-              style: TextStyle(fontStyle: FontStyle.italic),
-            ),
-          ),
-        ),
-      ],
-      // Table rows - dynamic - For each row we collected data for, create a DataCell for it
-      // TODO: Some sort of "no history yet" message if there are no entries
-      rows: <DataRow>[
-        for (var row in rows)
-          DataRow(
-            cells: <DataCell>[
-              DataCell(Text(row.day)),
-              DataCell(Text(row.time)),
-              DataCell(Text(row.data)),
-            ],
-          ),
-      ],
-    );
-  }
-}
-
-// Table with 4 columns, column titles, and data filled in
-class HistoryTable4Cols extends StatelessWidget {
-  HistoryTable4Cols(this.rows, this.col1Name, this.col2Name, {super.key});
-
-  var rows;
-  String col1Name;
-  String col2Name;
-
-  @override
-  Widget build(BuildContext context) {
-    // Source: https://api.flutter.dev/flutter/material/DataTable-class.html
-    return Align(
-      alignment: Alignment.topCenter,
-      child: SingleChildScrollView( // shouldn't need to scroll but just in case of small screen
-        scrollDirection: Axis.horizontal,
-        child: DataTable(
-          columnSpacing: 30,
-          columns: <DataColumn>[
-            // Table column titles
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Date',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Time',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  '$col1Name',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  '$col2Name',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-          ],
-          // Table rows - dynamic - For each row we collected data for, create a DataCell for it
-          // TODO: Some sort of "no history yet" message if there are no entries
-          rows: <DataRow>[
-            for (var row in rows)
-              DataRow(
-                cells: <DataCell>[
-                  DataCell(Text(row.day)),
-                  DataCell(Text(row.time)),
-                  DataCell(Text(row.data1)),
-                  DataCell(Text(row.data2))
-                ],
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-}
