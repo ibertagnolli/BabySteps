@@ -7,7 +7,8 @@ import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:babysteps/app/pages/calendar/milestones.dart';
+//import 'package:babysteps/app/pages/calendar/milestones.dart';
+import 'package:babysteps/app/widgets/milestone_widgets.dart';
 //import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'dart:core';
 
@@ -78,6 +79,7 @@ class _CalendarPageState extends State<CalendarPage> {
                     setState(() {
                       _selectedDay = DateUtils.dateOnly(selectedDay);
                       _focusedDay = DateUtils.dateOnly(focusedDay);
+                      monthsAlive =(_selectedDay.difference(dob!).inDays / 30).floor();
                     });
                   }
                 },
@@ -146,42 +148,10 @@ class _CalendarPageState extends State<CalendarPage> {
             ),
             ), 
             // Daily calendar milestones card
-              Padding(
-                padding: const EdgeInsets.all(15),
-                child: ExpansionTile(
-                  backgroundColor: Theme.of(context).colorScheme.surface,
-                  collapsedBackgroundColor:
-                      Theme.of(context).colorScheme.surface,
-                  title: Text(
-                    'Milestones for ${DateFormat.Md().format(_selectedDay)}',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Theme.of(context).colorScheme.onSurface,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  initiallyExpanded: true,
-                  children: <Widget>[
-                    // List of milestones
-                 
-                   
-                    ListTile(
-                      title: Text(
-                        'Month $monthsAlive Milestones',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          
-                          for (String milestone in Milestones.milestonesByMonth[monthsAlive]!)
-                            Text('• $milestone'),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+             Padding(
+  padding: const EdgeInsets.all(15),
+  child:  MilestonesWidget(monthsAlive: monthsAlive),
+             ),
             ],
           ),
         ),
