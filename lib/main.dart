@@ -29,14 +29,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:babysteps/app/pages/user/login_landing.dart';
 import 'package:babysteps/app/pages/user/login.dart';
 import 'package:babysteps/app/pages/user/signup.dart';
-
+//import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 //Code for routing (most of this page) taken and adjusted from this tutorial and this github:
 //https://codewithandrea.com/articles/flutter-bottom-navigation-bar-nested-routes-gorouter/
 //https://github.com/bizz84/nested_navigation_examples/blob/main/examples/gorouter/lib/main.dart
 
 bool loggedIn = false;
 UserProfile currentUser = UserProfile();
-
+//late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([
@@ -88,6 +88,7 @@ void main() async {
       print('User is signed in!');
     }
   });
+
 
   runApp(const MyApp());
 }
