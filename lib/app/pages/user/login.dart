@@ -109,7 +109,8 @@ class _LoginPageState extends State<LoginPage> {
                       try {
                         await FirebaseAuth.instance.signInWithEmailAndPassword(
                             email: email.text, password: password.text);
-                        context.go('/home');
+                        context.go('/tracking'); 
+                        // context.go('/home'); //TODO: add back in when home is interesting
                       } catch (e) {
                         userOrPasswordIncorrect();
                       }

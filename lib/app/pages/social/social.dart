@@ -1,5 +1,5 @@
-import 'package:babysteps/app/pages/social/social_database.dart';
 import 'package:babysteps/app/pages/social/social_stream.dart';
+import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
 
@@ -14,12 +14,6 @@ class SocialPage extends StatefulWidget {
 
 class _SocialPageState extends State<SocialPage> {
   @override
-  void initState() {
-    super.initState();
-    SocialDatabaseMethods().listenForSocialReads();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -33,22 +27,28 @@ class _SocialPageState extends State<SocialPage> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Align(
-                alignment: Alignment.topRight,
-                child: IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: () => context.go('/social/newPost'),
-                )),
-            const SocialStream(),
-            // ElevatedButton(onPressed:PdfCreator.createPdf(),
-            //  child: const Text("Save to PDF"))
-
-          ],
-        ),
-      ),
+          child: ValueListenableBuilder(
+        valueListenable: currentUser,
+        builder: (context, value, child) {
+          if (value == null) {
+            return const Text("Loading...");
+          } else {
+            return Column(
+              children: [
+                Align(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                      icon: const Icon(Icons.add),
+                      onPressed: () => context.go('/social/newPost'),
+                    )),
+                const SocialStream(),
+                // ElevatedButton(onPressed:PdfCreator.createPdf(),
+                //  child: const Text("Save to PDF"))
+              ],
+            );
+          }
+        },
+      )),
     );
   }
 }
-

@@ -1,9 +1,7 @@
 import 'package:babysteps/app/pages/notes/notes.dart';
-import 'package:babysteps/app/pages/notes/notes_card.dart';
-import 'package:babysteps/app/pages/notes/notes_database.dart';
 import 'package:babysteps/app/pages/notes/notes_stream.dart';
+import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
-import 'package:babysteps/app/widgets/widgets.dart';
 
 class NotesHomePage extends StatefulWidget {
   const NotesHomePage({super.key});
@@ -18,15 +16,9 @@ class _NotesHomePageState extends State<NotesHomePage> {
   void _openNote() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => NotesPage("", "", "")), // Open a new NotesPage
+      MaterialPageRoute(
+          builder: (context) => NotesPage("", "", "")), // Open a new NotesPage
     );
-  }
-
-  // Grab the data on page initialization
-  @override
-  void initState() {
-    super.initState();
-    NoteDatabaseMethods().listenForNoteReads();
   }
 
   @override
@@ -43,36 +35,52 @@ class _NotesHomePageState extends State<NotesHomePage> {
           ),
         ),
       ),
-      
+
       // List of notes
-      body: Column(
-        children: [
-          Flexible(
-            flex: 3,
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: NotesStream(),
-            ),
-          ),
-                // Add note button
-                 ElevatedButton(
-                  onPressed: _openNote,
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.tertiary),
-                    foregroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.onTertiary),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
+      body: ValueListenableBuilder(
+        valueListenable: currentUser,
+        builder: (context, value, child) {
+          if (value == null) {
+            return const Text("Loading...");
+          } else {
+            return ValueListenableBuilder(
+              valueListenable: currentUser.value!.currentBaby,
+              builder: (context, value, child) {
+                return Column(
+                  children: [
+                    Flexible(
+                      flex: 3,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: NotesStream(),
                       ),
                     ),
-                  ),
-                  child: const Text('New Note'),
-             //   )),
-          ),
-          //  )
-        ],
+                    // Add note button
+                    ElevatedButton(
+                      onPressed: _openNote,
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                            Theme.of(context).colorScheme.tertiary),
+                        foregroundColor: MaterialStateProperty.all(
+                            Theme.of(context).colorScheme.onTertiary),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                        ),
+                      ),
+                      child: const Text('New Note'),
+                      //   )),
+                    ),
+                    //  )
+                  ],
+                );
+              },
+            );
+          }
+        },
       ),
     );
-    // );
   }
 }

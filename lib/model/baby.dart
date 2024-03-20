@@ -1,10 +1,14 @@
 class Baby {
-  String? name;
-  DateTime? dob;
-  String? collectionId;
-  List<dynamic>? caregivers;
+  String name;
+  DateTime dob;
+  String collectionId;
+  List<dynamic> caregivers;
 
-  Baby({this.name, this.dob, this.collectionId, this.caregivers});
+  Baby(
+      {required this.name,
+      required this.dob,
+      required this.collectionId,
+      required this.caregivers});
 
   updateName(String name) {
     this.name = name;
@@ -15,6 +19,6 @@ class Baby {
   }
 
   updateCaregivers(Map<String, String> caregivers) {
-    this.caregivers?.add(caregivers);
+    this.caregivers.add(caregivers);
   }
 }

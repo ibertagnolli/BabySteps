@@ -8,7 +8,6 @@ import 'package:babysteps/main.dart';
 import 'package:babysteps/model/baby.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class TrackingPage extends StatefulWidget {
   const TrackingPage({super.key});
@@ -18,101 +17,90 @@ class TrackingPage extends StatefulWidget {
 }
 
 class _TrackingPageState extends State<TrackingPage> {
-  Stream<QuerySnapshot> feedingStream =
-      FeedingDatabaseMethods().getFeedingStream();
-  Stream<QuerySnapshot> sleepStream = SleepDatabaseMethods().getStream();
-  Stream<QuerySnapshot> diaperStream = DiaperDatabaseMethods().getStream();
-  Stream<QuerySnapshot> weightStream = WeightDatabaseMethods().getStream();
-  Stream<QuerySnapshot> tempStream = TemperatureDatabaseMethods().getStream();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // Navigation Bar
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        title: const Text('Tracking'),
-        leading: const Padding(
-          padding: EdgeInsets.all(8),
-          child: Image(
-            image: AssetImage('assets/BabyStepsLogo.png'),
-          ),
-        ),
-        // actions: [
-        //   IconButton(
-        //       onPressed: () => context.go('/profile'),
-        //       icon: const Icon(Icons.person))
-        // ],
-      ),
-      // Clickable TrackingCards to each tracking page
-      body: SingleChildScrollView(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 32),
-            child: Column(
-              children: [
-                if (currentUser.babies.length > 1)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 16),
-                        child: DropdownMenu<Baby>(
-                            initialSelection:
-                                currentUser.babies[currentUser.currBabyIndex],
-                            onSelected: (value) {
-                              if (value != null) {
-                                currentUser.currBabyIndex =
-                                    currentUser.babies.indexOf(value);
-                              }
-                              setState(() {
-                                feedingStream =
-                                    FeedingDatabaseMethods().getFeedingStream();
-                                sleepStream =
-                                    SleepDatabaseMethods().getStream();
-                                diaperStream =
-                                    DiaperDatabaseMethods().getStream();
-                                weightStream =
-                                    WeightDatabaseMethods().getStream();
-                                tempStream =
-                                    TemperatureDatabaseMethods().getStream();
-                                // scaffoldKey = UniqueKey();
-                              });
-                            },
-                            dropdownMenuEntries: currentUser.babies.map((baby) {
-                              return DropdownMenuEntry(
-                                  value: baby, label: baby.name!);
-                            }).toList()),
-                      ),
-                    ],
-                  ),
-                TrackingStream(const Icon(Icons.local_drink, size: 40),
-                    "Feeding", '/tracking/feeding',
-                    stream: feedingStream),
-                TrackingStream(const Icon(Icons.crib, size: 40), "Sleep",
-                    '/tracking/sleep',
-                    stream: sleepStream),
-                TrackingStream(
-                    const Icon(Icons.baby_changing_station, size: 40),
-                    'Diaper Change',
-                    '/tracking/diaper',
-                    stream: diaperStream),
-                TrackingStream(
-                  const Icon(Icons.scale, size: 40),
-                  "Weight",
-                  '/tracking/weight',
-                  stream: weightStream,
+    String babyDoc = currentUser.value!.currentBaby.value!.collectionId;
+    Stream<QuerySnapshot> feedingStream =
+        FeedingDatabaseMethods().getFeedingStream(babyDoc);
+    Stream<QuerySnapshot> sleepStream =
+        SleepDatabaseMethods().getStream(babyDoc);
+    Stream<QuerySnapshot> diaperStream =
+        DiaperDatabaseMethods().getStream(babyDoc);
+    Stream<QuerySnapshot> weightStream =
+        WeightDatabaseMethods().getStream(babyDoc);
+    Stream<QuerySnapshot> tempStream =
+        TemperatureDatabaseMethods().getStream(babyDoc);
+
+    return
+        //   // Clickable TrackingCards to each tracking page
+        //   body:
+        SingleChildScrollView(
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 32),
+          child: Column(
+            children: [
+              if (currentUser.value!.babies != null &&
+                  currentUser.value!.babies!.length > 1)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 16),
+                      child: DropdownMenu<Baby>(
+                          initialSelection:
+                              currentUser.value!.currentBaby.value,
+                          onSelected: (value) {
+                            if (value != null) {
+                              currentUser.value!.currentBaby.value = value;
+                            }
+                            setState(() {
+                              feedingStream = FeedingDatabaseMethods()
+                                  .getFeedingStream(babyDoc);
+                              sleepStream =
+                                  SleepDatabaseMethods().getStream(babyDoc);
+                              diaperStream =
+                                  DiaperDatabaseMethods().getStream(babyDoc);
+                              weightStream =
+                                  WeightDatabaseMethods().getStream(babyDoc);
+                              tempStream = TemperatureDatabaseMethods()
+                                  .getStream(babyDoc);
+                            });
+                          },
+                          dropdownMenuEntries:
+                              currentUser.value!.babies!.map((baby) {
+                            return DropdownMenuEntry(
+                                value: baby, label: baby.name);
+                          }).toList()),
+                    ),
+                  ],
                 ),
-                TrackingStream(
-                  const Icon(Icons.thermostat, size: 40),
-                  "Temperature",
-                  '/tracking/temperature',
-                  stream: tempStream,
-                ),
-              ],
-            ),
+              TrackingStream(const Icon(Icons.local_drink, size: 40), "Feeding",
+                  '/tracking/feeding',
+                  stream: feedingStream),
+              TrackingStream(
+                  const Icon(Icons.crib, size: 40), "Sleep", '/tracking/sleep',
+                  stream: sleepStream),
+              TrackingStream(const Icon(Icons.baby_changing_station, size: 40),
+                  'Diaper Change', '/tracking/diaper',
+                  stream: diaperStream),
+              TrackingStream(
+                const Icon(Icons.scale, size: 40),
+                "Weight",
+                '/tracking/weight',
+                stream: weightStream,
+              ),
+              TrackingStream(
+                const Icon(Icons.thermostat, size: 40),
+                "Temperature",
+                '/tracking/temperature',
+                stream: tempStream,
+              ),
+            ],
           ),
         ),
       ),
+      // ),
     );
   }
 }

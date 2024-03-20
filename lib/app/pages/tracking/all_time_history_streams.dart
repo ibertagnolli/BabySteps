@@ -1,14 +1,10 @@
 import 'package:babysteps/app/widgets/stopwatch.dart';
+import 'package:babysteps/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
-import 'package:babysteps/main.dart';
 import 'package:babysteps/app/widgets/history_widgets.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
-String? babyDoc = currentUser
-    .babies[currentUser.currBabyIndex].collectionId; //TODO: get current baby
 
 // DIAPER
 
@@ -22,7 +18,7 @@ class DiaperAllTimeStream extends StatefulWidget {
 class _DiaperAllTimeStreamState extends State<DiaperAllTimeStream> {
   final Stream<QuerySnapshot> _diaperAllTimeStream = db
       .collection("Babies")
-      .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
+      .doc(currentUser.value!.currentBaby.value!.collectionId)
       .collection("Diaper")
       .orderBy('date', descending: true)
       .snapshots();
@@ -78,7 +74,7 @@ class SleepAllTimeStream extends StatefulWidget {
 class _SleepAllTimeStreamState extends State<SleepAllTimeStream> {
   final Stream<QuerySnapshot> _sleepAllTimeStream = db
       .collection("Babies")
-      .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
+      .doc(currentUser.value!.currentBaby.value!.collectionId)
       .collection("Sleep")
       .where('active', isEqualTo: false)
       .orderBy('date', descending: true)
@@ -148,7 +144,7 @@ class WeightAllTimeStream extends StatefulWidget {
 class _WeightAllTimeStreamState extends State<WeightAllTimeStream> {
   final Stream<QuerySnapshot> _weightAllTimeStream = db
       .collection("Babies")
-      .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
+      .doc(currentUser.value!.currentBaby.value!.collectionId)
       .collection("Weight")
       .orderBy('date',
           descending: false) // False because we'll go through them in
@@ -210,7 +206,7 @@ class TemperatureAllTimeStream extends StatefulWidget {
 class _TemperatureAllTimeStreamState extends State<TemperatureAllTimeStream> {
   final Stream<QuerySnapshot> _temperatureAllTimeStream = db
       .collection("Babies")
-      .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
+      .doc(currentUser.value!.currentBaby.value!.collectionId)
       .collection("Temperature")
       .orderBy('date',
           descending: false) // False because we'll go through them in
@@ -270,7 +266,7 @@ class _BreastfeedingAllTimeStreamState
     extends State<BreastfeedingAllTimeStream> {
   final Stream<QuerySnapshot> _breastfeedingAllTimeStream = db
       .collection("Babies")
-      .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
+      .doc(currentUser.value!.currentBaby.value!.collectionId)
       .collection("Feeding")
       .where('type', isEqualTo: 'BreastFeeding')
       .where('active', isEqualTo: false)
@@ -348,7 +344,7 @@ class _BottleFeedingAllTimeStreamState
     extends State<BottleFeedingAllTimeStream> {
   final Stream<QuerySnapshot> _bottleFeedingAllTimeStream = db
       .collection("Babies")
-      .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
+      .doc(currentUser.value!.currentBaby.value!.collectionId)
       .collection("Feeding")
       .where('type', isEqualTo: 'Bottle')
       .where('active', isEqualTo: false)

@@ -1,12 +1,11 @@
 import 'package:babysteps/app/pages/social/social_database.dart';
 import 'package:babysteps/app/widgets/social_widgets.dart';
+import 'package:babysteps/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 
 class SocialStream extends StatefulWidget {
@@ -18,7 +17,7 @@ class SocialStream extends StatefulWidget {
 
 class _SocialStreamState extends State<SocialStream> {
   final Stream<QuerySnapshot> _socialStream =
-      SocialDatabaseMethods().getStream();
+      SocialDatabaseMethods().getStream(currentUser.value!.userDoc);
   late var posts;
 
   Future<pw.Document> createMultiPdf(posts) async {
@@ -30,7 +29,7 @@ class _SocialStreamState extends State<SocialStream> {
     late String? caption;
     late String child;
     late String? imagePath;
-    late Image? networkImage;
+    // late Image? networkImage;
     List<pw.Widget> widgets = [];
 
     for (var post in posts) {
@@ -94,7 +93,7 @@ class _SocialStreamState extends State<SocialStream> {
         );
         //Otherwise add it to the pdf
       } else {
-        networkImage = Image.network(imagePath!);
+        // networkImage = Image.network(imagePath!);
 
         Uint8List bytes =
             (await NetworkAssetBundle(Uri.parse(imagePath)).load(imagePath))
@@ -193,19 +192,23 @@ class _SocialStreamState extends State<SocialStream> {
     );
     //TODO have a file picker pop up here
     if (!await FlutterFileDialog.isPickDirectorySupported()) {
-  print("Picking directory not supported");
-  return pdf;
-}
+      print("Picking directory not supported");
+      return pdf;
+    }
 
-final pickedDirectory = await FlutterFileDialog.pickDirectory();
-final bytes = await pdf.save();
-if (pickedDirectory != null) {
-  final bytes = await pdf.save();
-  FlutterFileDialog.saveFileToDirectory(directory: pickedDirectory, data: bytes, fileName: "$child.pdf", replace: true, mimeType:"application/pdf" );
-  print(pickedDirectory);
-  print(bytes);
-}
-  
+    final pickedDirectory = await FlutterFileDialog.pickDirectory();
+    final bytes = await pdf.save();
+    if (pickedDirectory != null) {
+      final bytes = await pdf.save();
+      FlutterFileDialog.saveFileToDirectory(
+          directory: pickedDirectory,
+          data: bytes,
+          fileName: "$child.pdf",
+          replace: true,
+          mimeType: "application/pdf");
+      // print(pickedDirectory);
+      // print(bytes);
+    }
 
     // final output = await getDownloadsDirectory();
     // print(output?.path);

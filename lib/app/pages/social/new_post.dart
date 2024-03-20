@@ -40,7 +40,7 @@ class _CreatePostState extends State<CreatePostPage> {
     DateTime now = DateTime.now();
     if (_imgFile != null) {
       final storageRef = FirebaseStorage.instance.ref();
-      final imagesRef = storageRef.child(currentUser.uid!);
+      final imagesRef = storageRef.child(currentUser.value!.uid);
       final imageRef = imagesRef.child(now.toIso8601String());
 
       try {
@@ -52,15 +52,17 @@ class _CreatePostState extends State<CreatePostPage> {
     }
 
     Map<String, dynamic> uploaddata = {
-      'usersName':currentUser.name,
+      'usersName': currentUser.value!.name,
       'date': now,
       'title': title.text == '' ? null : title.text,
       'caption': caption.text == '' ? null : caption.text,
-      'child': currentUser.babies[0].name, //TODO: update this to be the baby you're posting
+      'child': currentUser.value!.currentBaby.value!
+          .name, //TODO: update this to be the baby you're posting
       'image': filePath,
     };
 
-    await SocialDatabaseMethods().addPost(uploaddata);
+    await SocialDatabaseMethods()
+        .addPost(uploaddata, currentUser.value!.userDoc);
     //once data has been added, update the card accordingly
   }
 
@@ -96,7 +98,7 @@ class _CreatePostState extends State<CreatePostPage> {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.all(32),
+                padding: const EdgeInsets.all(32),
                 //If a photo has been added, show it, if not show the 'add photo' box
                 child: InkWell(
                   onTap: () => showDialog<String>(
@@ -163,7 +165,7 @@ class _CreatePostState extends State<CreatePostPage> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 32),
+                padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: TextField(
                   controller: title,
                   cursorColor: Theme.of(context).colorScheme.onPrimary,
@@ -176,7 +178,7 @@ class _CreatePostState extends State<CreatePostPage> {
               ),
               const SizedBox(height: 8),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 32),
+                padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: TextField(
                   controller: caption,
                   cursorColor: Theme.of(context).colorScheme.onPrimary,
@@ -197,7 +199,7 @@ class _CreatePostState extends State<CreatePostPage> {
                   backgroundColor: MaterialStateProperty.all(
                       Theme.of(context).colorScheme.surface),
                 ),
-                child: Text("Post", style: const TextStyle(fontSize: 18)),
+                child: const Text("Post", style: TextStyle(fontSize: 18)),
               ),
               const SizedBox(height: 16),
             ],
