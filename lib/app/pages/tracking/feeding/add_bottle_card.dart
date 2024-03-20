@@ -1,5 +1,6 @@
 import 'package:babysteps/app/pages/tracking/feeding/bottleFeeding.dart';
 import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
+import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
@@ -39,7 +40,10 @@ class _AddBottleCardState extends State<AddBottleCard> {
       'date': savedDate,
     };
 
-    await FeedingDatabaseMethods().addFeedingEntry(uploaddata);
+    await FeedingDatabaseMethods().addFeedingEntry(
+        uploaddata,
+        currentUser.value!.currentBaby.value!
+            .collectionId); //We have ensured currentUser has been assigned and current baby is not null before calling add_bottle_card
 
     ounces.clear();
     date.text = DateFormat("MM/dd/yyyy hh:mm a").format(DateTime.now());
@@ -80,16 +84,17 @@ class _AddBottleCardState extends State<AddBottleCard> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(child:
-                    BottleTypeButton(
-                        'Breast milk',
-                        activeButton.contains("Breast milk"),
-                        bottleTypeClicked),
+                    Expanded(
+                      child: BottleTypeButton(
+                          'Breast milk',
+                          activeButton.contains("Breast milk"),
+                          bottleTypeClicked),
                     ),
                     Expanded(
-                    child: BottleTypeButton('Formula',
-                        activeButton.contains("Formula"), bottleTypeClicked)
-                    )
+                        child: BottleTypeButton(
+                            'Formula',
+                            activeButton.contains("Formula"),
+                            bottleTypeClicked))
                   ],
                 ),
                 // First row: Weight inputs

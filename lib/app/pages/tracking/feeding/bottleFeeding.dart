@@ -1,9 +1,8 @@
 import 'package:babysteps/app/pages/tracking/feeding/add_bottle_card.dart';
+import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/pages/tracking/feeding/bottle_feeding_stream.dart';
 import 'package:babysteps/app/widgets/history_widgets.dart';
-import 'package:babysteps/app/pages/tracking/history_streams.dart';
-import 'package:babysteps/app/widgets/widgets.dart';
 import 'dart:core';
 
 class BottleFeedingPage extends StatefulWidget {
@@ -30,36 +29,44 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
       ),
       body: SingleChildScrollView(
         child: Center(
-          child: Column(children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(32),
-              child: Text('Bottle Feeding',
-                  style: TextStyle(
-                      fontSize: 36,
-                      color: Theme.of(context).colorScheme.onBackground)),
-            ),
+            child: ValueListenableBuilder(
+          valueListenable: currentUser,
+          builder: (context, value, child) {
+            if (value == null) {
+              return const Text("Loading...");
+            } else {
+              return Column(children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.all(32),
+                  child: Text('Bottle Feeding',
+                      style: TextStyle(
+                          fontSize: 36,
+                          color: Theme.of(context).colorScheme.onBackground)),
+                ),
 
-            // Top card with info
-            Padding(
-              padding: EdgeInsets.only(bottom: 16),
-              child: BottleFeedingStream(),
-            ),
+                // Top card with info
+                Padding(
+                  padding: EdgeInsets.only(bottom: 16),
+                  child: BottleFeedingStream(),
+                ),
 
-            // Add Bottle Card
-            const Padding(
-              padding: EdgeInsets.all(15),
-              child: AddBottleCard(),
-            ),
+                // Add Bottle Card
+                const Padding(
+                  padding: EdgeInsets.all(15),
+                  child: AddBottleCard(),
+                ),
 
-            // NewStopWatch(timeSince, buttonText, updateData, () => {}, 0, false)
-          
-              // History Card - in widgets
-              Padding(
-                padding: EdgeInsets.only(top:30),
-                child: HistoryDropdown("bottle"),
-              ),
-          ]),
-        ),
+                // NewStopWatch(timeSince, buttonText, updateData, () => {}, 0, false)
+
+                // History Card - in widgets
+                Padding(
+                  padding: EdgeInsets.only(top: 30),
+                  child: HistoryDropdown("bottle"),
+                ),
+              ]);
+            }
+          },
+        )),
       ),
     );
   }

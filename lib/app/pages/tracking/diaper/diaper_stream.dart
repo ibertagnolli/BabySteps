@@ -1,3 +1,4 @@
+import 'package:babysteps/main.dart';
 import 'package:babysteps/time_since.dart';
 import 'package:babysteps/app/pages/tracking/diaper/diaper_database.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
@@ -13,8 +14,8 @@ class DiaperStream extends StatefulWidget {
 }
 
 class _DiaperStreamState extends State<DiaperStream> {
-  final Stream<QuerySnapshot> _diaperStream =
-      DiaperDatabaseMethods().getStream();
+  final Stream<QuerySnapshot> _diaperStream = DiaperDatabaseMethods()
+      .getStream(currentUser.value!.currentBaby.value!.collectionId);
 
   @override
   Widget build(BuildContext context) {

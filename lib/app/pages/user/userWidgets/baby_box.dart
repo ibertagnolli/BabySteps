@@ -30,7 +30,7 @@ class BabyBox extends StatelessWidget {
     TextEditingController controller = TextEditingController();
     List<String> caregiverNames = [];
     for (Map<String, dynamic> caregiver in caregivers) {
-      if (currentUser.uid != caregiver['uid']) {
+      if (currentUser.value!.uid != caregiver['uid']) {
         caregiverNames.add(caregiver['name'] ?? '');
       }
     }

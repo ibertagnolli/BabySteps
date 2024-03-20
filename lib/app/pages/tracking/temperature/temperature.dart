@@ -1,9 +1,7 @@
-import 'package:babysteps/app/pages/tracking/temperature/temperature_database.dart';
 import 'package:babysteps/app/pages/tracking/temperature/add_temperature_card.dart';
 import 'package:babysteps/app/pages/tracking/temperature/temperature_stream.dart';
-import 'package:babysteps/app/pages/tracking/history_streams.dart';
 import 'package:babysteps/app/widgets/history_widgets.dart';
-import 'package:babysteps/app/widgets/widgets.dart';
+import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
 
@@ -17,14 +15,6 @@ class TemperaturePage extends StatefulWidget {
 class _TemperaturePageState extends State<TemperaturePage> {
   String daysSinceTemp = "--";
   String lastTemp = "--";
-
-
-  @override
-  void initState() {
-    super.initState();
-   // getData();
-    TemperatureDatabaseMethods().listenForTemperatureReads();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,40 +30,48 @@ class _TemperaturePageState extends State<TemperaturePage> {
         title: const Text('Tracking'),
       ),
 
-      body:  SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: [
-              // temperature Title
-              Padding(
-                padding: EdgeInsets.all(32),
-                child: Text('Temperature',
-                    style: TextStyle(
-                        fontSize: 36,
-                        color: Theme.of(context).colorScheme.onBackground)),
-              ),
+      body: SingleChildScrollView(
+          child: ValueListenableBuilder(
+        valueListenable: currentUser,
+        builder: (context, value, child) {
+          if (value == null) {
+            return Text("Loading...");
+          } else {
+            return Center(
+              child: Column(
+                children: [
+                  // temperature Title
+                  Padding(
+                    padding: EdgeInsets.all(32),
+                    child: Text('Temperature',
+                        style: TextStyle(
+                            fontSize: 36,
+                            color: Theme.of(context).colorScheme.onBackground)),
+                  ),
 
-               // FilledCard Quick Temperature Info 
-              // (TemperatureStream returns the card with real time reads)
-            const  Padding(
-                padding: const EdgeInsets.only(bottom: 15),
-                child:SizedBox(
-                  child: TemperatureStream(),
-                ),
-              ),
+                  // FilledCard Quick Temperature Info
+                  // (TemperatureStream returns the card with real time reads)
+                  const Padding(
+                    padding: const EdgeInsets.only(bottom: 15),
+                    child: SizedBox(
+                      child: TemperatureStream(),
+                    ),
+                  ),
 
-              // Add Temperature Card
-              const Padding(
-                padding: EdgeInsets.all(15),
-                child: AddTemperatureCard(),
-              ),
+                  // Add Temperature Card
+                  const Padding(
+                    padding: EdgeInsets.all(15),
+                    child: AddTemperatureCard(),
+                  ),
 
-              // History card - in widgets
-              HistoryDropdown("temperature")
-            ],
-          ),
-        ),
-      ),
+                  // History card - in widgets
+                  HistoryDropdown("temperature")
+                ],
+              ),
+            );
+          }
+        },
+      )),
     );
   }
 }

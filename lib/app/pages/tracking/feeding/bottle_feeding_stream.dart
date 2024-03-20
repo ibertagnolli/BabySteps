@@ -1,5 +1,6 @@
 import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
 import 'package:babysteps/app/widgets/feeding_widgets.dart';
+import 'package:babysteps/main.dart';
 import 'package:babysteps/time_since.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -17,8 +18,9 @@ class BottleFeedingStream extends StatefulWidget {
 }
 
 class _BottleFeedingStreamState extends State<BottleFeedingStream> {
-  final Stream<QuerySnapshot> _bottleFeedingStream =
-      FeedingDatabaseMethods().getBottleFeedingStream();
+  final Stream<QuerySnapshot> _bottleFeedingStream = FeedingDatabaseMethods()
+      .getBottleFeedingStream(
+          currentUser.value!.currentBaby.value!.collectionId);
 
   @override
   Widget build(BuildContext context) {
@@ -36,13 +38,13 @@ class _BottleFeedingStreamState extends State<BottleFeedingStream> {
         // An array of documents, but our query only returns an array of one document
         var lastFeedDoc = snapshot.data!.docs;
         String timeSinceFed = 'Never';
-        String lastBottleType = 'None';
+        // String lastBottleType = 'None';
         String lastBottleAmount = 'None';
 
         if (lastFeedDoc.isNotEmpty) {
           DateTime date = lastFeedDoc[0]['date'].toDate();
           timeSinceFed = getTimeSince(date);
-          lastBottleType = lastFeedDoc[0]['bottleType'];
+          // lastBottleType = lastFeedDoc[0]['bottleType'];
           lastBottleAmount = lastFeedDoc[0]['ounces'] + ' oz';
         }
 

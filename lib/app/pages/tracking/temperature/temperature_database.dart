@@ -1,29 +1,13 @@
-import 'package:babysteps/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 //Contains the database methods to access temperature information
 class TemperatureDatabaseMethods {
   FirebaseFirestore db = FirebaseFirestore.instance;
-  String? babyDoc = currentUser
-      .babies[currentUser.currBabyIndex].collectionId; //TODO: get current baby
 
-  // Sets up the snapshot to listen to changes in the collection.
-  void listenForTemperatureReads() {
-    final docRef = db
-        .collection("Babies")
-        .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
-        .collection("Temperature");
-    docRef.snapshots().listen(
-          (event) => print(
-              "current data: ${event.size}"), // These are helpful for debugging, but we can remove them
-          onError: (error) => print("Listen failed: $error"),
-        );
-  }
-
-  Stream<QuerySnapshot> getStream() {
+  Stream<QuerySnapshot> getStream(String babyDoc) {
     return db
         .collection("Babies")
-        .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
+        .doc(babyDoc)
         .collection("Temperature")
         .orderBy('date', descending: true)
         .limit(1)
@@ -31,21 +15,20 @@ class TemperatureDatabaseMethods {
   }
 
   //This methods adds an entry to the temperature collection
-  Future addTemperature(Map<String, dynamic> userInfoMap) async {
+  Future addTemperature(
+      Map<String, dynamic> userInfoMap, String babyDoc) async {
     return await FirebaseFirestore.instance
         .collection('Babies')
-        .doc(babyDoc ??
-            'IYyV2hqR7omIgeA4r7zQ') // TODO update to current user's document id
+        .doc(babyDoc)
         .collection('Temperature')
         .add(userInfoMap);
   }
 
   //This method gets the entries from the temperature collection and orders them so the most recent entry is document[0].
-  Future<QuerySnapshot> getLatestTemperatureInfo() async {
+  Future<QuerySnapshot> getLatestTemperatureInfo(String babyDoc) async {
     return await FirebaseFirestore.instance
         .collection('Babies')
-        .doc(babyDoc ??
-            'IYyV2hqR7omIgeA4r7zQ') // TODO update to current user's document id
+        .doc(babyDoc)
         .collection('Temperature')
         .orderBy('date', descending: true)
         .get();

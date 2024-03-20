@@ -1,6 +1,5 @@
 import 'package:babysteps/app/pages/calendar/add_event_button.dart';
 import 'package:babysteps/app/pages/calendar/add_task_button.dart';
-import 'package:babysteps/app/pages/calendar/calendar_database.dart';
 import 'package:babysteps/app/pages/calendar/event_stream.dart';
 import 'package:babysteps/app/pages/calendar/task_stream.dart';
 import 'package:babysteps/main.dart';
@@ -12,19 +11,19 @@ import 'package:babysteps/app/widgets/milestone_widgets.dart';
 //import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'dart:core';
 
-
 class CalendarPage extends StatefulWidget {
- const CalendarPage({super.key});
+  const CalendarPage({super.key});
 
- @override
- State<CalendarPage> createState() => _CalendarPageState();
+  @override
+  State<CalendarPage> createState() => _CalendarPageState();
 }
 
 class _CalendarPageState extends State<CalendarPage> {
   CalendarFormat _calendarFormat = CalendarFormat.twoWeeks;
   DateTime _focusedDay = DateUtils.dateOnly(DateTime.now()); // The current day
-  DateTime _selectedDay = DateUtils.dateOnly(DateTime.now()); // The day selected in the calendar
-  DateTime? dob = currentUser.babies[currentUser.currBabyIndex].dob;
+  DateTime _selectedDay =
+      DateUtils.dateOnly(DateTime.now()); // The day selected in the calendar
+  DateTime? dob = currentUser.value!.currentBaby.value!.dob;
   late int monthsAlive;
 
 //Grab the data on page initialization
@@ -32,40 +31,24 @@ class _CalendarPageState extends State<CalendarPage> {
   void initState() {
     super.initState();
     _selectedDay = _focusedDay;
-    CalendarDatabaseMethods().listenForEventReads();
-    CalendarDatabaseMethods().listenForTaskReads();
-    monthsAlive =(_selectedDay.difference(dob!).inDays / 30).floor();
+    monthsAlive = (_selectedDay.difference(dob!).inDays / 30).floor();
   }
 
   @override
   Widget build(BuildContext context) {
     // Navigation Bar
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        title: const Text('Calendar'),
-        leading: const Padding(
-          padding: EdgeInsets.all(8),
-          child: Image(
-            image: AssetImage('assets/BabyStepsLogo.png'),
-          ),
-        ),
-      ),
-
-      // Widgets
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 15, bottom: 15),
-          child: ListView(children: <Widget>[      
-            
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 15, bottom: 15),
+        child: ListView(
+          children: <Widget>[
             // Calendar Widget
             Padding(
               padding: const EdgeInsets.only(bottom: 15),
               child: TableCalendar(
                 firstDay: DateTime.utc(2020, 10, 16),
                 lastDay: DateTime.utc(2050, 3, 14),
-                focusedDay:   _focusedDay,
+                focusedDay: _focusedDay,
                 selectedDayPredicate: (day) {
                   // Use `selectedDayPredicate` to determine which day is currently selected.
                   // If this returns true, then `day` will be marked as selected.
@@ -79,7 +62,8 @@ class _CalendarPageState extends State<CalendarPage> {
                     setState(() {
                       _selectedDay = DateUtils.dateOnly(selectedDay);
                       _focusedDay = DateUtils.dateOnly(focusedDay);
-                      monthsAlive =(_selectedDay.difference(dob!).inDays / 30).floor();
+                      monthsAlive =
+                          (_selectedDay.difference(dob!).inDays / 30).floor();
                     });
                   }
                 },
@@ -95,12 +79,11 @@ class _CalendarPageState extends State<CalendarPage> {
                 },
               ),
             ),
-            
+
             // Daily calendar events card
             Padding(
               padding: const EdgeInsets.all(15),
-              child: 
-              ExpansionTile(
+              child: ExpansionTile(
                 backgroundColor: Theme.of(context).colorScheme.surface,
                 collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
                 title: Text('Events on ${DateFormat.Md().format(_selectedDay)}',
@@ -111,14 +94,17 @@ class _CalendarPageState extends State<CalendarPage> {
                 initiallyExpanded: true,
                 children: <Widget>[
                   // List of events
-                  EventStream(selectedDay: _selectedDay,),
-                  
+                  EventStream(
+                    selectedDay: _selectedDay,
+                  ),
+
                   // Add event button
                   Padding(
                     padding: const EdgeInsets.all(15),
-                    child: AddEventButton(selectedDay: _selectedDay,),
+                    child: AddEventButton(
+                      selectedDay: _selectedDay,
+                    ),
                   ),
-
                 ],
               ),
             ),
@@ -137,23 +123,26 @@ class _CalendarPageState extends State<CalendarPage> {
                 initiallyExpanded: true,
                 children: <Widget>[
                   // List of tasks
-                  TaskStream(selectedDay: _selectedDay,),
+                  TaskStream(
+                    selectedDay: _selectedDay,
+                  ),
 
                   // Add task button
                   Padding(
                     padding: const EdgeInsets.all(15),
-                    child: AddTaskButton(selectedDay: _selectedDay,),
+                    child: AddTaskButton(
+                      selectedDay: _selectedDay,
+                    ),
                   ),
-              ],
+                ],
+              ),
             ),
-            ), 
             // Daily calendar milestones card
-             Padding(
-  padding: const EdgeInsets.all(15),
-  child:  MilestonesWidget(monthsAlive: monthsAlive),
-             ),
-            ],
-          ),
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: MilestonesWidget(monthsAlive: monthsAlive),
+            ),
+          ],
         ),
       ),
     );

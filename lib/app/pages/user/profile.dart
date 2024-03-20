@@ -19,10 +19,16 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  UserProfile userProfile = currentUser;
-  List<Baby> babyList = currentUser.babies;
+  UserProfile userProfile = currentUser.value!;
+  List<Baby> babyList = currentUser.value!.babies!;
 
-  UserProfile updatedUser = UserProfile();
+  late UserProfile updatedUser = UserProfile(
+      name: userProfile.name,
+      email: userProfile.email,
+      uid: userProfile.uid,
+      userDoc: userProfile.userDoc,
+      currentBaby: userProfile.currentBaby,
+      babies: userProfile.babies);
 
   bool editing = false;
   bool addingBaby = false;
@@ -30,30 +36,27 @@ class _ProfilePageState extends State<ProfilePage> {
   void buttonClicked() async {
     if (editing) {
       List<String> babyIds = [];
-      await FirebaseAuth.instance.currentUser?.updateDisplayName(updatedUser.name);
+      await FirebaseAuth.instance.currentUser
+          ?.updateDisplayName(updatedUser.name);
 
       // try {
       //   FirebaseAuth.instance.currentUser?.updateEmail(updatedUser.email!);
       // } catch (e) {
       //   print(e);
       // }
-      for (Baby baby in updatedUser.babies) {
-        print(baby.name);
-        print(baby.dob);
-        babyIds.add(baby.collectionId ?? '');
-        await UserDatabaseMethods().updateBaby(
-            baby.collectionId ?? 'IYyV2hqR7omIgeA4r7zQ',
-            baby.name ?? 'Theo',
-            baby.dob ?? DateTime.now());
+      for (Baby baby in updatedUser.babies!) {
+        babyIds.add(baby.collectionId);
+        await UserDatabaseMethods()
+            .updateBaby(baby.collectionId, baby.name, baby.dob);
       }
 
-      await UserDatabaseMethods().updateUserBabies(
-          updatedUser.userDoc ?? 'T6eKIIOFF6uf6GTSCSD7', babyIds);
+      await UserDatabaseMethods()
+          .updateUserBabies(updatedUser.userDoc, babyIds);
     }
     setState(() {
       editing = !editing;
       addingBaby = false;
-      currentUser = updatedUser;
+      currentUser.value = updatedUser;
     });
   }
 
@@ -71,36 +74,44 @@ class _ProfilePageState extends State<ProfilePage> {
       'Name': '',
       'Caregivers': [
         {
-          'name': currentUser.name,
-          'doc': currentUser.userDoc,
-          'uid': currentUser.uid
+          'name': currentUser.value!.name,
+          'doc': currentUser.value!.userDoc,
+          'uid': currentUser.value!.uid
         }
       ]
     };
     DocumentReference babyRef = await UserDatabaseMethods().addBaby(uploaddata);
     setState(() {
-      updatedUser.addBaby(Baby(collectionId: babyRef.id, caregivers: [
-        {
-          'name': currentUser.name ?? '',
-          'doc': currentUser.userDoc ?? '',
-          'uid': currentUser.uid ?? ''
-        }
-      ]));
+      updatedUser.addBaby(Baby(
+          name: '',
+          dob: DateTime.now(),
+          collectionId: babyRef.id,
+          caregivers: [
+            {
+              'name': currentUser.value!.name,
+              'doc': currentUser.value!.userDoc,
+              'uid': currentUser.value!.uid,
+            }
+          ]));
     });
   }
 
   void updateBabyName(String? id, String newVal) {
-    Baby? updateBaby =
-        updatedUser.babies.where((baby) => baby.collectionId == id).firstOrNull;
+    Baby? updateBaby = updatedUser.babies!
+        .where((baby) => baby.collectionId == id)
+        .firstOrNull;
     if (updateBaby != null) {
       updateBaby.name = newVal;
     } else {
-      print('error finding baby in collection! $id ${updatedUser.babies.length}');
+      print(
+          'error finding baby in collection! $id ${updatedUser.babies!.length}');
     }
   }
 
   void updateBabyDOB(String? id, String newVal) {
-    Baby? updateBaby = updatedUser.babies.where((baby) => baby.collectionId == id).firstOrNull;
+    Baby? updateBaby = updatedUser.babies!
+        .where((baby) => baby.collectionId == id)
+        .firstOrNull;
     if (updateBaby != null) {
       updateBaby.dob = DateFormat.yMd().parse(newVal);
     } else {
@@ -122,101 +133,89 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // Nav bar
-      appBar: AppBar(
-          title: const Text('Profile'),
-          leading: BackButton(
-              onPressed: () => context.go('/home'),
-              color: Theme.of(context).colorScheme.onSurface)),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-
-                // Profile Image
-                Container(
-                  height: 120,
-                  width: 120,
-                  margin: const EdgeInsets.only(top: 0, bottom: 20),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Theme.of(context).colorScheme.surface,
-                    boxShadow: const [
-                      BoxShadow(
-                          color: Colors.black26,
-                          offset: Offset(2, 2),
-                          blurRadius: 10)
-                    ],
-                    image: const DecorationImage(
-                        image: AssetImage('assets/BabyStepsLogo.png')),
-                  ),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Profile Image
+              Container(
+                height: 120,
+                width: 120,
+                margin: const EdgeInsets.only(top: 0, bottom: 20),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Theme.of(context).colorScheme.surface,
+                  boxShadow: const [
+                    BoxShadow(
+                        color: Colors.black26,
+                        offset: Offset(2, 2),
+                        blurRadius: 10)
+                  ],
+                  image: const DecorationImage(
+                      image: AssetImage('assets/BabyStepsLogo.png')),
                 ),
-                
-                // User's profile info box
-                BuildInfoBox(
-                  label: '', 
-                  fields: [ 
-                    BuildInfoField('Name', [currentUser.name ?? ''], const Icon(Icons.account_box), editing, updateUserName),
-                    BuildInfoField('Email', [userProfile.email ?? ''], const Icon(Icons.email), editing, updateUserEmail), // TODO make this just a text field, not editable
-                  ]
-                ),
-                
-                //create children info box and put in fields
-                //TODO: display multiple baby's info when caregivers have more than one
+              ),
 
-                for (Baby element in babyList)
-                  BabyBox(
-                      element.name ?? '',
-                      element.dob ?? DateTime.now(),
-                      element.caregivers ?? [],
-                      editing,
-                      updateBabyName,
-                      updateBabyDOB,
-                      element.collectionId ?? 'N/A'),
+              // User's profile info box
+              BuildInfoBox(label: '', fields: [
+                BuildInfoField('Name', [currentUser.value!.name],
+                    const Icon(Icons.account_box), editing, updateUserName),
+                BuildInfoField(
+                    'Email',
+                    [userProfile.email],
+                    const Icon(Icons.email),
+                    editing,
+                    updateUserEmail), // TODO make this just a text field, not editable
+              ]),
 
-                if (editing)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16),
-                    child: ElevatedButton(
-                      onPressed: createBaby,
-                      style: blueButton(context),
-                      child: const Text('Add Child',
-                          style: TextStyle(fontSize: 26)),
-                    ),
-                  ),
+              //create children info box and put in fields
+              //TODO: display multiple baby's info when caregivers have more than one
 
-                //edit button
-                const SizedBox(height: 16),
-                Align(
-                  alignment: Alignment.bottomCenter,
+              for (Baby element in babyList)
+                BabyBox(element.name, element.dob, element.caregivers, editing,
+                    updateBabyName, updateBabyDOB, element.collectionId),
+
+              if (editing)
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
                   child: ElevatedButton(
-                    onPressed: buttonClicked,
+                    onPressed: createBaby,
                     style: blueButton(context),
-                    child: Text(editing ? 'Save' : 'Edit',
-                        style: const TextStyle(fontSize: 26)),
+                    child:
+                        const Text('Add Child', style: TextStyle(fontSize: 26)),
                   ),
                 ),
-                const SizedBox(height: 16),
 
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      FirebaseAuth.instance.signOut();
-                      currentUser = UserProfile();
-                      context.go('/login');
-                    },
-                    style: blueButton(context),
-                    child: const Text('Logout', style: TextStyle(fontSize: 26)),
-                  ),
+              //edit button
+              const SizedBox(height: 16),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: ElevatedButton(
+                  onPressed: buttonClicked,
+                  style: blueButton(context),
+                  child: Text(editing ? 'Save' : 'Edit',
+                      style: const TextStyle(fontSize: 26)),
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 16),
+
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: ElevatedButton(
+                  onPressed: () {
+                    FirebaseAuth.instance.signOut();
+                    currentUser.value = null;
+                    context.go('/login');
+                  },
+                  style: blueButton(context),
+                  child: const Text('Logout', style: TextStyle(fontSize: 26)),
+                ),
+              ),
+            ],
           ),
         ),
       ),

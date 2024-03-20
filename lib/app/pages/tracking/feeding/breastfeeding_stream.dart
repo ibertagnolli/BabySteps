@@ -1,5 +1,6 @@
 import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
 import 'package:babysteps/app/widgets/feeding_widgets.dart';
+import 'package:babysteps/main.dart';
 import 'package:babysteps/time_since.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +16,9 @@ class BreastFeedingStream extends StatefulWidget {
 }
 
 class _BreastFeedingStreamState extends State<BreastFeedingStream> {
-  final Stream<QuerySnapshot> _breastFeedingStream =
-      FeedingDatabaseMethods().getBreastfeedingStream();
+  final Stream<QuerySnapshot> _breastFeedingStream = FeedingDatabaseMethods()
+      .getBreastfeedingStream(
+          currentUser.value!.currentBaby.value!.collectionId);
 
   @override
   Widget build(BuildContext context) {

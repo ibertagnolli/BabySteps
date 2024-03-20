@@ -1,4 +1,5 @@
 import 'package:babysteps/app/pages/tracking/weight/weight_database.dart';
+import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -33,13 +34,14 @@ class _AddWeightCardState extends State<AddWeightCard> {
       'ounces': ounces.text,
       'date': savedDate,
     };
-    await WeightDatabaseMethods().addWeight(uploaddata);
+    await WeightDatabaseMethods().addWeight(
+        uploaddata, currentUser.value!.currentBaby.value!.collectionId);
 
     // Clear fields for next entry
     pounds.clear();
     ounces.clear();
     date.clear();
-     //add current date and time for autofill
+    //add current date and time for autofill
     date.text = DateFormat.yMd().add_jm().format(DateTime.now());
   }
 

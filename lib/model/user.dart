@@ -1,20 +1,22 @@
 import 'package:babysteps/model/baby.dart';
+import 'package:flutter/material.dart';
 
 class UserProfile {
-  String? name;
-  String? email;
-  String? uid;
-  String? userDoc;
-  int currBabyIndex;
-  List<Baby> babies;
+  String name;
+  String email;
+  String uid;
+  String userDoc;
+  ValueNotifier<Baby?> currentBaby;
+  // int currBabyIndex;
+  List<Baby>? babies;
 
   UserProfile({
-    this.name,
-    this.email,
-    this.uid,
-    this.userDoc,
-    this.currBabyIndex = 0,
-    this.babies = const [],
+    required this.name,
+    required this.email,
+    required this.uid,
+    required this.userDoc,
+    required this.currentBaby,
+    this.babies,
   });
 
   updateName(String name) {
@@ -26,6 +28,10 @@ class UserProfile {
   }
 
   addBaby(Baby baby) {
-    babies.add(baby);
+    if (babies == null) {
+      babies = [baby];
+    } else {
+      babies!.add(baby);
+    }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:babysteps/app/pages/notes/notes_database.dart';
+import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
 
@@ -16,8 +17,10 @@ class NotesPage extends StatefulWidget {
 
 /// The page where users write/edit Notes.
 class _NotesPageState extends State<NotesPage> {
-  late final TextEditingController _noteController = TextEditingController(text: widget.contents);
-  late final TextEditingController _titleController = TextEditingController(text: widget.title);
+  late final TextEditingController _noteController =
+      TextEditingController(text: widget.contents);
+  late final TextEditingController _titleController =
+      TextEditingController(text: widget.title);
 
   // The global key uniquely identifies the Form widget and allows validation of the form.
   final _formKey = GlobalKey<FormState>();
@@ -34,13 +37,14 @@ class _NotesPageState extends State<NotesPage> {
     };
 
     // Add a new note if the docId isn't specified. Else, update the existing Document.
-    if(widget.docId == "") {
-      await NoteDatabaseMethods().addNote(uploaddata);
+    if (widget.docId == "") {
+      await NoteDatabaseMethods()
+          .addNote(uploaddata, currentUser.value!.currentBaby.value!.collectionId);
+    } else {
+      await NoteDatabaseMethods().updateNote(widget.docId, uploaddata,
+          currentUser.value!.currentBaby.value!.collectionId);
     }
-    else {
-      await NoteDatabaseMethods().updateNote(widget.docId, uploaddata);
-    }
-    
+
     // Clear fields for next entry (not date)
     _noteController.clear();
     _titleController.clear();
@@ -50,7 +54,7 @@ class _NotesPageState extends State<NotesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      
+
       // Navigation Bar
       appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.surface,
@@ -59,15 +63,13 @@ class _NotesPageState extends State<NotesPage> {
             color: Theme.of(context).colorScheme.onSurface,
             onPressed: () => Navigator.of(context).pop(),
           )),
-      
+
       // Using a form to ensure all fields have data before saving
       // Using single child scroll view to fix overflow error
       body: SingleChildScrollView(
-          child: Form(
-        key: _formKey,
-        child: Column(
-          children: <Widget> [
-            
+        child: Form(
+          key: _formKey,
+          child: Column(children: <Widget>[
             // Note title
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -123,8 +125,7 @@ class _NotesPageState extends State<NotesPage> {
                         hintStyle: TextStyle(
                             fontSize: 15,
                             color: Theme.of(context).colorScheme.onSecondary,
-                            fontWeight: FontWeight.bold)
-                    ),
+                            fontWeight: FontWeight.bold)),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please write the note contents.';
@@ -137,28 +138,28 @@ class _NotesPageState extends State<NotesPage> {
             ),
 
             //Elevated button to save the note
-                   ElevatedButton(
-                    onPressed: () {
-                      if(_formKey.currentState!.validate()) {
-                        saveNote();
-                        Navigator.pop(context);
-                      }
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.tertiary),
-                      foregroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.onTertiary),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                      ),
-                    ),
-                    child: const Text('Save Note'),
-                  )
-               
-          ]
+            ElevatedButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  saveNote();
+                  Navigator.pop(context);
+                }
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(
+                    Theme.of(context).colorScheme.tertiary),
+                foregroundColor: MaterialStateProperty.all(
+                    Theme.of(context).colorScheme.onTertiary),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                ),
+              ),
+              child: const Text('Save Note'),
+            )
+          ]),
         ),
-      ),
       ),
     );
   }

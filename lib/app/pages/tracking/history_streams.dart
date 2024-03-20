@@ -1,15 +1,11 @@
 import 'package:babysteps/app/widgets/stopwatch.dart';
+import 'package:babysteps/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:babysteps/main.dart';
 import 'package:babysteps/app/widgets/history_widgets.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
-String? babyDoc = currentUser
-    .babies[currentUser.currBabyIndex].collectionId; //TODO: get current baby
-
 
 // BREASTFEEDING
 
@@ -23,7 +19,7 @@ class _BreastfeedingHistoryStreamState
     extends State<BreastfeedingHistoryStream> {
   final Stream<QuerySnapshot> _breastfeedingHistoryStream = db
       .collection("Babies")
-      .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
+      .doc(currentUser.value!.currentBaby.value!.collectionId)
       .collection("Feeding")
       .where('type', isEqualTo: 'BreastFeeding')
       .where('active', isEqualTo: false)
@@ -56,20 +52,24 @@ class _BreastfeedingHistoryStreamState
         lastBreastfeedingDocs.forEach((doc) {
           DateTime date = doc['date'].toDate();
           String dateStr = DateFormat('MM-dd hh:mm a').format(date);
-          var splitDate = dateStr.split(' '); // needed to get am/pm 
+          var splitDate = dateStr.split(' '); // needed to get am/pm
           String day = splitDate[0];
           String time = splitDate[1] + splitDate[2];
           String totalLength = transformMilliSeconds(doc['length']);
           String lastSide = doc['side']['latest'];
-          String leftLength = transformMilliSeconds(doc['side']['left']['duration']);
-          String rightLength = transformMilliSeconds(doc['side']['right']['duration']);
+          String leftLength =
+              transformMilliSeconds(doc['side']['left']['duration']);
+          String rightLength =
+              transformMilliSeconds(doc['side']['right']['duration']);
 
-          rows.add(RowData6Cols(day, time, leftLength, rightLength, totalLength, lastSide));
+          rows.add(RowData6Cols(
+              day, time, leftLength, rightLength, totalLength, lastSide));
           //rows.add(RowData4Cols(day, time, leftLength, rightLength));
         });
 
         // Make a table with the retrieved data
-        return HistoryTable6Cols(rows, "Left Length", "Right Length", "Total Time", "Ended On");
+        return HistoryTable6Cols(
+            rows, "Left Length", "Right Length", "Total Time", "Ended On");
         //return HistoryTable4Cols(rows, "Left Length", "Right Length");
       },
     );
@@ -86,7 +86,7 @@ class BottleHistoryStream extends StatefulWidget {
 class _BottleHistoryStreamState extends State<BottleHistoryStream> {
   final Stream<QuerySnapshot> _bottleHistoryStream = db
       .collection("Babies")
-      .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
+      .doc(currentUser.value!.currentBaby.value!.collectionId)
       .collection("Feeding")
       .where('type', isEqualTo: 'Bottle')
       .where('active', isEqualTo: false)
@@ -143,7 +143,7 @@ class SleepHistoryStream extends StatefulWidget {
 class _SleepHistoryStreamState extends State<SleepHistoryStream> {
   final Stream<QuerySnapshot> _sleepHistoryStream = db
       .collection("Babies")
-      .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
+      .doc(currentUser.value!.currentBaby.value!.collectionId)
       .collection("Sleep")
       .orderBy('date', descending: true)
       .limit(
@@ -198,7 +198,7 @@ class WeightHistoryStream extends StatefulWidget {
 class _WeightHistoryStreamState extends State<WeightHistoryStream> {
   final Stream<QuerySnapshot> _weightHistoryStream = db
       .collection("Babies")
-      .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
+      .doc(currentUser.value!.currentBaby.value!.collectionId)
       .collection("Weight")
       .orderBy('date', descending: true)
       .limit(
@@ -256,7 +256,7 @@ class TemperatureHistoryStream extends StatefulWidget {
 class _TemperatureHistoryStreamState extends State<TemperatureHistoryStream> {
   final Stream<QuerySnapshot> _temperatureHistoryStream = db
       .collection("Babies")
-      .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
+      .doc(currentUser.value!.currentBaby.value!.collectionId)
       .collection("Temperature")
       .orderBy('date', descending: true)
       .limit(
@@ -313,7 +313,7 @@ class DiaperHistoryStream extends StatefulWidget {
 class _DiaperHistoryStreamState extends State<DiaperHistoryStream> {
   final Stream<QuerySnapshot> _diaperHistoryStream = db
       .collection("Babies")
-      .doc(babyDoc ?? "IYyV2hqR7omIgeA4r7zQ")
+      .doc(currentUser.value!.currentBaby.value!.collectionId)
       .collection("Diaper")
       .orderBy('date', descending: true)
       .limit(
@@ -359,4 +359,3 @@ class _DiaperHistoryStreamState extends State<DiaperHistoryStream> {
     );
   }
 }
-
