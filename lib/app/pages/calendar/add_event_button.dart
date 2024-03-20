@@ -82,7 +82,7 @@ class _AddEventButtonState extends State<AddEventButton> {
               Theme.of(context).colorScheme.tertiary, // Background color
         ),
         child: Text("Add event",
-            style: TextStyle(color: Theme.of(context).colorScheme.onSecondary)),
+            style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
 
         // Dialog with event entry
         onPressed: () {

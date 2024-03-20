@@ -92,7 +92,7 @@ class BottleTypeButton extends StatelessWidget {
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.resolveWith((states) {
               return activeButton
-                  ? Theme.of(context).colorScheme.primary
+                  ? Theme.of(context).colorScheme.secondary
                   : Theme.of(context).colorScheme.surface;
             }),
             foregroundColor: MaterialStateProperty.resolveWith((states) {

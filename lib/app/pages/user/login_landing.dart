@@ -38,7 +38,7 @@ class _LoginLandingPageState extends State<LoginLandingPage> {
                     onPressed: () => context.go('/login/loginPage'),
                     style: FilledButton.styleFrom(
                         backgroundColor:
-                            Theme.of(context).colorScheme.secondary),
+                            Theme.of(context).colorScheme.primary),
                     child: Text(
                       'Login',
                       style: TextStyle(
@@ -52,7 +52,7 @@ class _LoginLandingPageState extends State<LoginLandingPage> {
                     onPressed: () => context.go('/login/signup'),
                     style: FilledButton.styleFrom(
                         backgroundColor:
-                            Theme.of(context).colorScheme.secondary),
+                            Theme.of(context).colorScheme.primary),
                     child: Text(
                       'Sign Up',
                       style: TextStyle(

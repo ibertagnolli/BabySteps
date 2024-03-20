@@ -44,7 +44,7 @@ class _PostState extends State<Post> {
           children: <Widget>[
             ListTile(
               leading: CircleAvatar(
-                backgroundColor: Theme.of(context).colorScheme.primary,
+                backgroundColor: Theme.of(context).colorScheme.secondary,
                 //TODO: dynamic avatar with either image or initials
                 child: Text(initials),
               ),

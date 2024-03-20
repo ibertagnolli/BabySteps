@@ -55,7 +55,7 @@ class _BottleFeedingStreamState extends State<BottleFeedingStream> {
             lastBottleAmount,
             "bottle amount",
             Icon(Icons.edit,
-                size: 50, color: Theme.of(context).colorScheme.onSecondary),
+                size: 50, color: Theme.of(context).colorScheme.onPrimary),
             Theme.of(context));
       },
     );

@@ -92,7 +92,7 @@ class _BreastFeedingStreamState extends State<BreastFeedingStream> {
 
         return FeedingOptionCard(
             Icon(Icons.water_drop,
-                size: 40, color: Theme.of(context).colorScheme.onSecondary),
+                size: 40, color: Theme.of(context).colorScheme.onPrimary),
             "Breast feeding",
             "Last side: $lastBreastSide",
             () => context.go('/tracking/feeding/breastFeeding'),
@@ -141,7 +141,7 @@ class _BottleFeedingStreamState extends State<BottleFeedingStream> {
 
         return FeedingOptionCard(
             Icon(Icons.local_drink,
-                size: 40, color: Theme.of(context).colorScheme.onSecondary),
+                size: 40, color: Theme.of(context).colorScheme.onPrimary),
             "Bottle feeding",
             "Last amount: $lastBottleAmount",
             () => context.go('/tracking/feeding/bottleFeeding'),
