@@ -62,7 +62,7 @@ class _AddTaskButtonState extends State<AddTaskButton> {
               Theme.of(context).colorScheme.tertiary, // Background color
         ),
         child: Text("Add task",
-            style: TextStyle(color: Theme.of(context).colorScheme.onSecondary)),
+            style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
 
         // Dialog with task entry
         onPressed: () {

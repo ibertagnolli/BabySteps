@@ -139,7 +139,7 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
         body: navigationShell,
         bottomNavigationBar: NavigationBar(
           selectedIndex: navigationShell.currentIndex,
-          indicatorColor: Theme.of(context).colorScheme.primary,
+          indicatorColor: Theme.of(context).colorScheme.secondary,
           destinations: const [
             // NavigationDestination(label: 'Home', icon: Icon(Icons.home)),
             NavigationDestination(label: 'Tracking', icon: Icon(Icons.folder)),

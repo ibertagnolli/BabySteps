@@ -121,7 +121,7 @@ class _CreatePostState extends State<CreatePostPage> {
                                     fontSize: 20,
                                     color: Theme.of(context)
                                         .colorScheme
-                                        .secondary),
+                                        .primary),
                               ),
                             ),
                             const SizedBox(height: 15),
@@ -136,7 +136,7 @@ class _CreatePostState extends State<CreatePostPage> {
                                     fontSize: 20,
                                     color: Theme.of(context)
                                         .colorScheme
-                                        .secondary),
+                                        .primary),
                               ),
                             ),
                           ],
@@ -168,7 +168,7 @@ class _CreatePostState extends State<CreatePostPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: TextField(
                   controller: title,
-                  cursorColor: Theme.of(context).colorScheme.onPrimary,
+                  cursorColor: Theme.of(context).colorScheme.onSecondary, 
                   decoration: InputDecoration(
                       filled: true,
                       fillColor: Theme.of(context).colorScheme.surface,
@@ -181,7 +181,7 @@ class _CreatePostState extends State<CreatePostPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: TextField(
                   controller: caption,
-                  cursorColor: Theme.of(context).colorScheme.onPrimary,
+                  cursorColor: Theme.of(context).colorScheme.onSecondary, 
                   decoration: InputDecoration(
                       filled: true,
                       fillColor: Theme.of(context).colorScheme.surface,

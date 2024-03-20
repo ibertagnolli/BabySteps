@@ -214,24 +214,22 @@ class _AddBabyPageState extends State<AddBabyPage> {
                     children: <Widget>[
                       // Baby's name field
                       TextFormField(
-                          cursorColor: Theme.of(context).colorScheme.secondary,
+                          cursorColor: Theme.of(context).colorScheme.primary,
                           controller: babyName,
                           decoration: InputDecoration(
                             labelText: 'Baby\'s first name',
                             labelStyle: TextStyle(
-                              color: Theme.of(context).colorScheme.secondary,
+                              color: Theme.of(context).colorScheme.primary,
                             ),
                             border: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .secondary)),
-                            focusColor: Theme.of(context).colorScheme.secondary,
+                                    color:
+                                        Theme.of(context).colorScheme.primary)),
+                            focusColor: Theme.of(context).colorScheme.primary,
                             focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .secondary)),
+                                    color:
+                                        Theme.of(context).colorScheme.primary)),
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -290,7 +288,7 @@ class _AddBabyPageState extends State<AddBabyPage> {
                           },
                           style: FilledButton.styleFrom(
                               backgroundColor:
-                                  Theme.of(context).colorScheme.secondary),
+                                  Theme.of(context).colorScheme.primary),
                           child: Text(
                             'Next',
                             style: TextStyle(
@@ -314,7 +312,7 @@ class _AddBabyPageState extends State<AddBabyPage> {
                           },
                           style: FilledButton.styleFrom(
                               backgroundColor:
-                                  Theme.of(context).colorScheme.secondary),
+                                  Theme.of(context).colorScheme.primary),
                           child: Text(
                             'Enter Code',
                             style: TextStyle(

@@ -81,14 +81,14 @@ class _NotesPageState extends State<NotesPage> {
                 maxLength: 20,
                 style: TextStyle(
                     fontSize: 25,
-                    color: Theme.of(context).colorScheme.onSecondary,
+                    color: Theme.of(context).colorScheme.onPrimary,
                     fontWeight: FontWeight.bold),
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: "Note Title",
                   hintStyle: TextStyle(
                       fontSize: 25,
-                      color: Theme.of(context).colorScheme.onSecondary,
+                      color: Theme.of(context).colorScheme.onPrimary,
                       fontWeight: FontWeight.bold),
                 ),
                 validator: (value) {
@@ -106,7 +106,7 @@ class _NotesPageState extends State<NotesPage> {
               child: Container(
                 decoration: BoxDecoration(
                     border: Border.all(
-                      color: Theme.of(context).colorScheme.secondary,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                     borderRadius: const BorderRadius.all(Radius.circular(20))),
                 child: Padding(
@@ -117,14 +117,14 @@ class _NotesPageState extends State<NotesPage> {
                     controller: _noteController,
                     style: TextStyle(
                         fontSize: 15,
-                        color: Theme.of(context).colorScheme.onSecondary,
+                        color: Theme.of(context).colorScheme.onPrimary,
                         fontWeight: FontWeight.bold),
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Add to note",
                         hintStyle: TextStyle(
                             fontSize: 15,
-                            color: Theme.of(context).colorScheme.onSecondary,
+                            color: Theme.of(context).colorScheme.onPrimary,
                             fontWeight: FontWeight.bold)),
                     validator: (value) {
                       if (value == null || value.isEmpty) {

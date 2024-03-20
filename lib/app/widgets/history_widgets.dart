@@ -85,12 +85,12 @@ class HistoryTabs extends StatelessWidget {
             bottom: PreferredSize( // Need this to let us set colors for some reason 
               preferredSize: Size.fromHeight(0), // Size 0 gets rid of the gap between the top and the tabs
               child: Material(
-                color: Theme.of(context).colorScheme.primary, 
+                color: Theme.of(context).colorScheme.secondary, 
                 
                 // Tab bar
                 child: TabBar(
-                  indicatorColor: Theme.of(context).colorScheme.secondary, // Color of selected tab
-                  labelColor: Theme.of(context).colorScheme.onPrimary,
+                  indicatorColor: Theme.of(context).colorScheme.primary, // Color of selected tab
+                  labelColor: Theme.of(context).colorScheme.onSecondary, 
                   tabs: [
                     Tab(text: 'Recent'),
                     Tab(text: 'All-time'),

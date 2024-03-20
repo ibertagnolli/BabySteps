@@ -54,19 +54,19 @@ class _LoginPageState extends State<LoginPage> {
                 padding: EdgeInsets.all(16),
                 child: TextField(
                   controller: email,
-                  cursorColor: Theme.of(context).colorScheme.secondary,
+                  cursorColor: Theme.of(context).colorScheme.primary,
                   decoration: InputDecoration(
                       labelText: 'Email',
                       labelStyle: TextStyle(
-                        color: Theme.of(context).colorScheme.secondary,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                       border: OutlineInputBorder(
                           borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.secondary)),
-                      focusColor: Theme.of(context).colorScheme.secondary,
+                              color: Theme.of(context).colorScheme.primary)),
+                      focusColor: Theme.of(context).colorScheme.primary,
                       focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.secondary)),
+                              color: Theme.of(context).colorScheme.primary)),
                       hintText: 'jon.doe@gmail.com'),
                 ),
               ),
@@ -75,19 +75,19 @@ class _LoginPageState extends State<LoginPage> {
                 child: TextField(
                   controller: password,
                   obscureText: true,
-                  cursorColor: Theme.of(context).colorScheme.secondary,
+                  cursorColor: Theme.of(context).colorScheme.primary,
                   decoration: InputDecoration(
                     labelText: 'Password',
                     labelStyle: TextStyle(
-                      color: Theme.of(context).colorScheme.secondary,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                     border: OutlineInputBorder(
                         borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.secondary)),
-                    focusColor: Theme.of(context).colorScheme.secondary,
+                            color: Theme.of(context).colorScheme.primary)),
+                    focusColor: Theme.of(context).colorScheme.primary,
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.secondary)),
+                            color: Theme.of(context).colorScheme.primary)),
                   ),
                 ),
               ),
@@ -117,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
                     },
                     style: FilledButton.styleFrom(
                         backgroundColor:
-                            Theme.of(context).colorScheme.secondary),
+                            Theme.of(context).colorScheme.primary),
                     child: Text(
                       'Login',
                       style: TextStyle(

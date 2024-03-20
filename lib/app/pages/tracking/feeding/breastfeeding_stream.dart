@@ -51,7 +51,7 @@ class _BreastFeedingStreamState extends State<BreastFeedingStream> {
             lastBreastSide,
             "side",
             Icon(Icons.sync_alt,
-                size: 50, color: Theme.of(context).colorScheme.onSecondary),
+                size: 50, color: Theme.of(context).colorScheme.onPrimary),
             Theme.of(context));
       },
     );
