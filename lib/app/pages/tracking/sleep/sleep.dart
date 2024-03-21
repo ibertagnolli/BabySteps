@@ -1,3 +1,4 @@
+import 'package:babysteps/app/pages/tracking/sleep/add_previous_sleep.dart';
 import 'package:babysteps/app/pages/tracking/sleep/sleep_database.dart';
 import 'package:babysteps/app/pages/tracking/sleep/sleep_stream.dart';
 import 'package:babysteps/app/widgets/stopwatch.dart';
@@ -106,12 +107,12 @@ class _SleepPageState extends State<SleepPage> {
         valueListenable: currentUser,
         builder: (context, value, child) {
           if (value == null) {
-            return Text("Loading...");
+            return const Text("Loading...");
           } else {
             return Center(
               child: Column(children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.all(32),
+                  padding: const EdgeInsets.all(32),
                   child: Text('Sleep',
                       style: TextStyle(
                           fontSize: 36,
@@ -174,9 +175,15 @@ class _SleepPageState extends State<SleepPage> {
                   },
                 ),
 
+                // Add Previous Sleep
+                const Padding(
+                  padding: EdgeInsets.only(top: 30, left: 15, right: 15),
+                  child: AddPreviousSleepCard(),
+                ),
+
                 // History Card - in widgets
                 Padding(
-                  padding: EdgeInsets.only(top: 30),
+                  padding: const EdgeInsets.only(top: 30),
                   child: HistoryDropdown("sleep"),
                 ),
               ]),
