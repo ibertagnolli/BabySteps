@@ -126,7 +126,7 @@ class _AddPreviousBreastfeedCardState extends State<AddPreviousBreastfeedCard> {
                           ),
                         ),
                       ),
-                      Text('mins on left side   ',
+                      Text('mins on left side   ', // Spaces to make aligned with right text
                           style: TextStyle(
                               fontSize: 20,
                               color: Theme.of(context).colorScheme.onSurface)),
