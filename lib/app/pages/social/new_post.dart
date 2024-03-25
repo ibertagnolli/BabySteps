@@ -1,4 +1,5 @@
 //This file contains the page for a new post entry
+import 'dart:async';
 import 'dart:io';
 
 import 'package:babysteps/app/pages/social/social_database.dart';
@@ -20,6 +21,7 @@ class _CreatePostState extends State<CreatePostPage> {
   TextEditingController title = TextEditingController();
   TextEditingController caption = TextEditingController();
   File? _imgFile;
+  bool error = false;
 
   void takeSnapshot(bool fromCamera) async {
     final ImagePicker picker = ImagePicker();
@@ -119,9 +121,8 @@ class _CreatePostState extends State<CreatePostPage> {
                                 'From Gallery',
                                 style: TextStyle(
                                     fontSize: 20,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .primary),
+                                    color:
+                                        Theme.of(context).colorScheme.primary),
                               ),
                             ),
                             const SizedBox(height: 15),
@@ -134,9 +135,8 @@ class _CreatePostState extends State<CreatePostPage> {
                                 'Take Photo',
                                 style: TextStyle(
                                     fontSize: 20,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .primary),
+                                    color:
+                                        Theme.of(context).colorScheme.primary),
                               ),
                             ),
                           ],
@@ -168,7 +168,7 @@ class _CreatePostState extends State<CreatePostPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: TextField(
                   controller: title,
-                  cursorColor: Theme.of(context).colorScheme.onSecondary, 
+                  cursorColor: Theme.of(context).colorScheme.onSecondary,
                   decoration: InputDecoration(
                       filled: true,
                       fillColor: Theme.of(context).colorScheme.surface,
@@ -181,7 +181,7 @@ class _CreatePostState extends State<CreatePostPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: TextField(
                   controller: caption,
-                  cursorColor: Theme.of(context).colorScheme.onSecondary, 
+                  cursorColor: Theme.of(context).colorScheme.onSecondary,
                   decoration: InputDecoration(
                       filled: true,
                       fillColor: Theme.of(context).colorScheme.surface,
@@ -189,11 +189,33 @@ class _CreatePostState extends State<CreatePostPage> {
                       helperText: 'Optional'),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 4),
+              if (error)
+                Text(
+                  "Must add photo, enter a title, or enter a caption!",
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.error, fontSize: 15),
+                  textAlign: TextAlign.center,
+                ),
+              const SizedBox(height: 4),
               FilledButton.tonal(
                 onPressed: () {
-                  createPost();
-                  Navigator.of(context).pop();
+                  if (_imgFile == null &&
+                      caption.text == '' &&
+                      title.text == '') {
+                    setState(() {
+                      error = true;
+                    });
+                    Timer.periodic(const Duration(seconds: 3), (Timer timer) {
+                      setState(() {
+                        error = false;
+                      });
+                      timer.cancel();
+                    });
+                  } else {
+                    createPost();
+                    Navigator.of(context).pop();
+                  }
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
