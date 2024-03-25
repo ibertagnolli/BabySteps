@@ -1,4 +1,5 @@
 import 'package:babysteps/app/pages/calendar/calendar_database.dart';
+import 'package:babysteps/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -17,7 +18,7 @@ class MilestoneStream extends StatefulWidget{
 class _MilestoneStreamState extends State<MilestoneStream> {
   @override
   Widget build(BuildContext context) {
-    final Stream<QuerySnapshot> milestoneStream = CalendarDatabaseMethods().getMilestoneStream(widget.selectedDay);
+    final Stream<QuerySnapshot> milestoneStream = CalendarDatabaseMethods().getMilestoneStream(widget.selectedDay, currentUser.value!.userDoc);
 
     return StreamBuilder<QuerySnapshot>(
       stream: milestoneStream,

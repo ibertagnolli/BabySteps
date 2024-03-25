@@ -14,10 +14,10 @@ class MilestonesWidget extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            color: Theme.of(context).colorScheme.primary,
+            color: Theme.of(context).colorScheme.secondary,
             child: TabBar(
-              indicatorColor: Theme.of(context).colorScheme.secondary,
-              labelColor: Theme.of(context).colorScheme.onPrimary,
+              indicatorColor: Theme.of(context).colorScheme.primary,
+              labelColor:Theme.of(context).colorScheme.onSecondary,
               tabs: const [
                 Tab(text: 'Social'),
                 Tab(text: 'Communication'),

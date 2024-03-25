@@ -26,7 +26,7 @@ class _CalendarPageState extends State<CalendarPage> {
   DateTime _focusedDay = DateUtils.dateOnly(DateTime.now()); // The current day
   DateTime _selectedDay =
       DateUtils.dateOnly(DateTime.now()); // The day selected in the calendar
-  DateTime? dob = currentUser.babies[currentUser.currBabyIndex].dob;
+  DateTime? dob = currentUser.value!.currentBaby.value!.dob;
   late int monthsAlive;
 
 //Grab the data on page initialization
@@ -34,29 +34,13 @@ class _CalendarPageState extends State<CalendarPage> {
   void initState() {
     super.initState();
     _selectedDay = _focusedDay;
-    CalendarDatabaseMethods().listenForEventReads();
-    CalendarDatabaseMethods().listenForTaskReads();
     monthsAlive = (_selectedDay.difference(dob!).inDays / 30).floor();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Navigation Bar
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        title: const Text('Calendar'),
-        leading: const Padding(
-          padding: EdgeInsets.all(8),
-          child: Image(
-            image: AssetImage('assets/BabyStepsLogo.png'),
-          ),
-        ),
-      ),
-
       // Widgets
-      body: Center(
+     return  Center(
         child: Padding(
           padding: const EdgeInsets.only(top: 15, bottom: 15),
           child: ListView(
@@ -263,15 +247,10 @@ class _CalendarPageState extends State<CalendarPage> {
                   ],
                 ),
               ),
-              // Daily calendar milestones card
-              // Padding(
-              //   padding: const EdgeInsets.all(15),
-              //   child: MilestonesWidget(monthsAlive: monthsAlive),
-              // ),
             ],
           ),
         ),
-      ),
+   //   ),
     );
   }
 }

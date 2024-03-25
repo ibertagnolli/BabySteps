@@ -1,4 +1,5 @@
 import 'package:babysteps/app/pages/calendar/calendar_database.dart';
+import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -40,7 +41,7 @@ class _AddMilestoneButtonState extends State<AddMilestoneButton> {
       'dateTime': milestoneDate,
     };
 
-    await CalendarDatabaseMethods().addMilestone(uploaddata);
+    await CalendarDatabaseMethods().addMilestone(uploaddata, currentUser.value!.userDoc);
 
     // Clear fields for next entry (not date)
     nameController.clear();
