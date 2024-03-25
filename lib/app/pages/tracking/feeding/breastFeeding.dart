@@ -1,5 +1,6 @@
 import 'package:babysteps/app/pages/tracking/feeding/breast_feeding_stopwatches.dart';
 import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
+import 'package:babysteps/app/widgets/loading_widget.dart';
 import 'package:babysteps/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -78,7 +79,7 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
         valueListenable: currentUser,
         builder: (context, value, child) {
           if (value == null) {
-            return const Text("loading...");
+            return const LoadingWidget();
           } else {
             return Center(
               child: Column(

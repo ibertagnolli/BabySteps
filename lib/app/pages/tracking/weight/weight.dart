@@ -1,6 +1,7 @@
 import 'package:babysteps/app/pages/tracking/weight/add_weight_card.dart';
 import 'package:babysteps/app/pages/tracking/weight/weight_stream.dart';
 import 'package:babysteps/app/widgets/history_widgets.dart';
+import 'package:babysteps/app/widgets/loading_widget.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
@@ -38,7 +39,7 @@ class _WeightPageState extends State<WeightPage> {
         valueListenable: currentUser,
         builder: (context, value, child) {
           if (value == null) {
-            return const Text("Loading...");
+            return const LoadingWidget();
           } else {
             return Center(
               child: Column(

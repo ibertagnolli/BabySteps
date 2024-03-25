@@ -1,6 +1,7 @@
 import 'package:babysteps/app/pages/tracking/temperature/add_temperature_card.dart';
 import 'package:babysteps/app/pages/tracking/temperature/temperature_stream.dart';
 import 'package:babysteps/app/widgets/history_widgets.dart';
+import 'package:babysteps/app/widgets/loading_widget.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
@@ -35,7 +36,7 @@ class _TemperaturePageState extends State<TemperaturePage> {
         valueListenable: currentUser,
         builder: (context, value, child) {
           if (value == null) {
-            return Text("Loading...");
+            return const LoadingWidget();
           } else {
             return Center(
               child: Column(

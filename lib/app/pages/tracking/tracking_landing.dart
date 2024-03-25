@@ -1,4 +1,5 @@
 import 'package:babysteps/app/pages/tracking/tracking.dart';
+import 'package:babysteps/app/widgets/loading_widget.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -32,22 +33,23 @@ class _TrackingLandingPageState extends State<TrackingLandingPage> {
         ],
       ),
       // Clickable TrackingCards to each tracking page
-      body: SingleChildScrollView(
-          child: ValueListenableBuilder(
+      body: ValueListenableBuilder(
         valueListenable: currentUser,
         builder: (context, value, child) {
           if (value == null) {
-            return const Text("Loading");
+            return const LoadingWidget();
           } else {
-            return ValueListenableBuilder(
-              valueListenable: currentUser.value!.currentBaby,
-              builder: (context, value, child) {
-                return const TrackingPage();
-              },
+            return SingleChildScrollView(
+              child: ValueListenableBuilder(
+                valueListenable: currentUser.value!.currentBaby,
+                builder: (context, value, child) {
+                  return const TrackingPage();
+                },
+              ),
             );
           }
         },
-      )),
+      ),
     );
   }
 }
