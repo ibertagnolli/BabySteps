@@ -1,4 +1,5 @@
 import 'package:babysteps/app/pages/calendar/calendar.dart';
+import 'package:babysteps/app/widgets/loading_widget.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
@@ -32,7 +33,7 @@ class _CalendarLandingPageState extends State<CalendarLandingPage> {
           valueListenable: currentUser,
           builder: (context, value, child) {
             if (value == null) {
-              return const Text("Loading...");
+              return const LoadingWidget();
             } else {
               return ValueListenableBuilder(
                 valueListenable: currentUser.value!.currentBaby,

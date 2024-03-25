@@ -1,6 +1,7 @@
 import 'package:babysteps/app/pages/tracking/sleep/add_previous_sleep.dart';
 import 'package:babysteps/app/pages/tracking/sleep/sleep_database.dart';
 import 'package:babysteps/app/pages/tracking/sleep/sleep_stream.dart';
+import 'package:babysteps/app/widgets/loading_widget.dart';
 import 'package:babysteps/app/widgets/stopwatch.dart';
 import 'package:babysteps/app/widgets/history_widgets.dart';
 import 'package:babysteps/main.dart';
@@ -107,7 +108,7 @@ class _SleepPageState extends State<SleepPage> {
         valueListenable: currentUser,
         builder: (context, value, child) {
           if (value == null) {
-            return const Text("Loading...");
+            return const LoadingWidget();
           } else {
             return Center(
               child: Column(children: <Widget>[

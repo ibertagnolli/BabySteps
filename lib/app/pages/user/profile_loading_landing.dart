@@ -1,4 +1,5 @@
 import 'package:babysteps/app/pages/user/profile.dart';
+import 'package:babysteps/app/widgets/loading_widget.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -24,7 +25,7 @@ class _ProfileLoadingLandingState extends State<ProfileLoadingLanding> {
           valueListenable: currentUser,
           builder: (context, value, child) {
             if (value == null) {
-              return const Text("Loading...");
+              return const LoadingWidget();
             } else {
               return const ProfilePage();
             }
