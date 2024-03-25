@@ -38,7 +38,7 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
             } else {
               return Column(children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.all(32),
+                  padding: const EdgeInsets.all(32),
                   child: Text('Bottle Feeding',
                       style: TextStyle(
                           fontSize: 36,
@@ -46,7 +46,7 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
                 ),
 
                 // Top card with info
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(bottom: 16),
                   child: BottleFeedingStream(),
                 ),

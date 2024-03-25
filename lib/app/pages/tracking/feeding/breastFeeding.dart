@@ -1,3 +1,4 @@
+import 'package:babysteps/app/pages/tracking/feeding/add_previous_breastfeed.dart';
 import 'package:babysteps/app/pages/tracking/feeding/breast_feeding_stopwatches.dart';
 import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
 import 'package:babysteps/app/widgets/loading_widget.dart';
@@ -85,7 +86,7 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
               child: Column(
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.all(32),
+                    padding: const EdgeInsets.all(32),
                     child: Text('Breast Feeding',
                         style: TextStyle(
                             fontSize: 36,
@@ -93,7 +94,7 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
                   ),
 
                   // Top card with info
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.only(bottom: 16),
                     child: BreastFeedingStream(),
                   ),
@@ -132,9 +133,15 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
                     },
                   ),
 
+                  // Add Previous Breastfeed
+                  const Padding(
+                    padding: EdgeInsets.only(top: 30, bottom: 15, left: 15, right: 15),
+                    child: AddPreviousBreastfeedCard(),
+                  ),
+
                   // History Card - in widgets
                   Padding(
-                    padding: EdgeInsets.only(top: 10),
+                    padding: const EdgeInsets.only(top: 10),
                     child: HistoryDropdown("breastfeeding"),
                   ),
                 ],
