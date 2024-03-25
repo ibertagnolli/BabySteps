@@ -53,7 +53,7 @@ class FeedingDatabaseMethods {
       Map<String, dynamic> userInfoMap, String babyDoc) async {
     return await db
         .collection('Babies')
-        .doc(babyDoc) // TODO update to current user's document id
+        .doc(babyDoc)
         .collection('Feeding')
         .add(userInfoMap);
   }
