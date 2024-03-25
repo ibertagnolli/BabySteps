@@ -1,7 +1,6 @@
 import 'package:babysteps/app/pages/calendar/add_event_button.dart';
 import 'package:babysteps/app/pages/calendar/add_milestone_button.dart';
 import 'package:babysteps/app/pages/calendar/add_task_button.dart';
-import 'package:babysteps/app/pages/calendar/calendar_database.dart';
 import 'package:babysteps/app/pages/calendar/event_stream.dart';
 import 'package:babysteps/app/pages/calendar/milestone_stream.dart';
 import 'package:babysteps/app/pages/calendar/task_stream.dart';

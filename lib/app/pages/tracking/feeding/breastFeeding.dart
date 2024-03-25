@@ -1,5 +1,8 @@
+import 'package:babysteps/app/pages/tracking/feeding/add_previous_breastfeed.dart';
 import 'package:babysteps/app/pages/tracking/feeding/breast_feeding_stopwatches.dart';
 import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
+import 'package:babysteps/app/widgets/loading_widget.dart';
+import 'package:babysteps/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/pages/tracking/feeding/breastfeeding_stream.dart';
@@ -25,8 +28,9 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
 //Get the data from the database
   Future getData() async {
     //Get the ongoing data
-    QuerySnapshot ongoingBreastFeeding =
-        await FeedingDatabaseMethods().getLatestOngoingBreastFeedingEntry();
+    QuerySnapshot ongoingBreastFeeding = await FeedingDatabaseMethods()
+        .getLatestOngoingBreastFeedingEntry(
+            currentUser.value!.currentBaby.value!.collectionId);
     //make sure we don't try to access an index that doesn't exist
     if (ongoingBreastFeeding.docs.isNotEmpty) {
       //get the document id so we can update it later
@@ -72,66 +76,80 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.all(32),
-                child: Text('Breast Feeding',
-                    style: TextStyle(
-                        fontSize: 36,
-                        color: Theme.of(context).colorScheme.onBackground)),
-              ),
+          child: ValueListenableBuilder(
+        valueListenable: currentUser,
+        builder: (context, value, child) {
+          if (value == null) {
+            return const LoadingWidget();
+          } else {
+            return Center(
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(32),
+                    child: Text('Breast Feeding',
+                        style: TextStyle(
+                            fontSize: 36,
+                            color: Theme.of(context).colorScheme.onBackground)),
+                  ),
 
-              // Top card with info
-              Padding(
-                padding: EdgeInsets.only(bottom: 16),
-                child: BreastFeedingStream(),
-              ),
-              FutureBuilder(
-                future: getData(),
-                builder:
-                    (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                  List<Widget> children;
-                  if (snapshot.hasData) {
-                    children = <Widget>[
-                      Column(
-                        children: [
-                          BreastFeedingStopwatches(
-                            docId,
-                            timeSoFarOnLeft,
-                            timeSoFarOnRight,
-                            sideMap,
-                            leftSideGoing,
-                            rightSideGoing,
-                            timerGoing,
+                  // Top card with info
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 16),
+                    child: BreastFeedingStream(),
+                  ),
+                  FutureBuilder(
+                    future: getData(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<dynamic> snapshot) {
+                      List<Widget> children;
+                      if (snapshot.hasData) {
+                        children = <Widget>[
+                          Column(
+                            children: [
+                              BreastFeedingStopwatches(
+                                docId,
+                                timeSoFarOnLeft,
+                                timeSoFarOnRight,
+                                sideMap,
+                                leftSideGoing,
+                                rightSideGoing,
+                                timerGoing,
+                              )
+                            ],
                           )
-                        ],
-                      )
-                    ];
-                  } else if (snapshot.hasError) {
-                    children = errorMessage(snapshot.error.toString());
-                  } else {
-                    children = progressIndicator();
-                  }
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: children,
-                    ),
-                  );
-                },
-              ),
+                        ];
+                      } else if (snapshot.hasError) {
+                        children = errorMessage(snapshot.error.toString());
+                      } else {
+                        children = progressIndicator();
+                      }
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: children,
+                        ),
+                      );
+                    },
+                  ),
 
-              // History Card - in widgets
-              Padding(
-                padding: EdgeInsets.only(top: 10),
-                child: HistoryDropdown("breastfeeding"),
+                  // Add Previous Breastfeed
+                  const Padding(
+                    padding: EdgeInsets.only(top: 30, bottom: 15, left: 15, right: 15),
+                    child: AddPreviousBreastfeedCard(),
+                  ),
+
+                  // History Card - in widgets
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: HistoryDropdown("breastfeeding"),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
-      ),
+            );
+          }
+        },
+      )),
     );
   }
 }

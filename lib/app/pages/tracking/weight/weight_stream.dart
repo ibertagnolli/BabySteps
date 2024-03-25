@@ -1,3 +1,4 @@
+import 'package:babysteps/main.dart';
 import 'package:babysteps/time_since.dart';
 import 'package:babysteps/app/pages/tracking/weight/weight_database.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
@@ -13,8 +14,8 @@ class WeightStream extends StatefulWidget {
 }
 
 class _WeightStreamState extends State<WeightStream> {
-  final Stream<QuerySnapshot> _weightStream =
-      WeightDatabaseMethods().getStream();
+  final Stream<QuerySnapshot> _weightStream = WeightDatabaseMethods()
+      .getStream(currentUser.value!.currentBaby.value!.collectionId);
 
   @override
   Widget build(BuildContext context) {

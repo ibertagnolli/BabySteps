@@ -1,3 +1,4 @@
+import 'package:babysteps/app/pages/calendar/calendar_landing.dart';
 import 'package:babysteps/app/pages/notes/notes.dart';
 import 'package:babysteps/app/pages/notes/notes_home.dart';
 import 'package:babysteps/app/pages/social/new_post.dart';
@@ -7,11 +8,11 @@ import 'package:babysteps/app/pages/tracking/feeding/breastFeeding.dart';
 import 'package:babysteps/app/pages/tracking/feeding/feeding.dart';
 import 'package:babysteps/app/pages/tracking/sleep/sleep.dart';
 import 'package:babysteps/app/pages/tracking/temperature/temperature.dart';
-import 'package:babysteps/app/pages/tracking/tracking.dart';
+import 'package:babysteps/app/pages/tracking/tracking_landing.dart';
 import 'package:babysteps/app/pages/tracking/weight/weight.dart';
 import 'package:babysteps/app/pages/user/add_baby.dart';
 import 'package:babysteps/app/pages/user/edit.dart';
-import 'package:babysteps/app/pages/user/profile.dart';
+import 'package:babysteps/app/pages/user/profile_loading_landing.dart';
 import 'package:babysteps/app/pages/user/user_database.dart';
 import 'package:babysteps/model/baby.dart';
 import 'package:babysteps/model/user.dart';
@@ -20,7 +21,6 @@ import 'package:flutter/material.dart';
 import 'package:babysteps/theme.dart';
 import 'package:babysteps/app/pages/home/home.dart';
 import 'package:babysteps/app/pages/social/social.dart';
-import 'package:babysteps/app/pages/calendar/calendar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:flutter/services.dart';
@@ -35,7 +35,7 @@ import 'package:babysteps/app/pages/user/signup.dart';
 //https://github.com/bizz84/nested_navigation_examples/blob/main/examples/gorouter/lib/main.dart
 
 bool loggedIn = false;
-UserProfile currentUser = UserProfile();
+ValueNotifier<UserProfile?> currentUser = ValueNotifier(null);
 //late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -77,18 +77,18 @@ void main() async {
           }
         }
 
-        currentUser = UserProfile(
+        currentUser.value = UserProfile(
             userDoc: doc[0].id,
             uid: user.uid,
-            name: user.displayName,
-            email: user.email,
-            babies: babies);
+            name: user.displayName ?? '',
+            email: user.email ?? '',
+            babies: babies,
+            currentBaby: ValueNotifier(babies.isNotEmpty ? babies[0] : null));
       }
 
       print('User is signed in!');
     }
   });
-
 
   runApp(const MyApp());
 }
@@ -139,9 +139,9 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
         body: navigationShell,
         bottomNavigationBar: NavigationBar(
           selectedIndex: navigationShell.currentIndex,
-          indicatorColor: Theme.of(context).colorScheme.primary,
+          indicatorColor: Theme.of(context).colorScheme.secondary,
           destinations: const [
-            NavigationDestination(label: 'Home', icon: Icon(Icons.home)),
+            // NavigationDestination(label: 'Home', icon: Icon(Icons.home)),
             NavigationDestination(label: 'Tracking', icon: Icon(Icons.folder)),
             NavigationDestination(
                 label: 'Calendar', icon: Icon(Icons.calendar_month)),
@@ -170,7 +170,8 @@ final _shellNavigatorSocialKey =
 
 // the one and only GoRouter instance
 final goRouter = GoRouter(
-  initialLocation: loggedIn ? '/home' : '/login',
+  initialLocation: loggedIn ? '/tracking' : '/login',
+  // initialLocation: loggedIn ? '/home' : '/login', // TODO: put this back in when home page is interesting
   navigatorKey: _rootNavigatorKey,
   routes: [
     GoRoute(
@@ -195,7 +196,7 @@ final goRouter = GoRouter(
     GoRoute(
       path: '/profile',
       pageBuilder: (context, state) =>
-          const NoTransitionPage(child: ProfilePage()),
+          const NoTransitionPage(child: ProfileLoadingLanding()),
       routes: [
         GoRoute(
           path: 'edit',
@@ -216,18 +217,19 @@ final goRouter = GoRouter(
       },
       branches: [
         // first branch (Home)
-        StatefulShellBranch(
-          navigatorKey: _shellNavigatorHomeKey,
-          routes: [
-            // top route inside branch
-            GoRoute(
-              path: '/home',
-              pageBuilder: (context, state) => NoTransitionPage(
-                  child: HomePage() //(label: 'A', detailsPath: '/a/details'),
-                  ),
-            ),
-          ],
-        ),
+        //TODO: uncommen below code when home is interesting
+        // StatefulShellBranch(
+        //   navigatorKey: _shellNavigatorHomeKey,
+        //   routes: [
+        //     // top route inside branch
+        //     GoRoute(
+        //       path: '/home',
+        //       pageBuilder: (context, state) => NoTransitionPage(
+        //           child: HomePage() //(label: 'A', detailsPath: '/a/details'),
+        //           ),
+        //     ),
+        //   ],
+        // ),
         // second branch (Tracking)
         StatefulShellBranch(
           navigatorKey: _shellNavigatorTrackingKey,
@@ -235,8 +237,8 @@ final goRouter = GoRouter(
             // top route inside branch
             GoRoute(
               path: '/tracking',
-              pageBuilder: (context, state) =>
-                  const NoTransitionPage(child: TrackingPage()),
+              pageBuilder: (context, state) => const NoTransitionPage(
+                  child: TrackingLandingPage()), //TrackingPage()),
               routes: [
                 // feeding routes
                 GoRoute(
@@ -279,7 +281,7 @@ final goRouter = GoRouter(
             GoRoute(
               path: '/calendar',
               pageBuilder: (context, state) =>
-                  const NoTransitionPage(child: CalendarPage()),
+                  const NoTransitionPage(child: CalendarLandingPage()),
             ),
           ],
         ),

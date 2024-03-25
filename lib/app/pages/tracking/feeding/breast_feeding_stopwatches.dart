@@ -1,8 +1,8 @@
 import 'dart:async';
-
 import 'package:babysteps/app/pages/styles/stopwatch_styles.dart';
 import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
 import 'package:babysteps/app/widgets/stopwatch.dart';
+import 'package:babysteps/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
@@ -62,7 +62,8 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
 
       sideMap!['left'] = currentSide;
 
-      await FeedingDatabaseMethods().updateFeedingPauseEntry(sideMap, docId!);
+      await FeedingDatabaseMethods().updateFeedingPauseEntry(
+          sideMap, docId!, currentUser.value!.currentBaby.value!.collectionId);
       //once data has been added, update the card accordingly
     }
   }
@@ -83,7 +84,8 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
 
       sideMap!['right'] = currentSide;
 
-      await FeedingDatabaseMethods().updateFeedingPauseEntry(sideMap, docId!);
+      await FeedingDatabaseMethods().updateFeedingPauseEntry(
+          sideMap, docId!, currentUser.value!.currentBaby.value!.collectionId);
       //once data has been added, update the card accordingly
     }
   }
@@ -100,7 +102,8 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
         timeSoFarOnLeft += DateTime.now()
             .difference((leftSide['lastStart'] as Timestamp).toDate())
             .inMilliseconds;
-        leftSide['duration'] += DateTime.now() // Lexie added so side time is updated when done clicked
+        leftSide['duration'] += DateTime
+                .now() // Lexie added so side time is updated when done clicked
             .difference((leftSide['lastStart'] as Timestamp).toDate())
             .inMilliseconds;
       }
@@ -109,7 +112,8 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
         timeSoFarOnRight += DateTime.now()
             .difference((rightSide['lastStart'] as Timestamp).toDate())
             .inMilliseconds;
-        rightSide['duration'] += DateTime.now() // Lexie added so side time is updated when done clicked
+        rightSide['duration'] += DateTime
+                .now() // Lexie added so side time is updated when done clicked
             .difference((rightSide['lastStart'] as Timestamp).toDate())
             .inMilliseconds;
       }
@@ -123,7 +127,10 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
       sideMap!['right'] = rightSide;
 
       await FeedingDatabaseMethods().updateFeedingDoneEntry(
-          sideMap, timeSoFarOnLeft + timeSoFarOnRight, docId!);
+          sideMap,
+          timeSoFarOnLeft + timeSoFarOnRight,
+          docId!,
+          currentUser.value!.currentBaby.value!.collectionId);
       //once data has been added, update the card accordingly
     }
 
@@ -382,8 +389,8 @@ Future<String> uploadData(Map<String, dynamic> side) async {
     'date': DateTime.now(),
   };
 
-  DocumentReference doc =
-      await FeedingDatabaseMethods().addFeedingEntry(uploaddata);
+  DocumentReference doc = await FeedingDatabaseMethods().addFeedingEntry(
+      uploaddata, currentUser.value!.currentBaby.value!.collectionId);
 
   return doc.id;
 }

@@ -99,21 +99,21 @@ class _SignupPageState extends State<SignupPage> {
                     
                     // Full Name Field
                     TextFormField(
-                      cursorColor: Theme.of(context).colorScheme.secondary,
+                      cursorColor: Theme.of(context).colorScheme.primary,
                       controller: usersName,
                       maxLength: 60,
                       decoration: InputDecoration(
                           labelText: 'Full Name',
                           labelStyle: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary,
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                           border: OutlineInputBorder(
                               borderSide: BorderSide(
-                                  color: Theme.of(context).colorScheme.secondary)),
-                          focusColor: Theme.of(context).colorScheme.secondary,
+                                  color: Theme.of(context).colorScheme.primary)),
+                          focusColor: Theme.of(context).colorScheme.primary,
                           focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                  color: Theme.of(context).colorScheme.secondary)),
+                                  color: Theme.of(context).colorScheme.primary)),
                           hintText: 'Jon Doe'
                       ),
                       validator: (value) {
@@ -127,20 +127,20 @@ class _SignupPageState extends State<SignupPage> {
                     // Email Field
                     TextFormField(
                       controller: email,
-                      cursorColor: Theme.of(context).colorScheme.secondary,
+                      cursorColor: Theme.of(context).colorScheme.primary,
                       maxLength: 25,
                       decoration: InputDecoration(
                           labelText: 'Email',
                           labelStyle: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary,
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                           border: OutlineInputBorder(
                               borderSide: BorderSide(
-                                  color: Theme.of(context).colorScheme.secondary)),
-                          focusColor: Theme.of(context).colorScheme.secondary,
+                                  color: Theme.of(context).colorScheme.primary)),
+                          focusColor: Theme.of(context).colorScheme.primary,
                           focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                  color: Theme.of(context).colorScheme.secondary)),
+                                  color: Theme.of(context).colorScheme.primary)),
                           hintText: 'jon.doe@gmail.com'
                       ),
                       validator: (value) => EmailValidator.validate(value!) ? null : "Please enter a valid email",
@@ -150,20 +150,20 @@ class _SignupPageState extends State<SignupPage> {
                     TextFormField(
                       controller: password,
                       obscureText: true,
-                      cursorColor: Theme.of(context).colorScheme.secondary,
+                      cursorColor: Theme.of(context).colorScheme.primary,
                       maxLength: 25,
                       decoration: InputDecoration(
                         labelText: 'Password',
                         labelStyle: TextStyle(
-                          color: Theme.of(context).colorScheme.secondary,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                         border: OutlineInputBorder(
                             borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.secondary)),
-                        focusColor: Theme.of(context).colorScheme.secondary,
+                                color: Theme.of(context).colorScheme.primary)),
+                        focusColor: Theme.of(context).colorScheme.primary,
                         focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.secondary)),
+                                color: Theme.of(context).colorScheme.primary)),
                       ),
                       validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -177,20 +177,20 @@ class _SignupPageState extends State<SignupPage> {
                     TextFormField(
                       obscureText: true,
                       controller: confirmPassword,
-                      cursorColor: Theme.of(context).colorScheme.secondary,
+                      cursorColor: Theme.of(context).colorScheme.primary,
                       maxLength: 25,
                       decoration: InputDecoration(
                         labelText: 'Confirm Password',
                         labelStyle: TextStyle(
-                          color: Theme.of(context).colorScheme.secondary,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                         border: OutlineInputBorder(
                             borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.secondary)),
-                        focusColor: Theme.of(context).colorScheme.secondary,
+                                color: Theme.of(context).colorScheme.primary)),
+                        focusColor: Theme.of(context).colorScheme.primary,
                         focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.secondary)),
+                                color: Theme.of(context).colorScheme.primary)),
                       ),
                       validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -225,7 +225,7 @@ class _SignupPageState extends State<SignupPage> {
                         }
                       },
                       style: FilledButton.styleFrom(
-                          backgroundColor: Theme.of(context).colorScheme.secondary),
+                          backgroundColor: Theme.of(context).colorScheme.primary),
                       child: Text(
                           'Create Account',
                           style: TextStyle(

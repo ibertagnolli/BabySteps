@@ -1,4 +1,5 @@
 //This file contains the page for a new post entry
+import 'dart:async';
 import 'dart:io';
 
 import 'package:babysteps/app/pages/social/social_database.dart';
@@ -20,6 +21,7 @@ class _CreatePostState extends State<CreatePostPage> {
   TextEditingController title = TextEditingController();
   TextEditingController caption = TextEditingController();
   File? _imgFile;
+  bool error = false;
 
   void takeSnapshot(bool fromCamera) async {
     final ImagePicker picker = ImagePicker();
@@ -40,7 +42,7 @@ class _CreatePostState extends State<CreatePostPage> {
     DateTime now = DateTime.now();
     if (_imgFile != null) {
       final storageRef = FirebaseStorage.instance.ref();
-      final imagesRef = storageRef.child(currentUser.uid!);
+      final imagesRef = storageRef.child(currentUser.value!.uid);
       final imageRef = imagesRef.child(now.toIso8601String());
 
       try {
@@ -52,15 +54,17 @@ class _CreatePostState extends State<CreatePostPage> {
     }
 
     Map<String, dynamic> uploaddata = {
-      'usersName':currentUser.name,
+      'usersName': currentUser.value!.name,
       'date': now,
       'title': title.text == '' ? null : title.text,
       'caption': caption.text == '' ? null : caption.text,
-      'child': currentUser.babies[0].name, //TODO: update this to be the baby you're posting
+      'child': currentUser.value!.currentBaby.value!
+          .name, //TODO: update this to be the baby you're posting
       'image': filePath,
     };
 
-    await SocialDatabaseMethods().addPost(uploaddata);
+    await SocialDatabaseMethods()
+        .addPost(uploaddata, currentUser.value!.userDoc);
     //once data has been added, update the card accordingly
   }
 
@@ -96,7 +100,7 @@ class _CreatePostState extends State<CreatePostPage> {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.all(32),
+                padding: const EdgeInsets.all(32),
                 //If a photo has been added, show it, if not show the 'add photo' box
                 child: InkWell(
                   onTap: () => showDialog<String>(
@@ -117,9 +121,8 @@ class _CreatePostState extends State<CreatePostPage> {
                                 'From Gallery',
                                 style: TextStyle(
                                     fontSize: 20,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .secondary),
+                                    color:
+                                        Theme.of(context).colorScheme.primary),
                               ),
                             ),
                             const SizedBox(height: 15),
@@ -132,9 +135,8 @@ class _CreatePostState extends State<CreatePostPage> {
                                 'Take Photo',
                                 style: TextStyle(
                                     fontSize: 20,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .secondary),
+                                    color:
+                                        Theme.of(context).colorScheme.primary),
                               ),
                             ),
                           ],
@@ -163,10 +165,10 @@ class _CreatePostState extends State<CreatePostPage> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 32),
+                padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: TextField(
                   controller: title,
-                  cursorColor: Theme.of(context).colorScheme.onPrimary,
+                  cursorColor: Theme.of(context).colorScheme.onSecondary,
                   decoration: InputDecoration(
                       filled: true,
                       fillColor: Theme.of(context).colorScheme.surface,
@@ -176,10 +178,10 @@ class _CreatePostState extends State<CreatePostPage> {
               ),
               const SizedBox(height: 8),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 32),
+                padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: TextField(
                   controller: caption,
-                  cursorColor: Theme.of(context).colorScheme.onPrimary,
+                  cursorColor: Theme.of(context).colorScheme.onSecondary,
                   decoration: InputDecoration(
                       filled: true,
                       fillColor: Theme.of(context).colorScheme.surface,
@@ -187,17 +189,39 @@ class _CreatePostState extends State<CreatePostPage> {
                       helperText: 'Optional'),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 4),
+              if (error)
+                Text(
+                  "Must add photo, enter a title, or enter a caption!",
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.error, fontSize: 15),
+                  textAlign: TextAlign.center,
+                ),
+              const SizedBox(height: 4),
               FilledButton.tonal(
                 onPressed: () {
-                  createPost();
-                  Navigator.of(context).pop();
+                  if (_imgFile == null &&
+                      caption.text == '' &&
+                      title.text == '') {
+                    setState(() {
+                      error = true;
+                    });
+                    Timer.periodic(const Duration(seconds: 3), (Timer timer) {
+                      setState(() {
+                        error = false;
+                      });
+                      timer.cancel();
+                    });
+                  } else {
+                    createPost();
+                    Navigator.of(context).pop();
+                  }
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
                       Theme.of(context).colorScheme.surface),
                 ),
-                child: Text("Post", style: const TextStyle(fontSize: 18)),
+                child: const Text("Post", style: TextStyle(fontSize: 18)),
               ),
               const SizedBox(height: 16),
             ],

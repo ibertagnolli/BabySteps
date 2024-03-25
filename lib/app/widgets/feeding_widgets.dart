@@ -14,9 +14,9 @@ class FeedingOptionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: theme.colorScheme.secondary,
+      color: theme.colorScheme.primary,
       child: InkWell(
-        splashColor: theme.colorScheme.secondary,
+        splashColor: theme.colorScheme.primary,
         onTap: pageFunc,
         child: SizedBox(
           width: 360,
@@ -35,13 +35,13 @@ class FeedingOptionCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.onSecondary,
+                        color: theme.colorScheme.onPrimary,
                       ),
                     ),
                     Text(
                       extraInfo,
                       style: TextStyle(
-                        color: theme.colorScheme.onSecondary,
+                        color: theme.colorScheme.onPrimary,
                       ),
                     ),
                   ],
@@ -52,7 +52,7 @@ class FeedingOptionCard extends StatelessWidget {
                 padding: EdgeInsets.all(16),
                 child: Align(
                     child: Icon(Icons.arrow_circle_right_outlined,
-                        size: 30, color: theme.colorScheme.onSecondary)),
+                        size: 30, color: theme.colorScheme.onPrimary)),
               )
             ],
           ),
@@ -79,7 +79,7 @@ class FeedingInfoCard extends StatelessWidget {
     double width = screenWidth * 0.85;
     return Card(
       elevation: 0,
-      color: theme.colorScheme.secondary,
+      color: theme.colorScheme.primary,
       child: ConstrainedBox(
         constraints:
             BoxConstraints(minWidth: width, maxWidth: width, minHeight: 140),
@@ -89,13 +89,13 @@ class FeedingInfoCard extends StatelessWidget {
               padding: const EdgeInsets.all(6.0),
               child: ListTile(
                 leading: Icon(Icons.access_alarm,
-                    size: 50, color: theme.colorScheme.onSecondary),
+                    size: 50, color: theme.colorScheme.onPrimary),
                 // TODO: Is it more useful to know time since last bottle/breastfed specifically or last overall feed?
                 title: Text(
                   'Time since last fed: $timeSince',  
                   style: TextStyle(
                     fontSize: 20,
-                    color: theme.colorScheme.onSecondary,
+                    color: theme.colorScheme.onPrimary,
                   ),
                 ),
               ),
@@ -107,7 +107,7 @@ class FeedingInfoCard extends StatelessWidget {
                 title: Text('Last $typeOfLastThing: $lastThing',
                     style: TextStyle(
                       fontSize: 20,
-                      color: theme.colorScheme.onSecondary,
+                      color: theme.colorScheme.onPrimary,
                     )),
               ),
             ),

@@ -148,10 +148,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
         controller: controller,
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: TextStyle(color: Theme.of(context).colorScheme.secondary),
+          labelStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
           enabledBorder: UnderlineInputBorder(
             borderSide:
-                BorderSide(color: Theme.of(context).colorScheme.secondary),
+                BorderSide(color: Theme.of(context).colorScheme.primary),
           ),
           focusedBorder: UnderlineInputBorder(
             borderSide:

@@ -1,8 +1,8 @@
 import 'package:babysteps/app/pages/tracking/diaper/diaper_database.dart';
 import 'package:babysteps/app/pages/tracking/diaper/diaper_stream.dart';
-import 'package:babysteps/app/pages/tracking/history_streams.dart';
 import 'package:babysteps/app/widgets/history_widgets.dart';
-import 'package:babysteps/app/widgets/widgets.dart';
+import 'package:babysteps/app/widgets/loading_widget.dart';
+import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
 
@@ -31,15 +31,9 @@ class _DiaperPageState extends State<DiaperPage> {
       'date': DateTime.now(),
     };
 
-    await DiaperDatabaseMethods().addDiaper(uploaddata);
+    await DiaperDatabaseMethods()
+        .addDiaper(uploaddata, currentUser.value!.currentBaby.value!.collectionId);
     //once data has been added, update the card accordingly
-  }
-
-  //Grab the data on page initialization
-  @override
-  void initState() {
-    super.initState();
-    DiaperDatabaseMethods().listenForDiaperReads();
   }
 
   @override
@@ -55,127 +49,142 @@ class _DiaperPageState extends State<DiaperPage> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(32),
-                child: Text("Diaper Change",
-                    style: TextStyle(
-                        fontSize: 36,
-                        color: Theme.of(context).colorScheme.onBackground)),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 16),
-                child:SizedBox(
-                child: DiaperStream(),
-              ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Type:",
+          child: ValueListenableBuilder(
+        valueListenable: currentUser,
+        builder: (context, value, child) {
+          if (value == null) {
+            return const LoadingWidget();
+          } else {
+            return Center(
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(32),
+                    child: Text("Diaper Change",
                         style: TextStyle(
-                            fontSize: 30,
+                            fontSize: 36,
                             color: Theme.of(context).colorScheme.onBackground)),
-                    Column(
-                      children: [
-                        DiaperButton('Pee', activeButton.contains("Pee"),
-                            buttonClicked, Theme.of(context)),
-                        const Padding(padding: EdgeInsets.only(top: 16)),
-                        DiaperButton('Mixed', activeButton.contains("Mixed"),
-                            buttonClicked, Theme.of(context))
-                      ],
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 16),
+                    child: SizedBox(
+                      child: DiaperStream(),
                     ),
-                    Column(
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        DiaperButton('Poop', activeButton.contains("Poop"),
-                            buttonClicked, Theme.of(context)),
-                        const Padding(padding: EdgeInsets.only(top: 16)),
-                        DiaperButton('Dry', activeButton.contains("Dry"),
-                            buttonClicked, Theme.of(context))
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                        padding: const EdgeInsets.only(top: 6),
-                        child: Text("Diaper Rash?",
+                        Text("Type:",
                             style: TextStyle(
                                 fontSize: 30,
                                 color: Theme.of(context)
                                     .colorScheme
-                                    .onBackground))),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 32),
-                      child: Transform.scale(
-                        scale: 1.75,
-                        child: Checkbox(
-                          value: diaperRash,
-                          fillColor: MaterialStateProperty.all(
-                              Theme.of(context).colorScheme.surface),
-                          checkColor: Theme.of(context).colorScheme.onSurface,
-                          side: const BorderSide(
-                            color: Colors.grey,
-                            width: 1,
-                          ),
-                          onChanged: (bool? newValue) {
-                            setState(() {
-                              diaperRash = newValue!;
-                            });
-                          },
+                                    .onBackground)),
+                        Column(
+                          children: [
+                            DiaperButton('Pee', activeButton.contains("Pee"),
+                                buttonClicked, Theme.of(context)),
+                            const Padding(padding: EdgeInsets.only(top: 16)),
+                            DiaperButton(
+                                'Mixed',
+                                activeButton.contains("Mixed"),
+                                buttonClicked,
+                                Theme.of(context))
+                          ],
                         ),
-                      ),
-                    ),
-                    const SizedBox(
-                        width:
-                            56), // Just there to line "Diaper Rash" up with "Type"
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 40),
-                child: SizedBox(
-                  height: 75,
-                  width: 185,
-                  child: FilledButton.tonal(
-                    onPressed: uploadData,
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          Theme.of(context).colorScheme.tertiary),
-                      foregroundColor: MaterialStateProperty.all(
-                          Theme.of(context).colorScheme.onTertiary),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
+                        Column(
+                          children: [
+                            DiaperButton('Poop', activeButton.contains("Poop"),
+                                buttonClicked, Theme.of(context)),
+                            const Padding(padding: EdgeInsets.only(top: 16)),
+                            DiaperButton('Dry', activeButton.contains("Dry"),
+                                buttonClicked, Theme.of(context))
+                          ],
                         ),
-                      ),
+                      ],
                     ),
-                    child: const Text("Add Diaper",
-                        style: TextStyle(fontSize: 25)),
                   ),
-                ),
-              ),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                            padding: const EdgeInsets.only(top: 6),
+                            child: Text("Diaper Rash?",
+                                style: TextStyle(
+                                    fontSize: 30,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onBackground))),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 32),
+                          child: Transform.scale(
+                            scale: 1.75,
+                            child: Checkbox(
+                              value: diaperRash,
+                              fillColor: MaterialStateProperty.all(
+                                  Theme.of(context).colorScheme.surface),
+                              checkColor:
+                                  Theme.of(context).colorScheme.onSurface,
+                              side: const BorderSide(
+                                color: Colors.grey,
+                                width: 1,
+                              ),
+                              onChanged: (bool? newValue) {
+                                setState(() {
+                                  diaperRash = newValue!;
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                            width:
+                                56), // Just there to line "Diaper Rash" up with "Type"
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 40),
+                    child: SizedBox(
+                      height: 75,
+                      width: 185,
+                      child: FilledButton.tonal(
+                        onPressed: uploadData,
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              Theme.of(context).colorScheme.tertiary),
+                          foregroundColor: MaterialStateProperty.all(
+                              Theme.of(context).colorScheme.onTertiary),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                          ),
+                        ),
+                        child: const Text("Add Diaper",
+                            style: TextStyle(fontSize: 25)),
+                      ),
+                    ),
+                  ),
 
-              // History card - in widgets
-              Padding(
-                padding: const EdgeInsets.only(top:30),
-                child: HistoryDropdown("diaper"),
-              )
-            ],
-          ),
-        ),
-      ),
+                  // History card - in widgets
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30),
+                    child: HistoryDropdown("diaper"),
+                  )
+                ],
+              ),
+            );
+          }
+        },
+      )),
     );
   }
 }

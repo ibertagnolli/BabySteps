@@ -1,4 +1,5 @@
 import 'package:babysteps/app/pages/tracking/temperature/temperature_database.dart';
+import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -30,7 +31,8 @@ class _AddTemperatureCardState extends State<AddTemperatureCard> {
       'temperature': temp.text,
       'date': savedDate,
     };
-    await TemperatureDatabaseMethods().addTemperature(uploaddata);
+    await TemperatureDatabaseMethods().addTemperature(
+        uploaddata, currentUser.value!.currentBaby.value!.collectionId);
 
     // Clear fields for next entry
     temp.clear();
@@ -52,6 +54,7 @@ class _AddTemperatureCardState extends State<AddTemperatureCard> {
     return ExpansionTile(
         backgroundColor: Theme.of(context).colorScheme.surface,
         collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
+        initiallyExpanded: true,
         title: Text('Add Temperature',
             style: TextStyle(
                 fontSize: 25,
@@ -68,9 +71,10 @@ class _AddTemperatureCardState extends State<AddTemperatureCard> {
                   padding: const EdgeInsets.only(bottom: 10),
                   child: Row(
                     children: <Widget>[
-                      // Pounds input
+                      // Degree input
                       Expanded(
-                        child: Padding(
+                        child: 
+                        Padding(
                           padding: const EdgeInsets.only(left: 10, right: 10),
                           child: TextFormField(
                             controller: temp,
@@ -89,6 +93,10 @@ class _AddTemperatureCardState extends State<AddTemperatureCard> {
                           ),
                         ),
                       ),
+                      Text(' \u2109', // Degrees Fahrenheit symbol
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: Theme.of(context).colorScheme.onSurface)),
                     ],
                   ),
                 ),

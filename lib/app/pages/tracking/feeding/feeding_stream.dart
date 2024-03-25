@@ -1,6 +1,7 @@
 import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
 import 'package:babysteps/app/widgets/feeding_widgets.dart';
+import 'package:babysteps/main.dart';
 import 'package:babysteps/time_since.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -18,8 +19,8 @@ class FeedingStream extends StatefulWidget {
 }
 
 class _FeedingStreamState extends State<FeedingStream> {
-  final Stream<QuerySnapshot> _feedingStream =
-      FeedingDatabaseMethods().getFeedingStream();
+  final Stream<QuerySnapshot> _feedingStream = FeedingDatabaseMethods()
+      .getFeedingStream(currentUser.value!.currentBaby.value!.collectionId);
 
   @override
   Widget build(BuildContext context) {
@@ -62,8 +63,9 @@ class BreastFeedingStream extends StatefulWidget {
 }
 
 class _BreastFeedingStreamState extends State<BreastFeedingStream> {
-  final Stream<QuerySnapshot> _breastFeedingStream =
-      FeedingDatabaseMethods().getBreastfeedingStream();
+  final Stream<QuerySnapshot> _breastFeedingStream = FeedingDatabaseMethods()
+      .getBreastfeedingStream(
+          currentUser.value!.currentBaby.value!.collectionId);
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +92,7 @@ class _BreastFeedingStreamState extends State<BreastFeedingStream> {
 
         return FeedingOptionCard(
             Icon(Icons.water_drop,
-                size: 40, color: Theme.of(context).colorScheme.onSecondary),
+                size: 40, color: Theme.of(context).colorScheme.onPrimary),
             "Breast feeding",
             "Last side: $lastBreastSide",
             () => context.go('/tracking/feeding/breastFeeding'),
@@ -109,8 +111,9 @@ class BottleFeedingStream extends StatefulWidget {
 }
 
 class _BottleFeedingStreamState extends State<BottleFeedingStream> {
-  final Stream<QuerySnapshot> _bottleFeedingStream =
-      FeedingDatabaseMethods().getBottleFeedingStream();
+  final Stream<QuerySnapshot> _bottleFeedingStream = FeedingDatabaseMethods()
+      .getBottleFeedingStream(
+          currentUser.value!.currentBaby.value!.collectionId);
 
   @override
   Widget build(BuildContext context) {
@@ -138,9 +141,9 @@ class _BottleFeedingStreamState extends State<BottleFeedingStream> {
 
         return FeedingOptionCard(
             Icon(Icons.local_drink,
-                size: 40, color: Theme.of(context).colorScheme.onSecondary),
+                size: 40, color: Theme.of(context).colorScheme.onPrimary),
             "Bottle feeding",
-            "Last amount: $lastBottleAmount", // TODO: last bottle amount would be more helpful
+            "Last amount: $lastBottleAmount",
             () => context.go('/tracking/feeding/bottleFeeding'),
             Theme.of(context));
       },
