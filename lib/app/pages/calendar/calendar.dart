@@ -217,7 +217,9 @@ class _CalendarPageState extends State<CalendarPage> {
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: Row(
+                        mainAxisAlignment:  MainAxisAlignment.center,
                         children: <Widget>[
+                         
                           AddMilestoneButton(
                             selectedDay: _selectedDay,
                           ),
@@ -231,12 +233,10 @@ class _CalendarPageState extends State<CalendarPage> {
                                       .colorScheme
                                       .tertiary, // Background color
                                 ),
-                                child: Text("Add Post",
+                                child: const Text("Add Post",
                                     style: TextStyle(
                                         fontSize: 15,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onSecondary)),
+                                        color: Colors.white)),
 
                                 //go to new post page
                                 onPressed: () => context.go('/social/newPost')),
@@ -244,6 +244,7 @@ class _CalendarPageState extends State<CalendarPage> {
                         ],
                       ),
                     ),
+                 
                   ],
                 ),
               ),

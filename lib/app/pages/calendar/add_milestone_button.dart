@@ -1,4 +1,5 @@
 import 'package:babysteps/app/pages/calendar/calendar_database.dart';
+import 'package:babysteps/app/pages/styles/stopwatch_styles.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -62,8 +63,8 @@ class _AddMilestoneButtonState extends State<AddMilestoneButton> {
           backgroundColor:
               Theme.of(context).colorScheme.tertiary, // Background color
         ),
-        child: Text("Add Milestone",
-            style: TextStyle(fontSize: 15, color: Theme.of(context).colorScheme.onSecondary)),
+        child:const Text("Add Milestone",
+            style: TextStyle(fontSize: 15,  color:Colors.white)),
 
         // Dialog with Milestone entry
         onPressed: () {
@@ -139,7 +140,7 @@ class _AddMilestoneButtonState extends State<AddMilestoneButton> {
                                       Navigator.pop(context);
                                     }
                                   },
-                                  child: const Text("Submit"))
+                                  child: const Text("Submit", style:TextStyle(color:Colors.white)))
                             ],
                           )),
                     ));
