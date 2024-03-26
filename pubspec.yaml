@@ -54,6 +54,7 @@ dependencies:
   flutter_local_notifications: ^17.0.0
 
   timezone: any
+  firebase_dynamic_links: ^5.4.19
 dev_dependencies:
   flutter_test:
     sdk: flutter
