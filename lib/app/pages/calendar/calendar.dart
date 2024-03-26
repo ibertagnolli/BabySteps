@@ -3,6 +3,7 @@ import 'package:babysteps/app/pages/calendar/add_milestone_button.dart';
 import 'package:babysteps/app/pages/calendar/add_task_button.dart';
 import 'package:babysteps/app/pages/calendar/event_stream.dart';
 import 'package:babysteps/app/pages/calendar/milestone_stream.dart';
+import 'package:babysteps/app/pages/calendar/notifications.dart';
 import 'package:babysteps/app/pages/calendar/task_stream.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
@@ -244,7 +245,12 @@ class _CalendarPageState extends State<CalendarPage> {
                         ],
                       ),
                     ),
-                 
+                  ElevatedButton(
+        child: const Text('Show notifications'),
+        onPressed: () {
+          NotificationService().showNotification(title: 'Sample title', body: 'It works!');
+        },
+      ),
                   ],
                 ),
               ),

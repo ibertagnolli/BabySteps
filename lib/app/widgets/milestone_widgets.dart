@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:babysteps/app/pages/calendar/milestones.dart';
 
 class MilestonesWidget extends StatelessWidget {
   final int monthsAlive;
 
-  const MilestonesWidget({Key? key, required this.monthsAlive});
+  const MilestonesWidget({super.key, required this.monthsAlive});
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +75,7 @@ class MilestonesWidget extends StatelessWidget {
               for (String milestone in milestones)
                 Text('• $milestone'),
               if (milestones.isEmpty)
-                Text(
+                const Text(
                   'No CDC recommended milestones for this month. Please check the next month.',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),

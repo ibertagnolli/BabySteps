@@ -204,17 +204,16 @@ class _SignupPageState extends State<SignupPage> {
                     ),
 
                     // Error creating account
-                    if (errorMessage != null)
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Text(
-                          errorMessage!,
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            color: Theme.of(context).colorScheme.error,
-                          ),
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Text(
+                        errorMessage,
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          color: Theme.of(context).colorScheme.error,
                         ),
                       ),
+                    ),
                 
                     // Create Account Button
                     FilledButton(

@@ -49,10 +49,10 @@ class _NotesHomePageState extends State<NotesHomePage> {
               builder: (context, value, child) {
                 return Column(
                   children: [
-                    Flexible(
+                    const Flexible(
                       flex: 3,
                       child: Padding(
-                        padding: const EdgeInsets.all(8),
+                        padding: EdgeInsets.all(8),
                         child: NotesStream(),
                       ),
                     ),

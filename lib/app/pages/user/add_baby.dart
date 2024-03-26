@@ -251,7 +251,7 @@ class _AddBabyPageState extends State<AddBabyPage> {
                             onTap: () async {
                               // Don't show keyboard
                               FocusScope.of(context)
-                                  .requestFocus(new FocusNode());
+                                  .requestFocus(FocusNode());
 
                               DateTime? pickeddate = await showDatePicker(
                                   context: context,

@@ -8,7 +8,7 @@ FirebaseFirestore db = FirebaseFirestore.instance;
 
 /// The widget that reads realtime Event updates.
 class NotesStream extends StatefulWidget {
-  NotesStream({super.key});
+  const NotesStream({super.key});
 
   @override
   _NotesStreamState createState() => _NotesStreamState();

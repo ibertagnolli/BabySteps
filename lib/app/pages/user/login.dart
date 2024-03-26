@@ -51,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
                     color: Theme.of(context).colorScheme.surface),
               ),
               Padding(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: TextField(
                   controller: email,
                   cursorColor: Theme.of(context).colorScheme.primary,
@@ -71,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: TextField(
                   controller: password,
                   obscureText: true,
@@ -93,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               if (errorMessage != null)
                 Padding(
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   child: Text(
                     errorMessage!,
                     style: TextStyle(
@@ -103,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               Padding(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: FilledButton(
                     onPressed: () async {
                       try {
@@ -126,9 +126,9 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     )),
               ),
-              InkWell(child: Text('Forgot Password?'), onTap: () => {}),
+              InkWell(child: const Text('Forgot Password?'), onTap: () => {}),
               InkWell(
-                  child: Text('Don\'t have an account? Sign up here'),
+                  child: const Text('Don\'t have an account? Sign up here'),
                   onTap: () => context.go('/login/signup')),
             ],
           ),

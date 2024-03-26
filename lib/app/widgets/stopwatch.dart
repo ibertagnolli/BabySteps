@@ -114,7 +114,7 @@ class _NewStopWatchState extends State<NewStopWatch> {
         timerOngoing = true;
         timerStopped = false;
         watch.start();
-        timer = Timer.periodic(Duration(milliseconds: 100), updateTime);
+        timer = Timer.periodic(const Duration(milliseconds: 100), updateTime);
       });
     }
   }
