@@ -60,4 +60,42 @@ class CalendarDatabaseMethods {
         .doc(docId)
         .set(updatedUserInfoMap);
   }
+
+
+
+  // Adds a milestone to the milestones collection
+  Future addMilestone(Map<String, dynamic> userInfoMap,String userDoc) async {
+    return await db
+        .collection('Users')
+        .doc(userDoc)
+        .collection('Milestones')
+        .add(userInfoMap);
+  }
+
+  // Sets up the snapshot to listen to changes in the milestones collection.
+  // void listenForMilestoneReads() {
+  //   final docRef = db
+  //       .collection('Users')
+  //       .doc(userDoc)
+  //       .collection('Milestones');
+  //         docRef.snapshots().listen(
+  //         (event) => print(
+  //             "current data: ${event.size}"), // These are helpful for debugging, but we can remove them
+  //         onError: (error) => print("Listen failed: $error"),
+  //       );
+  // }
+
+  // Returns a snapshot of all the milestones on selectedDate
+  Stream<QuerySnapshot> getMilestoneStream(DateTime selectedDate,String userDoc) {
+    return db
+        .collection('Users')
+        .doc(userDoc)
+        .collection("Milestones")
+        .where('dateTime', isEqualTo: Timestamp.fromDate(DateUtils.dateOnly(selectedDate)))
+        .snapshots();
+  }
+
+ 
+
+
 }
