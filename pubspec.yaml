@@ -47,11 +47,14 @@ dependencies:
   firebase_storage: ^11.6.0
   shared_preferences: ^2.2.2
   image_picker: ^1.0.7
-  syncfusion_flutter_charts: 22.2.12 # there's a newer version but it introduces issues with our flutter version
+  syncfusion_flutter_charts: ^25.1.37 # there's a newer version but it introduces issues with our flutter version
   pdf: ^3.10.8
   path_provider: ^2.1.2
   flutter_file_dialog: ^3.0.2
+  flutter_local_notifications: ^17.0.0
 
+  timezone: any
+  firebase_dynamic_links: ^5.4.19
 dev_dependencies:
   flutter_test:
     sdk: flutter

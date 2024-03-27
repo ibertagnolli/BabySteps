@@ -69,7 +69,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Profile'),
+        title: const Text('Edit Profile'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -80,12 +80,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
             buildInputField('Email', emailController),
             buildInputField('Baby Name', babyNameController),
             buildInputField('Date of Birth', dobController),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Expanded(
               child: Row(
                 children: [
                   Padding(
-                    padding: EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
                     child: Align(
                       alignment: FractionalOffset.bottomRight,
                       child: ElevatedButton(
@@ -109,7 +109,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
                     child: Align(
                       alignment: FractionalOffset.bottomLeft,
                       child: ElevatedButton(

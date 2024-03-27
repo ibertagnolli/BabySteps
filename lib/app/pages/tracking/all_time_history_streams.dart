@@ -43,7 +43,7 @@ class _DiaperAllTimeStreamState extends State<DiaperAllTimeStream> {
         Map<DateTime, double> entries = {};
 
         // Go through all docs
-        allDiaperDocs.forEach((doc) {
+        for (var doc in allDiaperDocs) {
           DateTime date = doc['date'].toDate();
           var month = date.month;
           var day = date.day;
@@ -52,7 +52,7 @@ class _DiaperAllTimeStreamState extends State<DiaperAllTimeStream> {
           // Add one to the number of entries for that date, or set it to 1 if there were none
           entries.update(DateTime(year, month, day, 0), (v) => v + 1,
               ifAbsent: () => 1);
-        });
+        }
 
         // Make a graph with the retrieved data
         return TimeSeriesWidget(
@@ -102,7 +102,7 @@ class _SleepAllTimeStreamState extends State<SleepAllTimeStream> {
         Map<DateTime, double> entriesTotalTime = {};
 
         // Go through all docs
-        allSleepDocs.forEach((doc) {
+        for (var doc in allSleepDocs) {
           DateTime date = doc['date'].toDate();
           var month = date.month;
           var day = date.day;
@@ -122,7 +122,7 @@ class _SleepAllTimeStreamState extends State<SleepAllTimeStream> {
           entriesTotalTime.update(
               DateTime(year, month, day, 0), (v) => v + hoursSlept,
               ifAbsent: () => hoursSlept);
-        });
+        }
 
         // Make a graph with the retrieved data
         return StackedTimeSeriesWidget(entriesNumberPerDay, entriesTotalTime,
@@ -172,7 +172,7 @@ class _WeightAllTimeStreamState extends State<WeightAllTimeStream> {
         Map<DateTime, double> entries = {};
 
         // Go through all docs
-        allWeightDocs.forEach((doc) {
+        for (var doc in allWeightDocs) {
           DateTime date = doc['date'].toDate();
           var month = date.month;
           var day = date.day;
@@ -185,7 +185,7 @@ class _WeightAllTimeStreamState extends State<WeightAllTimeStream> {
           // TODO: This will only use the last entry for the day, do we want an average?
           entries.update(DateTime(year, month, day, 0), (v) => weight,
               ifAbsent: () => weight);
-        });
+        }
 
         // Make a graph with the retrieved data
         return TimeSeriesWidget(entries, "Weight Over Time", "Pounds");
@@ -234,7 +234,7 @@ class _TemperatureAllTimeStreamState extends State<TemperatureAllTimeStream> {
         Map<DateTime, double> entries = {};
 
         // Go through all docs
-        allTempDocs.forEach((doc) {
+        for (var doc in allTempDocs) {
           DateTime date = doc['date'].toDate();
           var month = date.month;
           var day = date.day;
@@ -244,7 +244,7 @@ class _TemperatureAllTimeStreamState extends State<TemperatureAllTimeStream> {
           // TODO: this will only use the last entry for each day, would an average be better?
           entries.update(DateTime(year, month, day, 0), (v) => temp,
               ifAbsent: () => temp);
-        });
+        }
 
         // Make a graph with the retrieved data
         return TimeSeriesWidget(entries, "Temperature Over Time", "Degrees");
@@ -295,7 +295,7 @@ class _BreastfeedingAllTimeStreamState
         Map<DateTime, double> entriesTotalTime = {};
 
         // Go through all docs
-        allBreastfeedingDocs.forEach((doc) {
+        for (var doc in allBreastfeedingDocs) {
           DateTime date = doc['date'].toDate();
           var month = date.month;
           var day = date.day;
@@ -317,7 +317,7 @@ class _BreastfeedingAllTimeStreamState
           entriesTotalTime.update(
               DateTime(year, month, day, 0), (v) => v + hoursBreastfed,
               ifAbsent: () => hoursBreastfed);
-        });
+        }
 
         // Make a graph with the retrieved data
         return StackedTimeSeriesWidget(
@@ -373,7 +373,7 @@ class _BottleFeedingAllTimeStreamState
         Map<DateTime, double> entriesTotalAmount = {};
 
         // Go through all docs
-        allBottleDocs.forEach((doc) {
+        for (var doc in allBottleDocs) {
           DateTime date = doc['date'].toDate();
           var month = date.month;
           var day = date.day;
@@ -389,7 +389,7 @@ class _BottleFeedingAllTimeStreamState
           entriesTotalAmount.update(
               DateTime(year, month, day, 0), (v) => v + bottleAmount,
               ifAbsent: () => bottleAmount);
-        });
+        }
 
         // Make a graph with the retrieved data
         return StackedTimeSeriesWidget(

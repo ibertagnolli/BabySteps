@@ -1,5 +1,4 @@
 import 'package:babysteps/app/pages/calendar/calendar_database.dart';
-import 'package:babysteps/app/pages/styles/stopwatch_styles.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -57,7 +56,7 @@ class _AddMilestoneButtonState extends State<AddMilestoneButton> {
       // Add Milestone Button
       width: 170.0,
       height: 30.0,
-      child:Padding( padding:EdgeInsets.only(right: 10), 
+      child:Padding( padding:const EdgeInsets.only(right: 10), 
       child: FilledButton(
         style: FilledButton.styleFrom(
           backgroundColor:
@@ -104,7 +103,7 @@ class _AddMilestoneButtonState extends State<AddMilestoneButton> {
                                 onTap: () async {
                                   // Don't show keyboard
                                   FocusScope.of(context)
-                                      .requestFocus(new FocusNode());
+                                      .requestFocus(FocusNode());
 
                                   DateTime? pickeddate = await showDatePicker(
                                       context: context,

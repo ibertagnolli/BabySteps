@@ -62,11 +62,11 @@ class BabyBox extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                  "Enter the user's email and we will send them an invite\nAlternatively you can send them this code and have them add it on account creation: ${babyId}"),
+                                  "Enter the user's email and we will send them an invite\nAlternatively you can send them this code and have them add it on account creation: $babyId"),
                               TextField(
                                 controller: controller,
                               ),
-                              SizedBox(height: 8),
+                              const SizedBox(height: 8),
                               ElevatedButton(
                                 onPressed: () {
                                   //send email
@@ -74,7 +74,7 @@ class BabyBox extends StatelessWidget {
                                 style: blueButton(context),
                                 child: const Text('Send Email Invite'),
                               ),
-                              SizedBox(height: 8),
+                              const SizedBox(height: 8),
                               ElevatedButton(
                                 onPressed: () {
                                   Clipboard.setData(
@@ -89,7 +89,7 @@ class BabyBox extends StatelessWidget {
                 });
           },
           style: blueButton(context),
-          child: Text('Add Caregiver'),
+          child: const Text('Add Caregiver'),
         ),
     ]);
   }
