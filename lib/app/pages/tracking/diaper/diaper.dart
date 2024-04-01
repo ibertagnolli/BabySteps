@@ -204,7 +204,7 @@ class DiaperButton extends StatelessWidget {
       padding: const EdgeInsets.only(left: 16),
       child: SizedBox(
         height: 48,
-        width: 120,
+        width: 120, // TODO make percentage of screen size?
         child: FilledButton.tonal(
           onPressed: () => {onPress(buttonText)},
           style: ButtonStyle(
