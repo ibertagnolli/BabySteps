@@ -3,6 +3,8 @@ import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
 
+import 'package:flutter/services.dart';
+
 class NotesPage extends StatefulWidget {
   final String title;
   final String contents;
@@ -24,6 +26,24 @@ class _NotesPageState extends State<NotesPage> {
 
   // The global key uniquely identifies the Form widget and allows validation of the form.
   final _formKey = GlobalKey<FormState>();
+
+  // Needed for Google Assistant
+  static const platform = MethodChannel('app.channel.shared.data');
+
+  @override
+  void initState() {
+    super.initState();
+    getSharedText();
+  }
+
+  Future<void> getSharedText() async {
+    var sharedData = await platform.invokeMethod('getSharedText');
+    if (sharedData != null) {
+      setState(() {
+        _noteController.text = sharedData;
+      });
+    }
+  }
 
   /// Saves a new event entry in the Firestore database if the entry does not already exist.
   /// Otherwise, updates the existing entry

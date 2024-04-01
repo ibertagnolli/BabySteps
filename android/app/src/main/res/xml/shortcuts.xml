@@ -1,0 +1,22 @@
+<!-- <shortcuts>
+    <shortcut
+        android:shortcutId="sleeping"
+        android:shortcutShortLabel="@string/activity_sleeping">
+        <capability-binding android:key="actions.intent.START_EXERCISE">
+        <parameter-binding
+            android:key="exercise.name"
+            android:value="@array/sleepingSynonyms"/>
+        </capability-binding>
+    </shortcut>
+
+    <capability android:name="actions.intent.START_EXERCISE">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="babysteps"
+            android:targetClass="com.devrel.android.fitactions.FitMainActivity"> UPDATE TO BABYSTEPS
+            <parameter
+            android:name="exercise.name"
+            android:key="exerciseType"/>
+        </intent>
+    </capability>
+</shortcuts> -->
