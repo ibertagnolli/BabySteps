@@ -8,53 +8,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-// Streams for the medical landing page. Has cards for condition,
-// vaccination, and medication.
-
-/// The widget that reads realtime feeding updates for the FilledCard.
-// class MedicalStream extends StatefulWidget {
-//   const MedicalStream({super.key});
-
-//   @override
-//   State<StatefulWidget> createState() => _MedicalStreamState();
-// }
-
-// class _MedicalStreamState extends State<MedicalStream> {
-//   final Stream<QuerySnapshot> _feedingStream = FeedingDatabaseMethods()
-//       .getFeedingStream(currentUser.value!.currentBaby.value!.collectionId);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return StreamBuilder<QuerySnapshot>(
-//       stream: _feedingStream,
-//       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-//         if (snapshot.hasError) {
-//           return const Text('Something went wrong');
-//         }
-
-//         if (snapshot.connectionState == ConnectionState.waiting) {
-//           return const Text("Loading");
-//         }
-
-//         // An array of documents, but our query only returns an array of one document
-//         var lastFeedDoc = snapshot.data!.docs;
-//         String timeSinceFed = 'Never';
-//         String lastType = '';
-//         if (lastFeedDoc.isNotEmpty) {
-//           DateTime date = lastFeedDoc[0]['date'].toDate();
-//           timeSinceFed = getTimeSince(date);
-//           lastType = lastFeedDoc[0]['type'];
-//         }
-
-//         // Returns the FilledCard
-
-//         return FilledCard("last fed: $timeSinceFed", "type: $lastType",
-//             const Icon(Icons.edit));
-//       },
-//     );
-//   }
-// }
-
 /// The widget that reads realtime feeding updates for the breast feeding button.
 class ConditionStream extends StatefulWidget {
   const ConditionStream({super.key});
@@ -90,7 +43,6 @@ class _ConditionStreamState extends State<ConditionStream> {
         }
 
         // Returns the condition card/button
-
         return TrackingOptionCard(
             Icon(Icons.sick,
                 size: 40, color: Theme.of(context).colorScheme.onPrimary),
@@ -139,13 +91,12 @@ class _VaccinationStreamState extends State<VaccinationStream> {
         }
 
         // Returns the vaccination card/button
-
         return TrackingOptionCard(
             Icon(Icons.vaccines,
                 size: 40, color: Theme.of(context).colorScheme.onPrimary),
             "Vaccinations",
             "Last amount: $lastBottleAmount",
-            () => context.go('/tracking/feeding/bottleFeeding'),
+            () => context.go('/tracking/medical/vaccinations'),
             Theme.of(context));
       },
     );
@@ -188,7 +139,6 @@ class _MedicationStreamState extends State<MedicationStream> {
         }
 
         // Returns the medications card/button
-
         return TrackingOptionCard(
             Icon(Icons.medication_liquid,
                 size: 40, color: Theme.of(context).colorScheme.onPrimary),

@@ -7,6 +7,7 @@ import 'package:babysteps/app/pages/tracking/feeding/bottleFeeding.dart';
 import 'package:babysteps/app/pages/tracking/feeding/breastFeeding.dart';
 import 'package:babysteps/app/pages/tracking/feeding/feeding.dart';
 import 'package:babysteps/app/pages/tracking/medical/medical.dart';
+import 'package:babysteps/app/pages/tracking/medical/vaccinations.dart';
 import 'package:babysteps/app/pages/tracking/sleep/sleep.dart';
 import 'package:babysteps/app/pages/tracking/temperature/temperature.dart';
 import 'package:babysteps/app/pages/tracking/tracking_landing.dart';
@@ -273,9 +274,15 @@ final goRouter = GoRouter(
                   path: 'temperature',
                   builder: (context, state) => const TemperaturePage(),
                 ),
+                // medical routes
                 GoRoute(
                   path: 'medical',
                   builder: (context, state) => const MedicalPage(),
+                  routes: [
+                    GoRoute(
+                        path: 'vaccinations',
+                        builder: (context, state) => const VaccinationsPage()),
+                  ]
                 ),
               ],
             ),

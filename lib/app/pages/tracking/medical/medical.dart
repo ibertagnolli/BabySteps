@@ -37,28 +37,20 @@ class _MedicalPageState extends State<MedicalPage> {
                       color: Theme.of(context).colorScheme.onBackground)),
             ),
 
-            // Top card with data
+            // Medical option buttons - condition, vaccination, and medication
+            // All have basic info displayed on them, using real time reads
             // const Padding(
-            //   padding: EdgeInsets.only(bottom: 16),
-            //   child: SizedBox(
-            //     child: MedicalStream(),
-            //   ),
+            //   padding: EdgeInsets.only(bottom: 16, left: 15, right: 15),
+            //   child: ConditionStream(),
             // ),
-
-            // Feeding option buttons - breast feeding or bottle feeding
-            // Both have basic info displayed on them, using real time reads
-            const Padding(
-              padding: EdgeInsets.only(bottom: 16, left: 15, right: 15),
-              child: ConditionStream(),
-            ),
             const Padding(
               padding: EdgeInsets.only(bottom: 16, left: 15, right: 15),
               child: VaccinationStream(),
             ),
-            const Padding(
-              padding: EdgeInsets.only(bottom: 16, left: 15, right: 15),
-              child: MedicationStream(),
-            ),
+            // const Padding(
+            //   padding: EdgeInsets.only(bottom: 16, left: 15, right: 15),
+            //   child: MedicationStream(),
+            // ),
           ]),
         ),
       ),
