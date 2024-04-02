@@ -20,7 +20,7 @@ class WeightDatabaseMethods {
     return await db
         .collection('Babies')
         .doc(babyDoc)
-        .collection('Weight')
+        .collection('Vaccine')
         .add(userInfoMap);
   }
 

@@ -1,3 +1,4 @@
+import 'package:babysteps/app/pages/tracking/medical/medical_database.dart';
 import 'package:babysteps/app/pages/tracking/weight/weight_database.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
@@ -23,17 +24,17 @@ class _AddVaccineCardState extends State<AddVaccineCard> {
   TextEditingController date = TextEditingController(
       text: DateFormat("MM/dd/yyyy").format(DateTime.now()));
 
-  /// Saves a new weight entry in the Firestore database.
-  saveNewWeight() async {
-    DateTime savedDate = DateFormat("MM/dd/yyyy hh:mm").parse(date.text);
+  /// Saves a new vaccine entry in the Firestore database.
+  saveNewVaccine() async {
+    DateTime savedDate = DateFormat("MM/dd/yyyy").parse(date.text);
 
     // Write weight data to database
     Map<String, dynamic> uploaddata = {
-      'pounds': vaccName.text,
-      'ounces': reaction.text,
+      'vaccine': vaccName.text,
+      'reaction': reaction.text,
       'date': savedDate,
     };
-    await WeightDatabaseMethods().addWeight(
+    await MedicalDatabaseMethods().addVaccine(
         uploaddata, currentUser.value!.currentBaby.value!.collectionId);
 
     // Clear fields for next entry
@@ -100,11 +101,6 @@ class _AddVaccineCardState extends State<AddVaccineCard> {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a date';
                       }
-
-                      // ERROR -> THIS ISN'T WORKING!!!
-                      // NOTE: If user picks a date after current date, it reverts to the previously picked date.
-                      // The entry field reflects this. No error checking, but doesn't let user input invalid data.
-
                       return null;
                     },
                     // Don't show the keyboard
@@ -140,25 +136,19 @@ class _AddVaccineCardState extends State<AddVaccineCard> {
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
                     decoration: const InputDecoration(
-                      hintText: 'Has the baby have any reactions?'
+                      hintText: 'Has the baby had any reactions?'
                     ),
-                    // validator: (value) {
-                    //   if (value == null || value.isEmpty) {
-                    //     return 'Please enter pounds';
-                    //   }
-                    //   return null;
-                    // },
                   )
                 ),
 
                 // Third row: Submit button
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
                   child: ElevatedButton(
                     onPressed: () {
                       // Validate returns true if the form is valid, or false otherwise.
                       if (_formKey.currentState!.validate()) {
-                        saveNewWeight();
+                        saveNewVaccine();
                       }
                     },
                     style: ButtonStyle(

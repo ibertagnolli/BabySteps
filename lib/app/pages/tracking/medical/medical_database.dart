@@ -14,13 +14,12 @@ class MedicalDatabaseMethods{
         .snapshots();
   }
 
-  //This methods adds an entry to the temperature collection
-  Future addTemperature(
-      Map<String, dynamic> userInfoMap, String babyDoc) async {
-    return await FirebaseFirestore.instance
+  // This methods adds an entry to the vaccine collection
+  Future addVaccine(Map<String, dynamic> userInfoMap, String babyDoc) async {
+    return await db
         .collection('Babies')
         .doc(babyDoc)
-        .collection('Temperature')
+        .collection('Vaccines')
         .add(userInfoMap);
   }
 
