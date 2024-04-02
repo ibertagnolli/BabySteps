@@ -1,5 +1,6 @@
 import 'package:babysteps/app/pages/calendar/calendar.dart';
 import 'package:babysteps/app/widgets/loading_widget.dart';
+import 'package:babysteps/app/widgets/social_only_widget.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
@@ -35,10 +36,12 @@ class _CalendarLandingPageState extends State<CalendarLandingPage> {
             if (value == null) {
               return const LoadingWidget();
             } else {
-              return ValueListenableBuilder(
-                valueListenable: currentUser.value!.currentBaby,
-                builder: (context, value, child) => const CalendarPage(),
-              );
+              return currentUser.value!.socialOnly
+                  ? const SocialOnlyWidget()
+                  : ValueListenableBuilder(
+                      valueListenable: currentUser.value!.currentBaby,
+                      builder: (context, value, child) => const CalendarPage(),
+                    );
             }
           },
         ));

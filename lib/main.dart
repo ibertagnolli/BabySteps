@@ -36,6 +36,7 @@ import 'package:babysteps/app/pages/calendar/notifications.dart';
 //https://github.com/bizz84/nested_navigation_examples/blob/main/examples/gorouter/lib/main.dart
 
 bool loggedIn = false;
+bool hasBaby = false;
 ValueNotifier<UserProfile?> currentUser = ValueNotifier(null);
 //late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 void main() async {
@@ -79,6 +80,8 @@ void main() async {
                 caregivers: doc2['Caregivers']));
           }
         }
+
+        hasBaby = babies.isNotEmpty;
 
         currentUser.value = UserProfile(
             userDoc: doc[0].id,
@@ -173,7 +176,11 @@ final _shellNavigatorSocialKey =
 
 // the one and only GoRouter instance
 final goRouter = GoRouter(
-  initialLocation: loggedIn ? '/tracking' : '/login',
+  initialLocation: loggedIn
+      ? hasBaby
+          ? '/tracking'
+          : '/login/signup/addBaby'
+      : '/login',
   // initialLocation: loggedIn ? '/home' : '/login', // TODO: put this back in when home page is interesting
   navigatorKey: _rootNavigatorKey,
   routes: [
