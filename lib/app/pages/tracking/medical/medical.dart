@@ -1,4 +1,8 @@
 import 'package:babysteps/app/pages/tracking/feeding/feeding_stream.dart';
+import 'package:babysteps/app/pages/tracking/medical/condition_stream.dart';
+import 'package:babysteps/app/pages/tracking/medical/medical_stream.dart';
+import 'package:babysteps/app/pages/tracking/medical/medication_stream.dart';
+import 'package:babysteps/app/pages/tracking/medical/vaccination_stream.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
 
@@ -12,6 +16,7 @@ class MedicalPage extends StatefulWidget {
 class _MedicalPageState extends State<MedicalPage> {
   @override
   Widget build(BuildContext context) {
+    // Nav bar
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
@@ -22,12 +27,14 @@ class _MedicalPageState extends State<MedicalPage> {
           color: Theme.of(context).colorScheme.onSurface,
         ),
       ),
+      
+      // Widgets
       body: SingleChildScrollView(
         child: Center(
           child: Flex(direction: Axis.vertical, children: <Widget>[
             Padding(
               padding: const EdgeInsets.all(32),
-              child: Text('Feeding',
+              child: Text('Medical',
                   style: TextStyle(
                       fontSize: 36,
                       color: Theme.of(context).colorScheme.onBackground)),
@@ -37,7 +44,7 @@ class _MedicalPageState extends State<MedicalPage> {
             const Padding(
               padding: EdgeInsets.only(bottom: 16),
               child: SizedBox(
-                child: FeedingStream(),
+                child: MedicalStream(),
               ),
             ),
 
@@ -45,11 +52,15 @@ class _MedicalPageState extends State<MedicalPage> {
             // Both have basic info displayed on them, using real time reads
             const Padding(
               padding: EdgeInsets.only(bottom: 16, left: 15, right: 15),
-              child: BreastFeedingStream(),
+              child: ConditionStream(),
             ),
             const Padding(
               padding: EdgeInsets.only(bottom: 16, left: 15, right: 15),
-              child: BottleFeedingStream(),
+              child: VaccinationStream(),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(bottom: 16, left: 15, right: 15),
+              child: MedicationStream(),
             ),
           ]),
         ),
