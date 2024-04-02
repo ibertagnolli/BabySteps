@@ -83,13 +83,25 @@ void main() async {
 
         hasBaby = babies.isNotEmpty;
 
-        currentUser.value = UserProfile(
+        try {
+          currentUser.value = UserProfile(
+              userDoc: doc[0].id,
+              uid: user.uid,
+              name: user.displayName ?? '',
+              email: user.email ?? '',
+              babies: babies,
+              currentBaby: ValueNotifier(babies.isNotEmpty ? babies[0] : null),
+              socialOnly: doc[0]['SocialOnly']);
+        } catch (e) {
+          currentUser.value = UserProfile(
             userDoc: doc[0].id,
             uid: user.uid,
             name: user.displayName ?? '',
             email: user.email ?? '',
             babies: babies,
-            currentBaby: ValueNotifier(babies.isNotEmpty ? babies[0] : null));
+            currentBaby: ValueNotifier(babies.isNotEmpty ? babies[0] : null),
+          );
+        }
       }
 
       print('User is signed in!');

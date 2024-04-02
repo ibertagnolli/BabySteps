@@ -3,12 +3,14 @@ class Baby {
   DateTime dob;
   String collectionId;
   List<dynamic> caregivers;
+  List<dynamic>? socialUsers;
 
   Baby(
       {required this.name,
       required this.dob,
       required this.collectionId,
-      required this.caregivers});
+      required this.caregivers,
+      this.socialUsers});
 
   updateName(String name) {
     this.name = name;

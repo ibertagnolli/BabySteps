@@ -32,11 +32,21 @@ class UserDatabaseMethods {
   }
 
   /// Updates the baby at currBabyDoc with the list of caregivers
-  Future updateBabyCaregiver(String currBabyDoc, List<dynamic> caregivers) async {
+  Future updateBabyCaregiver(
+      String currBabyDoc, List<dynamic> caregivers) async {
     return await db
         .collection("Babies")
         .doc(currBabyDoc)
         .update({"Caregivers": caregivers});
+  }
+
+  /// Updates the baby at currBabyDoc with the list of socialUsers
+  Future updateBabySocialUser(
+      String currBabyDoc, List<dynamic> socialUsers) async {
+    return await db
+        .collection("Babies")
+        .doc(currBabyDoc)
+        .update({"SocialUsers": socialUsers});
   }
 
   Future updateUserBabies(String userDoc, List<String> babies) async {

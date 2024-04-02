@@ -14,7 +14,8 @@ class BabyBox extends StatelessWidget {
     this.editing,
     this.updateName,
     this.updateDOB,
-    this.babyId, {
+    this.babyId,
+    this.socialUsers, {
     super.key,
   });
   final String babyName;
@@ -24,16 +25,24 @@ class BabyBox extends StatelessWidget {
   final Function(String? id, String newVal) updateName;
   final Function(String? id, String newVal) updateDOB;
   final String babyId;
+  final List<dynamic> socialUsers;
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController controller = TextEditingController();
+    // TextEditingController controller = TextEditingController();
     List<String> caregiverNames = [];
+    List<String> socialNames = [];
     for (Map<String, dynamic> caregiver in caregivers) {
       if (currentUser.value!.uid != caregiver['uid']) {
         caregiverNames.add(caregiver['name'] ?? '');
       }
     }
+    for (Map<String, dynamic> socialUser in socialUsers) {
+      if (currentUser.value!.uid != socialUser['uid']) {
+        socialNames.add(socialUser['name'] ?? '');
+      }
+    }
+
     return BuildInfoBox(label: '', fields: [
       BuildInfoField(
         'Baby Name',
@@ -62,19 +71,21 @@ class BabyBox extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                  "Enter the user's email and we will send them an invite\nAlternatively you can send them this code and have them add it on account creation: $babyId"),
-                              TextField(
-                                controller: controller,
-                              ),
-                              const SizedBox(height: 8),
-                              ElevatedButton(
-                                onPressed: () {
-                                  //send email
-                                },
-                                style: blueButton(context),
-                                child: const Text('Send Email Invite'),
-                              ),
-                              const SizedBox(height: 8),
+                                  "Send the caregiver you want to add this code and have them add it on account creation: $babyId"),
+                              // Text(
+                              //     "Enter the user's email and we will send them an invite\nAlternatively you can send them this code and have them add it on account creation: $babyId"),
+                              // TextField(
+                              //   controller: controller,
+                              // ),
+                              // const SizedBox(height: 8),
+                              // ElevatedButton(
+                              //   onPressed: () {
+                              //     //send email
+                              //   },
+                              //   style: blueButton(context),
+                              //   child: const Text('Send Email Invite'),
+                              // ),
+                              // const SizedBox(height: 8),
                               ElevatedButton(
                                 onPressed: () {
                                   Clipboard.setData(
@@ -90,6 +101,42 @@ class BabyBox extends StatelessWidget {
           },
           style: blueButton(context),
           child: const Text('Add Caregiver'),
+        ),
+      if (socialNames.isNotEmpty || editing)
+        BuildInfoField('Social only Users', socialNames,
+            const Icon(Icons.people), editing, (unused, unused2) => {}),
+      if (editing)
+        ElevatedButton(
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return Dialog(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                            "Send the user this code and have them add it on account creation: ${babyId}_SOU"),
+                        ElevatedButton(
+                          onPressed: () {
+                            Clipboard.setData(
+                                ClipboardData(text: "${babyId}_SOU"));
+                            //send email
+                          },
+                          style: blueButton(context),
+                          child: const Text('Save code to clipboard'),
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+          style: blueButton(context),
+          child: const Text('Add Social User'),
         ),
     ]);
   }

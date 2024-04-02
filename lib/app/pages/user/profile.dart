@@ -176,8 +176,15 @@ class _ProfilePageState extends State<ProfilePage> {
               //TODO: display multiple baby's info when caregivers have more than one
 
               for (Baby element in babyList)
-                BabyBox(element.name, element.dob, element.caregivers, editing,
-                    updateBabyName, updateBabyDOB, element.collectionId),
+                BabyBox(
+                    element.name,
+                    element.dob,
+                    element.caregivers,
+                    editing,
+                    updateBabyName,
+                    updateBabyDOB,
+                    element.collectionId,
+                    element.socialUsers ?? []),
 
               if (editing)
                 Padding(
