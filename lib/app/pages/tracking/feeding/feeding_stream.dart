@@ -1,4 +1,5 @@
 import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
+import 'package:babysteps/app/widgets/landing_page_widgets.dart';
 import 'package:babysteps/app/widgets/widgets.dart';
 import 'package:babysteps/app/widgets/feeding_widgets.dart';
 import 'package:babysteps/main.dart';
@@ -90,7 +91,7 @@ class _BreastFeedingStreamState extends State<BreastFeedingStream> {
 
         // Returns the breast feeding card/button
 
-        return FeedingOptionCard(
+        return TrackingOptionCard(
             Icon(Icons.water_drop,
                 size: 40, color: Theme.of(context).colorScheme.onPrimary),
             "Breast feeding",
@@ -139,7 +140,7 @@ class _BottleFeedingStreamState extends State<BottleFeedingStream> {
 
         // Returns the bottle feeding card/button
 
-        return FeedingOptionCard(
+        return TrackingOptionCard(
             Icon(Icons.local_drink,
                 size: 40, color: Theme.of(context).colorScheme.onPrimary),
             "Bottle feeding",

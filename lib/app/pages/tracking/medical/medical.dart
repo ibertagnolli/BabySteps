@@ -1,8 +1,5 @@
 import 'package:babysteps/app/pages/tracking/feeding/feeding_stream.dart';
-import 'package:babysteps/app/pages/tracking/medical/condition_stream.dart';
 import 'package:babysteps/app/pages/tracking/medical/medical_stream.dart';
-import 'package:babysteps/app/pages/tracking/medical/medication_stream.dart';
-import 'package:babysteps/app/pages/tracking/medical/vaccination_stream.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
 
@@ -41,12 +38,12 @@ class _MedicalPageState extends State<MedicalPage> {
             ),
 
             // Top card with data
-            const Padding(
-              padding: EdgeInsets.only(bottom: 16),
-              child: SizedBox(
-                child: MedicalStream(),
-              ),
-            ),
+            // const Padding(
+            //   padding: EdgeInsets.only(bottom: 16),
+            //   child: SizedBox(
+            //     child: MedicalStream(),
+            //   ),
+            // ),
 
             // Feeding option buttons - breast feeding or bottle feeding
             // Both have basic info displayed on them, using real time reads
