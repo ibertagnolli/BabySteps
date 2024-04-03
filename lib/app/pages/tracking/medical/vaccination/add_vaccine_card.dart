@@ -24,12 +24,14 @@ class _AddVaccineCardState extends State<AddVaccineCard> {
   /// Saves a new vaccine entry in the Firestore database.
   saveNewVaccine() async {
     DateTime savedDate = DateFormat("MM/dd/yyyy").parse(date.text);
+    // Add the time so Medical tracking card shows time of latest update
+    DateTime savedDateWithTime = DateTime(savedDate.year, savedDate.month, savedDate.day, DateTime.now().hour, DateTime.now().minute);
 
     // Write weight data to database
     Map<String, dynamic> uploaddata = {
       'vaccine': vaccName.text,
       'reaction': reaction.text,
-      'date': savedDate,
+      'date': savedDateWithTime,
     };
     await MedicalDatabaseMethods().addVaccine(
         uploaddata, currentUser.value!.currentBaby.value!.collectionId);
@@ -39,7 +41,7 @@ class _AddVaccineCardState extends State<AddVaccineCard> {
     reaction.clear();
     date.clear();
     //add current date and time for autofill
-    date.text = DateFormat.yMd().add_jm().format(DateTime.now());
+    date.text = DateFormat.yMd().format(DateTime.now());
   }
 
   @override
