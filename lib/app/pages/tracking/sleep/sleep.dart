@@ -1,3 +1,4 @@
+import 'package:babysteps/app/pages/calendar/notifications.dart';
 import 'package:babysteps/app/pages/tracking/sleep/add_previous_sleep.dart';
 import 'package:babysteps/app/pages/tracking/sleep/sleep_database.dart';
 import 'package:babysteps/app/pages/tracking/sleep/sleep_stream.dart';
@@ -80,6 +81,20 @@ class _SleepPageState extends State<SleepPage> {
       //once data has been added, update the card accordingly
       napDone(napLength);
     }
+    //Schedule notification for reminder in 2 hours 
+    var today = DateTime.now();
+    var twoHours = today.hour + 2;
+     NotificationService().scheduleNotification(
+            title: "Nap Reminder",
+            body: "Its been 2 hours since ${currentUser.value?.currentBaby.value?.name} has had a Nap"
+                '$twoHours:${today.minute}',
+            scheduledNotificationDateTime: DateTime(
+                today.year,
+                today.month,
+                today.day,
+                twoHours,
+                today.minute));
+  
   }
 
   void napDone(String napLength) {
