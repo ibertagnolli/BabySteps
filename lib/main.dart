@@ -1,5 +1,6 @@
 import 'package:babysteps/app/pages/calendar/calendar_landing.dart';
 import 'package:babysteps/app/pages/notes/notes.dart';
+import 'package:babysteps/app/pages/home/home.dart';
 import 'package:babysteps/app/pages/notes/notes_home.dart';
 import 'package:babysteps/app/pages/social/new_post.dart';
 import 'package:babysteps/app/pages/tracking/diaper/diaper.dart';
@@ -220,7 +221,7 @@ final goRouter = GoRouter(
       },
       branches: [
         // first branch (Home) 
-        //TODO: uncommen below code when home is interesting
+        //TODO: uncomment below code when home is interesting
         StatefulShellBranch(
           navigatorKey: _shellNavigatorHomeKey,
           routes: [
