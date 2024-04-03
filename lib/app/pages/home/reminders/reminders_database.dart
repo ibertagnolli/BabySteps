@@ -21,8 +21,6 @@ class RemindersDatabaseMethods {
         .collection('Users')
         .doc(userDoc)
         .collection("Reminders")
-        .where('dateTime',
-            isEqualTo: Timestamp.fromDate(DateUtils.dateOnly(selectedDate)))
         .snapshots();
   }
 
