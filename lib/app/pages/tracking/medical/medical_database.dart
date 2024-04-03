@@ -24,12 +24,12 @@ class MedicalDatabaseMethods{
   }
 
   //This method gets the entries from the temperature collection and orders them so the most recent entry is document[0].
-  Future<QuerySnapshot> getLatestTemperatureInfo(String babyDoc) async {
-    return await FirebaseFirestore.instance
+  Stream<QuerySnapshot> getVaccineStream(String babyDoc) {
+    return FirebaseFirestore.instance
         .collection('Babies')
         .doc(babyDoc)
-        .collection('Temperature')
+        .collection('Vaccines')
         .orderBy('date', descending: true)
-        .get();
+        .snapshots();
   }
 }

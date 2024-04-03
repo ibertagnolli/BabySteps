@@ -1,8 +1,6 @@
 import 'package:babysteps/app/pages/tracking/medical/medical_database.dart';
-import 'package:babysteps/app/pages/tracking/weight/weight_database.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 /// The widget that adds a weight measurement.
@@ -69,14 +67,14 @@ class _AddVaccineCardState extends State<AddVaccineCard> {
         // Input fields
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.all(15),
+            padding: const EdgeInsets.only(bottom: 15, left: 15, right: 15),
             child: Form(
               key: _formKey,
               child: Column(children: <Widget>[
 
                 // Date entry
                 Padding(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
                   child: TextFormField(
                     controller: date,
                     decoration: const InputDecoration(
@@ -129,7 +127,7 @@ class _AddVaccineCardState extends State<AddVaccineCard> {
 
                 // Reactions
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+                  padding: const EdgeInsets.only(left: 10, right: 10),
                   child: TextFormField(
                     controller: reaction,
                     maxLength: 300,
