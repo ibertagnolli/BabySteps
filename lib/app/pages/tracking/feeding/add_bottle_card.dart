@@ -55,7 +55,7 @@ class _AddBottleCardState extends State<AddBottleCard> {
     var today = DateTime.now();
     var twoHours = today.hour + 2;
      NotificationService().scheduleNotification(
-            title: "Breastfeeding Reminder",
+            title: "Bottlefeeding Reminder",
             body: "Its been 2 hours since you last fed ${currentUser.value?.currentBaby.value?.name}"
                 '$twoHours:${today.minute}',
             scheduledNotificationDateTime: DateTime(
