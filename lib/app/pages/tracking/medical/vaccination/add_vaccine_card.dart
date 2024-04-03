@@ -3,7 +3,7 @@ import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-/// The widget that adds a weight measurement.
+/// The expandable card that lets users add a vaccine.
 class AddVaccineCard extends StatefulWidget {
   const AddVaccineCard({super.key});
 
@@ -11,7 +11,6 @@ class AddVaccineCard extends StatefulWidget {
   State<StatefulWidget> createState() => _AddVaccineCardState();
 }
 
-/// Stores the mutable data that can change over the lifetime of the AddWeightCard.
 class _AddVaccineCardState extends State<AddVaccineCard> {
   // The global key uniquely identifies the Form widget and allows
   // validation of the form.

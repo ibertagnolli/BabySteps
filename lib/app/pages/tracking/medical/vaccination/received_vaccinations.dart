@@ -2,7 +2,7 @@ import 'package:babysteps/app/pages/tracking/medical/vaccination/vaccine_stream.
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-/// The widget that adds a bottle.
+/// The expandable card that displays Received Vaccines.
 class ReceivedVaccinationsCard extends StatefulWidget {
   const ReceivedVaccinationsCard({super.key});
 
@@ -10,7 +10,6 @@ class ReceivedVaccinationsCard extends StatefulWidget {
   State<StatefulWidget> createState() => _ReceivedVaccinationsCardState();
 }
 
-/// Stores the mutable data that can change over the lifetime of the AddWeightCard.
 class _ReceivedVaccinationsCardState extends State<ReceivedVaccinationsCard> { 
   @override
   Widget build(BuildContext context) {

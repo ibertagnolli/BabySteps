@@ -5,6 +5,7 @@ import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
 
+/// The Vaccination Tracking page.
 class VaccinationsPage extends StatefulWidget {
   const VaccinationsPage({super.key});
 

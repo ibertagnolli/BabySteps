@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+/// Realtime reads to load all received vaccines for the Received Vaccines card.
 class VaccineStream extends StatefulWidget {
   const VaccineStream({super.key});
 

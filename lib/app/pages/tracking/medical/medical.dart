@@ -2,6 +2,8 @@ import 'package:babysteps/app/pages/tracking/medical/medical_stream.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
 
+/// The Medical landing page with links to Condition, Vaccine, and Medication
+/// tracking pages.
 class MedicalPage extends StatefulWidget {
   const MedicalPage({super.key});
 

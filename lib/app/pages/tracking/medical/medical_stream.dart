@@ -52,7 +52,8 @@ class _ConditionStreamState extends State<ConditionStream> {
   }
 }
 
-/// The widget that reads realtime feeding updates for the bottle feeding button.
+/// Reads realtime updates for the Vaccination TrackingOptionCard.
+/// This card directs to the Vaccination tracking page.
 class VaccinationStream extends StatefulWidget {
   const VaccinationStream({super.key});
 
