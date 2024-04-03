@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'package:babysteps/app/pages/calendar/notifications.dart';
 import 'package:babysteps/app/pages/styles/stopwatch_styles.dart';
 import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
 import 'package:babysteps/app/widgets/stopwatch.dart';
 import 'package:babysteps/main.dart';
+import 'package:babysteps/model/baby.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
@@ -151,6 +153,20 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
       leftElapsedTime = transformMilliSeconds(timeSoFarOnLeft);
       rightElapsedTime = transformMilliSeconds(timeSoFarOnRight);
     });
+
+    //Schedule notification for reminder in 2 hours 
+    var today = DateTime.now();
+    var twoHours = today.hour + 2;
+     NotificationService().scheduleNotification(
+            title: "Breastfeeding Reminder",
+            body: "Its been 2 hours since you last fed ${currentUser.value?.currentBaby.value?.name}"
+                '$twoHours:${today.minute}',
+            scheduledNotificationDateTime: DateTime(
+                today.year,
+                today.month,
+                today.day,
+                twoHours,
+                today.minute));
   }
 
   updateLeftTime(Timer timer) {

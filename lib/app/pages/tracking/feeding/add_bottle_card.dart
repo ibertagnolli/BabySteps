@@ -1,3 +1,4 @@
+import 'package:babysteps/app/pages/calendar/notifications.dart';
 import 'package:babysteps/app/pages/tracking/feeding/bottleFeeding.dart';
 import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
 import 'package:babysteps/main.dart';
@@ -30,6 +31,7 @@ class _AddBottleCardState extends State<AddBottleCard> {
     DateTime savedDate = DateFormat("MM/dd/yyyy hh:mm a").parse(date.text);
     String savedOz = ounces.text;
 
+  
     Map<String, dynamic> uploaddata = {
       'type': 'Bottle',
       'side': '--',
@@ -47,6 +49,22 @@ class _AddBottleCardState extends State<AddBottleCard> {
 
     ounces.clear();
     date.text = DateFormat("MM/dd/yyyy hh:mm a").format(DateTime.now());
+
+
+    //Schedule notification for reminder in 2 hours 
+    var today = DateTime.now();
+    var twoHours = today.hour + 2;
+     NotificationService().scheduleNotification(
+            title: "Breastfeeding Reminder",
+            body: "Its been 2 hours since you last fed ${currentUser.value?.currentBaby.value?.name}"
+                '$twoHours:${today.minute}',
+            scheduledNotificationDateTime: DateTime(
+                today.year,
+                today.month,
+                today.day,
+                twoHours,
+                today.minute));
+  
   }
 
   void bottleTypeClicked(String type) {
