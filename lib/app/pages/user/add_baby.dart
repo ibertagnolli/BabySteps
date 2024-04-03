@@ -64,11 +64,15 @@ class _AddBabyPageState extends State<AddBabyPage> {
               await UserDatabaseMethods().getBaby(babyId);
           Map<String, dynamic> doc2 = snapshot2.data()! as Map<String, dynamic>;
 
-          babies.add(Baby(
+          babies.add(
+            Baby(
               collectionId: babyId,
               dob: (doc2['DOB'] as Timestamp).toDate(),
               name: doc2['Name'],
-              caregivers: doc2['Caregivers']));
+              caregivers: doc2['Caregivers'],
+              socialUsers: doc2['SocialUsers'],
+            ),
+          );
         }
       }
 

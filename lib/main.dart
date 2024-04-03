@@ -1,6 +1,7 @@
 import 'package:babysteps/app/pages/calendar/calendar_landing.dart';
 import 'package:babysteps/app/pages/notes/notes.dart';
 import 'package:babysteps/app/pages/notes/notes_home.dart';
+import 'package:babysteps/app/pages/social/comments.dart';
 import 'package:babysteps/app/pages/social/new_post.dart';
 import 'package:babysteps/app/pages/tracking/diaper/diaper.dart';
 import 'package:babysteps/app/pages/tracking/feeding/bottleFeeding.dart';
@@ -77,7 +78,8 @@ void main() async {
                 collectionId: babyId,
                 dob: (doc2['DOB'] as Timestamp).toDate(),
                 name: doc2['Name'],
-                caregivers: doc2['Caregivers']));
+                caregivers: doc2['Caregivers'],
+                socialUsers: doc2['SocialUsers']));
           }
         }
 
@@ -338,6 +340,14 @@ final goRouter = GoRouter(
                     path: 'newPost',
                     builder: (context, state) {
                       return const CreatePostPage();
+                    },
+                  ),
+                  GoRoute(
+                    path: 'comments/:id1',
+                    builder: (context, state) {
+                      return CommentsPage(
+                        state.pathParameters['id1'] ?? '',
+                      );
                     },
                   ),
                 ]),

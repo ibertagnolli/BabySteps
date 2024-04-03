@@ -16,8 +16,8 @@ class SocialStream extends StatefulWidget {
 }
 
 class _SocialStreamState extends State<SocialStream> {
-  final Stream<QuerySnapshot> _socialStream =
-      SocialDatabaseMethods().getStream(currentUser.value!.userDoc);
+  final Stream<QuerySnapshot> _socialStream = SocialDatabaseMethods()
+      .getStream(currentUser.value!.currentBaby.value!.collectionId);
   late var posts;
 
   Future<pw.Document> createMultiPdf(posts) async {
@@ -235,21 +235,24 @@ class _SocialStreamState extends State<SocialStream> {
         if (snapshot.data != null) {
           posts = snapshot.data!.docs;
 
-          for (var post in posts) {
+          for (QueryDocumentSnapshot post in posts) {
             String userName = post['usersName'];
             DateTime date = post['date'].toDate();
             String? title = post['title'];
             String? caption = post['caption'];
-            String child = post['child'];
+            List<dynamic> child = post['child'];
+            List<dynamic> likes = post['likes'];
             String? imagePath = post['image'];
 
             postWidgets.add(Post(
               usersName: userName,
               timeStamp: date.toIso8601String(),
-              childName: child,
+              childName: child[0],
               title: title,
               caption: caption,
               image: imagePath,
+              postDoc: post.id,
+              likes: likes,
             ));
           }
         }
