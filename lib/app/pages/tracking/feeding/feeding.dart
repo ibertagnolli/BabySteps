@@ -44,11 +44,11 @@ class _FeedingPageState extends State<FeedingPage> {
             // Feeding option buttons - breast feeding or bottle feeding
             // Both have basic info displayed on them, using real time reads
             const Padding(
-              padding: EdgeInsets.only(bottom: 16),
+              padding: EdgeInsets.only(bottom: 16, left: 15, right: 15),
               child: BreastFeedingStream(),
             ),
             const Padding(
-              padding: EdgeInsets.only(bottom: 16),
+              padding: EdgeInsets.only(bottom: 16, left: 15, right: 15),
               child: BottleFeedingStream(),
             ),
           ]),

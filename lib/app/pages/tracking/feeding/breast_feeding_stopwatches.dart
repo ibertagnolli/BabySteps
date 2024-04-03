@@ -284,88 +284,100 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-              height: 200,
-              width: 195,
-              child: Container(
-                padding: const EdgeInsets.all(1.0),
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Text(
-                        leftElapsedTime,
-                        style: timerText(),
+            // Left timer
+            Expanded(
+              flex: 2,
+              child: SizedBox(
+                height: 200,
+                width: 195,
+                child: Container(
+                  padding: const EdgeInsets.all(1.0),
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Text(
+                          leftElapsedTime,
+                          style: timerText(),
+                        ),
                       ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(1.0),
-                          child: SizedBox(
-                            height: 60,
-                            width: 180,
-                            child: FilledButton(
-                              style: FilledButton.styleFrom(
-                                  backgroundColor: buttonColor(leftSideGoing)),
-                              onPressed: leftSideGoing
-                                  ? () => stopSide(true)
-                                  : () => startLeftSide(),
-                              child: Text(
-                                leftSideGoing ? "Stop left" : "Start left",
-                                style: buttonTextStyle(leftSideGoing),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(1.0),
+                            child: SizedBox(
+                              height: 60,
+                              width: 180, // TODO make fraction of screen size?
+                              child: FilledButton(
+                                style: FilledButton.styleFrom(
+                                    backgroundColor: buttonColor(leftSideGoing)),
+                                onPressed: leftSideGoing
+                                    ? () => stopSide(true)
+                                    : () => startLeftSide(),
+                                child: Text(
+                                  leftSideGoing ? "Stop left" : "Start left",
+                                  style: buttonTextStyle(leftSideGoing),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    )
-                  ],
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
-            SizedBox(
-              height: 200,
-              width: 195,
-              child: Container(
-                padding: const EdgeInsets.all(1.0),
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Text(rightElapsedTime, style: timerText()),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(1.0),
-                          child: SizedBox(
-                            height: 60,
-                            width: 180,
-                            child: FilledButton(
-                              style: FilledButton.styleFrom(
-                                backgroundColor: buttonColor(rightSideGoing),
-                              ),
-                              onPressed: rightSideGoing
-                                  ? () => stopSide(false)
-                                  : () => startRightSide(),
-                              child: Text(
-                                rightSideGoing ? "Stop right" : "Start right",
-                                style: buttonTextStyle(rightSideGoing),
+            
+            // Right timer
+            Expanded(
+              flex: 2,
+              child: SizedBox(
+                height: 200,
+                width: 195,
+                child: Container(
+                  padding: const EdgeInsets.all(1.0),
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Text(rightElapsedTime, style: timerText()),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(1.0),
+                            child: SizedBox(
+                              height: 60,
+                              width: 180, // TODO make fraction of screen size?
+                              child: FilledButton(
+                                style: FilledButton.styleFrom(
+                                  backgroundColor: buttonColor(rightSideGoing),
+                                ),
+                                onPressed: rightSideGoing
+                                    ? () => stopSide(false)
+                                    : () => startRightSide(),
+                                child: Text(
+                                  rightSideGoing ? "Stop right" : "Start right",
+                                  style: buttonTextStyle(rightSideGoing),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
+            
           ],
         ),
+        
+        // Done button
         FilledButton(
           style: FilledButton.styleFrom(
               backgroundColor: const Color.fromARGB(255, 13, 60, 70)),

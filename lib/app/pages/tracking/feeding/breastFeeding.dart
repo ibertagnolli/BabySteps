@@ -98,40 +98,45 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
                     padding: EdgeInsets.only(bottom: 16),
                     child: BreastFeedingStream(),
                   ),
-                  FutureBuilder(
-                    future: getData(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<dynamic> snapshot) {
-                      List<Widget> children;
-                      if (snapshot.hasData) {
-                        children = <Widget>[
-                          Column(
-                            children: [
-                              BreastFeedingStopwatches(
-                                docId,
-                                timeSoFarOnLeft,
-                                timeSoFarOnRight,
-                                sideMap,
-                                leftSideGoing,
-                                rightSideGoing,
-                                timerGoing,
-                              )
-                            ],
-                          )
-                        ];
-                      } else if (snapshot.hasError) {
-                        children = errorMessage(snapshot.error.toString());
-                      } else {
-                        children = progressIndicator();
-                      }
-                      return Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: children,
-                        ),
-                      );
-                    },
+                  SizedBox(
+                    // padding: const EdgeInsets.only(left: 15, right: 15),
+                    child: FutureBuilder(
+                      future: getData(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<dynamic> snapshot) {
+                        List<Widget> children;
+                        if (snapshot.hasData) {
+                          children = <Widget>[
+                            Column(
+                              children: [
+                                BreastFeedingStopwatches(
+                                  docId,
+                                  timeSoFarOnLeft,
+                                  timeSoFarOnRight,
+                                  sideMap,
+                                  leftSideGoing,
+                                  rightSideGoing,
+                                  timerGoing,
+                                )
+                              ],
+                            )
+                          ];
+                        } else if (snapshot.hasError) {
+                          children = errorMessage(snapshot.error.toString());
+                        } else {
+                          children = progressIndicator();
+                        }
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: children,
+                          ),
+                        );
+                      },
+                    ),
                   ),
+
+                  
 
                   // Add Previous Breastfeed
                   const Padding(
