@@ -13,6 +13,62 @@ class VaccineStream extends StatefulWidget {
 }
 
 class _VaccineStreamState extends State<VaccineStream> {
+  void openVaccDialog(Map<String, dynamic> data) {
+
+    // Display "None" if no reaction is recorded.
+    String reactionToDisplay = data['reaction'];
+    if(reactionToDisplay == "") {
+      reactionToDisplay = "None";
+    }
+
+    showDialog(
+      context: context,
+        builder: (context) {
+          return Dialog(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    // Name and date of vaccine
+                    Wrap(
+                      spacing: 16.0,
+                      children: [
+                        Text(
+                          DateFormat('MM/dd/yyyy').format(data['date'].toDate()),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                          ),
+                        ),
+                        Text(
+                          "${data['vaccine']}",
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                          ),
+                        ),
+                      ]
+                    ),
+                    
+                    // Reaction
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Text(
+                        "Reaction: $reactionToDisplay",
+                        style: const TextStyle(fontSize: 18),
+                      ),
+                    ),
+                  ],
+                )
+              ),
+            ),
+          );
+        }
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> vaccineStream = MedicalDatabaseMethods()
@@ -41,14 +97,26 @@ class _VaccineStreamState extends State<VaccineStream> {
                 .map((DocumentSnapshot document) {
                       Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
                       return ListTile(
-                        title: Row(
+                        title: Wrap(
+                          spacing: 16.0,
                           children: [
                             Text(DateFormat('MM/dd/yyyy').format(data['date'].toDate())),
-                            const Text("    "),
-                            Text(data['vaccine']),
+                            Text(
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              "${data['vaccine']}",
+                            ),
                           ]
                         ),
-                        subtitle: data['reaction'] == "" ? null : Text("Reaction: ${data['reaction']}"),
+                        subtitle: data['reaction'] == "" ? null : 
+                          Text(
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            "Reaction: ${data['reaction']}"
+                          ),
+                        onTap: () {
+                          openVaccDialog(data);
+                        },
                       );
                     })
                 .toList()

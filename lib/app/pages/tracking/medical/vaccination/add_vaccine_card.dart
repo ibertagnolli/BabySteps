@@ -113,7 +113,7 @@ class _AddVaccineCardState extends State<AddVaccineCard> {
                   padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
                   child: TextFormField(
                     controller: vaccName,
-                    maxLength: 25,
+                    maxLength: 50,
                     decoration: const InputDecoration(
                       hintText: 'Name of vaccine'
                     ),
