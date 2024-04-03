@@ -13,8 +13,8 @@ class ReminderCard extends StatelessWidget {
 
   /// Deletes the selected Reminder from the database
   Future<void> deleteReminder() async {
-    // await RemindersDatabaseMethods()
-    //     .deleteReminder(docId, currentUser.value!.currentBaby.value!.collectionId);
+    await RemindersDatabaseMethods()
+        .deleteReminder(docId, currentUser.value!.userDoc);
   }
 
   /// Opens the Reminder for edits
