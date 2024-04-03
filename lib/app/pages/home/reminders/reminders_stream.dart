@@ -41,6 +41,7 @@ class _RemindersStreamState extends State<RemindersStream> {
           return const Text("No reminders set.");
         } else {
           return ListView(
+            physics: const NeverScrollableScrollPhysics(), // so the whole page scrolls, not just the reminders
             shrinkWrap:
                 true, // TODO We can make this a SizedBox and it will scroll by default. But, the box is not obviously scrollable.
             children: reminderDocs
