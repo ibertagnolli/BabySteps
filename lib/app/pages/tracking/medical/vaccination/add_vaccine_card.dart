@@ -135,7 +135,7 @@ class _AddVaccineCardState extends State<AddVaccineCard> {
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
                     decoration: const InputDecoration(
-                      hintText: 'Has the baby had any reactions?'
+                      hintText: 'Baby\'s reactions to the vaccine'
                     ),
                   )
                 ),

@@ -48,6 +48,7 @@ class _VaccineStreamState extends State<VaccineStream> {
                             Text(data['vaccine']),
                           ]
                         ),
+                        subtitle: data['reaction'] == "" ? null : Text("Reaction: ${data['reaction']}"),
                       );
                     })
                 .toList()
