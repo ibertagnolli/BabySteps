@@ -90,11 +90,8 @@ class _DiaperPageState extends State<DiaperPage> {
                             DiaperButton('Pee', activeButton.contains("Pee"),
                                 buttonClicked, Theme.of(context)),
                             const Padding(padding: EdgeInsets.only(top: 16)),
-                            DiaperButton(
-                                'Mixed',
-                                activeButton.contains("Mixed"),
-                                buttonClicked,
-                                Theme.of(context))
+                            DiaperButton('Mixed', activeButton.contains("Mixed"),
+                                buttonClicked, Theme.of(context))
                           ],
                         ),
                         Column(
@@ -115,6 +112,7 @@ class _DiaperPageState extends State<DiaperPage> {
                     padding: const EdgeInsets.all(16),
                     child: Row(
                       children: [
+                        
                         // Text column
                         Padding(
                           padding: const EdgeInsets.only(right: 0),
@@ -167,6 +165,8 @@ class _DiaperPageState extends State<DiaperPage> {
                                 ),
                               ),
                             ),
+
+                            if (activeButton != "Pee" && activeButton != "Dry")
                             // Diarrhea
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 32),
