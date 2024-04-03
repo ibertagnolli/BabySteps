@@ -59,6 +59,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
     return ExpansionTile(
         backgroundColor: Theme.of(context).colorScheme.surface,
         collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
+        initiallyExpanded: true,
         title: Text('Add Weight',
             style: TextStyle(
                 fontSize: 25,

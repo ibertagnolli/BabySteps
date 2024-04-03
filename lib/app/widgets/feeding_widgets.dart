@@ -23,9 +23,9 @@ class FeedingOptionCard extends StatelessWidget {
           height: 80,
           child: Row(
             children: [
-              Padding(padding: EdgeInsets.all(16), child: icon),
+              Padding(padding: const EdgeInsets.all(16), child: icon),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 12.0),
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -47,9 +47,9 @@ class FeedingOptionCard extends StatelessWidget {
                   ],
                 ),
               ),
-              Expanded(child: SizedBox()),
+              const Expanded(child: SizedBox()),
               Padding(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: Align(
                     child: Icon(Icons.arrow_circle_right_outlined,
                         size: 30, color: theme.colorScheme.onPrimary)),

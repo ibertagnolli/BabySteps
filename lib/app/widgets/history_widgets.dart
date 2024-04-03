@@ -19,28 +19,28 @@ class HistoryDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     switch (trackingPage) {
     case 'diaper':
-      recentStream = DiaperHistoryStream();
-      allTimeStream = DiaperAllTimeStream();
+      recentStream = const DiaperHistoryStream();
+      allTimeStream = const DiaperAllTimeStream();
       break;
     case 'bottle':
-      recentStream = BottleHistoryStream();
-      allTimeStream = BottleFeedingAllTimeStream();
+      recentStream = const BottleHistoryStream();
+      allTimeStream = const BottleFeedingAllTimeStream();
       break;
     case 'breastfeeding':
-      recentStream = BreastfeedingHistoryStream();
-      allTimeStream = BreastfeedingAllTimeStream();
+      recentStream = const BreastfeedingHistoryStream();
+      allTimeStream = const BreastfeedingAllTimeStream();
       break;
     case 'sleep':
-      recentStream = SleepHistoryStream();
-      allTimeStream = SleepAllTimeStream();
+      recentStream = const SleepHistoryStream();
+      allTimeStream = const SleepAllTimeStream();
       break;
     case 'temperature':
-      recentStream = TemperatureHistoryStream();
-      allTimeStream = TemperatureAllTimeStream();
+      recentStream = const TemperatureHistoryStream();
+      allTimeStream = const TemperatureAllTimeStream();
       break;
     case 'weight':
-      recentStream = WeightHistoryStream();
-      allTimeStream = WeightAllTimeStream();
+      recentStream = const WeightHistoryStream();
+      allTimeStream = const WeightAllTimeStream();
       break;
   }
     return Padding(
@@ -83,7 +83,7 @@ class HistoryTabs extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             bottom: PreferredSize( // Need this to let us set colors for some reason 
-              preferredSize: Size.fromHeight(0), // Size 0 gets rid of the gap between the top and the tabs
+              preferredSize: const Size.fromHeight(0), // Size 0 gets rid of the gap between the top and the tabs
               child: Material(
                 color: Theme.of(context).colorScheme.secondary, 
                 
@@ -91,7 +91,7 @@ class HistoryTabs extends StatelessWidget {
                 child: TabBar(
                   indicatorColor: Theme.of(context).colorScheme.primary, // Color of selected tab
                   labelColor: Theme.of(context).colorScheme.onSecondary, 
-                  tabs: [
+                  tabs: const [
                     Tab(text: 'Recent'),
                     Tab(text: 'All-time'),
                   ],
@@ -136,11 +136,10 @@ class TimeSeriesWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    entries.keys.forEach((date) {
+    for (var date in entries.keys) {
       double? value = entries[date];
       chartData.add(ChartData(x: date, yValue: value));
       }
-    );
 
     return Scaffold(
         // appBar: AppBar(
@@ -158,15 +157,15 @@ class TimeSeriesWidget extends StatelessWidget {
                 backgroundColor: Colors.white,
                 primaryXAxis: DateTimeAxis(
                   title: AxisTitle(text: 'Date'),
-                  majorGridLines: MajorGridLines(width: 0),
+                  majorGridLines: const MajorGridLines(width: 0),
                   edgeLabelPlacement: EdgeLabelPlacement.shift,
                   intervalType: DateTimeIntervalType.days),
                 primaryYAxis: NumericAxis(title: AxisTitle(text: yAxisTitle),),
                 series:<CartesianSeries>[
                   LineSeries<ChartData, DateTime>(
                     dataSource: chartData,
-                    color: Color(0xFF0D4B5F),
-                    markerSettings: MarkerSettings(isVisible: true, ),
+                    color: const Color(0xFF0D4B5F),
+                    markerSettings: const MarkerSettings(isVisible: true, ),
                     xValueMapper: (ChartData entries, _) => entries.x,
                     yValueMapper: (ChartData entries, _) => entries.yValue,
                     name: 'Entries',
@@ -194,16 +193,14 @@ class StackedTimeSeriesWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    entries1.keys.forEach((date) {
+    for (var date in entries1.keys) {
       double? value = entries1[date];
       chartData1.add(ChartData(x: date, yValue: value));
       }
-    );
-    entries2.keys.forEach((date) {
+    for (var date in entries2.keys) {
       double? value = entries2[date];
       chartData2.add(ChartData(x: date, yValue: value));
       }
-    );
 
     return Scaffold(
         // appBar: AppBar(
@@ -220,11 +217,11 @@ class StackedTimeSeriesWidget extends StatelessWidget {
                 // zoomPanBehavior: _zoomPanBehavior, // TODO
                 backgroundColor: Colors.white,
                 primaryXAxis: DateTimeAxis(
-                  majorGridLines: MajorGridLines(width: 0),
+                  majorGridLines: const MajorGridLines(width: 0),
                   edgeLabelPlacement: EdgeLabelPlacement.shift,
                   intervalType: DateTimeIntervalType.days),
                 primaryYAxis: NumericAxis(),
-                legend: Legend(
+                legend: const Legend(
                   isVisible: true,
                   position: LegendPosition.bottom,
                   toggleSeriesVisibility: true, // Toggles the series visibility on tapping the legend item
@@ -233,16 +230,16 @@ class StackedTimeSeriesWidget extends StatelessWidget {
                 series: <CartesianSeries>[
                   LineSeries<ChartData, DateTime>(
                     dataSource: chartData1,
-                    color: Color(0xFF0D4B5F),
-                    markerSettings: MarkerSettings(isVisible: true, ),
+                    color: const Color(0xFF0D4B5F),
+                    markerSettings: const MarkerSettings(isVisible: true, ),
                     xValueMapper: (ChartData entries, _) => entries.x,
                     yValueMapper: (ChartData entries, _) => entries.yValue,
                     name: yAxis1,
                   ),
                   LineSeries<ChartData, DateTime>(
                     dataSource: chartData2,
-                    color: Color(0xFFF2BB9B),
-                    markerSettings: MarkerSettings(isVisible: true, ),
+                    color: const Color(0xFFF2BB9B),
+                    markerSettings: const MarkerSettings(isVisible: true, ),
                     xValueMapper: (ChartData entries, _) => entries.x,
                     yValueMapper: (ChartData entries, _) => entries.yValue,
                     name: yAxis2,
@@ -266,7 +263,7 @@ class HistoryTable3Cols extends StatelessWidget {
     return DataTable(
       columns: <DataColumn>[
         // Table column titles
-        DataColumn(
+        const DataColumn(
           label: Expanded(
             child: Text(
               'Date',
@@ -274,7 +271,7 @@ class HistoryTable3Cols extends StatelessWidget {
             ),
           ),
         ),
-        DataColumn(
+        const DataColumn(
           label: Expanded(
             child: Text(
               'Time',
@@ -285,8 +282,8 @@ class HistoryTable3Cols extends StatelessWidget {
         DataColumn(
           label: Expanded(
             child: Text(
-              '$colName',
-              style: TextStyle(fontStyle: FontStyle.italic),
+              colName,
+              style: const TextStyle(fontStyle: FontStyle.italic),
             ),
           ),
         ),
@@ -326,7 +323,7 @@ class HistoryTable4Cols extends StatelessWidget {
           columnSpacing: 20,
           columns: <DataColumn>[
             // Table column titles
-            DataColumn(
+            const DataColumn(
               label: Expanded(
                 child: Text(
                   'Date',
@@ -334,7 +331,7 @@ class HistoryTable4Cols extends StatelessWidget {
                 ),
               ),
             ),
-            DataColumn(
+            const DataColumn(
               label: Expanded(
                 child: Text(
                   'Time',
@@ -345,16 +342,16 @@ class HistoryTable4Cols extends StatelessWidget {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  '$col1Name',
-                  style: TextStyle(fontStyle: FontStyle.italic),
+                  col1Name,
+                  style: const TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
             ),
             DataColumn(
               label: Expanded(
                 child: Text(
-                  '$col2Name',
-                  style: TextStyle(fontStyle: FontStyle.italic),
+                  col2Name,
+                  style: const TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
             ),
@@ -389,7 +386,7 @@ class HistoryTable6Cols extends StatelessWidget {
   String col3Name;
   String col4Name;
 
-  ScrollController _controller = ScrollController();
+  final ScrollController _controller = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -404,7 +401,7 @@ class HistoryTable6Cols extends StatelessWidget {
           columnSpacing: 20,
           columns: <DataColumn>[
             // Table column titles
-            DataColumn(
+            const DataColumn(
               label: Expanded(
                 child: Text(
                   'Date',
@@ -412,7 +409,7 @@ class HistoryTable6Cols extends StatelessWidget {
                 ),
               ),
             ),
-            DataColumn(
+            const DataColumn(
               label: Expanded(
                 child: Text(
                   'Time',
@@ -423,32 +420,32 @@ class HistoryTable6Cols extends StatelessWidget {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  '$col1Name',
-                  style: TextStyle(fontStyle: FontStyle.italic),
+                  col1Name,
+                  style: const TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
             ),
             DataColumn(
               label: Expanded(
                 child: Text(
-                  '$col2Name',
-                  style: TextStyle(fontStyle: FontStyle.italic),
+                  col2Name,
+                  style: const TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
             ),
             DataColumn(
               label: Expanded(
                 child: Text(
-                  '$col3Name',
-                  style: TextStyle(fontStyle: FontStyle.italic),
+                  col3Name,
+                  style: const TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
             ),
             DataColumn(
               label: Expanded(
                 child: Text(
-                  '$col4Name',
-                  style: TextStyle(fontStyle: FontStyle.italic),
+                  col4Name,
+                  style: const TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
             ),

@@ -37,7 +37,7 @@ class _PostState extends State<Post> {
     String initials = widget.usersName.isEmpty ? "A" : widget.usersName[0];
 
     return Card(
-      child: Container(
+      child: SizedBox(
         width: cardWidth,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -64,12 +64,12 @@ class _PostState extends State<Post> {
             //Since the caption is also optional, check to see if we have a caption before displaying it
             if (widget.caption != null)
               Padding(
-                padding: EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16.0),
                 child: Container(
                     alignment: Alignment.centerLeft,
                     child: Text(widget.caption!, textAlign: TextAlign.left)),
               ),
-            Divider(
+            const Divider(
               indent: 16.0,
               endIndent: 16.0,
             ),
@@ -79,14 +79,14 @@ class _PostState extends State<Post> {
                 IconButton(
                     //Todo navigate to a page to comment
                     onPressed: () => debugPrint("comment"),
-                    icon: Icon(Icons.chat_bubble_outline)),
+                    icon: const Icon(Icons.chat_bubble_outline)),
                 const SizedBox(width: 8),
                 IconButton(
                     //toggle between a filled and empty heart
                     onPressed: () => likeClicked(),
                     icon: postLiked
-                        ? Icon(Icons.favorite, color: Colors.red)
-                        : Icon(Icons.favorite_border_outlined)),
+                        ? const Icon(Icons.favorite, color: Colors.red)
+                        : const Icon(Icons.favorite_border_outlined)),
                 const SizedBox(width: 8),
               ],
             ),

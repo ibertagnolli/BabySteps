@@ -10,6 +10,8 @@ FirebaseFirestore db = FirebaseFirestore.instance;
 // BREASTFEEDING
 
 class BreastfeedingHistoryStream extends StatefulWidget {
+  const BreastfeedingHistoryStream({super.key});
+
   @override
   _BreastfeedingHistoryStreamState createState() =>
       _BreastfeedingHistoryStreamState();
@@ -49,7 +51,7 @@ class _BreastfeedingHistoryStreamState
         //List<RowData4Cols> rows = [];
 
         // For however many most recent docs we have, get relevant info and build a row for it
-        lastBreastfeedingDocs.forEach((doc) {
+        for (var doc in lastBreastfeedingDocs) {
           DateTime date = doc['date'].toDate();
           String dateStr = DateFormat('MM-dd hh:mm a').format(date);
           var splitDate = dateStr.split(' '); // needed to get am/pm
@@ -65,7 +67,7 @@ class _BreastfeedingHistoryStreamState
           rows.add(RowData6Cols(
               day, time, leftLength, rightLength, totalLength, lastSide));
           //rows.add(RowData4Cols(day, time, leftLength, rightLength));
-        });
+        }
 
         // Make a table with the retrieved data
         return HistoryTable6Cols(
@@ -79,6 +81,8 @@ class _BreastfeedingHistoryStreamState
 // BOTTLE FEEDING
 
 class BottleHistoryStream extends StatefulWidget {
+  const BottleHistoryStream({super.key});
+
   @override
   _BottleHistoryStreamState createState() => _BottleHistoryStreamState();
 }
@@ -114,7 +118,7 @@ class _BottleHistoryStreamState extends State<BottleHistoryStream> {
         List<RowData4Cols> rows = [];
 
         // For however many most recent docs we have, build a row for it
-        lastBottleDocs.forEach((doc) {
+        for (var doc in lastBottleDocs) {
           DateTime date = doc['date'].toDate();
           String dateStr = DateFormat('MM-dd hh:mm a').format(date);
           var splitDate = dateStr.split(' ');
@@ -124,7 +128,7 @@ class _BottleHistoryStreamState extends State<BottleHistoryStream> {
           String amount = doc['ounces'] + " oz";
 
           rows.add(RowData4Cols(day, time, amount, bottleType));
-        });
+        }
 
         // Make a table with the retrieved data
         return HistoryTable4Cols(rows, "Amount", "Bottle Type");
@@ -136,6 +140,8 @@ class _BottleHistoryStreamState extends State<BottleHistoryStream> {
 // SLEEP
 
 class SleepHistoryStream extends StatefulWidget {
+  const SleepHistoryStream({super.key});
+
   @override
   _SleepHistoryStreamState createState() => _SleepHistoryStreamState();
 }
@@ -170,7 +176,7 @@ class _SleepHistoryStreamState extends State<SleepHistoryStream> {
         List<RowData3Cols> rows = [];
 
         // For however many most recent docs we have, build a row for it
-        lastSleepDocs.forEach((doc) {
+        for (var doc in lastSleepDocs) {
           DateTime date = doc['date'].toDate();
           String dateStr = DateFormat('MM-dd hh:mm a').format(date);
           var splitDate = dateStr.split(' ');
@@ -179,7 +185,7 @@ class _SleepHistoryStreamState extends State<SleepHistoryStream> {
           String length = doc['length'];
 
           rows.add(RowData3Cols(day, time, length));
-        });
+        }
 
         // Make a table with the retrieved data
         return HistoryTable3Cols(rows, "Length");
@@ -191,6 +197,8 @@ class _SleepHistoryStreamState extends State<SleepHistoryStream> {
 // WEIGHT
 
 class WeightHistoryStream extends StatefulWidget {
+  const WeightHistoryStream({super.key});
+
   @override
   _WeightHistoryStreamState createState() => _WeightHistoryStreamState();
 }
@@ -225,7 +233,7 @@ class _WeightHistoryStreamState extends State<WeightHistoryStream> {
         List<RowData3Cols> rows = [];
 
         // For however many most recent docs we have, build a row for it
-        lastWeightDocs.forEach((doc) {
+        for (var doc in lastWeightDocs) {
           DateTime date = doc['date'].toDate();
           String dateStr = DateFormat('MM-dd hh:mm a').format(date);
           var splitDate = dateStr.split(' ');
@@ -236,7 +244,7 @@ class _WeightHistoryStreamState extends State<WeightHistoryStream> {
           String weight = '$pounds lbs $ounces oz';
 
           rows.add(RowData3Cols(day, time, weight));
-        });
+        }
 
         // Make a table with the retrieved data
         return HistoryTable3Cols(rows, "Weight");
@@ -248,6 +256,8 @@ class _WeightHistoryStreamState extends State<WeightHistoryStream> {
 // TEMPERATURE
 
 class TemperatureHistoryStream extends StatefulWidget {
+  const TemperatureHistoryStream({super.key});
+
   @override
   _TemperatureHistoryStreamState createState() =>
       _TemperatureHistoryStreamState();
@@ -283,7 +293,7 @@ class _TemperatureHistoryStreamState extends State<TemperatureHistoryStream> {
         List<RowData3Cols> rows = [];
 
         // For however many most recent docs we have, build a row for it
-        lastTemperatureDocs.forEach((doc) {
+        for (var doc in lastTemperatureDocs) {
           DateTime date = doc['date'].toDate();
           String dateStr = DateFormat('MM-dd hh:mm a').format(date);
           var splitDate = dateStr.split(' ');
@@ -292,7 +302,7 @@ class _TemperatureHistoryStreamState extends State<TemperatureHistoryStream> {
           String temperature = doc['temperature'];
 
           rows.add(RowData3Cols(day, time, temperature));
-        });
+        }
 
         // Make a table with the retrieved data
         return HistoryTable3Cols(rows, "Temperature");
@@ -340,7 +350,7 @@ class _DiaperHistoryStreamState extends State<DiaperHistoryStream> {
         List<RowData4Cols> rows = [];
 
         // For however many most recent docs we have, build a row for it
-        lastDiaperDocs.forEach((doc) {
+        for (var doc in lastDiaperDocs) {
           DateTime date = doc['date'].toDate();
           String dateStr = DateFormat('MM-dd hh:mm a').format(date);
           var splitDate = dateStr.split(' ');
@@ -351,7 +361,7 @@ class _DiaperHistoryStreamState extends State<DiaperHistoryStream> {
           String diaperRash = diaperRashBool ? "Yes" : "No";
 
           rows.add(RowData4Cols(day, time, diaperType, diaperRash));
-        });
+        }
 
         // Make a table with the retrieved data
         return HistoryTable4Cols(rows, "Diaper Type", "Diaper Rash?");

@@ -3,17 +3,17 @@ import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-/// The widget that adds a new task.
-class AddTaskButton extends StatefulWidget {
+/// The widget that adds a new Milestone.
+class AddMilestoneButton extends StatefulWidget {
   DateTime selectedDay;
-  AddTaskButton({required this.selectedDay, super.key});
+  AddMilestoneButton({required this.selectedDay, super.key});
 
   @override
-  State<StatefulWidget> createState() => _AddTaskButtonState();
+  State<StatefulWidget> createState() => _AddMilestoneButtonState();
 }
 
-/// Stores the mutable data that can change over the lifetime of the AddTaskButton.
-class _AddTaskButtonState extends State<AddTaskButton> {
+/// Stores the mutable data that can change over the lifetime of the AddMilestoneButton.
+class _AddMilestoneButtonState extends State<AddMilestoneButton> {
   // The global key uniquely identifies the Form widget and allows
   // validation of the form.
   final _formKey = GlobalKey<FormState>();
@@ -30,18 +30,18 @@ class _AddTaskButtonState extends State<AddTaskButton> {
     super.dispose();
   }
 
-  /// Saves a new task entry in the Firestore database.
-  saveNewTask() async {
-    DateTime taskDate = DateFormat("MM/dd/yyyy").parse(dateController.text);
+  /// Saves a new Milestone entry in the Firestore database.
+  saveNewMilestone() async {
+    DateTime milestoneDate =
+        DateFormat("MM/dd/yyyy").parse(dateController.text);
 
-    // Write task data to database
+    // Write Milestone data to database
     Map<String, dynamic> uploaddata = {
       'name': nameController.text,
-      'dateTime': taskDate,
-      'completed': false,
+      'dateTime': milestoneDate,
     };
-    await CalendarDatabaseMethods()
-        .addTask(uploaddata, currentUser.value!.userDoc);
+
+    await CalendarDatabaseMethods().addMilestone(uploaddata, currentUser.value!.userDoc);
 
     // Clear fields for next entry (not date)
     nameController.clear();
@@ -53,47 +53,48 @@ class _AddTaskButtonState extends State<AddTaskButton> {
     dateController.text = DateFormat.yMd().format(widget.selectedDay);
 
     return SizedBox(
-      // Add Task Button
+      // Add Milestone Button
       width: 170.0,
       height: 30.0,
+      child:Padding( padding:const EdgeInsets.only(right: 10), 
       child: FilledButton(
         style: FilledButton.styleFrom(
           backgroundColor:
               Theme.of(context).colorScheme.tertiary, // Background color
         ),
-        child: Text("Add task",
-            style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
+        child:const Text("Add Milestone",
+            style: TextStyle(fontSize: 15,  color:Colors.white)),
 
-        // Dialog with task entry
+        // Dialog with Milestone entry
         onPressed: () {
           showDialog(
               context: context,
               builder: (context) {
                 return AlertDialog(
                     scrollable: true,
-                    title: const Text("New Task"),
+                    title: const Text("New Milestone"),
                     content: Padding(
                       padding: const EdgeInsets.all(8),
                       child: Form(
                           key: _formKey,
                           child: Column(
                             children: <Widget>[
-                              // Task Name
+                              //Milestone Name/info
                               TextFormField(
                                 controller: nameController,
-                                maxLength: 30,
+                                maxLength: 100,
                                 decoration: const InputDecoration(
-                                  labelText: "Task",
+                                  labelText: "Milestone",
                                 ),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please enter the task name';
+                                    return 'Please enter the Milestone name';
                                   }
                                   return null;
                                 },
                               ),
 
-                              // Task Date
+                              // Milestone Date
                               TextFormField(
                                 controller: dateController,
                                 decoration: const InputDecoration(
@@ -127,22 +128,24 @@ class _AddTaskButtonState extends State<AddTaskButton> {
                                 },
                               ),
 
-                              // TODO add start time for task notifications
+                            
 
                               // Submit button
                               ElevatedButton(
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
-                                      saveNewTask();
+                                      //TODO change to save new milestone
+                                      saveNewMilestone();
                                       Navigator.pop(context);
                                     }
                                   },
-                                  child: const Text("Submit"))
+                                  child: const Text("Submit", style:TextStyle(color:Colors.white)))
                             ],
                           )),
                     ));
               });
         },
+      ),
       ),
     );
   }

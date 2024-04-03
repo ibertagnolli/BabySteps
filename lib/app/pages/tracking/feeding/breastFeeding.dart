@@ -1,5 +1,7 @@
+import 'package:babysteps/app/pages/tracking/feeding/add_previous_breastfeed.dart';
 import 'package:babysteps/app/pages/tracking/feeding/breast_feeding_stopwatches.dart';
 import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
+import 'package:babysteps/app/widgets/loading_widget.dart';
 import 'package:babysteps/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -78,13 +80,13 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
         valueListenable: currentUser,
         builder: (context, value, child) {
           if (value == null) {
-            return const Text("loading...");
+            return const LoadingWidget();
           } else {
             return Center(
               child: Column(
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.all(32),
+                    padding: const EdgeInsets.all(32),
                     child: Text('Breast Feeding',
                         style: TextStyle(
                             fontSize: 36,
@@ -92,48 +94,59 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
                   ),
 
                   // Top card with info
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.only(bottom: 16),
                     child: BreastFeedingStream(),
                   ),
-                  FutureBuilder(
-                    future: getData(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<dynamic> snapshot) {
-                      List<Widget> children;
-                      if (snapshot.hasData) {
-                        children = <Widget>[
-                          Column(
-                            children: [
-                              BreastFeedingStopwatches(
-                                docId,
-                                timeSoFarOnLeft,
-                                timeSoFarOnRight,
-                                sideMap,
-                                leftSideGoing,
-                                rightSideGoing,
-                                timerGoing,
-                              )
-                            ],
-                          )
-                        ];
-                      } else if (snapshot.hasError) {
-                        children = errorMessage(snapshot.error.toString());
-                      } else {
-                        children = progressIndicator();
-                      }
-                      return Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: children,
-                        ),
-                      );
-                    },
+                  SizedBox(
+                    // padding: const EdgeInsets.only(left: 15, right: 15),
+                    child: FutureBuilder(
+                      future: getData(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<dynamic> snapshot) {
+                        List<Widget> children;
+                        if (snapshot.hasData) {
+                          children = <Widget>[
+                            Column(
+                              children: [
+                                BreastFeedingStopwatches(
+                                  docId,
+                                  timeSoFarOnLeft,
+                                  timeSoFarOnRight,
+                                  sideMap,
+                                  leftSideGoing,
+                                  rightSideGoing,
+                                  timerGoing,
+                                )
+                              ],
+                            )
+                          ];
+                        } else if (snapshot.hasError) {
+                          children = errorMessage(snapshot.error.toString());
+                        } else {
+                          children = progressIndicator();
+                        }
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: children,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+
+                  
+
+                  // Add Previous Breastfeed
+                  const Padding(
+                    padding: EdgeInsets.only(top: 30, bottom: 15, left: 15, right: 15),
+                    child: AddPreviousBreastfeedCard(),
                   ),
 
                   // History Card - in widgets
                   Padding(
-                    padding: EdgeInsets.only(top: 10),
+                    padding: const EdgeInsets.only(top: 10),
                     child: HistoryDropdown("breastfeeding"),
                   ),
                 ],

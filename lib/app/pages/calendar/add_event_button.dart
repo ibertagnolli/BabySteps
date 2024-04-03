@@ -1,4 +1,5 @@
 import 'package:babysteps/app/pages/calendar/calendar_database.dart';
+import 'package:babysteps/app/pages/calendar/notifications.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -16,7 +17,6 @@ class AddEventButton extends StatefulWidget {
 class _AddEventButtonState extends State<AddEventButton> {
   // The global key uniquely identifies the Form widget and allows validation of the form.
   final _formKey = GlobalKey<FormState>();
-
   // Store user input for database upload
   TextEditingController nameController = TextEditingController();
   TextEditingController timeController = TextEditingController();
@@ -33,17 +33,26 @@ class _AddEventButtonState extends State<AddEventButton> {
   }
 
   /// Gets the user's selected event time.
-  void _selectTime() async {
+  _selectTime(selectedDay, eventName) async {
     final TimeOfDay? selectedTime = await showTimePicker(
       initialTime: TimeOfDay.now(),
       context: context,
     );
 
     if (selectedTime != null) {
-      // TODO can selectedTime ever be null?
       setState(() {
         eventTime = selectedTime;
         timeController.text = selectedTime.format(context);
+        NotificationService().scheduleNotification(
+            title: eventName,
+            body:
+                '${selectedTime.hour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}',
+            scheduledNotificationDateTime: DateTime(
+                selectedDay.year,
+                selectedDay.month,
+                selectedDay.day,
+                selectedTime.hour,
+                selectedTime.minute));
       });
     }
   }
@@ -152,7 +161,10 @@ class _AddEventButtonState extends State<AddEventButton> {
                                 decoration: const InputDecoration(
                                   labelText: "Start Time",
                                 ),
-                                onTap: _selectTime,
+                                onTap: () {
+                                  _selectTime(
+                                      widget.selectedDay, nameController.text);
+                                },
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return 'Please enter the event start time';

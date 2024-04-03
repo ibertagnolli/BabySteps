@@ -54,6 +54,7 @@ class _AddTemperatureCardState extends State<AddTemperatureCard> {
     return ExpansionTile(
         backgroundColor: Theme.of(context).colorScheme.surface,
         collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
+        initiallyExpanded: true,
         title: Text('Add Temperature',
             style: TextStyle(
                 fontSize: 25,
@@ -70,9 +71,10 @@ class _AddTemperatureCardState extends State<AddTemperatureCard> {
                   padding: const EdgeInsets.only(bottom: 10),
                   child: Row(
                     children: <Widget>[
-                      // Pounds input
+                      // Degree input
                       Expanded(
-                        child: Padding(
+                        child: 
+                        Padding(
                           padding: const EdgeInsets.only(left: 10, right: 10),
                           child: TextFormField(
                             controller: temp,
@@ -91,6 +93,10 @@ class _AddTemperatureCardState extends State<AddTemperatureCard> {
                           ),
                         ),
                       ),
+                      Text(' \u2109', // Degrees Fahrenheit symbol
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: Theme.of(context).colorScheme.onSurface)),
                     ],
                   ),
                 ),
@@ -103,7 +109,7 @@ class _AddTemperatureCardState extends State<AddTemperatureCard> {
                   ),
                   onTap: () async {
                     // Don't show keyboard
-                    FocusScope.of(context).requestFocus(new FocusNode());
+                    FocusScope.of(context).requestFocus(FocusNode());
 
                     DateTime? pickeddate = await showDatePicker(
                         context: context,

@@ -64,8 +64,8 @@ class _SignupPageState extends State<SignupPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: SingleChildScrollView(
-        child: Center(
+      body: Center(
+        child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -204,17 +204,16 @@ class _SignupPageState extends State<SignupPage> {
                     ),
 
                     // Error creating account
-                    if (errorMessage != null)
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Text(
-                          errorMessage!,
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            color: Theme.of(context).colorScheme.error,
-                          ),
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Text(
+                        errorMessage,
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          color: Theme.of(context).colorScheme.error,
                         ),
                       ),
+                    ),
                 
                     // Create Account Button
                     FilledButton(

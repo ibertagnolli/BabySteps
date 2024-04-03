@@ -19,7 +19,6 @@ import 'package:babysteps/model/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/theme.dart';
-import 'package:babysteps/app/pages/home/home.dart';
 import 'package:babysteps/app/pages/social/social.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -29,6 +28,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:babysteps/app/pages/user/login_landing.dart';
 import 'package:babysteps/app/pages/user/login.dart';
 import 'package:babysteps/app/pages/user/signup.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:babysteps/app/pages/calendar/notifications.dart';
 //import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 //Code for routing (most of this page) taken and adjusted from this tutorial and this github:
 //https://codewithandrea.com/articles/flutter-bottom-navigation-bar-nested-routes-gorouter/
@@ -39,6 +40,8 @@ ValueNotifier<UserProfile?> currentUser = ValueNotifier(null);
 //late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  NotificationService().initNotification();
+  tz.initializeTimeZones();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -177,7 +180,7 @@ final goRouter = GoRouter(
     GoRoute(
         path: '/login',
         pageBuilder: (context, state) =>
-            NoTransitionPage(child: LoginLandingPage()),
+            const NoTransitionPage(child: LoginLandingPage()),
         routes: [
           GoRoute(
             path: 'loginPage',

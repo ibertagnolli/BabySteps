@@ -1,4 +1,5 @@
 import 'package:babysteps/app/pages/tracking/feeding/add_bottle_card.dart';
+import 'package:babysteps/app/widgets/loading_widget.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/pages/tracking/feeding/bottle_feeding_stream.dart';
@@ -33,11 +34,11 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
           valueListenable: currentUser,
           builder: (context, value, child) {
             if (value == null) {
-              return const Text("Loading...");
+              return const LoadingWidget();
             } else {
               return Column(children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.all(32),
+                  padding: const EdgeInsets.all(32),
                   child: Text('Bottle Feeding',
                       style: TextStyle(
                           fontSize: 36,
@@ -45,7 +46,7 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
                 ),
 
                 // Top card with info
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(bottom: 16),
                   child: BottleFeedingStream(),
                 ),
@@ -60,7 +61,7 @@ class _BottleFeedingPageState extends State<BottleFeedingPage> {
 
                 // History Card - in widgets
                 Padding(
-                  padding: EdgeInsets.only(top: 30),
+                  padding: const EdgeInsets.only(top: 30),
                   child: HistoryDropdown("bottle"),
                 ),
               ]);

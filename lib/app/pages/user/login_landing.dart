@@ -15,8 +15,9 @@ class _LoginLandingPageState extends State<LoginLandingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: SingleChildScrollView(
-        child: Center(
+      body: Center(
+        child: 
+        SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -33,7 +34,7 @@ class _LoginLandingPageState extends State<LoginLandingPage> {
                     color: Theme.of(context).colorScheme.surface),
               ),
               Padding(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: FilledButton(
                     onPressed: () => context.go('/login/loginPage'),
                     style: FilledButton.styleFrom(
@@ -47,7 +48,7 @@ class _LoginLandingPageState extends State<LoginLandingPage> {
                     )),
               ),
               Padding(
-                padding: EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
                 child: FilledButton(
                     onPressed: () => context.go('/login/signup'),
                     style: FilledButton.styleFrom(

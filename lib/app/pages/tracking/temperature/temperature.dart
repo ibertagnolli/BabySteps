@@ -1,6 +1,7 @@
 import 'package:babysteps/app/pages/tracking/temperature/add_temperature_card.dart';
 import 'package:babysteps/app/pages/tracking/temperature/temperature_stream.dart';
 import 'package:babysteps/app/widgets/history_widgets.dart';
+import 'package:babysteps/app/widgets/loading_widget.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
@@ -35,14 +36,14 @@ class _TemperaturePageState extends State<TemperaturePage> {
         valueListenable: currentUser,
         builder: (context, value, child) {
           if (value == null) {
-            return Text("Loading...");
+            return const LoadingWidget();
           } else {
             return Center(
               child: Column(
                 children: [
                   // temperature Title
                   Padding(
-                    padding: EdgeInsets.all(32),
+                    padding: const EdgeInsets.all(32),
                     child: Text('Temperature',
                         style: TextStyle(
                             fontSize: 36,
@@ -52,7 +53,7 @@ class _TemperaturePageState extends State<TemperaturePage> {
                   // FilledCard Quick Temperature Info
                   // (TemperatureStream returns the card with real time reads)
                   const Padding(
-                    padding: const EdgeInsets.only(bottom: 15),
+                    padding: EdgeInsets.only(bottom: 15),
                     child: SizedBox(
                       child: TemperatureStream(),
                     ),

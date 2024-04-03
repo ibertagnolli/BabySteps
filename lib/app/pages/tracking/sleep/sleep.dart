@@ -1,5 +1,8 @@
+import 'package:babysteps/app/pages/calendar/notifications.dart';
+import 'package:babysteps/app/pages/tracking/sleep/add_previous_sleep.dart';
 import 'package:babysteps/app/pages/tracking/sleep/sleep_database.dart';
 import 'package:babysteps/app/pages/tracking/sleep/sleep_stream.dart';
+import 'package:babysteps/app/widgets/loading_widget.dart';
 import 'package:babysteps/app/widgets/stopwatch.dart';
 import 'package:babysteps/app/widgets/history_widgets.dart';
 import 'package:babysteps/main.dart';
@@ -78,6 +81,20 @@ class _SleepPageState extends State<SleepPage> {
       //once data has been added, update the card accordingly
       napDone(napLength);
     }
+    //Schedule notification for reminder in 2 hours 
+    var today = DateTime.now();
+    var twoHours = today.hour + 2;
+     NotificationService().scheduleNotification(
+            title: "Nap Reminder",
+            body: "Its been 2 hours since ${currentUser.value?.currentBaby.value?.name} has had a Nap"
+                '$twoHours:${today.minute}',
+            scheduledNotificationDateTime: DateTime(
+                today.year,
+                today.month,
+                today.day,
+                twoHours,
+                today.minute));
+  
   }
 
   void napDone(String napLength) {
@@ -106,12 +123,12 @@ class _SleepPageState extends State<SleepPage> {
         valueListenable: currentUser,
         builder: (context, value, child) {
           if (value == null) {
-            return Text("Loading...");
+            return const LoadingWidget();
           } else {
             return Center(
               child: Column(children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.all(32),
+                  padding: const EdgeInsets.all(32),
                   child: Text('Sleep',
                       style: TextStyle(
                           fontSize: 36,
@@ -174,9 +191,15 @@ class _SleepPageState extends State<SleepPage> {
                   },
                 ),
 
+                // Add Previous Sleep
+                const Padding(
+                  padding: EdgeInsets.only(top: 30, left: 15, right: 15),
+                  child: AddPreviousSleepCard(),
+                ),
+
                 // History Card - in widgets
                 Padding(
-                  padding: EdgeInsets.only(top: 30),
+                  padding: const EdgeInsets.only(top: 30),
                   child: HistoryDropdown("sleep"),
                 ),
               ]),

@@ -1,5 +1,3 @@
-import 'package:babysteps/app/pages/calendar/notifications.dart';
-import 'package:babysteps/app/pages/tracking/feeding/bottleFeeding.dart';
 import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
@@ -7,64 +5,70 @@ import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
 /// The widget that adds a bottle.
-class AddBottleCard extends StatefulWidget {
-  const AddBottleCard({super.key});
+class AddPreviousBreastfeedCard extends StatefulWidget {
+  const AddPreviousBreastfeedCard({super.key});
 
   @override
-  State<StatefulWidget> createState() => _AddBottleCardState();
+  State<StatefulWidget> createState() => _AddPreviousBreastfeedCardState();
 }
 
 /// Stores the mutable data that can change over the lifetime of the AddWeightCard.
-class _AddBottleCardState extends State<AddBottleCard> {
+class _AddPreviousBreastfeedCardState extends State<AddPreviousBreastfeedCard> {
   String activeButton = "Breast milk";
 
   // The global key uniquely identifies the Form widget and allows
   // validation of the form.
   final _formKey = GlobalKey<FormState>();
 
-  TextEditingController ounces = TextEditingController();
+  TextEditingController leftMinutes = TextEditingController();
+  TextEditingController rightMinutes = TextEditingController();
   TextEditingController date = TextEditingController(
       text: DateFormat("MM/dd/yyyy hh:mm a").format(DateTime
-          .now())); // TODO is 24hr time ok? this is hard-coded, so we would need a bool if user can customize it
-
-  uploadData() async {
-    DateTime savedDate = DateFormat("MM/dd/yyyy hh:mm a").parse(date.text);
-    String savedOz = ounces.text;
+          .now()));
 
   
-    Map<String, dynamic> uploaddata = {
-      'type': 'Bottle',
-      'side': '--',
-      'length': '--',
-      'bottleType': activeButton,
-      'ounces': savedOz,
+  //Upload the original data, this will be called once the session is started
+  uploadData() async {
+    DateTime savedDate = DateFormat("MM/dd/yyyy hh:mm a").parse(date.text);
+    String savedLeftMins = leftMinutes.text;
+    int leftMins = int.parse(savedLeftMins) * 60000; // convert minutes to ms
+    String savedRightMins = rightMinutes.text;
+    int rightMins = int.parse(savedRightMins) * 60000; // convert minutes to ms
+
+    Map<String, dynamic> leftSideData = {
       'active': false,
+      'duration': leftMins,
+      'lastStart': "",
+    };
+
+    Map<String, dynamic> rightSideData = {
+      'active': false,
+      'duration': rightMins,
+      'lastStart': "",
+    };
+
+    Map<String, dynamic> side = {
+      'latest': "",
+      'left': leftSideData,
+      'right': rightSideData,
+      'type': "BreastFeeding",
+    };
+
+    Map<String, dynamic> uploaddata = {
+      'type': 'BreastFeeding',
+      'side': side,
+      'length': leftMins + rightMins,
+      'active': false,
+      'ounces': '--',
       'date': savedDate,
     };
 
     await FeedingDatabaseMethods().addFeedingEntry(
-        uploaddata,
-        currentUser.value!.currentBaby.value!
-            .collectionId); //We have ensured currentUser has been assigned and current baby is not null before calling add_bottle_card
+        uploaddata, currentUser.value!.currentBaby.value!.collectionId);
 
-    ounces.clear();
+    leftMinutes.clear();
+    rightMinutes.clear();
     date.text = DateFormat("MM/dd/yyyy hh:mm a").format(DateTime.now());
-
-
-    //Schedule notification for reminder in 2 hours 
-    var today = DateTime.now();
-    var twoHours = today.hour + 2;
-     NotificationService().scheduleNotification(
-            title: "Bottlefeeding Reminder",
-            body: "Its been 2 hours since you last fed ${currentUser.value?.currentBaby.value?.name}"
-                '$twoHours:${today.minute}',
-            scheduledNotificationDateTime: DateTime(
-                today.year,
-                today.month,
-                today.day,
-                twoHours,
-                today.minute));
-  
   }
 
   void bottleTypeClicked(String type) {
@@ -76,7 +80,7 @@ class _AddBottleCardState extends State<AddBottleCard> {
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    ounces.dispose();
+    leftMinutes.dispose();
     date.dispose();
     super.dispose();
   }
@@ -86,36 +90,20 @@ class _AddBottleCardState extends State<AddBottleCard> {
     return ExpansionTile(
         backgroundColor: Theme.of(context).colorScheme.surface,
         collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
-        title: Text('Add Bottle',
+        title: Text('Add Previous Feed',
             style: TextStyle(
                 fontSize: 25,
                 color: Theme.of(context).colorScheme.onSurface,
                 fontWeight: FontWeight.bold)),
-        initiallyExpanded: true,
+        initiallyExpanded: false,
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(15),
             child: Form(
               key: _formKey,
               child: Column(children: <Widget>[
-                // Buttons for bottle type
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: BottleTypeButton(
-                          'Breast milk',
-                          activeButton.contains("Breast milk"),
-                          bottleTypeClicked),
-                    ),
-                    Expanded(
-                        child: BottleTypeButton(
-                            'Formula',
-                            activeButton.contains("Formula"),
-                            bottleTypeClicked))
-                  ],
-                ),
-                // First row: Weight inputs
+
+                // Left minutes
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: Row(
@@ -125,18 +113,47 @@ class _AddBottleCardState extends State<AddBottleCard> {
                         child: Padding(
                           padding: const EdgeInsets.only(left: 10, right: 10),
                           child: TextFormField(
-                            controller: ounces,
+                            controller: leftMinutes,
                             keyboardType: TextInputType.number,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter ounces of milk';
+                                return 'Please enter minutes fed on left side';
                               }
                               return null;
                             },
                           ),
                         ),
                       ),
-                      Text('ounces',
+                      Text('mins on left side   ', // Spaces to make aligned with right text
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: Theme.of(context).colorScheme.onSurface)),
+                    ],
+                  ),
+                ),
+
+                // Right minutes
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Row(
+                    children: <Widget>[
+                      // Pounds input
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          child: TextFormField(
+                            controller: rightMinutes,
+                            keyboardType: TextInputType.number,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter minutes fed on right side';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      ),
+                      Text('mins on right side',
                           style: TextStyle(
                               fontSize: 20,
                               color: Theme.of(context).colorScheme.onSurface)),
@@ -217,7 +234,7 @@ class _AddBottleCardState extends State<AddBottleCard> {
                         ),
                       ),
                     ),
-                    child: const Text('Save Bottle'),
+                    child: const Text('Save Feed'),
                   ),
                 ),
               ]),

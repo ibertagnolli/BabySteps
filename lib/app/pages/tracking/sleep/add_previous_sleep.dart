@@ -1,82 +1,72 @@
-import 'package:babysteps/app/pages/calendar/notifications.dart';
-import 'package:babysteps/app/pages/tracking/feeding/bottleFeeding.dart';
-import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
+import 'package:babysteps/app/pages/tracking/sleep/sleep_database.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
 /// The widget that adds a bottle.
-class AddBottleCard extends StatefulWidget {
-  const AddBottleCard({super.key});
+class AddPreviousSleepCard extends StatefulWidget {
+  const AddPreviousSleepCard({super.key});
 
   @override
-  State<StatefulWidget> createState() => _AddBottleCardState();
+  State<StatefulWidget> createState() => _AddPreviousSleepCardState();
 }
 
 /// Stores the mutable data that can change over the lifetime of the AddWeightCard.
-class _AddBottleCardState extends State<AddBottleCard> {
+class _AddPreviousSleepCardState extends State<AddPreviousSleepCard> {
   String activeButton = "Breast milk";
 
   // The global key uniquely identifies the Form widget and allows
   // validation of the form.
   final _formKey = GlobalKey<FormState>();
 
-  TextEditingController ounces = TextEditingController();
+  TextEditingController minutes = TextEditingController();
+  TextEditingController hours = TextEditingController();
   TextEditingController date = TextEditingController(
       text: DateFormat("MM/dd/yyyy hh:mm a").format(DateTime
-          .now())); // TODO is 24hr time ok? this is hard-coded, so we would need a bool if user can customize it
-
-  uploadData() async {
-    DateTime savedDate = DateFormat("MM/dd/yyyy hh:mm a").parse(date.text);
-    String savedOz = ounces.text;
+          .now()));
 
   
+  // Upload sleep entry into database
+  uploadData() async {
+    DateTime savedDate = DateFormat("MM/dd/yyyy hh:mm a").parse(date.text);
+    
+    String savedMins = minutes.text;
+    int tempMins = int.parse(savedMins);
+    if (tempMins < 10) {
+      savedMins = "0$tempMins";
+    }
+    else {
+      savedMins = "$tempMins";
+    }
+
+    String savedHours = hours.text;
+    int tempHrs = int.parse(savedHours);
+    if (tempHrs < 10) {
+      savedHours = "0$tempHrs";
+    }
+    else {
+      savedHours = "$tempHrs";
+    }
+
     Map<String, dynamic> uploaddata = {
-      'type': 'Bottle',
-      'side': '--',
-      'length': '--',
-      'bottleType': activeButton,
-      'ounces': savedOz,
+      'length': "$savedHours:$savedMins:00",
       'active': false,
       'date': savedDate,
     };
 
-    await FeedingDatabaseMethods().addFeedingEntry(
-        uploaddata,
-        currentUser.value!.currentBaby.value!
-            .collectionId); //We have ensured currentUser has been assigned and current baby is not null before calling add_bottle_card
+    await SleepDatabaseMethods().addSleepEntry(
+        uploaddata, currentUser.value!.currentBaby.value!.collectionId);
 
-    ounces.clear();
+    minutes.clear();
+    hours.clear();
     date.text = DateFormat("MM/dd/yyyy hh:mm a").format(DateTime.now());
-
-
-    //Schedule notification for reminder in 2 hours 
-    var today = DateTime.now();
-    var twoHours = today.hour + 2;
-     NotificationService().scheduleNotification(
-            title: "Bottlefeeding Reminder",
-            body: "Its been 2 hours since you last fed ${currentUser.value?.currentBaby.value?.name}"
-                '$twoHours:${today.minute}',
-            scheduledNotificationDateTime: DateTime(
-                today.year,
-                today.month,
-                today.day,
-                twoHours,
-                today.minute));
-  
-  }
-
-  void bottleTypeClicked(String type) {
-    setState(() {
-      activeButton = type;
-    });
   }
 
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    ounces.dispose();
+    minutes.dispose();
     date.dispose();
     super.dispose();
   }
@@ -86,60 +76,64 @@ class _AddBottleCardState extends State<AddBottleCard> {
     return ExpansionTile(
         backgroundColor: Theme.of(context).colorScheme.surface,
         collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
-        title: Text('Add Bottle',
+        title: Text('Add Previous Sleep',
             style: TextStyle(
                 fontSize: 25,
                 color: Theme.of(context).colorScheme.onSurface,
                 fontWeight: FontWeight.bold)),
-        initiallyExpanded: true,
+        initiallyExpanded: false,
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(15),
             child: Form(
               key: _formKey,
               child: Column(children: <Widget>[
-                // Buttons for bottle type
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: BottleTypeButton(
-                          'Breast milk',
-                          activeButton.contains("Breast milk"),
-                          bottleTypeClicked),
-                    ),
-                    Expanded(
-                        child: BottleTypeButton(
-                            'Formula',
-                            activeButton.contains("Formula"),
-                            bottleTypeClicked))
-                  ],
-                ),
-                // First row: Weight inputs
+
+                // Minutes
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: Row(
                     children: <Widget>[
-                      // Pounds input
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.only(left: 10, right: 10),
                           child: TextFormField(
-                            controller: ounces,
+                            controller: hours,
                             keyboardType: TextInputType.number,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter ounces of milk';
+                                return 'Please enter hours slept';
                               }
                               return null;
                             },
                           ),
                         ),
                       ),
-                      Text('ounces',
+                      Text('hours',
                           style: TextStyle(
                               fontSize: 20,
-                              color: Theme.of(context).colorScheme.onSurface)),
+                              color: Theme.of(context).colorScheme.onSurface)
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          child: TextFormField(
+                            controller: minutes,
+                            keyboardType: TextInputType.number,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter minutes slept';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      ),
+                      Text('minutes',
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: Theme.of(context).colorScheme.onSurface)
+                      ),
                     ],
                   ),
                 ),
@@ -217,7 +211,7 @@ class _AddBottleCardState extends State<AddBottleCard> {
                         ),
                       ),
                     ),
-                    child: const Text('Save Bottle'),
+                    child: const Text('Save Sleep'),
                   ),
                 ),
               ]),

@@ -8,7 +8,7 @@ FirebaseFirestore db = FirebaseFirestore.instance;
 
 /// The widget that reads realtime Event updates.
 class NotesStream extends StatefulWidget {
-  NotesStream({super.key});
+  const NotesStream({super.key});
 
   @override
   _NotesStreamState createState() => _NotesStreamState();
@@ -35,7 +35,7 @@ class _NotesStreamState extends State<NotesStream> {
         var noteDocs = snapshot.data!.docs;
 
         if (noteDocs.isEmpty) {
-          return const Text("No notes");
+          return const Text("No saved notes");
         } else {
           return ListView(
             shrinkWrap:

@@ -1,6 +1,7 @@
 import 'package:babysteps/app/pages/tracking/diaper/diaper_database.dart';
 import 'package:babysteps/app/pages/tracking/diaper/diaper_stream.dart';
 import 'package:babysteps/app/widgets/history_widgets.dart';
+import 'package:babysteps/app/widgets/loading_widget.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
@@ -52,7 +53,7 @@ class _DiaperPageState extends State<DiaperPage> {
         valueListenable: currentUser,
         builder: (context, value, child) {
           if (value == null) {
-            return const Text("loading...");
+            return const LoadingWidget();
           } else {
             return Center(
               child: Column(
@@ -203,7 +204,7 @@ class DiaperButton extends StatelessWidget {
       padding: const EdgeInsets.only(left: 16),
       child: SizedBox(
         height: 48,
-        width: 120,
+        width: 120, // TODO make percentage of screen size?
         child: FilledButton.tonal(
           onPressed: () => {onPress(buttonText)},
           style: ButtonStyle(
