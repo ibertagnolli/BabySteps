@@ -1,4 +1,4 @@
-import 'package:babysteps/app/pages/tracking/medical/vaccine_stream.dart';
+import 'package:babysteps/app/pages/tracking/medical/vaccination/vaccine_stream.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 

@@ -1,5 +1,5 @@
-import 'package:babysteps/app/pages/tracking/medical/add_vaccine_card.dart';
-import 'package:babysteps/app/pages/tracking/medical/received_vaccinations.dart';
+import 'package:babysteps/app/pages/tracking/medical/vaccination/add_vaccine_card.dart';
+import 'package:babysteps/app/pages/tracking/medical/vaccination/received_vaccinations.dart';
 import 'package:babysteps/app/widgets/loading_widget.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
@@ -57,12 +57,6 @@ class _VaccinationsPageState extends State<VaccinationsPage> {
                     padding: EdgeInsets.only(top: 30, bottom: 30, left: 15, right: 15),
                     child: ReceivedVaccinationsCard(),
                   ),
-
-                  // History Card - in widgets
-                  // Padding(
-                  //   padding: const EdgeInsets.only(top: 10),
-                  //   child: HistoryDropdown("breastfeeding"),
-                  // ),
                 ],
               ),
             );

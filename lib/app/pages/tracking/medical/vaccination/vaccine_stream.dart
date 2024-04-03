@@ -42,7 +42,7 @@ class _VaccineStreamState extends State<VaccineStream> {
                       return ListTile(
                         title: Row(
                           children: [
-                            Text(DateFormat('MM-dd-yyyy').format(data['date'].toDate())),
+                            Text(DateFormat('MM/dd/yyyy').format(data['date'].toDate())),
                             const Text("    "),
                             Text(data['vaccine']),
                           ]
