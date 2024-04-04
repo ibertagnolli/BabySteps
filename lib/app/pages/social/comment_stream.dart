@@ -41,7 +41,7 @@ class _CommentStreamState extends State<CommentStream> {
               for (dynamic comment in comments) {
                 commentWidgets.add(Comment(
                     name: comment['name'],
-                    timeStamp: comment['time'],
+                    timeStamp: (comment['time'] as Timestamp).toDate(),
                     comment: comment['comment'],
                     postDoc: post.id));
               }

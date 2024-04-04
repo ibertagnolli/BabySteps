@@ -343,10 +343,11 @@ final goRouter = GoRouter(
                     },
                   ),
                   GoRoute(
-                    path: 'comments/:id1',
+                    path: 'comments',
+                    name: '/social/comments',
                     builder: (context, state) {
                       return CommentsPage(
-                        state.pathParameters['id1'] ?? '',
+                        state.uri.queryParameters['postId'] ?? '',
                       );
                     },
                   ),

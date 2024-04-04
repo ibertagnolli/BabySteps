@@ -33,7 +33,16 @@ class SocialDatabaseMethods {
   }
 
   Future addComment(
-      List<dynamic> comments, String babyDoc, String postDoc) async {
+      Map<String, dynamic> comment, String babyDoc, String postDoc) async {
+    DocumentSnapshot snapshot = await db
+        .collection('Babies')
+        .doc(babyDoc)
+        .collection('Social')
+        .doc(postDoc)
+        .get();
+    List<dynamic> comments =
+        (snapshot.data() as Map<String, dynamic>)['comments'];
+    comments.add(comment);
     return await db
         .collection('Babies')
         .doc(babyDoc)

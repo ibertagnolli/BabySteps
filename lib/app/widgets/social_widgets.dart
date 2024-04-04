@@ -108,9 +108,8 @@ class _PostState extends State<Post> {
               children: <Widget>[
                 IconButton(
                     //Todo navigate to a page to comment
-                    onPressed: () => context.goNamed(
-                        '/social/comments/:${widget.postDoc}',
-                        pathParameters: {'id1': widget.postDoc}),
+                    onPressed: () => context.goNamed('/social/comments',
+                        queryParameters: {'postId': widget.postDoc}),
                     icon: const Icon(Icons.chat_bubble_outline)),
                 const SizedBox(width: 8),
                 IconButton(
@@ -148,7 +147,7 @@ class Comment extends StatefulWidget {
     required this.postDoc,
   });
   final String name;
-  final String timeStamp;
+  final DateTime timeStamp;
   final String comment;
   final String postDoc;
 
@@ -159,39 +158,30 @@ class Comment extends StatefulWidget {
 class _CommentState extends State<Comment> {
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final cardWidth = screenWidth * 0.90; // 90% of screen width
+    final cardWidth = MediaQuery.of(context).size.width;
     //Update this to actually grab the initials from the user in the database, also this has a potential to break if the name is ""
     String initials = widget.name.isEmpty ? "A" : widget.name[0];
 
-    return Card(
-      child: SizedBox(
-        width: cardWidth,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Theme.of(context).colorScheme.secondary,
-                //TODO: dynamic avatar with either image or initials
-                child: Text(initials),
-              ),
-              title: Row(children: [
-                Text(
-                  "${widget.name}: ",
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Text(widget.comment)
-              ]),
-              subtitle: Text(widget.timeStamp),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        ListTile(
+          leading: CircleAvatar(
+            backgroundColor: Theme.of(context).colorScheme.secondary,
+            //TODO: dynamic avatar with either image or initials
+            child: Text(initials),
+          ),
+          title: Row(children: [
+            Text(
+              "${widget.name}: ",
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            const Divider(
-              indent: 16.0,
-              endIndent: 16.0,
-            ),
-          ],
+            Text(widget.comment)
+          ]),
+          subtitle: Text(widget.timeStamp.toString()),
         ),
-      ),
+        const Divider(),
+      ],
     );
   }
 }

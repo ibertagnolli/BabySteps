@@ -1,4 +1,5 @@
 import 'package:babysteps/app/pages/social/comment_stream.dart';
+import 'package:babysteps/app/pages/social/social_database.dart';
 import 'package:babysteps/app/widgets/loading_widget.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +17,8 @@ class _CommentsPageState extends State<CommentsPage> {
   @override
   Widget build(BuildContext context) {
     TextEditingController controller = TextEditingController();
-
     return Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.surface,
           title: const Text('Comments'),
@@ -32,16 +33,31 @@ class _CommentsPageState extends State<CommentsPage> {
             if (value == null) {
               return const LoadingWidget();
             } else {
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    CommentStream(widget.postId),
-                    Align(
-                      alignment: Alignment.bottomCenter,
+              return Column(
+                children: [
+                  const Divider(),
+                  SingleChildScrollView(
+                    child: CommentStream(widget.postId),
+                  ),
+                  const Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Align(
+                      // alignment: Alignment.bottomCenter,
                       child: TextField(
                         controller: controller,
-                        textInputAction: TextInputAction.go,
-                        onSubmitted: (value) => print(value),
+                        textInputAction: TextInputAction.done,
+                        onSubmitted: (value) async {
+                          controller.clear();
+                          await SocialDatabaseMethods().addComment({
+                            'comment': value,
+                            'group': '',
+                            'name': currentUser.value!.name,
+                            'time': DateTime.now(),
+                            'uid': currentUser.value!.uid,
+                          }, currentUser.value!.currentBaby.value!.collectionId,
+                              widget.postId);
+                        },
                         decoration: InputDecoration(
                           label: const Text('comment...'),
                           suffixIcon: IconButton(
@@ -50,9 +66,9 @@ class _CommentsPageState extends State<CommentsPage> {
                           ),
                         ),
                       ),
-                    )
-                  ],
-                ),
+                    ),
+                  ),
+                ],
               );
             }
           },
