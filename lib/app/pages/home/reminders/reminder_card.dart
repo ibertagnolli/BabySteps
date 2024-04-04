@@ -1,14 +1,19 @@
 import 'package:babysteps/app/pages/home/reminders/reminders_database.dart';
 import 'package:babysteps/main.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_time_patterns.dart';
+import 'package:intl/intl.dart';
 
 /// Each card shows a reminder on the home page
 class ReminderCard extends StatelessWidget {
   final String name;
+  final String reminderType;
+  final Timestamp timestamp;
   final docId;
   final context; // TODO if we make this a Stateful widget, we'll have access to context outside of build()
 
-  const ReminderCard(this.name, this.docId,
+  const ReminderCard(this.name, this.reminderType, this.timestamp, this.docId,
       {super.key, this.context}); // this.context
 
   /// Deletes the selected Reminder from the database
@@ -27,6 +32,19 @@ class ReminderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    DateTime reminderDate = DateTime.fromMillisecondsSinceEpoch(timestamp.seconds * 1000);
+    String reminderTime = DateFormat.jm().format(reminderDate);
+    String reminderDay = DateFormat.Md().format(reminderDate);
+    Duration timeDifference = DateTime.now().difference(reminderDate);
+    int timeDifferenceDays = timeDifference.inDays;
+    int timeDifferenceHours = timeDifference.inHours % 24;
+    int timeDifferenceMin = timeDifference.inMinutes % 60;
+    String timeDiffString = (((timeDifferenceDays) > 0 ? " $timeDifferenceDays days" : '') 
+              + ((timeDifferenceHours) > 0 ? " $timeDifferenceHours hrs" : '') 
+              + ((timeDifferenceMin) > 0 ? " $timeDifferenceMin min" : '') );
+    String remindIn = (reminderDate.isBefore(DateTime.now()) ? timeDiffString + " ago" : "in" + timeDiffString);
+
     return Card(
       color: Theme.of(context).colorScheme.surface,
       child: InkWell(
@@ -49,10 +67,10 @@ class ReminderCard extends StatelessWidget {
                       style: const TextStyle(
                           fontSize: 15, fontWeight: FontWeight.bold),
                     ),
-                    // TODO We can add this easily, just need to make the widget Stateful. Do we want it?
-                    // Text(
-                    //   "Last edited at $lastEdited" " o'clock",
-                    // ),
+                    Text(
+                      ((reminderType == "in") ? remindIn
+                      : "at $reminderDay, $reminderTime")
+                    ),
                   ],
                 ),
               ),

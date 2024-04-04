@@ -3,7 +3,9 @@ import 'package:babysteps/app/pages/home/reminders/reminder_card.dart';
 import 'package:babysteps/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'dart:core';
+
 
 
 FirebaseFirestore db = FirebaseFirestore.instance;
@@ -21,7 +23,7 @@ class _RemindersStreamState extends State<RemindersStream> {
   @override
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> remindersStream = RemindersDatabaseMethods()
-        .getRemindersStream(widget.selectedDay, 'TYrhEVcdFGtEcbW5U6OL'); //*****TODO: currentUser.value!.userDoc  
+        .getRemindersStream(widget.selectedDay, 'kQV8iUPdxr6OV0xbqWWt'); //*****TODO: currentUser.value!.userDoc   
 
     return StreamBuilder<QuerySnapshot>(
       stream: remindersStream,
@@ -50,7 +52,7 @@ class _RemindersStreamState extends State<RemindersStream> {
                       document.data()! as Map<String, dynamic>;
                   var docId = document.id;
                   return 
-                    ReminderCard(data['name'], docId, context: context);
+                    ReminderCard(data['remindAbout'], data['reminderType'], data['dateTime'], docId, context: context);
                   // CheckboxListTile(
                   //   // TODO add this back if we want Tasks to have associated times
                   //   // title: Row(
