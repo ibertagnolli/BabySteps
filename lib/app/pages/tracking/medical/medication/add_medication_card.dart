@@ -19,19 +19,17 @@ class _AddMedicationCardState extends State<AddMedicationCard> {
   TextEditingController medName = TextEditingController();
   TextEditingController reaction = TextEditingController();
   TextEditingController date = TextEditingController(
-      text: DateFormat("MM/dd/yyyy").format(DateTime.now()));
+      text: DateFormat("MM/dd/yyyy HH:mm").format(DateTime.now()));
 
   /// Saves a new medication entry in the Firestore database.
   saveNewMedication() async {
-    DateTime savedDate = DateFormat("MM/dd/yyyy").parse(date.text);
-    // Add the time so Medical tracking card shows time of latest update
-    DateTime savedDateWithTime = DateTime(savedDate.year, savedDate.month, savedDate.day, DateTime.now().hour, DateTime.now().minute);
-
+    DateTime savedDate = DateFormat("MM/dd/yyyy HH:mm").parse(date.text);
+    
     // Write weight data to database
     Map<String, dynamic> uploaddata = {
       'medication': medName.text,
       'reaction': reaction.text,
-      'date': savedDateWithTime,
+      'date': savedDate,
     };
     await MedicalDatabaseMethods().addMedication(
         uploaddata, currentUser.value!.currentBaby.value!.collectionId);
@@ -41,7 +39,7 @@ class _AddMedicationCardState extends State<AddMedicationCard> {
     reaction.clear();
     date.clear();
     //add current date and time for autofill
-    date.text = DateFormat.yMd().format(DateTime.now());
+    date.text = DateFormat.yMd().add_jm().format(DateTime.now());
   }
 
   @override
@@ -88,11 +86,20 @@ class _AddMedicationCardState extends State<AddMedicationCard> {
                           initialDate: DateTime.now(),
                           firstDate: DateTime(2020),
                           lastDate: DateTime.now());
+                      
+                      TimeOfDay? pickedTime = await showTimePicker(
+                        context: context, 
+                        initialTime: TimeOfDay.fromDateTime(DateTime.now()),
+                      );
 
-                      if (pickeddate != null) {
+                      if (pickeddate != null && pickedTime != null) {
+                        DateTime pickedDateAndTime = DateTime(
+                          pickeddate.year, pickeddate.month, pickeddate.day, 
+                          pickedTime.hour, pickedTime.minute,
+                        );
                         setState(() {
                           date.text =
-                              DateFormat.yMd().format(pickeddate);
+                              DateFormat.yMd().add_jm().format(pickedDateAndTime);
                         });
                       }
                     },
