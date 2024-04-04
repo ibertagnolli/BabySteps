@@ -17,6 +17,7 @@ class _DiaperPageState extends State<DiaperPage> {
   //set initial state for cards
   String activeButton = "Pee";
   bool diaperRash = false;
+  bool diarrhea = false;
   void buttonClicked(String buttonName) {
     setState(() {
       activeButton = buttonName;
@@ -28,6 +29,7 @@ class _DiaperPageState extends State<DiaperPage> {
     Map<String, dynamic> uploaddata = {
       'type': activeButton,
       'rash': diaperRash,
+      'diarrhea' : diarrhea,
       'date': DateTime.now(),
     };
 
@@ -88,11 +90,8 @@ class _DiaperPageState extends State<DiaperPage> {
                             DiaperButton('Pee', activeButton.contains("Pee"),
                                 buttonClicked, Theme.of(context)),
                             const Padding(padding: EdgeInsets.only(top: 16)),
-                            DiaperButton(
-                                'Mixed',
-                                activeButton.contains("Mixed"),
-                                buttonClicked,
-                                Theme.of(context))
+                            DiaperButton('Mixed', activeButton.contains("Mixed"),
+                                buttonClicked, Theme.of(context))
                           ],
                         ),
                         Column(
@@ -107,50 +106,85 @@ class _DiaperPageState extends State<DiaperPage> {
                       ],
                     ),
                   ),
+
+                  // Diaper Rash row
                   Padding(
                     padding: const EdgeInsets.all(16),
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Padding(
-                            padding: const EdgeInsets.only(top: 6),
-                            child: Text("Diaper Rash?",
-                                style: TextStyle(
-                                    fontSize: 30,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onBackground))),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 32),
-                          child: Transform.scale(
-                            scale: 1.75,
-                            child: Checkbox(
-                              value: diaperRash,
-                              fillColor: MaterialStateProperty.all(
-                                  Theme.of(context).colorScheme.surface),
-                              checkColor:
-                                  Theme.of(context).colorScheme.onSurface,
-                              side: const BorderSide(
-                                color: Colors.grey,
-                                width: 1,
-                              ),
-                              onChanged: (bool? newValue) {
-                                setState(() {
-                                  diaperRash = newValue!;
-                                });
-                              },
-                            ),
+                        SizedBox(
+                          width: 200,
+                          child: Text("Diaper Rash?",
+                            style: TextStyle(
+                            fontSize: 30,
+                            color: Theme.of(context).colorScheme.onBackground,
+                            )
                           ),
                         ),
-                        const SizedBox(
-                            width:
-                                56), // Just there to line "Diaper Rash" up with "Type"
+                        Transform.scale(
+                          scale: 1.75,
+                          child: Checkbox(
+                            value: diaperRash,
+                            fillColor: MaterialStateProperty.all(
+                                Theme.of(context).colorScheme.surface),
+                            checkColor:
+                                Theme.of(context).colorScheme.onSurface,
+                            side: const BorderSide(
+                              color: Colors.grey,
+                              width: 1,
+                            ),
+                            onChanged: (bool? newValue) {
+                              setState(() {
+                                diaperRash = newValue!;
+                              });
+                            },
+                          ),
+                        ),
                       ],
                     ),
                   ),
+
+                  // Diarrhea row only appears for Poop and Mixed
+                  if (activeButton != "Pee" && activeButton != "Dry")
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 200,
+                              child: Text("Diarrhea?",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: 30,
+                                  color: Theme.of(context).colorScheme.onBackground
+                                  )
+                              ),
+                            ),
+                            Transform.scale(
+                              scale: 1.75,
+                              child: Checkbox(
+                                value: diarrhea,
+                                fillColor: MaterialStateProperty.all(
+                                    Theme.of(context).colorScheme.surface),
+                                checkColor:
+                                    Theme.of(context).colorScheme.onSurface,
+                                side: const BorderSide(
+                                  color: Colors.grey,
+                                  width: 1,
+                                ),
+                                onChanged: (bool? newValue) {
+                                  setState(() {
+                                    diarrhea = newValue!;
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                    ),
+
                   Padding(
-                    padding: const EdgeInsets.only(top: 40),
+                    padding: const EdgeInsets.only(top: 20),
                     child: SizedBox(
                       height: 75,
                       width: 185,
