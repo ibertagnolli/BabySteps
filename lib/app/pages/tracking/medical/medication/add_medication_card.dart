@@ -148,6 +148,7 @@ class _AddMedicationCardState extends State<AddMedicationCard> {
                       // Validate returns true if the form is valid, or false otherwise.
                       if (_formKey.currentState!.validate()) {
                         saveNewMedication();
+                        FocusManager.instance.primaryFocus?.unfocus();
                       }
                     },
                     style: ButtonStyle(
