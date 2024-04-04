@@ -3,7 +3,6 @@ import 'package:babysteps/app/pages/home/reminders/reminder_card.dart';
 import 'package:babysteps/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'dart:core';
 
 
@@ -53,26 +52,6 @@ class _RemindersStreamState extends State<RemindersStream> {
                   var docId = document.id;
                   return 
                     ReminderCard(data['remindAbout'], data['reminderType'], data['dateTime'], docId, context: context);
-                  // CheckboxListTile(
-                  //   // TODO add this back if we want Tasks to have associated times
-                  //   // title: Row(
-                  //   //   children: [Text(data['name']),
-                  //   //              const Text(" at "),
-                  //   //              Text(DateFormat('hh:mm').format(data['dateTime'].toDate()))]
-                  //   // ),
-                  //   title: Text(data['name']),
-                  //   value: data['completed'],
-                  //   onChanged: (bool? value) async {
-                  //     // Write updated reminder data to database
-                  //     Map<String, dynamic> updateData = {
-                  //       'name': data['name'],
-                  //       'dateTime': data['dateTime'],
-                  //       'completed': !data['completed'],
-                  //     };
-                  //     await RemindersDatabaseMethods().updateReminder(
-                  //         docId, updateData, currentUser.value!.userDoc);
-                  //   },
-                  // );
                 })
                 .toList()
                 .cast(),
