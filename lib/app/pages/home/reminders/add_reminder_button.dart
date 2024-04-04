@@ -225,7 +225,10 @@ class _TimeIntervalState extends State<TimeInterval> {
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Please enter the reminder time';
+              return 'Please enter the reminder timing';
+            }
+            if(int.tryParse(value) == null) {
+              return 'Please enter a number';
             }
             return null;
           },
