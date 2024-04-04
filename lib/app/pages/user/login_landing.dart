@@ -15,8 +15,9 @@ class _LoginLandingPageState extends State<LoginLandingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: SingleChildScrollView(
-        child: Center(
+      body: Center(
+        child: 
+        SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,

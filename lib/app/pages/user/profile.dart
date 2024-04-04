@@ -140,10 +140,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return Center(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Center(
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,

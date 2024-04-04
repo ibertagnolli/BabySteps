@@ -266,8 +266,8 @@ class _AddBabyPageState extends State<AddBabyPage> {
     TextEditingController babyCode = TextEditingController();
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: SingleChildScrollView(
-        child: Center(
+      body: Center(
+        child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -278,17 +278,25 @@ class _AddBabyPageState extends State<AddBabyPage> {
                   height: 200,
                   child: Image.asset('assets/BabyStepsLogo.png',
                       fit: BoxFit.scaleDown)),
-              Text(
-                'Tell us about your baby',
-                style: TextStyle(
-                    fontSize: 30.0,
-                    color: Theme.of(context).colorScheme.surface),
+              Padding(
+                padding: const EdgeInsets.all(5),
+                child: Text(
+                'Tell us about your baby.',
+                  style: TextStyle(
+                      fontSize: 30.0,
+                      color: Theme.of(context).colorScheme.surface),
+                ),
               ),
-              Text(
-                'This information can always be updated',
-                style: TextStyle(
-                    fontSize: 20.0,
-                    color: Theme.of(context).colorScheme.surface),
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: Text(
+                    'This information can always be updated.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 20.0,
+                        color: Theme.of(context).colorScheme.surface,
+                    ),
+                ),
               ),
 
               // Form fields
@@ -325,14 +333,41 @@ class _AddBabyPageState extends State<AddBabyPage> {
                           }),
 
                       // Baby's DOB field
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('Date of birth:'),
-                          TextFormField(
-                            controller: date,
-                            decoration: const InputDecoration(
-                              icon: Icon(Icons.calendar_today_rounded),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 25),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('Date of birth:'),
+                            TextFormField(
+                              controller: date,
+                              decoration: const InputDecoration(
+                                icon: Icon(Icons.calendar_today_rounded),
+                              ),
+                              onTap: () async {
+                                // Don't show keyboard
+                                FocusScope.of(context)
+                                    .requestFocus(FocusNode());
+
+                                DateTime? pickeddate = await showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime(2020),
+                                    lastDate: DateTime(2101));
+
+                                if (pickeddate != null) {
+                                  setState(() {
+                                    date.text =
+                                        DateFormat.yMd().format(pickeddate);
+                                  });
+                                }
+                              },
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter a date';
+                                }
+                                return null;
+                              },
                             ),
                             onTap: () async {
                               // Don't show keyboard
@@ -362,7 +397,9 @@ class _AddBabyPageState extends State<AddBabyPage> {
                       ),
 
                       // Next button submits the form and adds the baby
-                      FilledButton(
+                      Padding(
+                        padding: const EdgeInsets.only(top: 40),
+                        child: FilledButton(
                           onPressed: () {
                             // Validate returns true if the form is valid, or false otherwise.
                             if (_formKey.currentState!.validate()) {
@@ -380,15 +417,20 @@ class _AddBabyPageState extends State<AddBabyPage> {
                               fontSize: 20.0,
                               color: Theme.of(context).colorScheme.surface,
                             ),
-                          )),
+                          )
+                        ),
+                      ),
 
                       // Text sectioning baby add code section
-                      Text(
-                        'Or click here to add a baby code',
-                        style: TextStyle(
-                            fontSize: 20.0,
-                            color: Theme.of(context).colorScheme.surface),
-                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 25),
+                        child: Text(
+                          'Or click here to add a baby code',
+                          style: TextStyle(
+                              fontSize: 20.0,
+                              color: Theme.of(context).colorScheme.surface),
+                        ),
+                      ),                      
 
                       // Button to add baby with code
                       FilledButton(
