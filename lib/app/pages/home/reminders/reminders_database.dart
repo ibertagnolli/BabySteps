@@ -10,7 +10,7 @@ class RemindersDatabaseMethods {
   Future addReminder(Map<String, dynamic> userInfoMap, String userDoc) async {
     return await db
         .collection('Users')
-        .doc(userDoc)
+        .doc(userDoc) 
         .collection('Reminders')
         .add(userInfoMap);
   }
@@ -21,6 +21,7 @@ class RemindersDatabaseMethods {
         .collection('Users')
         .doc(userDoc)
         .collection("Reminders")
+        .orderBy('dateTime')
         .snapshots();
   }
 
