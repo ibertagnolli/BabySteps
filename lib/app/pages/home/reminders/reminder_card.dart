@@ -36,14 +36,21 @@ class ReminderCard extends StatelessWidget {
     DateTime reminderDate = DateTime.fromMillisecondsSinceEpoch(timestamp.seconds * 1000);
     String reminderTime = DateFormat.jm().format(reminderDate);
     String reminderDay = DateFormat.Md().format(reminderDate);
-    Duration timeDifference = DateTime.now().difference(reminderDate);
-    int timeDifferenceDays = timeDifference.inDays;
-    int timeDifferenceHours = timeDifference.inHours % 24;
-    int timeDifferenceMin = timeDifference.inMinutes % 60;
+    Duration timeDifference = reminderDate.difference(DateTime.now()); // reminderDate - now
+    int timeDifferenceDays = timeDifference.inDays.abs();
+    int timeDifferenceHours = timeDifference.inHours.abs() % 24;
+    int timeDifferenceMin = timeDifference.inMinutes.abs() % 60;
     String timeDiffString = (((timeDifferenceDays) > 0 ? " $timeDifferenceDays days" : '') 
-              + ((timeDifferenceHours) > 0 ? " $timeDifferenceHours hrs" : '') 
+              + ((timeDifferenceHours) > 0 ? " $timeDifferenceHours hr" : '') 
               + ((timeDifferenceMin) > 0 ? " $timeDifferenceMin min" : '') );
     String remindIn = (reminderDate.isBefore(DateTime.now()) ? timeDiffString + " ago" : "in" + timeDiffString);
+        print(name);
+        print(reminderDate);
+        print("difference: " + timeDifference.toString());
+        print("time in days " + timeDifferenceDays.toString());
+        print("time in hrs " + timeDifferenceHours.toString());
+        print("time in min " + timeDifferenceMin.toString());
+        print(remindIn);
 
     return Card(
       color: (reminderDate.isBefore(DateTime.now())) ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.surface,
