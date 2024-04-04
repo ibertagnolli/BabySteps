@@ -1,4 +1,5 @@
 import 'package:babysteps/app/pages/tracking/medical/medical_database.dart';
+import 'package:babysteps/app/widgets/styles.dart';
 import 'package:babysteps/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -13,13 +14,36 @@ class VaccineStream extends StatefulWidget {
 }
 
 class _VaccineStreamState extends State<VaccineStream> {
-  void openVaccDialog(Map<String, dynamic> data) {
+  TextEditingController reactionController = TextEditingController();
 
+  /// Saves reaction data to the database
+  void saveReaction(Map<String, dynamic> data) async {
+    String docId = data['docId'];
+    Map<String, dynamic> uploaddata = {
+      'vaccine': data['vaccine'],
+      'date': data['date'],
+      'reaction': reactionController.text,
+    };
+
+    // Add a new vaccine if the docId isn't specified (this shouldn't happen). 
+    // Else, update the existing Document.
+    if (docId == "") {
+      await MedicalDatabaseMethods()
+          .addVaccine(uploaddata, currentUser.value!.currentBaby.value!.collectionId);
+    } else {
+      await MedicalDatabaseMethods().updateVaccine(docId, uploaddata,
+          currentUser.value!.currentBaby.value!.collectionId);
+    }
+  }
+
+  /// Opens a readonly vaccine dialog box with vaccine information
+  void editVaccDialog(Map<String, dynamic> data) {
     // Display "None" if no reaction is recorded.
     String reactionToDisplay = data['reaction'];
     if(reactionToDisplay == "") {
       reactionToDisplay = "None";
     }
+    reactionController.text = reactionToDisplay;
 
     showDialog(
       context: context,
@@ -51,15 +75,28 @@ class _VaccineStreamState extends State<VaccineStream> {
                         ),
                       ]
                     ),
-                    
-                    // Reaction
+
+                    // Reaction                 
                     Padding(
                       padding: const EdgeInsets.only(top: 10),
-                      child: Text(
-                        "Reaction: $reactionToDisplay",
+                      child: TextField(
+                        enabled: true,
+                        maxLength: 500,
+                        maxLines: null,
                         style: const TextStyle(fontSize: 18),
+                        controller: reactionController,
                       ),
                     ),
+
+                    // Edit button
+                    ElevatedButton(
+                      onPressed: () {
+                        saveReaction(data);
+                        Navigator.pop(context);
+                      },
+                      style: blueButton(context),
+                      child: const Text('Save changes'),                 
+                    )
                   ],
                 )
               ),
@@ -96,6 +133,7 @@ class _VaccineStreamState extends State<VaccineStream> {
             children: allVaccineDocs
                 .map((DocumentSnapshot document) {
                       Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+                      data['docId'] = document.id;
                       return ListTile(
                         title: Wrap(
                           spacing: 16.0,
@@ -105,17 +143,16 @@ class _VaccineStreamState extends State<VaccineStream> {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               "${data['vaccine']}",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ]
                         ),
                         subtitle: data['reaction'] == "" ? null : 
-                          Text(
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            "Reaction: ${data['reaction']}"
-                          ),
+                          Text(data['reaction']),
                         onTap: () {
-                          openVaccDialog(data);
+                          editVaccDialog(data);
                         },
                       );
                     })

@@ -48,4 +48,15 @@ class MedicalDatabaseMethods{
         .limit(1)
         .snapshots();
   }
+
+  // Updates a vaccine entry in the database.
+  Future updateVaccine(var docId, Map<String, dynamic> updatedUserInfoMap,
+      String babyDoc) async {
+    return await db
+        .collection('Babies')
+        .doc(babyDoc)
+        .collection('Vaccines')
+        .doc(docId)
+        .set(updatedUserInfoMap);
+  }
 }
