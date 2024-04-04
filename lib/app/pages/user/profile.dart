@@ -78,22 +78,29 @@ class _ProfilePageState extends State<ProfilePage> {
           'doc': currentUser.value!.userDoc,
           'uid': currentUser.value!.uid
         }
-      ]
+      ],
+      'SocialUsers': []
     };
     DocumentReference babyRef = await UserDatabaseMethods().addBaby(uploaddata);
-    setState(() {
-      updatedUser.addBaby(Baby(
-          name: '',
-          dob: DateTime.now(),
-          collectionId: babyRef.id,
-          caregivers: [
-            {
-              'name': currentUser.value!.name,
-              'doc': currentUser.value!.userDoc,
-              'uid': currentUser.value!.uid,
-            }
-          ]));
-    });
+    setState(
+      () {
+        updatedUser.addBaby(
+          Baby(
+            name: '',
+            dob: DateTime.now(),
+            collectionId: babyRef.id,
+            caregivers: [
+              {
+                'name': currentUser.value!.name,
+                'doc': currentUser.value!.userDoc,
+                'uid': currentUser.value!.uid,
+              }
+            ],
+            socialUsers: [],
+          ),
+        );
+      },
+    );
   }
 
   void updateBabyName(String? id, String newVal) {
@@ -176,8 +183,15 @@ class _ProfilePageState extends State<ProfilePage> {
               //TODO: display multiple baby's info when caregivers have more than one
 
               for (Baby element in babyList)
-                BabyBox(element.name, element.dob, element.caregivers, editing,
-                    updateBabyName, updateBabyDOB, element.collectionId),
+                BabyBox(
+                    element.name,
+                    element.dob,
+                    element.caregivers,
+                    editing,
+                    updateBabyName,
+                    updateBabyDOB,
+                    element.collectionId,
+                    element.socialUsers ?? []),
 
               if (editing)
                 Padding(

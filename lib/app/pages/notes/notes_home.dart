@@ -1,6 +1,7 @@
 import 'package:babysteps/app/pages/notes/notes.dart';
 import 'package:babysteps/app/pages/notes/notes_stream.dart';
 import 'package:babysteps/app/widgets/loading_widget.dart';
+import 'package:babysteps/app/widgets/social_only_widget.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 

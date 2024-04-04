@@ -1,3 +1,5 @@
+import 'package:babysteps/app/pages/user/user_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -110,15 +112,28 @@ class _LoginPageState extends State<LoginPage> {
                       try {
                         await FirebaseAuth.instance.signInWithEmailAndPassword(
                             email: email.text, password: password.text);
-                        context.go('/tracking'); 
+
+                        String userUid = FirebaseAuth.instance.currentUser!.uid;
+
+                        QuerySnapshot snapshot =
+                            await UserDatabaseMethods().getUser(userUid);
+                        var doc = snapshot.docs;
+                        if (doc.isNotEmpty) {
+                          List<dynamic> babyList = doc[0]['baby'];
+                          babyList.isNotEmpty
+                              ? context.go('/tracking')
+                              : context.go('/login/signup/addBaby');
+                        } else {
+                          context.go('/login/signup/addBaby');
+                        }
+
                         // context.go('/home'); //TODO: add back in when home is interesting
                       } catch (e) {
                         userOrPasswordIncorrect();
                       }
                     },
                     style: FilledButton.styleFrom(
-                        backgroundColor:
-                            Theme.of(context).colorScheme.primary),
+                        backgroundColor: Theme.of(context).colorScheme.primary),
                     child: Text(
                       'Login',
                       style: TextStyle(

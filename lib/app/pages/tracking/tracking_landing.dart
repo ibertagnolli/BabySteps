@@ -1,5 +1,6 @@
 import 'package:babysteps/app/pages/tracking/tracking.dart';
 import 'package:babysteps/app/widgets/loading_widget.dart';
+import 'package:babysteps/app/widgets/social_only_widget.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -39,14 +40,16 @@ class _TrackingLandingPageState extends State<TrackingLandingPage> {
           if (value == null) {
             return const LoadingWidget();
           } else {
-            return SingleChildScrollView(
-              child: ValueListenableBuilder(
-                valueListenable: currentUser.value!.currentBaby,
-                builder: (context, value, child) {
-                  return const TrackingPage();
-                },
-              ),
-            );
+            return currentUser.value!.socialOnly
+                ? const SocialOnlyWidget()
+                : SingleChildScrollView(
+                    child: ValueListenableBuilder(
+                      valueListenable: currentUser.value!.currentBaby,
+                      builder: (context, value, child) {
+                        return const TrackingPage();
+                      },
+                    ),
+                  );
           }
         },
       ),
