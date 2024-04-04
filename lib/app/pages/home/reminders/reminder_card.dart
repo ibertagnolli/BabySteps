@@ -46,7 +46,7 @@ class ReminderCard extends StatelessWidget {
     String remindIn = (reminderDate.isBefore(DateTime.now()) ? timeDiffString + " ago" : "in" + timeDiffString);
 
     return Card(
-      color: Theme.of(context).colorScheme.surface,
+      color: (reminderDate.isBefore(DateTime.now())) ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.surface,
       child: InkWell(
         onTap: () => editReminder(),
         splashColor: Theme.of(context).colorScheme.surface,
