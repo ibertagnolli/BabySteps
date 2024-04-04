@@ -67,7 +67,7 @@ class MedicalDatabaseMethods{
     return await db
         .collection('Babies')
         .doc(babyDoc)
-        .collection('Vaccines')
+        .collection('Medications')
         .add(userInfoMap);
   }
 
@@ -76,7 +76,7 @@ class MedicalDatabaseMethods{
     return FirebaseFirestore.instance
         .collection('Babies')
         .doc(babyDoc)
-        .collection('Vaccines')
+        .collection('Medications')
         .orderBy('date', descending: true)
         .snapshots();
   }
@@ -86,7 +86,7 @@ class MedicalDatabaseMethods{
     return db
         .collection('Babies')
         .doc(babyDoc)
-        .collection('Vaccines')
+        .collection('Medications')
         .orderBy('date', descending: true)
         .limit(1)
         .snapshots();
@@ -98,7 +98,7 @@ class MedicalDatabaseMethods{
     return await db
         .collection('Babies')
         .doc(babyDoc)
-        .collection('Vaccines')
+        .collection('Medications')
         .doc(docId)
         .set(updatedUserInfoMap);
   }
