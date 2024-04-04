@@ -148,6 +148,7 @@ class _AddVaccineCardState extends State<AddVaccineCard> {
                       // Validate returns true if the form is valid, or false otherwise.
                       if (_formKey.currentState!.validate()) {
                         saveNewVaccine();
+                        FocusManager.instance.primaryFocus?.unfocus();
                       }
                     },
                     style: ButtonStyle(
