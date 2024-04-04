@@ -17,19 +17,12 @@ class _AddReminderButtonState extends State<AddReminderButton> {
   // The global key uniquely identifies the Form widget and allows
   // validation of the form.
   final _formKey = GlobalKey<FormState>();
-  int reminderType = 1;
 
   // Store user input for database upload
   TextEditingController nameController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   TextEditingController timeController = TextEditingController();
   TimeOfDay reminderTime = TimeOfDay.now();
-
-  setReminderType(int selectedType)  {
-    setState(() {
-      reminderType = selectedType;
-    });
-  }
 
   @override
   void dispose() {
@@ -114,74 +107,7 @@ class _AddReminderButtonState extends State<AddReminderButton> {
                           child: Column(
                             children: <Widget>[
 
-                              // Reminder Name
-                              TextFormField(
-                                controller: nameController,
-                                maxLength: 30,
-                                decoration: const InputDecoration(
-                                  labelText: "Remind me about",
-                                ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter the reminder title';
-                                  }
-                                  return null;
-                                },
-                              ),
-
-                              // Reminder Type
-                              RadioButtons((int selectedType) {
-                                setState(() { reminderType = selectedType; });
-                                print(selectedType);
-                              },),
-
-                              // Reminder Date
-                              TextFormField(
-                                controller: dateController,
-                                decoration: const InputDecoration(
-                                  labelText: "Date",
-                                ),
-                                onTap: () async {
-                                  DateTime? pickedDate = await showDatePicker(
-                                      context: context,
-                                      initialDate: DateTime.now(),
-                                      firstDate: DateTime(2020),
-                                      lastDate: DateTime(2050));
-
-                                  if (pickedDate != null) {
-                                    dateController.text = DateFormat.yMd()
-                                        .add_jm()
-                                        .format(pickedDate);
-                                  }
-                                },
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter a date';
-                                  }
-                                  return null;
-                                },
-                                // Don't show the keyboard
-                                showCursor: true,
-                                readOnly: true,
-                              ),
-
-                              // Reminder Time
-                              TextFormField(
-                                controller: timeController,
-                                decoration: const InputDecoration(
-                                  labelText: "Time",
-                                ),
-                                onTap: _selectTime,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter the reminder time';
-                                  }
-                                  return null;
-                                },
-                                // Don't show the keyboard
-                                showCursor: true,
-                                readOnly: true,
-                              ),
+                              NewReminderForm(nameController, dateController, timeController, _selectTime),
 
                               // Submit button
                               Padding(
@@ -206,63 +132,213 @@ class _AddReminderButtonState extends State<AddReminderButton> {
 }
 
 
-
-class RadioButtons extends StatefulWidget {
-  const RadioButtons(this.setTypeFunction, {super.key});
-
-  final Function(int val) setTypeFunction;
-
-  @override
-  State<RadioButtons> createState() => _RadioButtonsState();
-}
-
-class _RadioButtonsState extends State<RadioButtons> {
-  int selectedOption = 1; 
+class DateAndTime extends StatelessWidget {
+  const DateAndTime(
+      this.dateController, this.timeController, this._selectTime, {super.key});
+  final TextEditingController dateController;
+  final TextEditingController timeController;
+  final Function() _selectTime;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        ListTile(
-          title: const Text('in'),
-          leading: Radio<int>(
-            value: 1,
-            groupValue: selectedOption,
-            onChanged: (value) {
-              setState(() {
-                selectedOption = value!;
-              });
-              widget.setTypeFunction(value!);
+          // Reminder Date
+          TextFormField(
+            controller: dateController,
+            decoration: const InputDecoration(
+              labelText: "Date",
+            ),
+            onTap: () async {
+              DateTime? pickedDate = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(2020),
+                  lastDate: DateTime(2050));
+
+              if (pickedDate != null) {
+                dateController.text = DateFormat.yMd()
+                    .add_jm()
+                    .format(pickedDate);
+              }
             },
-          ),
-        ),
-        ListTile(
-          title: const Text('at'),
-          leading: Radio<int>(
-            value: 2,
-            groupValue: selectedOption,
-            onChanged: (value) {
-              setState(() {
-                selectedOption = value!;
-              });
-              widget.setTypeFunction(value!);
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter a date';
+              }
+              return null;
             },
+            // Don't show the keyboard
+            showCursor: true,
+            readOnly: true,
           ),
-        ),
-        ListTile(
-          title: const Text('every'),
-          leading: Radio<int>(
-            value: 3,
-            groupValue: selectedOption,
-            onChanged: (value) {
-              setState(() {
-                selectedOption = value!;
-              });
-              widget.setTypeFunction(value!);
+
+          // Reminder Time
+          TextFormField(
+            controller: timeController,
+            decoration: const InputDecoration(
+              labelText: "Time",
+            ),
+            onTap: _selectTime,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter the reminder time';
+              }
+              return null;
             },
+            // Don't show the keyboard
+            showCursor: true,
+            readOnly: true,
           ),
+      ]
+    );
+  }
+}
+
+const List<String> list = <String>['minutes', 'hours', 'days'];
+class TimeInterval extends StatefulWidget {
+  TimeInterval({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _TimeIntervalState();
+}
+
+class _TimeIntervalState extends State<TimeInterval> {
+  TextEditingController inputController = TextEditingController();
+  String dropdownValue = list.first;
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    inputController.dispose();
+    super.dispose();
+  }
+
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        TextFormField(
+          controller: inputController,
+          maxLength: 30,
+          decoration: const InputDecoration(
+            labelText: "How many",
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter the reminder time';
+            }
+            return null;
+          },
         ),
+
+        DropdownMenu<String>(
+          initialSelection: list.first,
+          onSelected: (String? value) {
+            // This is called when the user selects an item.
+            setState(() {
+              dropdownValue = value!;
+            });
+          },
+          dropdownMenuEntries: list.map<DropdownMenuEntry<String>>((String value) {
+            return DropdownMenuEntry<String>(value: value, label: value);
+          }).toList(),
+        )
       ],
     );
   }
+}
+
+class TimingSelection extends StatelessWidget {
+  const TimingSelection(
+      this.selectedOption, this.dateController, this.timeController, this._selectTime, {super.key});
+  final int selectedOption;
+  final TextEditingController dateController;
+  final TextEditingController timeController;
+  final Function() _selectTime;
+
+  @override
+  Widget build(BuildContext context) {
+    if (selectedOption == 1) {
+      return TimeInterval();
+    }
+    if (selectedOption == 2) {
+      return DateAndTime(dateController, timeController, _selectTime);
+    }
+    else {
+      return Text("error with selection");
+    }
+  }
+}
+
+
+class NewReminderForm extends StatefulWidget {
+  const NewReminderForm(this.nameController, this.dateController, this.timeController, this._selectTime, {super.key});//this.setTypeFunction, 
+
+  final TextEditingController nameController;
+  final TextEditingController dateController;
+  final TextEditingController timeController;
+  final Function() _selectTime;
+
+  @override
+  State<NewReminderForm> createState() => _NewReminderFormState();
+}
+
+class _NewReminderFormState extends State<NewReminderForm> {
+  int selectedOption = 1; 
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      Column(
+        children: <Widget>[
+
+          // Reminder Name
+          TextFormField(
+            controller: widget.nameController,
+            maxLength: 30,
+            decoration: const InputDecoration(
+              labelText: "Remind me about",
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter the reminder content';
+              }
+              return null;
+            },
+          ),
+
+          // Radio buttons 
+          ListTile(
+            title: const Text('in'),
+            leading: Radio<int>(
+              value: 1,
+              groupValue: selectedOption,
+              onChanged: (value) {
+                setState(() {
+                  selectedOption = value!;
+                });
+              },
+            ),
+          ),
+          ListTile(
+            title: const Text('at'),
+            leading: Radio<int>(
+              value: 2,
+              groupValue: selectedOption,
+              onChanged: (value) {
+                setState(() {
+                  selectedOption = value!;
+                });
+              },
+            ),
+          ),
+
+          // Set time 
+          TimingSelection(selectedOption, widget.dateController, widget.timeController, widget._selectTime),
+
+        ],
+      )
+    ],);
+  }
+
 }
