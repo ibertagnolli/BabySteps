@@ -281,7 +281,7 @@ class _AddBabyPageState extends State<AddBabyPage> {
               Padding(
                 padding: const EdgeInsets.all(5),
                 child: Text(
-                'Tell us about your baby.',
+                  'Tell us about your baby.',
                   style: TextStyle(
                       fontSize: 30.0,
                       color: Theme.of(context).colorScheme.surface),
@@ -290,12 +290,12 @@ class _AddBabyPageState extends State<AddBabyPage> {
               Padding(
                 padding: const EdgeInsets.all(15),
                 child: Text(
-                    'This information can always be updated.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 20.0,
-                        color: Theme.of(context).colorScheme.surface,
-                    ),
+                  'This information can always be updated.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    color: Theme.of(context).colorScheme.surface,
+                  ),
                 ),
               ),
 
@@ -369,56 +369,32 @@ class _AddBabyPageState extends State<AddBabyPage> {
                                 return null;
                               },
                             ),
-                            onTap: () async {
-                              // Don't show keyboard
-                              FocusScope.of(context).requestFocus(FocusNode());
-
-                              DateTime? pickeddate = await showDatePicker(
-                                  context: context,
-                                  initialDate: DateTime.now(),
-                                  firstDate: DateTime(2020),
-                                  lastDate: DateTime(2101));
-
-                              if (pickeddate != null) {
-                                setState(() {
-                                  date.text =
-                                      DateFormat.yMd().format(pickeddate);
-                                });
-                              }
-                            },
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter a date';
-                              }
-                              return null;
-                            },
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
 
                       // Next button submits the form and adds the baby
                       Padding(
                         padding: const EdgeInsets.only(top: 40),
                         child: FilledButton(
-                          onPressed: () {
-                            // Validate returns true if the form is valid, or false otherwise.
-                            if (_formKey.currentState!.validate()) {
-                              uploadFirstBaby();
-                              context.go('/tracking');
-                              // context.go('/home'); //TODO: add back in when home is interesting
-                            }
-                          },
-                          style: FilledButton.styleFrom(
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.primary),
-                          child: Text(
-                            'Next',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              color: Theme.of(context).colorScheme.surface,
-                            ),
-                          )
-                        ),
+                            onPressed: () {
+                              // Validate returns true if the form is valid, or false otherwise.
+                              if (_formKey.currentState!.validate()) {
+                                uploadFirstBaby();
+                                context.go('/tracking');
+                                // context.go('/home'); //TODO: add back in when home is interesting
+                              }
+                            },
+                            style: FilledButton.styleFrom(
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.primary),
+                            child: Text(
+                              'Next',
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                color: Theme.of(context).colorScheme.surface,
+                              ),
+                            )),
                       ),
 
                       // Text sectioning baby add code section
@@ -430,23 +406,24 @@ class _AddBabyPageState extends State<AddBabyPage> {
                               fontSize: 20.0,
                               color: Theme.of(context).colorScheme.surface),
                         ),
-                      ),                      
+                      ),
 
                       // Button to add baby with code
                       FilledButton(
-                          onPressed: () {
-                            showBabyAddCodeDialog(babyCode);
-                          },
-                          style: FilledButton.styleFrom(
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.primary),
-                          child: Text(
-                            'Enter Code',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              color: Theme.of(context).colorScheme.surface,
-                            ),
-                          )),
+                        onPressed: () {
+                          showBabyAddCodeDialog(babyCode);
+                        },
+                        style: FilledButton.styleFrom(
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary),
+                        child: Text(
+                          'Enter Code',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            color: Theme.of(context).colorScheme.surface,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
