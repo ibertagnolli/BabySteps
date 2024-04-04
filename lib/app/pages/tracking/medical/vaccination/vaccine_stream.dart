@@ -53,39 +53,43 @@ class _VaccineStreamState extends State<VaccineStream> {
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    // Name and date of vaccine
-                    Wrap(
-                      spacing: 16.0,
-                      children: [
-                        Text(
-                          DateFormat('MM/dd/yyyy').format(data['date'].toDate()),
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24,
-                          ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        // Name and date of vaccine
+                        Wrap(
+                          spacing: 16.0,
+                          children: [
+                            Text(
+                              DateFormat('MM/dd/yyyy').format(data['date'].toDate()),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 24,
+                              ),
+                            ),
+                            Text(
+                              "${data['vaccine']}",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 24,
+                              ),
+                            ),
+                          ]
                         ),
-                        Text(
-                          "${data['vaccine']}",
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24,
-                          ),
-                        ),
-                      ]
-                    ),
 
-                    // Reaction                 
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: TextField(
-                        enabled: true,
-                        maxLength: 500,
-                        maxLines: null,
-                        style: const TextStyle(fontSize: 18),
-                        controller: reactionController,
-                      ),
+                        // Reaction                 
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: TextField(
+                            enabled: true,
+                            maxLength: 500,
+                            maxLines: null,
+                            style: const TextStyle(fontSize: 18),
+                            controller: reactionController,
+                          ),
+                        ),
+                      ],
                     ),
 
                     // Edit button
