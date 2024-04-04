@@ -71,13 +71,14 @@ class MedicalDatabaseMethods{
         .add(userInfoMap);
   }
 
-  // Returns all entries in the medication collection.
+  // Returns 10 most recent entries in the medication collection.
   Stream<QuerySnapshot> getMedicationStream(String babyDoc) {
     return FirebaseFirestore.instance
         .collection('Babies')
         .doc(babyDoc)
         .collection('Medications')
         .orderBy('date', descending: true)
+        .limit(10)
         .snapshots();
   }
 
