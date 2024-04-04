@@ -1,3 +1,4 @@
+import 'package:babysteps/app/pages/tracking/additional_streams.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/pages/tracking/history_streams.dart';
 import 'package:babysteps/app/pages/tracking/all_time_history_streams.dart';
@@ -13,6 +14,7 @@ class HistoryDropdown extends StatelessWidget {
 
   var recentStream;
   var allTimeStream;
+  var additionalStream = null; // Currently the only additional stream is diarrhea
 
 
   @override
@@ -21,6 +23,7 @@ class HistoryDropdown extends StatelessWidget {
     case 'diaper':
       recentStream = const DiaperHistoryStream();
       allTimeStream = const DiaperAllTimeStream();
+      additionalStream = const DiaperDiarrheaStream();
       break;
     case 'bottle':
       recentStream = const BottleHistoryStream();
@@ -57,7 +60,7 @@ class HistoryDropdown extends StatelessWidget {
                 children: <Widget>[
                   SizedBox(
                     height: 400, // TODO edit this to be sized based on space, not set value
-                    child: HistoryTabs(recentStream, allTimeStream)
+                    child: HistoryTabs(recentStream, allTimeStream, additionalStream)
                   ),
                 ],
               ),
@@ -65,21 +68,41 @@ class HistoryDropdown extends StatelessWidget {
   }
 }
 
-// The tab options inside history - recent and all-time
+// The tab options inside history - recent and all-time, and optional additionalStream
 // sources: https://docs.flutter.dev/cookbook/design/tabs
 // https://www.flutterbeads.com/change-tab-bar-color-in-flutter/
 class HistoryTabs extends StatelessWidget {
-  HistoryTabs(this.recentStream, this.allTimeStream, {super.key});
+  HistoryTabs(this.recentStream, this.allTimeStream, this.additionalStream, {super.key});
 
   var recentStream;
   var allTimeStream;
+  var additionalStream;
 
   @override
   Widget build(BuildContext context) {
+    
+    // Set up for an additional tab
+    int numTabs = 2;
+    List<Tab> tabs = const [
+      Tab(text: 'Recent'),
+      Tab(text: 'All-time'),
+    ];
+    List<Widget> tabBarView = [recentStream, allTimeStream];
+
+    if (additionalStream != null) {
+      numTabs = 3;
+      tabs = const [
+        Tab(text: 'Recent'),
+        Tab(text: 'All-time'),
+        Tab(text: 'Diarrhea'),
+      ];
+      tabBarView = [recentStream, allTimeStream, additionalStream];
+    }
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: DefaultTabController(
-        length: 2, // Number of tabs 
+        length: numTabs, // Number of tabs 
         child: Scaffold(
           appBar: AppBar(
             bottom: PreferredSize( // Need this to let us set colors for some reason 
@@ -91,10 +114,7 @@ class HistoryTabs extends StatelessWidget {
                 child: TabBar(
                   indicatorColor: Theme.of(context).colorScheme.primary, // Color of selected tab
                   labelColor: Theme.of(context).colorScheme.onSecondary, 
-                  tabs: const [
-                    Tab(text: 'Recent'),
-                    Tab(text: 'All-time'),
-                  ],
+                  tabs: tabs,
                 ),
               ),
             ),
@@ -103,11 +123,8 @@ class HistoryTabs extends StatelessWidget {
 
           // The stuff displayed when the tab is selected
           body: TabBarView( 
-            children: [
-              // Goes in order - first goes with first tab, second with second
-              recentStream,
-              allTimeStream,
-            ],
+            // Goes in order - first goes with first tab, second with second
+            children: tabBarView,
           ),
         ),
       ),

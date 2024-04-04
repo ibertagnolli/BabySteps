@@ -58,13 +58,16 @@ class _CreatePostState extends State<CreatePostPage> {
       'date': now,
       'title': title.text == '' ? null : title.text,
       'caption': caption.text == '' ? null : caption.text,
-      'child': currentUser.value!.currentBaby.value!
-          .name, //TODO: update this to be the baby you're posting
+      'child': [
+        currentUser.value!.currentBaby.value!.name
+      ], //TODO: update this to be the baby you're posting
       'image': filePath,
+      'likes': [],
+      'comments': [],
     };
 
-    await SocialDatabaseMethods()
-        .addPost(uploaddata, currentUser.value!.userDoc);
+    await SocialDatabaseMethods().addPost(
+        uploaddata, currentUser.value!.currentBaby.value!.collectionId);
     //once data has been added, update the card accordingly
   }
 

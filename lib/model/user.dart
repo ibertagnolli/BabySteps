@@ -9,15 +9,16 @@ class UserProfile {
   ValueNotifier<Baby?> currentBaby;
   // int currBabyIndex;
   List<Baby>? babies;
+  bool socialOnly;
 
-  UserProfile({
-    required this.name,
-    required this.email,
-    required this.uid,
-    required this.userDoc,
-    required this.currentBaby,
-    this.babies,
-  });
+  UserProfile(
+      {required this.name,
+      required this.email,
+      required this.uid,
+      required this.userDoc,
+      required this.currentBaby,
+      this.babies,
+      this.socialOnly = false});
 
   updateName(String name) {
     this.name = name;

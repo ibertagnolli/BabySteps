@@ -1,17 +1,26 @@
+import 'dart:js_interop';
+
+import 'package:babysteps/app/pages/social/social_database.dart';
+import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class Post extends StatefulWidget {
-  const Post(
+  Post(
       {super.key,
       required this.usersName,
       required this.timeStamp,
       required this.childName,
+      required this.postDoc,
+      required this.likes,
       this.title,
       this.caption,
       this.image});
   final String usersName;
   final String timeStamp;
   final String childName;
+  final String postDoc;
+  List<dynamic> likes;
   final String? title;
   final String? caption;
   final String? image;
@@ -22,11 +31,32 @@ class Post extends StatefulWidget {
 
 class _PostState extends State<Post> {
   //TODO: pull from database
-  bool postLiked = false;
+  late bool postLiked;
+
   void likeClicked() {
     setState(() {
       postLiked = !postLiked;
+      if (postLiked) {
+        widget.likes.add(
+            {'name': currentUser.value!.name, 'uid': currentUser.value!.uid});
+        SocialDatabaseMethods().addLikes(widget.likes,
+            currentUser.value!.currentBaby.value!.collectionId, widget.postDoc);
+      } else {
+        widget.likes
+            .removeWhere((like) => like['uid'] == currentUser.value!.uid);
+
+        SocialDatabaseMethods().addLikes(widget.likes,
+            currentUser.value!.currentBaby.value!.collectionId, widget.postDoc);
+      }
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    postLiked =
+        widget.likes.any((like) => like['uid'] == currentUser.value!.uid);
   }
 
   @override
@@ -78,7 +108,8 @@ class _PostState extends State<Post> {
               children: <Widget>[
                 IconButton(
                     //Todo navigate to a page to comment
-                    onPressed: () => debugPrint("comment"),
+                    onPressed: () => context.goNamed('/social/comments',
+                        queryParameters: {'postId': widget.postDoc}),
                     icon: const Icon(Icons.chat_bubble_outline)),
                 const SizedBox(width: 8),
                 IconButton(
@@ -90,9 +121,67 @@ class _PostState extends State<Post> {
                 const SizedBox(width: 8),
               ],
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                widget.likes.length == 1
+                    ? Text("liked by: ${widget.likes.length.toString()} person")
+                    : Text(
+                        "liked by: ${widget.likes.length.toString()} people"),
+                const SizedBox(width: 8),
+              ],
+            )
           ],
         ),
       ),
+    );
+  }
+}
+
+class Comment extends StatefulWidget {
+  const Comment({
+    super.key,
+    required this.name,
+    required this.timeStamp,
+    required this.comment,
+    required this.postDoc,
+  });
+  final String name;
+  final DateTime timeStamp;
+  final String comment;
+  final String postDoc;
+
+  @override
+  State<StatefulWidget> createState() => _CommentState();
+}
+
+class _CommentState extends State<Comment> {
+  @override
+  Widget build(BuildContext context) {
+    final cardWidth = MediaQuery.of(context).size.width;
+    //Update this to actually grab the initials from the user in the database, also this has a potential to break if the name is ""
+    String initials = widget.name.isEmpty ? "A" : widget.name[0];
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        ListTile(
+          leading: CircleAvatar(
+            backgroundColor: Theme.of(context).colorScheme.secondary,
+            //TODO: dynamic avatar with either image or initials
+            child: Text(initials),
+          ),
+          title: Row(children: [
+            Text(
+              "${widget.name}: ",
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Text(widget.comment)
+          ]),
+          subtitle: Text(widget.timeStamp.toString()),
+        ),
+        const Divider(),
+      ],
     );
   }
 }

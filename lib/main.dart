@@ -2,11 +2,14 @@ import 'package:babysteps/app/pages/calendar/calendar_landing.dart';
 import 'package:babysteps/app/pages/notes/notes.dart';
 import 'package:babysteps/app/pages/home/home.dart';
 import 'package:babysteps/app/pages/notes/notes_home.dart';
+import 'package:babysteps/app/pages/social/comments.dart';
 import 'package:babysteps/app/pages/social/new_post.dart';
 import 'package:babysteps/app/pages/tracking/diaper/diaper.dart';
 import 'package:babysteps/app/pages/tracking/feeding/bottleFeeding.dart';
 import 'package:babysteps/app/pages/tracking/feeding/breastFeeding.dart';
 import 'package:babysteps/app/pages/tracking/feeding/feeding.dart';
+import 'package:babysteps/app/pages/tracking/medical/medical.dart';
+import 'package:babysteps/app/pages/tracking/medical/vaccination/vaccinations.dart';
 import 'package:babysteps/app/pages/tracking/sleep/sleep.dart';
 import 'package:babysteps/app/pages/tracking/temperature/temperature.dart';
 import 'package:babysteps/app/pages/tracking/tracking_landing.dart';
@@ -37,6 +40,7 @@ import 'package:babysteps/app/pages/calendar/notifications.dart';
 //https://github.com/bizz84/nested_navigation_examples/blob/main/examples/gorouter/lib/main.dart
 
 bool loggedIn = false;
+bool hasBaby = false;
 ValueNotifier<UserProfile?> currentUser = ValueNotifier(null);
 //late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 void main() async {
@@ -77,17 +81,32 @@ void main() async {
                 collectionId: babyId,
                 dob: (doc2['DOB'] as Timestamp).toDate(),
                 name: doc2['Name'],
-                caregivers: doc2['Caregivers']));
+                caregivers: doc2['Caregivers'],
+                socialUsers: doc2['SocialUsers']));
           }
         }
 
-        currentUser.value = UserProfile(
+        hasBaby = babies.isNotEmpty;
+
+        try {
+          currentUser.value = UserProfile(
+              userDoc: doc[0].id,
+              uid: user.uid,
+              name: user.displayName ?? '',
+              email: user.email ?? '',
+              babies: babies,
+              currentBaby: ValueNotifier(babies.isNotEmpty ? babies[0] : null),
+              socialOnly: doc[0]['SocialOnly']);
+        } catch (e) {
+          currentUser.value = UserProfile(
             userDoc: doc[0].id,
             uid: user.uid,
             name: user.displayName ?? '',
             email: user.email ?? '',
             babies: babies,
-            currentBaby: ValueNotifier(babies.isNotEmpty ? babies[0] : null));
+            currentBaby: ValueNotifier(babies.isNotEmpty ? babies[0] : null),
+          );
+        }
       }
 
       print('User is signed in!');
@@ -174,8 +193,12 @@ final _shellNavigatorSocialKey =
 
 // the one and only GoRouter instance
 final goRouter = GoRouter(
-  //initialLocation: loggedIn ? '/tracking' : '/login', 
-  initialLocation: loggedIn ? '/home' : '/login', // TODO: put this back in when home page is interesting
+  initialLocation: loggedIn
+      ? hasBaby
+          ? '/tracking'
+          : '/login/signup/addBaby'
+      : '/login',
+  // initialLocation: loggedIn ? '/home' : '/login', // TODO: put this back in when home page is interesting
   navigatorKey: _rootNavigatorKey,
   routes: [
     GoRoute(
@@ -273,6 +296,16 @@ final goRouter = GoRouter(
                   path: 'temperature',
                   builder: (context, state) => const TemperaturePage(),
                 ),
+                // medical routes
+                GoRoute(
+                  path: 'medical',
+                  builder: (context, state) => const MedicalPage(),
+                  routes: [
+                    GoRoute(
+                        path: 'vaccinations',
+                        builder: (context, state) => const VaccinationsPage()),
+                  ]
+                ),
               ],
             ),
           ],
@@ -320,6 +353,15 @@ final goRouter = GoRouter(
                     path: 'newPost',
                     builder: (context, state) {
                       return const CreatePostPage();
+                    },
+                  ),
+                  GoRoute(
+                    path: 'comments',
+                    name: '/social/comments',
+                    builder: (context, state) {
+                      return CommentsPage(
+                        state.uri.queryParameters['postId'] ?? '',
+                      );
                     },
                   ),
                 ]),

@@ -25,7 +25,7 @@ class WeightDatabaseMethods {
   }
 
   // This method gets the entries from the weight collection and orders them so the most recent entry is document[0].
-  Future<QuerySnapshot> getLatestWeightInfo(String babyDoc) async {
+  Future<QuerySnapshot> getWeightInfo(String babyDoc) async {
     return await db
         .collection('Babies')
         .doc(babyDoc)

@@ -1,5 +1,6 @@
 import 'package:babysteps/app/pages/tracking/diaper/diaper_database.dart';
 import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
+import 'package:babysteps/app/pages/tracking/medical/medical_database.dart';
 import 'package:babysteps/app/pages/tracking/tracking_widgets.dart';
 import 'package:babysteps/app/pages/tracking/sleep/sleep_database.dart';
 import 'package:babysteps/app/pages/tracking/temperature/temperature_database.dart';
@@ -30,11 +31,11 @@ class _TrackingPageState extends State<TrackingPage> {
         WeightDatabaseMethods().getStream(babyDoc);
     Stream<QuerySnapshot> tempStream =
         TemperatureDatabaseMethods().getStream(babyDoc);
+    Stream<QuerySnapshot> medicalStream =
+        MedicalDatabaseMethods().getStream(babyDoc);
 
-    return
-        //   // Clickable TrackingCards to each tracking page
-        //   body:
-        SingleChildScrollView(
+    // Clickable TrackingCards to each tracking page
+    return SingleChildScrollView(
       child: Center(
         child: Padding(
           padding: const EdgeInsets.only(top: 32),
@@ -65,6 +66,7 @@ class _TrackingPageState extends State<TrackingPage> {
                                   WeightDatabaseMethods().getStream(babyDoc);
                               tempStream = TemperatureDatabaseMethods()
                                   .getStream(babyDoc);
+                              medicalStream = MedicalDatabaseMethods().getStream(babyDoc);
                             });
                           },
                           dropdownMenuEntries:
@@ -96,6 +98,9 @@ class _TrackingPageState extends State<TrackingPage> {
                 '/tracking/temperature',
                 stream: tempStream,
               ),
+              TrackingStream(const Icon(Icons.medical_services, size: 40),
+                  'Medical', '/tracking/medical',
+                  stream: medicalStream),
             ],
           ),
         ),
