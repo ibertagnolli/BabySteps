@@ -59,4 +59,47 @@ class MedicalDatabaseMethods{
         .doc(docId)
         .set(updatedUserInfoMap);
   }
+
+  // MEDICATION METHODS
+
+  // Adds an entry to the medication collection.
+  Future addMedication(Map<String, dynamic> userInfoMap, String babyDoc) async {
+    return await db
+        .collection('Babies')
+        .doc(babyDoc)
+        .collection('Vaccines')
+        .add(userInfoMap);
+  }
+
+  // Returns all entries in the medication collection.
+  Stream<QuerySnapshot> getMedicationStream(String babyDoc) {
+    return FirebaseFirestore.instance
+        .collection('Babies')
+        .doc(babyDoc)
+        .collection('Vaccines')
+        .orderBy('date', descending: true)
+        .snapshots();
+  }
+
+  // Updates the Medication card on the Medical landing page.
+  Stream<QuerySnapshot> getLatestMedicationUpdate(String babyDoc) {
+    return db
+        .collection('Babies')
+        .doc(babyDoc)
+        .collection('Vaccines')
+        .orderBy('date', descending: true)
+        .limit(1)
+        .snapshots();
+  }
+
+  // Updates a medication entry in the database.
+  Future updateMedication(var docId, Map<String, dynamic> updatedUserInfoMap,
+      String babyDoc) async {
+    return await db
+        .collection('Babies')
+        .doc(babyDoc)
+        .collection('Vaccines')
+        .doc(docId)
+        .set(updatedUserInfoMap);
+  }
 }
