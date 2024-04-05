@@ -19,11 +19,11 @@ class _AddMedicationCardState extends State<AddMedicationCard> {
   TextEditingController medName = TextEditingController();
   TextEditingController reaction = TextEditingController();
   TextEditingController date = TextEditingController(
-      text: DateFormat("MM/dd/yyyy HH:mm").format(DateTime.now()));
+      text: DateFormat("MM/dd/yyyy hh:mm a").format(DateTime.now()));
 
   /// Saves a new medication entry in the Firestore database.
   saveNewMedication() async {
-    DateTime savedDate = DateFormat("MM/dd/yyyy HH:mm").parse(date.text);
+    DateTime savedDate = DateFormat("MM/dd/yyyy hh:mm a").parse(date.text);
     
     // Write medication data to database
     Map<String, dynamic> uploaddata = {

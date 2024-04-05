@@ -62,7 +62,7 @@ class _MedicineStreamState extends State<MedicineStream> {
                           spacing: 16.0,
                           children: [
                             Text(
-                              DateFormat('MM/dd/yyyy').format(data['date'].toDate()),
+                              DateFormat('MM/dd/yyyy  hh:mm a').format(data['date'].toDate()),
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 24,
@@ -142,7 +142,7 @@ class _MedicineStreamState extends State<MedicineStream> {
                         title: Wrap(
                           spacing: 16.0,
                           children: [
-                            Text(DateFormat('MM/dd/yyyy').format(data['date'].toDate())),
+                            Text(DateFormat('MM/dd/yyyy hh:mm a').format(data['date'].toDate())),
                             Text(
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
