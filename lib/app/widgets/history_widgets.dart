@@ -504,8 +504,8 @@ class _HistoryTable5Cols extends State<HistoryTable5Cols> {
                         padding: const EdgeInsets.only(right: 15),
                         child: ElevatedButton(
                           onPressed: () async {
-                            if(dataType == "Bottle") {
-                              await FeedingDatabaseMethods().deleteFeeding(
+                            if(dataType == "Diaper") {
+                              await DiaperDatabaseMethods().deleteDiaper(
                                 docId,
                                 currentUser.value!.currentBaby.value!
                                     .collectionId);
