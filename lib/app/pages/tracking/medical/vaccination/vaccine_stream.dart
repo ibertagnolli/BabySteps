@@ -23,6 +23,7 @@ class _VaccineStreamState extends State<VaccineStream> {
       'vaccine': data['vaccine'],
       'date': data['date'],
       'reaction': reactionController.text,
+      'type': 'vaccine',
     };
 
     // Add a new vaccine if the docId isn't specified (this shouldn't happen). 

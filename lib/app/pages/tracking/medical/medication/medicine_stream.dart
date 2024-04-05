@@ -23,6 +23,7 @@ class _MedicineStreamState extends State<MedicineStream> {
       'medication': data['medication'],
       'date': data['date'],
       'reaction': reactionController.text,
+      'type': 'medication',
     };
 
     // Add a new medication if the docId isn't specified (this shouldn't happen). 
