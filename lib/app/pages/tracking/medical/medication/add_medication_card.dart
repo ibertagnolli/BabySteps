@@ -25,11 +25,12 @@ class _AddMedicationCardState extends State<AddMedicationCard> {
   saveNewMedication() async {
     DateTime savedDate = DateFormat("MM/dd/yyyy HH:mm").parse(date.text);
     
-    // Write weight data to database
+    // Write medication data to database
     Map<String, dynamic> uploaddata = {
       'medication': medName.text,
       'reaction': reaction.text,
       'date': savedDate,
+      'type': 'medication',
     };
     await MedicalDatabaseMethods().addMedication(
         uploaddata, currentUser.value!.currentBaby.value!.collectionId);

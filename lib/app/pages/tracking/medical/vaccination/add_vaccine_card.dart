@@ -27,11 +27,12 @@ class _AddVaccineCardState extends State<AddVaccineCard> {
     // Add the time so Medical tracking card shows time of latest update
     DateTime savedDateWithTime = DateTime(savedDate.year, savedDate.month, savedDate.day, DateTime.now().hour, DateTime.now().minute);
 
-    // Write weight data to database
+    // Write vaccine data to database
     Map<String, dynamic> uploaddata = {
       'vaccine': vaccName.text,
       'reaction': reaction.text,
       'date': savedDateWithTime,
+      'type': 'vaccine',
     };
     await MedicalDatabaseMethods().addVaccine(
         uploaddata, currentUser.value!.currentBaby.value!.collectionId);

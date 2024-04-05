@@ -11,7 +11,7 @@ class MedicalDatabaseMethods{
     return db
         .collection("Babies")
         .doc(babyDoc)
-        .collection("Vaccines")
+        .collection("Medical")
         .orderBy('date', descending: true)
         .limit(1)
         .snapshots();
@@ -24,7 +24,7 @@ class MedicalDatabaseMethods{
     return await db
         .collection('Babies')
         .doc(babyDoc)
-        .collection('Vaccines')
+        .collection('Medical')
         .add(userInfoMap);
   }
 
@@ -33,7 +33,8 @@ class MedicalDatabaseMethods{
     return FirebaseFirestore.instance
         .collection('Babies')
         .doc(babyDoc)
-        .collection('Vaccines')
+        .collection('Medical')
+        .where('type', isEqualTo: 'vaccine')
         .orderBy('date', descending: true)
         .snapshots();
   }
@@ -43,7 +44,8 @@ class MedicalDatabaseMethods{
     return db
         .collection('Babies')
         .doc(babyDoc)
-        .collection('Vaccines')
+        .collection('Medical')
+        .where('type', isEqualTo: 'vaccine')
         .orderBy('date', descending: true)
         .limit(1)
         .snapshots();
@@ -55,7 +57,7 @@ class MedicalDatabaseMethods{
     return await db
         .collection('Babies')
         .doc(babyDoc)
-        .collection('Vaccines')
+        .collection('Medical')
         .doc(docId)
         .set(updatedUserInfoMap);
   }
@@ -67,7 +69,7 @@ class MedicalDatabaseMethods{
     return await db
         .collection('Babies')
         .doc(babyDoc)
-        .collection('Medications')
+        .collection('Medical')
         .add(userInfoMap);
   }
 
@@ -76,7 +78,8 @@ class MedicalDatabaseMethods{
     return FirebaseFirestore.instance
         .collection('Babies')
         .doc(babyDoc)
-        .collection('Medications')
+        .collection('Medical')
+        .where('type', isEqualTo: 'medication')
         .orderBy('date', descending: true)
         .limit(10)
         .snapshots();
@@ -87,7 +90,8 @@ class MedicalDatabaseMethods{
     return db
         .collection('Babies')
         .doc(babyDoc)
-        .collection('Medications')
+        .collection('Medical')
+        .where('type', isEqualTo: 'medication')
         .orderBy('date', descending: true)
         .limit(1)
         .snapshots();
@@ -99,7 +103,7 @@ class MedicalDatabaseMethods{
     return await db
         .collection('Babies')
         .doc(babyDoc)
-        .collection('Medications')
+        .collection('Medical')
         .doc(docId)
         .set(updatedUserInfoMap);
   }
