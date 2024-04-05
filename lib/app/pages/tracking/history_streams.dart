@@ -131,7 +131,7 @@ class _BottleHistoryStreamState extends State<BottleHistoryStream> {
         }
 
         // Make a table with the retrieved data
-        return HistoryTable4Cols(rows, "Amount", "Bottle Type");
+        return HistoryTable4Cols("Bottle", rows, "Amount", "Bottle Type");
       },
     );
   }
@@ -364,7 +364,7 @@ class _DiaperHistoryStreamState extends State<DiaperHistoryStream> {
         }
 
         // Make a table with the retrieved data
-        return HistoryTable4Cols(rows, "Diaper Type", "Diaper Rash?");
+        return HistoryTable4Cols("Diaper", rows, "Diaper Type", "Diaper Rash?");
       },
     );
   }

@@ -1,5 +1,7 @@
 import 'package:babysteps/app/pages/tracking/additional_streams.dart';
+import 'package:babysteps/app/pages/tracking/diaper/diaper_database.dart';
 import 'package:babysteps/app/widgets/styles.dart';
+import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/pages/tracking/history_streams.dart';
 import 'package:babysteps/app/pages/tracking/all_time_history_streams.dart';
@@ -323,11 +325,12 @@ class HistoryTable3Cols extends StatelessWidget {
 
 // Recent history table with 4 columns, column titles, and data filled in
 class HistoryTable4Cols extends StatefulWidget {
+  String dataType;
   var rows;
   String col1Name;
   String col2Name;
 
-  HistoryTable4Cols(this.rows, this.col1Name, this.col2Name, {super.key});
+  HistoryTable4Cols(this.dataType, this.rows, this.col1Name, this.col2Name, {super.key});
 
   @override
   State<HistoryTable4Cols> createState() => _HistoryTable4Cols();
@@ -335,7 +338,20 @@ class HistoryTable4Cols extends StatefulWidget {
 
 class _HistoryTable4Cols extends State<HistoryTable4Cols> {
 
-  void deleteRow() {
+  void deleteDiaperRow(String date, String time, String data1, String data2) {
+    Map<String, dynamic> uploaddata = {
+      'date': DateTime.now(),
+      'diarrhea': activeButton,
+      'rash': diaperRash,
+      'type' : data1,
+    };
+
+    await DiaperDatabaseMethods()
+        .deleteDiaper(uploaddata, currentUser.value!.currentBaby.value!.collectionId);
+
+  }
+
+  void deleteRow(String dataType, String date, String time, String data1, String data2) {
     showDialog(
         context: context,
         builder: (context) {
@@ -359,13 +375,22 @@ class _HistoryTable4Cols extends State<HistoryTable4Cols> {
                       Padding(
                         padding: const EdgeInsets.only(right: 15),
                         child: ElevatedButton(
-                          onPressed: () {print("---yes, delete");}, 
+                          onPressed: () {
+                            if(dataType == "Diaper") {
+                              deleteDiaperRow(date, time, data1, data2);
+                            } else {
+                              // deleteBottleRow();
+                              print("---yes, delete");
+                            }
+                          }, 
                           style: blueButton(context),
                           child: const Text('Yes'),
                         ),
                       ),                      
                       ElevatedButton(
-                        onPressed: () {print("---no, don't delete");}, 
+                        onPressed: () {
+                          Navigator.of(context, rootNavigator: true).pop();
+                        },
                         style: blueButton(context),
                         child: const Text('No'),
                       )
@@ -434,7 +459,7 @@ class _HistoryTable4Cols extends State<HistoryTable4Cols> {
                   DataCell(Text(row.data2))
                 ],
                 onLongPress: () {
-                  deleteRow();
+                  deleteRow(widget.dataType, row.day, row.time, row.data1, row.data2);
                 },
               ),
           ],
