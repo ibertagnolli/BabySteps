@@ -366,7 +366,7 @@ class _DiaperHistoryStreamState extends State<DiaperHistoryStream> {
         }
 
         // Make a table with the retrieved data
-        return HistoryTable5Cols("Diaper", rows, "Diaper Type", "Diaper Rash?");
+        return HistoryTable5Cols("Diaper", rows, "Diaper Type", "Diaper Rash?", "Diarrhea?");
       },
     );
   }

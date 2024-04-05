@@ -468,8 +468,9 @@ class HistoryTable5Cols extends StatefulWidget {
   var rows;
   String col1Name;
   String col2Name;
+  String col3Name;
 
-  HistoryTable5Cols(this.dataType, this.rows, this.col1Name, this.col2Name, {super.key});
+  HistoryTable5Cols(this.dataType, this.rows, this.col1Name, this.col2Name, this.col3Name, {super.key});
 
   @override
   State<HistoryTable5Cols> createState() => _HistoryTable5Cols();
@@ -576,6 +577,14 @@ class _HistoryTable5Cols extends State<HistoryTable5Cols> {
                 ),
               ),
             ),
+            DataColumn(
+              label: Expanded(
+                child: Text(
+                  widget.col3Name,
+                  style: const TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
+            ),
           ],
           // Table rows - dynamic - For each row we collected data for, create a DataCell for it
           // TODO: Some sort of "no history yet" message if there are no entries
@@ -586,7 +595,8 @@ class _HistoryTable5Cols extends State<HistoryTable5Cols> {
                   DataCell(Text(row.day)),
                   DataCell(Text(row.time)),
                   DataCell(Text(row.data1)),
-                  DataCell(Text(row.data2))
+                  DataCell(Text(row.data2)),
+                  DataCell(Text(row.data3)),
                 ],
                 onLongPress: () {
                   deleteRow(widget.dataType, row.docId);
