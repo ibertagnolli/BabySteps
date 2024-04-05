@@ -327,7 +327,7 @@ class _DiaperHistoryStreamState extends State<DiaperHistoryStream> {
       .collection("Diaper")
       .orderBy('date', descending: true)
       .limit(
-          5) // TODO: How many do we want? Specific number? Any from "this week"?
+          10) // TODO: How many do we want? Specific number? Any from "this week"?
       .snapshots();
 
   @override
@@ -347,7 +347,7 @@ class _DiaperHistoryStreamState extends State<DiaperHistoryStream> {
         var lastDiaperDocs = snapshot.data!.docs;
 
         // List of RowData objects holding data for the table
-        List<RowData4Cols> rows = [];
+        List<RowData5Cols> rows = [];
 
         // For however many most recent docs we have, build a row for it
         for (var doc in lastDiaperDocs) {
@@ -359,12 +359,14 @@ class _DiaperHistoryStreamState extends State<DiaperHistoryStream> {
           String diaperType = doc['type'];
           bool diaperRashBool = doc['rash'];
           String diaperRash = diaperRashBool ? "Yes" : "No";
+          bool diaperDiarrheaBool = doc['diarrhea'];
+          String diaperDiarrhea = diaperDiarrheaBool ? "Yes" : "No";
 
-          rows.add(RowData4Cols(day, time, diaperType, diaperRash, doc.id));
+          rows.add(RowData5Cols(day, time, diaperType, diaperRash, diaperDiarrhea, doc.id));
         }
 
         // Make a table with the retrieved data
-        return HistoryTable4Cols("Diaper", rows, "Diaper Type", "Diaper Rash?");
+        return HistoryTable5Cols("Diaper", rows, "Diaper Type", "Diaper Rash?");
       },
     );
   }
