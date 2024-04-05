@@ -20,7 +20,7 @@ class _AddTemperatureCardState extends State<AddTemperatureCard> {
 
   TextEditingController temp = TextEditingController();
   TextEditingController date = TextEditingController(
-      text: DateFormat("MM/dd/yyyy HH:mm").format(DateTime
+      text: DateFormat("MM/dd/yyyy hh:mm a").format(DateTime
           .now())); // TODO is 24hr time ok? this is hard-coded, so we would need a bool if user can customize it
 
   /// Saves a new Temperature entry in the Firestore database.
