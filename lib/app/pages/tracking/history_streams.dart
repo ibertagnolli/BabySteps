@@ -127,7 +127,7 @@ class _BottleHistoryStreamState extends State<BottleHistoryStream> {
           String bottleType = doc['bottleType'];
           String amount = doc['ounces'] + " oz";
 
-          rows.add(RowData4Cols(day, time, amount, bottleType));
+          rows.add(RowData4Cols(day, time, amount, bottleType, doc.id));
         }
 
         // Make a table with the retrieved data
@@ -360,7 +360,7 @@ class _DiaperHistoryStreamState extends State<DiaperHistoryStream> {
           bool diaperRashBool = doc['rash'];
           String diaperRash = diaperRashBool ? "Yes" : "No";
 
-          rows.add(RowData4Cols(day, time, diaperType, diaperRash));
+          rows.add(RowData4Cols(day, time, diaperType, diaperRash, doc.id));
         }
 
         // Make a table with the retrieved data

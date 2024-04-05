@@ -102,4 +102,18 @@ class FeedingDatabaseMethods {
         .orderBy('date', descending: true)
         .get();
   }
+
+  // Deletes a feeding entry identified by docId
+  Future deleteFeeding(var docId, String babyDoc) async {
+    return await db
+        .collection('Babies')
+        .doc(babyDoc)
+        .collection('Feeding')
+        .doc(docId)
+        .delete()
+        .then(
+          (doc) => print("Document deleted"),
+          onError: (e) => print("Error deleting document $e"),
+        );
+  }
 }

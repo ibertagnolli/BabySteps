@@ -1,10 +1,12 @@
 import 'package:babysteps/app/pages/tracking/additional_streams.dart';
 import 'package:babysteps/app/pages/tracking/diaper/diaper_database.dart';
+import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
 import 'package:babysteps/app/widgets/styles.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/pages/tracking/history_streams.dart';
 import 'package:babysteps/app/pages/tracking/all_time_history_streams.dart';
+import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'dart:core';
 
@@ -337,21 +339,7 @@ class HistoryTable4Cols extends StatefulWidget {
 }
 
 class _HistoryTable4Cols extends State<HistoryTable4Cols> {
-
-  void deleteDiaperRow(String date, String time, String data1, String data2) {
-    Map<String, dynamic> uploaddata = {
-      'date': DateTime.now(),
-      'diarrhea': activeButton,
-      'rash': diaperRash,
-      'type' : data1,
-    };
-
-    await DiaperDatabaseMethods()
-        .deleteDiaper(uploaddata, currentUser.value!.currentBaby.value!.collectionId);
-
-  }
-
-  void deleteRow(String dataType, String date, String time, String data1, String data2) {
+  void deleteRow(String dataType, String docId) {
     showDialog(
         context: context,
         builder: (context) {
@@ -375,13 +363,16 @@ class _HistoryTable4Cols extends State<HistoryTable4Cols> {
                       Padding(
                         padding: const EdgeInsets.only(right: 15),
                         child: ElevatedButton(
-                          onPressed: () {
-                            if(dataType == "Diaper") {
-                              deleteDiaperRow(date, time, data1, data2);
+                          onPressed: () async {
+                            if(dataType == "Bottle") {
+                              await FeedingDatabaseMethods().deleteFeeding(
+                                docId,
+                                currentUser.value!.currentBaby.value!
+                                    .collectionId);
                             } else {
-                              // deleteBottleRow();
-                              print("---yes, delete");
+                              print("Error: Trying to delete the wrong dataType.");
                             }
+                            Navigator.of(context, rootNavigator: true).pop();
                           }, 
                           style: blueButton(context),
                           child: const Text('Yes'),
@@ -459,7 +450,7 @@ class _HistoryTable4Cols extends State<HistoryTable4Cols> {
                   DataCell(Text(row.data2))
                 ],
                 onLongPress: () {
-                  deleteRow(widget.dataType, row.day, row.time, row.data1, row.data2);
+                  deleteRow(widget.dataType, row.docId);
                 },
               ),
           ],
@@ -575,13 +566,14 @@ class RowData3Cols<T1, T2, T3> {
 }
 
 // Represents the data shown in the history table when we need 4 columns
-class RowData4Cols<T1, T2, T3, T4> {
+class RowData4Cols<T1, T2, T3, T4, T5> {
   T1 day;
   T2 time;
   T3 data1;
   T4 data2;
+  T5 docId;
 
-  RowData4Cols(this.day, this.time, this.data1, this.data2);
+  RowData4Cols(this.day, this.time, this.data1, this.data2, this.docId);
 }
 
 // Represents the data shown in the history table when we need 6 columns
