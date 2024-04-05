@@ -1,10 +1,10 @@
 import 'package:babysteps/app/pages/tracking/additional_streams.dart';
+import 'package:babysteps/app/widgets/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/pages/tracking/history_streams.dart';
 import 'package:babysteps/app/pages/tracking/all_time_history_streams.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-
-
+import 'dart:core';
 
 // The history dropdown widget
 class HistoryDropdown extends StatelessWidget {
@@ -329,6 +329,49 @@ class HistoryTable4Cols extends StatelessWidget {
   String col1Name;
   String col2Name;
 
+  void deleteRow(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 15),
+                    child: Text(
+                      "Do you want to delete this data entry?"
+                    ),
+                  ),
+                  // Buttons
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 15),
+                        child: ElevatedButton(
+                          onPressed: () {print("---yes, delete");}, 
+                          style: blueButton(context),
+                          child: const Text('Yes'),
+                        ),
+                      ),                      
+                      ElevatedButton(
+                        onPressed: () {print("---no, don't delete");}, 
+                        style: blueButton(context),
+                        child: const Text('No'),
+                      )
+                    ],
+                  ),
+                ],)
+            )
+          );
+        }
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // Source: https://api.flutter.dev/flutter/material/DataTable-class.html
@@ -384,6 +427,9 @@ class HistoryTable4Cols extends StatelessWidget {
                   DataCell(Text(row.data1)),
                   DataCell(Text(row.data2))
                 ],
+                onLongPress: () {
+                  deleteRow(context);
+                },
               ),
           ],
         ),
