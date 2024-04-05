@@ -322,14 +322,20 @@ class HistoryTable3Cols extends StatelessWidget {
 }
 
 // Recent history table with 4 columns, column titles, and data filled in
-class HistoryTable4Cols extends StatelessWidget {
-  HistoryTable4Cols(this.rows, this.col1Name, this.col2Name, {super.key});
-
+class HistoryTable4Cols extends StatefulWidget {
   var rows;
   String col1Name;
   String col2Name;
 
-  void deleteRow(BuildContext context) {
+  HistoryTable4Cols(this.rows, this.col1Name, this.col2Name, {super.key});
+
+  @override
+  State<HistoryTable4Cols> createState() => _HistoryTable4Cols();
+}
+
+class _HistoryTable4Cols extends State<HistoryTable4Cols> {
+
+  void deleteRow() {
     showDialog(
         context: context,
         builder: (context) {
@@ -402,7 +408,7 @@ class HistoryTable4Cols extends StatelessWidget {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  col1Name,
+                  widget.col1Name,
                   style: const TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
@@ -410,7 +416,7 @@ class HistoryTable4Cols extends StatelessWidget {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  col2Name,
+                  widget.col2Name,
                   style: const TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
@@ -419,7 +425,7 @@ class HistoryTable4Cols extends StatelessWidget {
           // Table rows - dynamic - For each row we collected data for, create a DataCell for it
           // TODO: Some sort of "no history yet" message if there are no entries
           rows: <DataRow>[
-            for (var row in rows)
+            for (var row in widget.rows)
               DataRow(
                 cells: <DataCell>[
                   DataCell(Text(row.day)),
@@ -428,7 +434,7 @@ class HistoryTable4Cols extends StatelessWidget {
                   DataCell(Text(row.data2))
                 ],
                 onLongPress: () {
-                  deleteRow(context);
+                  deleteRow();
                 },
               ),
           ],
