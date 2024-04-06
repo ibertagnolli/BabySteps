@@ -15,27 +15,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 
   int numReminders = 0;
-
+ 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        title: const Text('Home'),
-        leading: const Padding(
-          padding: EdgeInsets.all(8),
-          child: Image(
-            image: AssetImage('assets/BabyStepsLogo.png'),
-          ),
-        ),
-        actions: [
-          IconButton(
-              onPressed: () => context.go('/profile'),
-              icon: const Icon(Icons.person))
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Center(
+    return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -84,8 +67,6 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       
-      ),
-      ),   
-    );
+      );
   }
 }
