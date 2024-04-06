@@ -110,14 +110,14 @@ class MedicationStream extends StatefulWidget {
 }
 
 class _MedicationStreamState extends State<MedicationStream> {
-  final Stream<QuerySnapshot> _bottleFeedingStream = FeedingDatabaseMethods()
-      .getBottleFeedingStream(
+  final Stream<QuerySnapshot> _medicationStream = MedicalDatabaseMethods()
+      .getLatestMedicationUpdate(
           currentUser.value!.currentBaby.value!.collectionId);
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _bottleFeedingStream,
+      stream: _medicationStream,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
           return const Text('Something went wrong');
@@ -128,12 +128,11 @@ class _MedicationStreamState extends State<MedicationStream> {
         }
 
         // An array of documents, but our query only returns an array of one document
-        var lastFeedDoc = snapshot.data!.docs;
+        var lastMedicationDoc = snapshot.data!.docs;
 
-        String lastBottleAmount = 'None';
-
-        if (lastFeedDoc.isNotEmpty) {
-          lastBottleAmount = lastFeedDoc[0]['ounces'] + ' oz';
+        String lastUpdateOn = 'Never';
+        if (lastMedicationDoc.isNotEmpty) {
+          lastUpdateOn = DateFormat('MM/dd/yyyy').format(lastMedicationDoc[0]['date'].toDate());
         }
 
         // Returns the medications card/button
@@ -141,8 +140,8 @@ class _MedicationStreamState extends State<MedicationStream> {
             Icon(Icons.medication_liquid,
                 size: 40, color: Theme.of(context).colorScheme.onPrimary),
             "Medications",
-            "Last amount: $lastBottleAmount",
-            () => context.go('/tracking/feeding/bottleFeeding'),
+            "Last amount: $lastUpdateOn",
+            () => context.go('/tracking/medical/medications'),
             Theme.of(context));
       },
     );

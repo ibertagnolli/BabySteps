@@ -5,40 +5,40 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-/// Realtime reads to load all received vaccines for the Received Vaccines card.
-class VaccineStream extends StatefulWidget {
-  const VaccineStream({super.key});
+/// Realtime reads to load all received medications for the Recent Medications card.
+class MedicineStream extends StatefulWidget {
+  const MedicineStream({super.key});
 
   @override
-  _VaccineStreamState createState() => _VaccineStreamState();
+  _MedicineStreamState createState() => _MedicineStreamState();
 }
 
-class _VaccineStreamState extends State<VaccineStream> {
+class _MedicineStreamState extends State<MedicineStream> {
   TextEditingController reactionController = TextEditingController();
 
   /// Saves reaction data to the database
   void saveReaction(Map<String, dynamic> data) async {
     String docId = data['docId'];
     Map<String, dynamic> uploaddata = {
-      'vaccine': data['vaccine'],
+      'medication': data['medication'],
       'date': data['date'],
       'reaction': reactionController.text,
-      'type': 'vaccine',
+      'type': 'medication',
     };
 
-    // Add a new vaccine if the docId isn't specified (this shouldn't happen). 
+    // Add a new medication if the docId isn't specified (this shouldn't happen). 
     // Else, update the existing Document.
     if (docId == "") {
       await MedicalDatabaseMethods()
-          .addVaccine(uploaddata, currentUser.value!.currentBaby.value!.collectionId);
+          .addMedication(uploaddata, currentUser.value!.currentBaby.value!.collectionId);
     } else {
-      await MedicalDatabaseMethods().updateVaccine(docId, uploaddata,
+      await MedicalDatabaseMethods().updateMedication(docId, uploaddata,
           currentUser.value!.currentBaby.value!.collectionId);
     }
   }
 
-  /// Opens a readonly vaccine dialog box with vaccine information
-  void editVaccDialog(Map<String, dynamic> data) {
+  /// Opens a readonly vaccine dialog box with medication information
+  void editMedicationDialog(Map<String, dynamic> data) {
     // Display "None" if no reaction is recorded.
     String reactionToDisplay = data['reaction'];
     if(reactionToDisplay == "") {
@@ -58,19 +58,19 @@ class _VaccineStreamState extends State<VaccineStream> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        // Name and date of vaccine
+                        // Name and date of medication
                         Wrap(
                           spacing: 16.0,
                           children: [
                             Text(
-                              DateFormat('MM/dd/yyyy').format(data['date'].toDate()),
+                              DateFormat('MM/dd/yyyy  hh:mm a').format(data['date'].toDate()),
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 24,
                               ),
                             ),
                             Text(
-                              "${data['vaccine']}",
+                              "${data['medication']}",
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 24,
@@ -114,7 +114,7 @@ class _VaccineStreamState extends State<VaccineStream> {
   @override
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> vaccineStream = MedicalDatabaseMethods()
-      .getVaccineStream(currentUser.value!.currentBaby.value!.collectionId);
+      .getMedicationStream(currentUser.value!.currentBaby.value!.collectionId);
 
     return StreamBuilder<QuerySnapshot>(
       stream: vaccineStream,
@@ -128,14 +128,14 @@ class _VaccineStreamState extends State<VaccineStream> {
         }
 
         // An array of documents
-        var allVaccineDocs = snapshot.data!.docs;
+        var allMedicationDocs = snapshot.data!.docs;
 
-        if (allVaccineDocs.isEmpty) {
-          return const Text("No vaccines recorded.");
+        if (allMedicationDocs.isEmpty) {
+          return const Text("No medications recently recorded.");
         } else {
           return ListView(
             shrinkWrap: true,
-            children: allVaccineDocs
+            children: allMedicationDocs
                 .map((DocumentSnapshot document) {
                       Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
                       data['docId'] = document.id;
@@ -143,11 +143,11 @@ class _VaccineStreamState extends State<VaccineStream> {
                         title: Wrap(
                           spacing: 16.0,
                           children: [
-                            Text(DateFormat('MM/dd/yyyy').format(data['date'].toDate())),
+                            Text(DateFormat('MM/dd/yyyy hh:mm a').format(data['date'].toDate())),
                             Text(
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              "${data['vaccine']}",
+                              "${data['medication']}",
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                               ),
@@ -157,7 +157,7 @@ class _VaccineStreamState extends State<VaccineStream> {
                         subtitle: data['reaction'] == "" ? null : 
                           Text(data['reaction']),
                         onTap: () {
-                          editVaccDialog(data);
+                          editMedicationDialog(data);
                         },
                       );
                     })

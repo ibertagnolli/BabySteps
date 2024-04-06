@@ -1,5 +1,3 @@
-// import 'dart:js_interop'; 
-
 import 'package:babysteps/app/pages/social/social_database.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';

@@ -177,14 +177,18 @@ class _AddEventButtonState extends State<AddEventButton> {
                               ),
 
                               // Submit button
-                              ElevatedButton(
+                              Padding(
+                                padding: EdgeInsets.only(top: 15),
+                                child: ElevatedButton(
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
                                       saveNewEvent();
                                       Navigator.pop(context);
                                     }
                                   },
-                                  child: const Text("Submit"))
+                                  child: const Text("Submit")
+                                ),
+                              ),
                             ],
                           )),
                     ));

@@ -3,52 +3,50 @@ import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-/// The expandable card that lets users add a vaccine.
-class AddVaccineCard extends StatefulWidget {
-  const AddVaccineCard({super.key});
+/// The expandable card that lets users add a medication.
+class AddMedicationCard extends StatefulWidget {
+  const AddMedicationCard({super.key});
 
   @override
-  State<StatefulWidget> createState() => _AddVaccineCardState();
+  State<StatefulWidget> createState() => _AddMedicationCardState();
 }
 
-class _AddVaccineCardState extends State<AddVaccineCard> {
+class _AddMedicationCardState extends State<AddMedicationCard> {
   // The global key uniquely identifies the Form widget and allows
   // validation of the form.
   final _formKey = GlobalKey<FormState>();
 
-  TextEditingController vaccName = TextEditingController();
+  TextEditingController medName = TextEditingController();
   TextEditingController reaction = TextEditingController();
   TextEditingController date = TextEditingController(
-      text: DateFormat("MM/dd/yyyy").format(DateTime.now()));
+      text: DateFormat("MM/dd/yyyy hh:mm a").format(DateTime.now()));
 
-  /// Saves a new vaccine entry in the Firestore database.
-  saveNewVaccine() async {
-    DateTime savedDate = DateFormat("MM/dd/yyyy").parse(date.text);
-    // Add the time so Medical tracking card shows time of latest update
-    DateTime savedDateWithTime = DateTime(savedDate.year, savedDate.month, savedDate.day, DateTime.now().hour, DateTime.now().minute);
-
-    // Write vaccine data to database
+  /// Saves a new medication entry in the Firestore database.
+  saveNewMedication() async {
+    DateTime savedDate = DateFormat("MM/dd/yyyy hh:mm a").parse(date.text);
+    
+    // Write medication data to database
     Map<String, dynamic> uploaddata = {
-      'vaccine': vaccName.text,
+      'medication': medName.text,
       'reaction': reaction.text,
-      'date': savedDateWithTime,
-      'type': 'vaccine',
+      'date': savedDate,
+      'type': 'medication',
     };
-    await MedicalDatabaseMethods().addVaccine(
+    await MedicalDatabaseMethods().addMedication(
         uploaddata, currentUser.value!.currentBaby.value!.collectionId);
 
     // Clear fields for next entry
-    vaccName.clear();
+    medName.clear();
     reaction.clear();
     date.clear();
     //add current date and time for autofill
-    date.text = DateFormat.yMd().format(DateTime.now());
+    date.text = DateFormat.yMd().add_jm().format(DateTime.now());
   }
 
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    vaccName.dispose();
+    medName.dispose();
     reaction.dispose();
     date.dispose();
     super.dispose();
@@ -61,7 +59,7 @@ class _AddVaccineCardState extends State<AddVaccineCard> {
         backgroundColor: Theme.of(context).colorScheme.surface,
         collapsedBackgroundColor: Theme.of(context).colorScheme.surface,
         initiallyExpanded: true,
-        title: Text('Add Vaccine',
+        title: Text('Add Medication',
             style: TextStyle(
                 fontSize: 25,
                 color: Theme.of(context).colorScheme.onSurface,
@@ -89,11 +87,20 @@ class _AddVaccineCardState extends State<AddVaccineCard> {
                           initialDate: DateTime.now(),
                           firstDate: DateTime(2020),
                           lastDate: DateTime.now());
+                      
+                      TimeOfDay? pickedTime = await showTimePicker(
+                        context: context, 
+                        initialTime: TimeOfDay.fromDateTime(DateTime.now()),
+                      );
 
-                      if (pickeddate != null) {
+                      if (pickeddate != null && pickedTime != null) {
+                        DateTime pickedDateAndTime = DateTime(
+                          pickeddate.year, pickeddate.month, pickeddate.day, 
+                          pickedTime.hour, pickedTime.minute,
+                        );
                         setState(() {
                           date.text =
-                              DateFormat.yMd().format(pickeddate);
+                              DateFormat.yMd().add_jm().format(pickedDateAndTime);
                         });
                       }
                     },
@@ -109,18 +116,18 @@ class _AddVaccineCardState extends State<AddVaccineCard> {
                   ),
                 ),
 
-                // Name of vaccine
+                // Name of medication
                 Padding(
                   padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
                   child: TextFormField(
-                    controller: vaccName,
+                    controller: medName,
                     maxLength: 50,
                     decoration: const InputDecoration(
-                      hintText: 'Name of vaccine'
+                      hintText: 'Name of medication'
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter the vaccine name.';
+                        return 'Please enter the medication name.';
                       }
                       return null;
                     },
@@ -136,7 +143,7 @@ class _AddVaccineCardState extends State<AddVaccineCard> {
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
                     decoration: const InputDecoration(
-                      hintText: 'Baby\'s reactions to the vaccine'
+                      hintText: 'Baby\'s reactions to the medication'
                     ),
                   )
                 ),
@@ -148,7 +155,7 @@ class _AddVaccineCardState extends State<AddVaccineCard> {
                     onPressed: () {
                       // Validate returns true if the form is valid, or false otherwise.
                       if (_formKey.currentState!.validate()) {
-                        saveNewVaccine();
+                        saveNewMedication();
                         FocusManager.instance.primaryFocus?.unfocus();
                       }
                     },
@@ -163,7 +170,7 @@ class _AddVaccineCardState extends State<AddVaccineCard> {
                         ),
                       ),
                     ),
-                    child: const Text('Save Vaccine'),
+                    child: const Text('Save Medication'),
                   ),
                 ),
               ]),

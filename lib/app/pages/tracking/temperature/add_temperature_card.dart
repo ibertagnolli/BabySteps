@@ -20,7 +20,7 @@ class _AddTemperatureCardState extends State<AddTemperatureCard> {
 
   TextEditingController temp = TextEditingController();
   TextEditingController date = TextEditingController(
-      text: DateFormat("MM/dd/yyyy HH:mm").format(DateTime
+      text: DateFormat("MM/dd/yyyy hh:mm a").format(DateTime
           .now())); // TODO is 24hr time ok? this is hard-coded, so we would need a bool if user can customize it
 
   /// Saves a new Temperature entry in the Firestore database.
@@ -112,17 +112,26 @@ class _AddTemperatureCardState extends State<AddTemperatureCard> {
                     FocusScope.of(context).requestFocus(FocusNode());
 
                     DateTime? pickeddate = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(2020),
-                        lastDate: DateTime.now());
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2020),
+                          lastDate: DateTime.now());
+                      
+                      TimeOfDay? pickedTime = await showTimePicker(
+                        context: context, 
+                        initialTime: TimeOfDay.fromDateTime(DateTime.now()),
+                      );
 
-                    if (pickeddate != null) {
-                      setState(() {
-                        date.text =
-                            DateFormat.yMd().add_jm().format(pickeddate);
-                      });
-                    }
+                      if (pickeddate != null && pickedTime != null) {
+                        DateTime pickedDateAndTime = DateTime(
+                          pickeddate.year, pickeddate.month, pickeddate.day, 
+                          pickedTime.hour, pickedTime.minute,
+                        );
+                        setState(() {
+                          date.text =
+                              DateFormat.yMd().add_jm().format(pickedDateAndTime);
+                        });
+                      }
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
