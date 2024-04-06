@@ -105,6 +105,7 @@ class _NotesPageState extends State<NotesPage> {
               padding: const EdgeInsets.all(8.0),
               child: Container(
                 decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
                     border: Border.all(
                       color: Theme.of(context).colorScheme.primary,
                     ),
@@ -117,14 +118,14 @@ class _NotesPageState extends State<NotesPage> {
                     controller: _noteController,
                     style: TextStyle(
                         fontSize: 15,
-                        color: Theme.of(context).colorScheme.onPrimary,
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontWeight: FontWeight.bold),
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Add to note",
                         hintStyle: TextStyle(
                             fontSize: 15,
-                            color: Theme.of(context).colorScheme.onPrimary,
+                            color: Theme.of(context).colorScheme.onSurface,
                             fontWeight: FontWeight.bold)),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
