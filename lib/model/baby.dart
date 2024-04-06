@@ -2,6 +2,7 @@ class Baby {
   String name;
   DateTime dob;
   String collectionId;
+  String primaryCaregiverUid;
   List<dynamic> caregivers;
   List<dynamic>? socialUsers;
 
@@ -9,6 +10,7 @@ class Baby {
       {required this.name,
       required this.dob,
       required this.collectionId,
+      required this.primaryCaregiverUid,
       required this.caregivers,
       this.socialUsers});
 

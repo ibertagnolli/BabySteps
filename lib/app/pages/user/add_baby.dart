@@ -71,6 +71,7 @@ class _AddBabyPageState extends State<AddBabyPage> {
               name: doc2['Name'],
               caregivers: doc2['Caregivers'],
               socialUsers: doc2['SocialUsers'],
+              primaryCaregiverUid: doc2['PrimaryCaregiverUID'],
             ),
           );
         }
@@ -132,12 +133,12 @@ class _AddBabyPageState extends State<AddBabyPage> {
 
             babies.add(
               Baby(
-                collectionId: babyId,
-                dob: (doc2['DOB'] as Timestamp).toDate(),
-                name: doc2['Name'],
-                caregivers: doc2['Caregivers'],
-                socialUsers: doc2['SocialUsers'],
-              ),
+                  collectionId: babyId,
+                  dob: (doc2['DOB'] as Timestamp).toDate(),
+                  name: doc2['Name'],
+                  caregivers: doc2['Caregivers'],
+                  socialUsers: doc2['SocialUsers'],
+                  primaryCaregiverUid: doc2['PrimaryCaregiverUID']),
             );
           }
         }
@@ -200,12 +201,12 @@ class _AddBabyPageState extends State<AddBabyPage> {
 
             babies.add(
               Baby(
-                collectionId: babyId,
-                dob: (doc2['DOB'] as Timestamp).toDate(),
-                name: doc2['Name'],
-                socialUsers: doc2['SocialUsers'],
-                caregivers: doc2['Caregivers'],
-              ),
+                  collectionId: babyId,
+                  dob: (doc2['DOB'] as Timestamp).toDate(),
+                  name: doc2['Name'],
+                  socialUsers: doc2['SocialUsers'],
+                  caregivers: doc2['Caregivers'],
+                  primaryCaregiverUid: doc2['PrimaryCaregiverUID']),
             );
           }
         }

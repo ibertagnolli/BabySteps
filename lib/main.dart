@@ -81,7 +81,8 @@ void main() async {
                 dob: (doc2['DOB'] as Timestamp).toDate(),
                 name: doc2['Name'],
                 caregivers: doc2['Caregivers'],
-                socialUsers: doc2['SocialUsers']));
+                socialUsers: doc2['SocialUsers'],
+                primaryCaregiverUid: doc2['PrimaryCaregiverUID']));
           }
         }
 
@@ -297,14 +298,14 @@ final goRouter = GoRouter(
                 ),
                 // medical routes
                 GoRoute(
-                  path: 'medical',
-                  builder: (context, state) => const MedicalPage(),
-                  routes: [
-                    GoRoute(
-                        path: 'vaccinations',
-                        builder: (context, state) => const VaccinationsPage()),
-                  ]
-                ),
+                    path: 'medical',
+                    builder: (context, state) => const MedicalPage(),
+                    routes: [
+                      GoRoute(
+                          path: 'vaccinations',
+                          builder: (context, state) =>
+                              const VaccinationsPage()),
+                    ]),
               ],
             ),
           ],
