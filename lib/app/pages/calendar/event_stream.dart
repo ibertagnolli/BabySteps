@@ -50,7 +50,7 @@ class _EventStreamState extends State<EventStream> {
                       Text(data['name']),
                       const Text(" at "),
                       Text(
-                          DateFormat('hh:mm').format(data['dateTime'].toDate()))
+                          DateFormat('hh:mm a').format(data['dateTime'].toDate()))
                     ]),
                   );
                 })

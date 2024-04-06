@@ -48,10 +48,10 @@ class _MedicalPageState extends State<MedicalPage> {
               padding: EdgeInsets.only(bottom: 16, left: 15, right: 15),
               child: VaccinationStream(),
             ),
-            // const Padding(
-            //   padding: EdgeInsets.only(bottom: 16, left: 15, right: 15),
-            //   child: MedicationStream(),
-            // ),
+            const Padding(
+              padding: EdgeInsets.only(bottom: 16, left: 15, right: 15),
+              child: MedicationStream(),
+            ),
           ]),
         ),
       ),
