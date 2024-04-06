@@ -343,6 +343,7 @@ class _HistoryTable4Cols extends State<HistoryTable4Cols> {
   /// Deletes a row of the 4 column table when the row is long pressed
   void deleteRow(String dataType, String docId) {
     showDialog(
+        // backgroundColor: Theme.of(context).colorScheme.surface, // TODO EMILY this line isn't working
         context: context,
         builder: (context) {
           return Dialog(
