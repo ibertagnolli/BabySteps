@@ -15,9 +15,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 
   int numReminders = 0;
-  DateTime _selectedDay = 
-      DateUtils.dateOnly(DateTime.now()); 
-  TimeOfDay _selectedTime = TimeOfDay.now();
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +72,7 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.only(left: 15, right: 15),
               child: 
                 // List of events
-                RemindersStream(selectedDay: _selectedDay,)
+                RemindersStream()
             ),
 
             // Add reminder button

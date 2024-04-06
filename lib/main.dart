@@ -193,12 +193,12 @@ final _shellNavigatorSocialKey =
 
 // the one and only GoRouter instance
 final goRouter = GoRouter(
-  initialLocation: loggedIn
-      ? hasBaby
-          ? '/tracking'
-          : '/login/signup/addBaby'
-      : '/login',
-  // initialLocation: loggedIn ? '/home' : '/login', // TODO: put this back in when home page is interesting
+  // initialLocation: loggedIn
+  //     ? hasBaby
+  //         ? '/tracking'
+  //         : '/login/signup/addBaby'
+  //     : '/login',
+  initialLocation: loggedIn ? '/home' : '/login', // TODO: put this back in when home page is interesting
   navigatorKey: _rootNavigatorKey,
   routes: [
     GoRoute(

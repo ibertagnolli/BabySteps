@@ -11,8 +11,7 @@ FirebaseFirestore db = FirebaseFirestore.instance;
 
 /// The widget that reads realtime Reminders updates.
 class RemindersStream extends StatefulWidget {
-  DateTime selectedDay;
-  RemindersStream({required this.selectedDay, super.key});
+  RemindersStream({super.key});
 
   @override
   _RemindersStreamState createState() => _RemindersStreamState();
@@ -22,7 +21,7 @@ class _RemindersStreamState extends State<RemindersStream> {
   @override
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> remindersStream = RemindersDatabaseMethods()
-        .getRemindersStream(widget.selectedDay, 'kQV8iUPdxr6OV0xbqWWt'); //*****TODO: currentUser.value!.userDoc   
+        .getRemindersStream('kQV8iUPdxr6OV0xbqWWt'); //*****TODO: un-hardcode, currentUser.value!.userDoc   
 
     return StreamBuilder<QuerySnapshot>(
       stream: remindersStream,
@@ -44,7 +43,7 @@ class _RemindersStreamState extends State<RemindersStream> {
           return ListView(
             physics: const NeverScrollableScrollPhysics(), // so the whole page scrolls, not just the reminders
             shrinkWrap:
-                true, // TODO We can make this a SizedBox and it will scroll by default. But, the box is not obviously scrollable.
+                true, 
             children: reminderDocs
                 .map((DocumentSnapshot document) {
                   Map<String, dynamic> data =

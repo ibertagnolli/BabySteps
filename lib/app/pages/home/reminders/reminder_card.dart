@@ -1,4 +1,5 @@
 import 'package:babysteps/app/pages/home/reminders/reminders_database.dart';
+import 'package:babysteps/app/pages/home/reminders/edit_reminder_stream.dart';
 import 'package:babysteps/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -22,13 +23,13 @@ class ReminderCard extends StatelessWidget {
         .deleteReminder(docId, currentUser.value!.userDoc);
   }
 
-  /// Opens the Reminder for edits
-  void editReminder() {
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(builder: (context) => EditRemindersStream(docId)),
-    // );
-  }
+  // /// Opens the Reminder for edits
+  // void editReminder() {
+  //   // Navigator.push(
+  //   //   context,
+  //   //   MaterialPageRoute(builder: (context) => EditRemindersStream(docId)),
+  //   // );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -44,18 +45,11 @@ class ReminderCard extends StatelessWidget {
               + ((timeDifferenceHours) > 0 ? " $timeDifferenceHours hr" : '') 
               + ((timeDifferenceMin) > 0 ? " $timeDifferenceMin min" : '') );
     String remindIn = (reminderDate.isBefore(DateTime.now()) ? timeDiffString + " ago" : "in" + timeDiffString);
-        print(name);
-        print(reminderDate);
-        print("difference: " + timeDifference.toString());
-        print("time in days " + timeDifferenceDays.toString());
-        print("time in hrs " + timeDifferenceHours.toString());
-        print("time in min " + timeDifferenceMin.toString());
-        print(remindIn);
 
     return Card(
       color: (reminderDate.isBefore(DateTime.now())) ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.surface,
       child: InkWell(
-        onTap: () => editReminder(),
+        //onTap: () => editReminder(),
         splashColor: Theme.of(context).colorScheme.surface,
         child: SizedBox(
           width: 200,
@@ -120,10 +114,7 @@ class ReminderCard extends StatelessWidget {
                               }),
 
                       // Edit button
-                      IconButton(
-                        icon: const Icon(Icons.edit),
-                        onPressed: () => editReminder(),
-                      )
+                      EditReminderStream(docId),
                     ],
                   ),
                 ),
