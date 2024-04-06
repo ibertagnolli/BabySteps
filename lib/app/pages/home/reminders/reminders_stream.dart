@@ -38,7 +38,10 @@ class _RemindersStreamState extends State<RemindersStream> {
         var reminderDocs = snapshot.data!.docs;
 
         if (reminderDocs.isEmpty) {
-          return const Text("No reminders set.");
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: const Text("No reminders set."),
+          );
         } else {
           return ListView(
             physics: const NeverScrollableScrollPhysics(), // so the whole page scrolls, not just the reminders

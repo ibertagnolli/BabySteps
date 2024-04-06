@@ -53,7 +53,6 @@ class _EditReminderStreamState extends State<EditReminderStream> {
   _setTimeUnit(String selectedUnit)  {
     
     WidgetsBinding.instance.addPostFrameCallback((_){
-      print(selectedUnit);
       setState(() {
         timeUnit = selectedUnit;
       });
@@ -100,6 +99,7 @@ class _EditReminderStreamState extends State<EditReminderStream> {
       reminderDT = DateTime(reminderDate.year, reminderDate.month, reminderDate.day,
         reminderTime.hour, reminderTime.minute);
     }
+
     // Write reminder data to database
     Map<String, dynamic> uploaddata = {
       'remindAbout': nameController.text,

@@ -50,7 +50,6 @@ class _AddReminderButtonState extends State<AddReminderButton> {
   // When dropdown used to change time unit, fix the state
   _setTimeUnit(String selectedUnit)  {
     WidgetsBinding.instance.addPostFrameCallback((_){
-      print(selectedUnit);
       setState(() {
         timeUnit = selectedUnit;
       });
@@ -97,6 +96,7 @@ class _AddReminderButtonState extends State<AddReminderButton> {
       reminderDT = DateTime(reminderDate.year, reminderDate.month, reminderDate.day,
         reminderTime.hour, reminderTime.minute);
     }
+    
     // Write reminder data to database
     Map<String, dynamic> uploaddata = {
       'remindAbout': nameController.text,
@@ -118,8 +118,8 @@ class _AddReminderButtonState extends State<AddReminderButton> {
 
     return SizedBox(
       // Add Reminder Button
-      width: 170.0,
-      height: 30.0,
+      width: 160.0,
+      height: 40.0,
       child: ElevatedButton(
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(

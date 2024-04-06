@@ -8,8 +8,6 @@ class RemindersDatabaseMethods {
 
   // Adds an event to the Reminders collection
   Future addReminder(Map<String, dynamic> userInfoMap, String userDoc) async {
-    print("adding to doc " + userDoc);
-    print(userInfoMap);
     return await db
         .collection('Users')
         .doc(userDoc) 
@@ -19,8 +17,6 @@ class RemindersDatabaseMethods {
 
   // Marks a task as completed/uncompleted
   Future updateReminder(var docId, Map<String, dynamic> updatedUserInfoMap, String userDoc) async {
-    print("updating doc " + userDoc);
-    print(updatedUserInfoMap);
     return await db
         .collection('Users')
         .doc(userDoc)
@@ -45,7 +41,6 @@ class RemindersDatabaseMethods {
 
   // Returns a snapshot of all the Reminders, oldest reminder date first 
   Stream<QuerySnapshot> getRemindersStream(String userDoc) {
-    //print("getting doc " + userDoc);
     return db
         .collection('Users')
         .doc(userDoc)
@@ -56,7 +51,6 @@ class RemindersDatabaseMethods {
 
   // Returns specific reminder info
   Stream<DocumentSnapshot<Map<String, dynamic>>> getSpecificReminderStream(var docId, String userDoc) {
-    //print("getting doc " + userDoc + " " + docId);
     return db
         .collection('Users')
         .doc(userDoc)

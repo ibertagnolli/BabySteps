@@ -39,7 +39,6 @@ class DateAndTime extends StatelessWidget {
 
               if (pickedDate != null) {
                 dateController.text = DateFormat.yMd()
-                    .add_jm()
                     .format(pickedDate);
               }
             },
@@ -191,7 +190,6 @@ class _NewReminderFormState extends State<NewReminderForm> {
   }
   @override
   Widget build(BuildContext context) {
-    print(widget.dateController.text);
     return Column(children: [
       Column(
         children: <Widget>[
