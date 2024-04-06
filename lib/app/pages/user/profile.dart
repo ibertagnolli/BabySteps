@@ -7,6 +7,7 @@ import 'package:babysteps/main.dart';
 import 'package:babysteps/model/baby.dart';
 import 'package:babysteps/model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:go_router/go_router.dart';
@@ -21,6 +22,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   UserProfile userProfile = currentUser.value!;
   List<Baby> babyList = currentUser.value!.babies!;
+  TextEditingController babyCode = TextEditingController();
 
   late UserProfile updatedUser = UserProfile(
       name: userProfile.name,
@@ -72,13 +74,8 @@ class _ProfilePageState extends State<ProfilePage> {
     Map<String, dynamic> uploaddata = {
       'DOB': DateTime.now(),
       'Name': '',
-      'Caregivers': [
-        {
-          'name': currentUser.value!.name,
-          'doc': currentUser.value!.userDoc,
-          'uid': currentUser.value!.uid
-        }
-      ],
+      'Caregivers': [],
+      'PrimaryCaregiverUID': currentUser.value!.uid,
       'SocialUsers': []
     };
     DocumentReference babyRef = await UserDatabaseMethods().addBaby(uploaddata);
@@ -89,18 +86,168 @@ class _ProfilePageState extends State<ProfilePage> {
             name: '',
             dob: DateTime.now(),
             collectionId: babyRef.id,
-            caregivers: [
-              {
-                'name': currentUser.value!.name,
-                'doc': currentUser.value!.userDoc,
-                'uid': currentUser.value!.uid,
-              }
-            ],
+            caregivers: [],
+            primaryCaregiverUid: currentUser.value!.uid,
             socialUsers: [],
           ),
         );
       },
     );
+  }
+
+  /// Creates a new caregiver user associated with an existing baby
+  uploadBabyToCaregiver(String babyCode) async {
+    try {
+      // Add the caregiver user to the baby's list of caregivers
+      DocumentSnapshot snapshot = await UserDatabaseMethods().getBaby(babyCode);
+      Map<String, dynamic> doc = snapshot.data()! as Map<String, dynamic>;
+      List<dynamic> caregivers = doc['Caregivers'];
+      caregivers.add({
+        'name': currentUser.value!.name,
+        'doc': currentUser.value!.userDoc,
+        'uid': currentUser.value!.uid
+      });
+      await UserDatabaseMethods().updateBabyCaregiver(babyCode, caregivers);
+
+      setState(
+        () {
+          updatedUser.addBaby(
+            Baby(
+              name: doc['Name'],
+              dob: (doc['DOB'] as Timestamp).toDate(),
+              collectionId: snapshot.id,
+              caregivers: caregivers,
+              primaryCaregiverUid: doc['PrimaryCaregiverUID'],
+              socialUsers: doc['socialUsers'],
+            ),
+          );
+        },
+      );
+    } catch (e) {
+      print('invalid code ${e.toString()}');
+    }
+  }
+
+  uploadBabyToSocialUser(String babyCode) async {
+    try {
+      // Add the caregiver user to the baby's list of social only users
+      DocumentSnapshot snapshot = await UserDatabaseMethods().getBaby(babyCode);
+      Map<String, dynamic> doc = snapshot.data()! as Map<String, dynamic>;
+      List<dynamic> socialUsers = doc['SocialUsers'] ?? [];
+      socialUsers.add({
+        'name': currentUser.value!.name,
+        'doc': currentUser.value!.userDoc,
+        'uid': currentUser.value!.uid
+      });
+      await UserDatabaseMethods().updateBabySocialUser(babyCode, socialUsers);
+
+      setState(
+        () {
+          updatedUser.addBaby(
+            Baby(
+              name: doc['Name'],
+              dob: (doc['DOB'] as Timestamp).toDate(),
+              collectionId: snapshot.id,
+              caregivers: doc['Caregivers'],
+              primaryCaregiverUid: doc['PrimaryCaregiverUID'],
+              socialUsers: socialUsers,
+            ),
+          );
+        },
+      );
+    } catch (e) {
+      print('invalid code ${e.toString()}');
+    }
+  }
+
+  void showBabyAddCodeDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+              child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text("Baby Code:"),
+                      TextField(
+                        controller: babyCode,
+                      ),
+                      const SizedBox(height: 8),
+                      ElevatedButton(
+                        onPressed: () {
+                          String babyCodeText = babyCode.text.endsWith("_SOU")
+                              ? babyCode.text
+                                  .substring(0, babyCode.text.length - 4)
+                              : babyCode.text;
+                          bool newBabyForUser = true;
+
+                          if (currentUser.value!.babies != null) {
+                            for (Baby baby in currentUser.value!.babies!) {
+                              if (babyCodeText == baby.collectionId) {
+                                newBabyForUser = false;
+                              }
+                            }
+                          }
+
+                          if (newBabyForUser &&
+                              babyCode.text.endsWith("_SOU")) {
+                            uploadBabyToSocialUser(babyCodeText);
+                          } else if (newBabyForUser) {
+                            uploadBabyToCaregiver(babyCodeText);
+                          }
+
+                          Navigator.pop(context);
+                          babyCode.text = '';
+                        },
+                        style: blueButton(context),
+                        child: const Text('Add baby'),
+                      ),
+                    ],
+                  )));
+        });
+  }
+
+  void showAddBabyOptions() {
+    showDialog(
+        context: context,
+        builder: (context) => Dialog(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        createBaby();
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        'New Child',
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Theme.of(context).colorScheme.primary),
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        showBabyAddCodeDialog();
+                      },
+                      child: Text(
+                        'From A Code',
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Theme.of(context).colorScheme.primary),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ));
   }
 
   void updateBabyName(String? id, String newVal) {
@@ -191,13 +338,14 @@ class _ProfilePageState extends State<ProfilePage> {
                     updateBabyName,
                     updateBabyDOB,
                     element.collectionId,
-                    element.socialUsers ?? []),
+                    element.socialUsers ?? [],
+                    element.primaryCaregiverUid == currentUser.value!.uid),
 
               if (editing)
                 Padding(
                   padding: const EdgeInsets.only(top: 16),
                   child: ElevatedButton(
-                    onPressed: createBaby,
+                    onPressed: showAddBabyOptions,
                     style: blueButton(context),
                     child:
                         const Text('Add Child', style: TextStyle(fontSize: 26)),

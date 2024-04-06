@@ -15,7 +15,8 @@ class BabyBox extends StatelessWidget {
     this.updateName,
     this.updateDOB,
     this.babyId,
-    this.socialUsers, {
+    this.socialUsers,
+    this.isPrimaryCaregiver, {
     super.key,
   });
   final String babyName;
@@ -26,6 +27,7 @@ class BabyBox extends StatelessWidget {
   final Function(String? id, String newVal) updateDOB;
   final String babyId;
   final List<dynamic> socialUsers;
+  final bool isPrimaryCaregiver;
 
   @override
   Widget build(BuildContext context) {
@@ -48,17 +50,22 @@ class BabyBox extends StatelessWidget {
         'Baby Name',
         [babyName],
         const Icon(Icons.account_box),
-        editing,
+        editing && isPrimaryCaregiver,
         updateName,
         id: babyId,
       ),
-      BuildInfoField('Date of Birth', [DateFormat.yMd().format(dateOfBirth)],
-          const Icon(Icons.calendar_month_outlined), editing, updateDOB,
-          date: true, id: babyId),
-      if (caregiverNames.isNotEmpty || editing)
+      BuildInfoField(
+          'Date of Birth',
+          [DateFormat.yMd().format(dateOfBirth)],
+          const Icon(Icons.calendar_month_outlined),
+          editing && isPrimaryCaregiver,
+          updateDOB,
+          date: true,
+          id: babyId),
+      if (caregiverNames.isNotEmpty || (editing && isPrimaryCaregiver))
         BuildInfoField('Caregivers', caregiverNames, const Icon(Icons.people),
-            editing, (unused, unused2) => {}),
-      if (editing)
+            false, (unused, unused2) => {}),
+      if (editing && isPrimaryCaregiver)
         ElevatedButton(
           onPressed: () {
             showDialog(
@@ -102,10 +109,10 @@ class BabyBox extends StatelessWidget {
           style: blueButton(context),
           child: const Text('Add Caregiver'),
         ),
-      if (socialNames.isNotEmpty || editing)
+      if (socialNames.isNotEmpty || (editing && isPrimaryCaregiver))
         BuildInfoField('Social only Users', socialNames,
-            const Icon(Icons.people), editing, (unused, unused2) => {}),
-      if (editing)
+            const Icon(Icons.people), false, (unused, unused2) => {}),
+      if (editing && isPrimaryCaregiver)
         ElevatedButton(
           onPressed: () {
             showDialog(

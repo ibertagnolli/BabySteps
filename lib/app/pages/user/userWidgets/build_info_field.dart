@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 
 class BuildInfoField extends StatelessWidget {
   const BuildInfoField(
-      this.label, this.valueList, this.icon, this.editing, this.onChange,
+      this.label, this.valueList, this.icon, this.canEdit, this.onChange,
       {super.key, this.date = false, this.id});
   final String label;
   final List<String> valueList;
   final Icon icon;
-  final bool editing;
+  final bool canEdit;
   final bool date;
   final Function(String? babyId, String newVal) onChange;
   final String? id;
@@ -25,7 +25,7 @@ class BuildInfoField extends StatelessWidget {
    
     for (String val in valueList) {
       values.add(BuildInfoLine(
-        editing,
+        canEdit,
         val,
         label,
         date: date,
