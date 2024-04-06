@@ -113,7 +113,7 @@ class _AddVaccineCardState extends State<AddVaccineCard> {
                   padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
                   child: TextFormField(
                     controller: vaccName,
-                    maxLength: 25,
+                    maxLength: 50,
                     decoration: const InputDecoration(
                       hintText: 'Name of vaccine'
                     ),
@@ -135,7 +135,7 @@ class _AddVaccineCardState extends State<AddVaccineCard> {
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
                     decoration: const InputDecoration(
-                      hintText: 'Has the baby had any reactions?'
+                      hintText: 'Baby\'s reactions to the vaccine'
                     ),
                   )
                 ),
@@ -148,6 +148,7 @@ class _AddVaccineCardState extends State<AddVaccineCard> {
                       // Validate returns true if the form is valid, or false otherwise.
                       if (_formKey.currentState!.validate()) {
                         saveNewVaccine();
+                        FocusManager.instance.primaryFocus?.unfocus();
                       }
                     },
                     style: ButtonStyle(
