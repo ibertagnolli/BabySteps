@@ -9,7 +9,14 @@ class UserProfile {
   ValueNotifier<Baby?> currentBaby;
   // int currBabyIndex;
   List<Baby>? babies;
-  bool socialOnly;
+  //This is a map that looks like:
+  //{
+  //  docId: String
+  //  primaryCaregiver: bool
+  //  canPost: bool
+  //  caregiver: bool //True if they can have access to all of babys info
+  //}
+  bool socialOnly; //This is true only if every baby in their map has caregiver false
 
   UserProfile(
       {required this.name,

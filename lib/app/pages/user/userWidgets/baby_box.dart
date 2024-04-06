@@ -4,6 +4,7 @@ import 'package:babysteps/app/widgets/styles.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class BabyBox extends StatelessWidget {
@@ -111,7 +112,7 @@ class BabyBox extends StatelessWidget {
         ),
       if (socialNames.isNotEmpty || (editing && isPrimaryCaregiver))
         BuildInfoField('Social only Users', socialNames,
-            const Icon(Icons.people), false, (unused, unused2) => {}),
+            const Icon(Icons.comment_outlined), false, (unused, unused2) => {}),
       if (editing && isPrimaryCaregiver)
         ElevatedButton(
           onPressed: () {
@@ -144,6 +145,19 @@ class BabyBox extends StatelessWidget {
           },
           style: blueButton(context),
           child: const Text('Add Social User'),
+        ),
+      if (isPrimaryCaregiver &&
+          (caregivers.isNotEmpty || socialUsers.isNotEmpty))
+        Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: ElevatedButton(
+            onPressed: () {
+              context.goNamed('/profile/userconfig',
+                  queryParameters: {'babyId': babyId});
+            },
+            style: blueButton(context),
+            child: const Text('Edit user permissions'),
+          ),
         ),
     ]);
   }

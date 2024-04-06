@@ -3,7 +3,15 @@ class Baby {
   DateTime dob;
   String collectionId;
   String primaryCaregiverUid;
-  List<dynamic> caregivers;
+  List<dynamic> caregivers; 
+  //This is a map that looks like:
+  // {
+  //  doc: String
+  //  name: String
+  //  uid: String
+  //  canPost: bool
+  //  caregiver: bool // false if a social only, true if access to tracking info
+  // }
   List<dynamic>? socialUsers;
 
   Baby(

@@ -15,6 +15,7 @@ import 'package:babysteps/app/pages/tracking/tracking_landing.dart';
 import 'package:babysteps/app/pages/tracking/weight/weight.dart';
 import 'package:babysteps/app/pages/user/add_baby.dart';
 import 'package:babysteps/app/pages/user/edit.dart';
+import 'package:babysteps/app/pages/user/edit_permissions.dart';
 import 'package:babysteps/app/pages/user/profile_loading_landing.dart';
 import 'package:babysteps/app/pages/user/user_database.dart';
 import 'package:babysteps/model/baby.dart';
@@ -228,6 +229,15 @@ final goRouter = GoRouter(
         GoRoute(
           path: 'edit',
           builder: (context, state) => const EditProfilePage(),
+        ),
+        GoRoute(
+          path: 'userconfig',
+          name: '/profile/userconfig',
+          builder: (context, state) {
+            return EditPermissionsPage(
+              state.uri.queryParameters['babyId'] ?? '',
+            );
+          },
         )
       ],
     ),
