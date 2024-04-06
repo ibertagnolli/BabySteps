@@ -112,17 +112,26 @@ class _AddTemperatureCardState extends State<AddTemperatureCard> {
                     FocusScope.of(context).requestFocus(FocusNode());
 
                     DateTime? pickeddate = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(2020),
-                        lastDate: DateTime.now());
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2020),
+                          lastDate: DateTime.now());
+                      
+                      TimeOfDay? pickedTime = await showTimePicker(
+                        context: context, 
+                        initialTime: TimeOfDay.fromDateTime(DateTime.now()),
+                      );
 
-                    if (pickeddate != null) {
-                      setState(() {
-                        date.text =
-                            DateFormat.yMd().add_jm().format(pickeddate);
-                      });
-                    }
+                      if (pickeddate != null && pickedTime != null) {
+                        DateTime pickedDateAndTime = DateTime(
+                          pickeddate.year, pickeddate.month, pickeddate.day, 
+                          pickedTime.hour, pickedTime.minute,
+                        );
+                        setState(() {
+                          date.text =
+                              DateFormat.yMd().add_jm().format(pickedDateAndTime);
+                        });
+                      }
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {

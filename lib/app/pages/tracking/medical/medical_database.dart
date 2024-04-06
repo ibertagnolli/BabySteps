@@ -11,7 +11,7 @@ class MedicalDatabaseMethods{
     return db
         .collection("Babies")
         .doc(babyDoc)
-        .collection("Vaccines")
+        .collection("Medical")
         .orderBy('date', descending: true)
         .limit(1)
         .snapshots();
@@ -24,7 +24,7 @@ class MedicalDatabaseMethods{
     return await db
         .collection('Babies')
         .doc(babyDoc)
-        .collection('Vaccines')
+        .collection('Medical')
         .add(userInfoMap);
   }
 
@@ -33,7 +33,8 @@ class MedicalDatabaseMethods{
     return FirebaseFirestore.instance
         .collection('Babies')
         .doc(babyDoc)
-        .collection('Vaccines')
+        .collection('Medical')
+        .where('type', isEqualTo: 'vaccine')
         .orderBy('date', descending: true)
         .snapshots();
   }
@@ -43,7 +44,8 @@ class MedicalDatabaseMethods{
     return db
         .collection('Babies')
         .doc(babyDoc)
-        .collection('Vaccines')
+        .collection('Medical')
+        .where('type', isEqualTo: 'vaccine')
         .orderBy('date', descending: true)
         .limit(1)
         .snapshots();
@@ -55,7 +57,53 @@ class MedicalDatabaseMethods{
     return await db
         .collection('Babies')
         .doc(babyDoc)
-        .collection('Vaccines')
+        .collection('Medical')
+        .doc(docId)
+        .set(updatedUserInfoMap);
+  }
+
+  // MEDICATION METHODS
+
+  // Adds an entry to the medication collection.
+  Future addMedication(Map<String, dynamic> userInfoMap, String babyDoc) async {
+    return await db
+        .collection('Babies')
+        .doc(babyDoc)
+        .collection('Medical')
+        .add(userInfoMap);
+  }
+
+  // Returns 10 most recent entries in the medication collection.
+  Stream<QuerySnapshot> getMedicationStream(String babyDoc) {
+    return FirebaseFirestore.instance
+        .collection('Babies')
+        .doc(babyDoc)
+        .collection('Medical')
+        .where('type', isEqualTo: 'medication')
+        .orderBy('date', descending: true)
+        .limit(10)
+        .snapshots();
+  }
+
+  // Updates the Medication card on the Medical landing page.
+  Stream<QuerySnapshot> getLatestMedicationUpdate(String babyDoc) {
+    return db
+        .collection('Babies')
+        .doc(babyDoc)
+        .collection('Medical')
+        .where('type', isEqualTo: 'medication')
+        .orderBy('date', descending: true)
+        .limit(1)
+        .snapshots();
+  }
+
+  // Updates a medication entry in the database.
+  Future updateMedication(var docId, Map<String, dynamic> updatedUserInfoMap,
+      String babyDoc) async {
+    return await db
+        .collection('Babies')
+        .doc(babyDoc)
+        .collection('Medical')
         .doc(docId)
         .set(updatedUserInfoMap);
   }
