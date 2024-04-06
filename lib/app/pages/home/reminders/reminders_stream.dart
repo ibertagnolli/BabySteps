@@ -21,7 +21,7 @@ class _RemindersStreamState extends State<RemindersStream> {
   @override
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> remindersStream = RemindersDatabaseMethods()
-        .getRemindersStream('kQV8iUPdxr6OV0xbqWWt'); //*****TODO: un-hardcode, currentUser.value!.userDoc   
+        .getRemindersStream(currentUser.value!.userDoc ); 
 
     return StreamBuilder<QuerySnapshot>(
       stream: remindersStream,

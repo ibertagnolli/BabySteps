@@ -1,4 +1,3 @@
-import 'package:babysteps/app/pages/home/home.dart';
 import 'package:babysteps/app/pages/home/reminders/reminders_database.dart';
 import 'package:babysteps/app/pages/home/reminders/reminders_widgets.dart';
 import 'package:intl/intl.dart';
@@ -14,7 +13,6 @@ class EditReminderStream extends StatefulWidget {
 
   EditReminderStream(this.docId, {super.key});
   
-
   @override
   _EditReminderStreamState createState() => _EditReminderStreamState();
 }
@@ -46,7 +44,6 @@ class _EditReminderStreamState extends State<EditReminderStream> {
   _setReminderType(int selectedType)  {
     
     WidgetsBinding.instance.addPostFrameCallback((_){
-      print(selectedType);
       setState(() {
         reminderType = selectedType;
       });
@@ -121,10 +118,9 @@ class _EditReminderStreamState extends State<EditReminderStream> {
 
   @override
   Widget build(BuildContext context) {
-    print("userDoc ${currentUser.value?.userDoc}");
     final Stream<DocumentSnapshot<Map<String, dynamic>>> reminderStream =
         RemindersDatabaseMethods().getSpecificReminderStream(
-            widget.docId, "kQV8iUPdxr6OV0xbqWWt"); // TODO: un-hardcode, currentUser.value!.userDoc 
+            widget.docId, currentUser.value!.userDoc);
 
     return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
       stream: reminderStream,

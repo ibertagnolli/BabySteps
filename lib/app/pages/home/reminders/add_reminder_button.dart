@@ -38,18 +38,17 @@ class _AddReminderButtonState extends State<AddReminderButton> {
     super.dispose();
   }
 
+  // When radiobutton used to change remindertype, fix the state
   _setReminderType(int selectedType)  {
-    
     WidgetsBinding.instance.addPostFrameCallback((_){
-      print(selectedType);
       setState(() {
         reminderType = selectedType;
       });
     });
   }
 
+  // When dropdown used to change time unit, fix the state
   _setTimeUnit(String selectedUnit)  {
-    
     WidgetsBinding.instance.addPostFrameCallback((_){
       print(selectedUnit);
       setState(() {
@@ -116,9 +115,6 @@ class _AddReminderButtonState extends State<AddReminderButton> {
 
   @override
   Widget build(BuildContext context) {
-    // Populate the controllers
-    dateController.text = DateFormat.yMd().format(DateTime.now());
-    timeController.text = TimeOfDay.now().format(context);
 
     return SizedBox(
       // Add Reminder Button
@@ -138,9 +134,12 @@ class _AddReminderButtonState extends State<AddReminderButton> {
           ),
         ),
         child: const Text('Add Reminder'),
-
         // Dialog with reminder entry
         onPressed: () {
+          // Populate the controllers
+          dateController.text = DateFormat.yMd().format(DateTime.now());
+          timeController.text = TimeOfDay.now().format(context);
+
           showDialog(
               context: context,
               builder: (context) {

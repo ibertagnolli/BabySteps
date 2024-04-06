@@ -181,7 +181,7 @@ class NewReminderForm extends StatefulWidget {
 
 class _NewReminderFormState extends State<NewReminderForm> {
   int selectedOption = 1;
-
+  
   @override
   void initState() {
     setState(() {
@@ -189,10 +189,9 @@ class _NewReminderFormState extends State<NewReminderForm> {
     });
     super.initState();
   }
-
   @override
   Widget build(BuildContext context) {
-    
+    print(widget.dateController.text);
     return Column(children: [
       Column(
         children: <Widget>[
