@@ -218,7 +218,10 @@ class _VaccineStreamState extends State<VaccineStream> {
         var allVaccineDocs = snapshot.data!.docs;
 
         if (allVaccineDocs.isEmpty) {
-          return const Text("No vaccines recorded.");
+          return const Padding(
+            padding: EdgeInsets.only(bottom: 10),
+            child: Text("No vaccines recorded."),
+          );
         } else {
           return ListView(
             shrinkWrap: true,
