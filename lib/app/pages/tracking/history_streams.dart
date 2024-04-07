@@ -184,11 +184,11 @@ class _SleepHistoryStreamState extends State<SleepHistoryStream> {
           String time = splitDate[1] + splitDate[2];
           String length = doc['length'];
 
-          rows.add(RowData3Cols(day, time, length));
+          rows.add(RowData3Cols(day, time, length, doc.id));
         }
 
         // Make a table with the retrieved data
-        return HistoryTable3Cols(rows, "Length");
+        return HistoryTable3Cols("Sleep", rows, "Length");
       },
     );
   }
@@ -243,11 +243,11 @@ class _WeightHistoryStreamState extends State<WeightHistoryStream> {
           String ounces = doc['ounces'];
           String weight = '$pounds lbs $ounces oz';
 
-          rows.add(RowData3Cols(day, time, weight));
+          rows.add(RowData3Cols(day, time, weight, doc.id));
         }
 
         // Make a table with the retrieved data
-        return HistoryTable3Cols(rows, "Weight");
+        return HistoryTable3Cols("Weight", rows, "Weight");
       },
     );
   }
@@ -301,11 +301,11 @@ class _TemperatureHistoryStreamState extends State<TemperatureHistoryStream> {
           String time = splitDate[1] + splitDate[2];
           String temperature = doc['temperature'];
 
-          rows.add(RowData3Cols(day, time, temperature));
+          rows.add(RowData3Cols(day, time, temperature, doc.id));
         }
 
         // Make a table with the retrieved data
-        return HistoryTable3Cols(rows, "Temperature");
+        return HistoryTable3Cols("Temperature", rows, "Temperature");
       },
     );
   }

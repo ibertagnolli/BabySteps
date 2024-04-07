@@ -33,4 +33,18 @@ class WeightDatabaseMethods {
         .orderBy('date', descending: true)
         .get();
   }
+
+  // Deletes the weight entry identified by docId
+  Future deleteWeight(var docId, String babyDoc) async {
+    return await db
+        .collection('Babies')
+        .doc(babyDoc)
+        .collection('Weight')
+        .doc(docId)
+        .delete()
+        .then(
+          (doc) => print("Document deleted"),
+          onError: (e) => print("Error deleting document $e"),
+        );
+  }
 }
