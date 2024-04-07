@@ -789,16 +789,113 @@ class _HistoryTable5Cols extends State<HistoryTable5Cols> {
 
 
 // Recent history table with 6 columns, column titles, and data filled in
-class HistoryTable6Cols extends StatelessWidget {
-  HistoryTable6Cols(this.rows, this.col1Name, this.col2Name, this.col3Name, this.col4Name, {super.key});
-
+class HistoryTable6Cols extends StatefulWidget {
+  String dataType;
   var rows;
   String col1Name;
   String col2Name;
   String col3Name;
   String col4Name;
 
+  HistoryTable6Cols(this.dataType, this.rows, this.col1Name, this.col2Name, this.col3Name, this.col4Name, {super.key});
+
+  @override
+  State<HistoryTable6Cols> createState() => _HistoryTable6Cols();
+}
+
+class _HistoryTable6Cols extends State<HistoryTable6Cols> {
+
   final ScrollController _controller = ScrollController();
+
+  /// Deletes a row of the 6 column table when the row is long pressed
+  void deleteRow(String dataType, String docId) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            backgroundColor: const Color(0xFFB3BEB6),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 20),
+                    child: Text(
+                      "Do you want to delete this data entry?",
+                      style: TextStyle(
+                        fontFamily: 'Georgia',
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                  // Buttons
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 15),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            if(dataType == "Breastfeed") {
+                              await FeedingDatabaseMethods().deleteFeeding(
+                                docId,
+                                currentUser.value!.currentBaby.value!
+                                    .collectionId);
+                            } else {
+                              print("Error: Trying to delete the wrong dataType.");
+                            }
+                            Navigator.of(context, rootNavigator: true).pop();
+                          }, 
+                          // style is hard-coded blue button style
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(const Color(0xFF4F646F)),
+                            foregroundColor: MaterialStateProperty.all(const Color(0xFFFFFAF1)),
+                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                            ),
+                          ),
+                          child: const Text(
+                            'Yes',
+                            style: TextStyle(
+                              fontFamily: 'Georgia',
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context, rootNavigator: true).pop();
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(const Color(0xFF4F646F)),
+                          foregroundColor: MaterialStateProperty.all(const Color(0xFFFFFAF1)),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                          ),
+                        ),
+                        child: const Text(
+                          'No',
+                          style: TextStyle(
+                            fontFamily: 'Georgia',
+                            fontSize: 20,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ],)
+            )
+          );
+        }
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -832,7 +929,7 @@ class HistoryTable6Cols extends StatelessWidget {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  col1Name,
+                  widget.col1Name,
                   style: const TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
@@ -840,7 +937,7 @@ class HistoryTable6Cols extends StatelessWidget {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  col2Name,
+                  widget.col2Name,
                   style: const TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
@@ -848,7 +945,7 @@ class HistoryTable6Cols extends StatelessWidget {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  col3Name,
+                  widget.col3Name,
                   style: const TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
@@ -856,7 +953,7 @@ class HistoryTable6Cols extends StatelessWidget {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  col4Name,
+                  widget.col4Name,
                   style: const TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
@@ -865,7 +962,7 @@ class HistoryTable6Cols extends StatelessWidget {
           // Table rows - dynamic - For each row we collected data for, create a DataCell for it
           // TODO: Some sort of "no history yet" message if there are no entries
           rows: <DataRow>[
-            for (var row in rows)
+            for (var row in widget.rows)
               DataRow(
                 cells: <DataCell>[
                   DataCell(Text(row.day)),
@@ -875,6 +972,9 @@ class HistoryTable6Cols extends StatelessWidget {
                   DataCell(Text(row.data3)),
                   DataCell(Text(row.data4)),
                 ],
+                onLongPress: () {
+                  deleteRow(widget.dataType, row.docId);
+                },
               ),
           ],
         ),
@@ -917,13 +1017,14 @@ class RowData5Cols<T1, T2, T3, T4, T5, T6> {
 }
 
 // Represents the data shown in the history table when we need 6 columns
-class RowData6Cols<T1, T2, T3, T4, T5, T6> {
+class RowData6Cols<T1, T2, T3, T4, T5, T6, T7> {
   T1 day;
   T2 time;
   T3 data1;
   T4 data2;
   T5 data3; 
   T6 data4;
+  T7 docId;
 
-  RowData6Cols(this.day, this.time, this.data1, this.data2, this.data3, this.data4);
+  RowData6Cols(this.day, this.time, this.data1, this.data2, this.data3, this.data4, this.docId);
 }
