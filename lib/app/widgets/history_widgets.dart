@@ -3,6 +3,7 @@ import 'package:babysteps/app/pages/tracking/diaper/diaper_database.dart';
 import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
 import 'package:babysteps/app/widgets/styles.dart';
 import 'package:babysteps/main.dart';
+import 'package:babysteps/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/pages/tracking/history_streams.dart';
 import 'package:babysteps/app/pages/tracking/all_time_history_streams.dart';
@@ -343,10 +344,10 @@ class _HistoryTable4Cols extends State<HistoryTable4Cols> {
   /// Deletes a row of the 4 column table when the row is long pressed
   void deleteRow(String dataType, String docId) {
     showDialog(
-        // backgroundColor: Theme.of(context).colorScheme.surface, // TODO EMILY this line isn't working
         context: context,
         builder: (context) {
           return Dialog(
+            backgroundColor: const Color(0xFFB3BEB6),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -354,9 +355,13 @@ class _HistoryTable4Cols extends State<HistoryTable4Cols> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   const Padding(
-                    padding: EdgeInsets.only(bottom: 15),
+                    padding: EdgeInsets.only(bottom: 20),
                     child: Text(
-                      "Do you want to delete this data entry?"
+                      "Do you want to delete this data entry?",
+                      style: TextStyle(
+                        fontFamily: 'Georgia',
+                        fontSize: 20,
+                      ),
                     ),
                   ),
                   // Buttons
@@ -377,16 +382,45 @@ class _HistoryTable4Cols extends State<HistoryTable4Cols> {
                             }
                             Navigator.of(context, rootNavigator: true).pop();
                           }, 
-                          style: blueButton(context),
-                          child: const Text('Yes'),
+                          // style is hard-coded blue button style
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(const Color(0xFF4F646F)),
+                            foregroundColor: MaterialStateProperty.all(const Color(0xFFFFFAF1)),
+                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                            ),
+                          ),
+                          child: const Text(
+                            'Yes',
+                            style: TextStyle(
+                              fontFamily: 'Georgia',
+                              fontSize: 20,
+                            ),
+                          ),
                         ),
-                      ),                      
+                      ),
                       ElevatedButton(
                         onPressed: () {
                           Navigator.of(context, rootNavigator: true).pop();
                         },
-                        style: blueButton(context),
-                        child: const Text('No'),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(const Color(0xFF4F646F)),
+                          foregroundColor: MaterialStateProperty.all(const Color(0xFFFFFAF1)),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                          ),
+                        ),
+                        child: const Text(
+                          'No',
+                          style: TextStyle(
+                            fontFamily: 'Georgia',
+                            fontSize: 20,
+                          ),
+                        ),
                       )
                     ],
                   ),
@@ -485,6 +519,7 @@ class _HistoryTable5Cols extends State<HistoryTable5Cols> {
         context: context,
         builder: (context) {
           return Dialog(
+            backgroundColor: const Color(0xFFB3BEB6),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -492,9 +527,13 @@ class _HistoryTable5Cols extends State<HistoryTable5Cols> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   const Padding(
-                    padding: EdgeInsets.only(bottom: 15),
+                    padding: EdgeInsets.only(bottom: 20),
                     child: Text(
-                      "Do you want to delete this data entry?"
+                      "Do you want to delete this data entry?",
+                      style: TextStyle(
+                        fontFamily: 'Georgia',
+                        fontSize: 20,
+                      ),
                     ),
                   ),
                   // Buttons
@@ -515,16 +554,44 @@ class _HistoryTable5Cols extends State<HistoryTable5Cols> {
                             }
                             Navigator.of(context, rootNavigator: true).pop();
                           }, 
-                          style: blueButton(context),
-                          child: const Text('Yes'),
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(const Color(0xFF4F646F)),
+                            foregroundColor: MaterialStateProperty.all(const Color(0xFFFFFAF1)),
+                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                            ),
+                          ),
+                          child: const Text(
+                            'Yes',
+                            style: TextStyle(
+                              fontFamily: 'Georgia',
+                              fontSize: 20,
+                            ),
+                          ),
                         ),
                       ),                      
                       ElevatedButton(
                         onPressed: () {
                           Navigator.of(context, rootNavigator: true).pop();
                         },
-                        style: blueButton(context),
-                        child: const Text('No'),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(const Color(0xFF4F646F)),
+                          foregroundColor: MaterialStateProperty.all(const Color(0xFFFFFAF1)),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                          ),
+                        ),
+                        child: const Text(
+                          'No',
+                          style: TextStyle(
+                            fontFamily: 'Georgia',
+                            fontSize: 20,
+                          ),
+                        ),
                       )
                     ],
                   ),
