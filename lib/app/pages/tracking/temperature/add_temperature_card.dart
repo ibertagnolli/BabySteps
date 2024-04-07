@@ -1,5 +1,6 @@
 import 'package:babysteps/app/pages/tracking/temperature/temperature_database.dart';
 import 'package:babysteps/main.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -110,28 +111,34 @@ class _AddTemperatureCardState extends State<AddTemperatureCard> {
                   onTap: () async {
                     // Don't show keyboard
                     FocusScope.of(context).requestFocus(FocusNode());
+                    await showCupertinoModalPopup<void>(
+                      context: context,
+                      builder: (_) {
+                        final size = MediaQuery.of(context).size;
 
-                    DateTime? pickeddate = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(2020),
-                          lastDate: DateTime.now());
-                      
-                      TimeOfDay? pickedTime = await showTimePicker(
-                        context: context, 
-                        initialTime: TimeOfDay.fromDateTime(DateTime.now()),
-                      );
-
-                      if (pickeddate != null && pickedTime != null) {
-                        DateTime pickedDateAndTime = DateTime(
-                          pickeddate.year, pickeddate.month, pickeddate.day, 
-                          pickedTime.hour, pickedTime.minute,
+                        return Container(
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(12),
+                              topRight: Radius.circular(12),
+                            ),
+                          ),
+                          height: size.height * 0.27,
+                          child: CupertinoDatePicker(
+                            maximumDate:
+                                DateTime.now().add(const Duration(seconds: 30)),
+                            mode: CupertinoDatePickerMode.dateAndTime,
+                            onDateTimeChanged: (value) {
+                              setState(() {
+                                date.text = DateFormat("MM/dd/yyyy hh:mm a")
+                                    .format(value);
+                              });
+                            },
+                          ),
                         );
-                        setState(() {
-                          date.text =
-                              DateFormat.yMd().add_jm().format(pickedDateAndTime);
-                        });
-                      }
+                      },
+                    );
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
