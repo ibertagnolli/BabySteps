@@ -60,4 +60,18 @@ class SleepDatabaseMethods {
         .doc(id)
         .update({"length": napLength, "date": timeEnded, "active": false});
   }
+
+  // Deletes the sleep entry identified by docId
+  Future deleteSleep(var docId, String babyDoc) async {
+    return await db
+        .collection('Babies')
+        .doc(babyDoc)
+        .collection('Sleep')
+        .doc(docId)
+        .delete()
+        .then(
+          (doc) => print("Document deleted"),
+          onError: (e) => print("Error deleting document $e"),
+        );
+  }
 }

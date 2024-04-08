@@ -1,12 +1,13 @@
 import 'package:babysteps/app/pages/tracking/additional_streams.dart';
 import 'package:babysteps/app/pages/tracking/diaper/diaper_database.dart';
 import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
-import 'package:babysteps/app/widgets/styles.dart';
+import 'package:babysteps/app/pages/tracking/sleep/sleep_database.dart';
+import 'package:babysteps/app/pages/tracking/temperature/temperature_database.dart';
+import 'package:babysteps/app/pages/tracking/weight/weight_database.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/pages/tracking/history_streams.dart';
 import 'package:babysteps/app/pages/tracking/all_time_history_streams.dart';
-import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'dart:core';
 
@@ -272,11 +273,118 @@ class StackedTimeSeriesWidget extends StatelessWidget {
 }
 
 // Recent history table with 3 columns, column titles, and rows of data filled in
-class HistoryTable3Cols extends StatelessWidget {
-  HistoryTable3Cols(this.rows, this.colName, {super.key});
-
+class HistoryTable3Cols extends StatefulWidget {
+  String dataType;
   var rows;
   String colName;
+
+  HistoryTable3Cols(this.dataType, this.rows, this.colName, {super.key});
+
+  @override
+  State<HistoryTable3Cols> createState() => _HistoryTable3Cols();
+}
+
+class _HistoryTable3Cols extends State<HistoryTable3Cols> {
+
+  /// Deletes a row of the 3 column table when the row is long pressed
+  void deleteRow(String dataType, String docId) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            backgroundColor: const Color(0xFFB3BEB6),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 20),
+                    child: Text(
+                      "Do you want to delete this data entry?",
+                      style: TextStyle(
+                        fontFamily: 'Georgia',
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                  // Buttons
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 15),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            if(dataType == "Sleep") {
+                              await SleepDatabaseMethods().deleteSleep(
+                                docId,
+                                currentUser.value!.currentBaby.value!
+                                    .collectionId);
+                            } else if (dataType == "Weight") {
+                              await WeightDatabaseMethods().deleteWeight(
+                                docId,
+                                currentUser.value!.currentBaby.value!
+                                    .collectionId);
+                            } else if (dataType == "Temperature") {
+                              await TemperatureDatabaseMethods().deleteTemperature(
+                                docId,
+                                currentUser.value!.currentBaby.value!
+                                    .collectionId);
+                            } else {
+                              print("Error: Trying to delete the wrong dataType.");
+                            }
+                            Navigator.of(context, rootNavigator: true).pop();
+                          }, 
+                          // style is hard-coded blue button style
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(const Color(0xFF4F646F)),
+                            foregroundColor: MaterialStateProperty.all(const Color(0xFFFFFAF1)),
+                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                            ),
+                          ),
+                          child: const Text(
+                            'Yes',
+                            style: TextStyle(
+                              fontFamily: 'Georgia',
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context, rootNavigator: true).pop();
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(const Color(0xFF4F646F)),
+                          foregroundColor: MaterialStateProperty.all(const Color(0xFFFFFAF1)),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                          ),
+                        ),
+                        child: const Text(
+                          'No',
+                          style: TextStyle(
+                            fontFamily: 'Georgia',
+                            fontSize: 20,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ],)
+            )
+          );
+        }
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -303,7 +411,7 @@ class HistoryTable3Cols extends StatelessWidget {
         DataColumn(
           label: Expanded(
             child: Text(
-              colName,
+              widget.colName,
               style: const TextStyle(fontStyle: FontStyle.italic),
             ),
           ),
@@ -312,13 +420,16 @@ class HistoryTable3Cols extends StatelessWidget {
       // Table rows - dynamic - For each row we collected data for, create a DataCell for it
       // TODO: Some sort of "no history yet" message if there are no entries
       rows: <DataRow>[
-        for (var row in rows)
+        for (var row in widget.rows)
           DataRow(
             cells: <DataCell>[
               DataCell(Text(row.day)),
               DataCell(Text(row.time)),
               DataCell(Text(row.data)),
             ],
+            onLongPress: () {
+              deleteRow(widget.dataType, row.docId);
+            },
           ),
       ],
     );
@@ -346,6 +457,7 @@ class _HistoryTable4Cols extends State<HistoryTable4Cols> {
         context: context,
         builder: (context) {
           return Dialog(
+            backgroundColor: const Color(0xFFB3BEB6),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -353,9 +465,13 @@ class _HistoryTable4Cols extends State<HistoryTable4Cols> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   const Padding(
-                    padding: EdgeInsets.only(bottom: 15),
+                    padding: EdgeInsets.only(bottom: 20),
                     child: Text(
-                      "Do you want to delete this data entry?"
+                      "Do you want to delete this data entry?",
+                      style: TextStyle(
+                        fontFamily: 'Georgia',
+                        fontSize: 20,
+                      ),
                     ),
                   ),
                   // Buttons
@@ -376,16 +492,45 @@ class _HistoryTable4Cols extends State<HistoryTable4Cols> {
                             }
                             Navigator.of(context, rootNavigator: true).pop();
                           }, 
-                          style: blueButton(context),
-                          child: const Text('Yes'),
+                          // style is hard-coded blue button style
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(const Color(0xFF4F646F)),
+                            foregroundColor: MaterialStateProperty.all(const Color(0xFFFFFAF1)),
+                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                            ),
+                          ),
+                          child: const Text(
+                            'Yes',
+                            style: TextStyle(
+                              fontFamily: 'Georgia',
+                              fontSize: 20,
+                            ),
+                          ),
                         ),
-                      ),                      
+                      ),
                       ElevatedButton(
                         onPressed: () {
                           Navigator.of(context, rootNavigator: true).pop();
                         },
-                        style: blueButton(context),
-                        child: const Text('No'),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(const Color(0xFF4F646F)),
+                          foregroundColor: MaterialStateProperty.all(const Color(0xFFFFFAF1)),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                          ),
+                        ),
+                        child: const Text(
+                          'No',
+                          style: TextStyle(
+                            fontFamily: 'Georgia',
+                            fontSize: 20,
+                          ),
+                        ),
                       )
                     ],
                   ),
@@ -484,6 +629,7 @@ class _HistoryTable5Cols extends State<HistoryTable5Cols> {
         context: context,
         builder: (context) {
           return Dialog(
+            backgroundColor: const Color(0xFFB3BEB6),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -491,9 +637,13 @@ class _HistoryTable5Cols extends State<HistoryTable5Cols> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   const Padding(
-                    padding: EdgeInsets.only(bottom: 15),
+                    padding: EdgeInsets.only(bottom: 20),
                     child: Text(
-                      "Do you want to delete this data entry?"
+                      "Do you want to delete this data entry?",
+                      style: TextStyle(
+                        fontFamily: 'Georgia',
+                        fontSize: 20,
+                      ),
                     ),
                   ),
                   // Buttons
@@ -514,16 +664,44 @@ class _HistoryTable5Cols extends State<HistoryTable5Cols> {
                             }
                             Navigator.of(context, rootNavigator: true).pop();
                           }, 
-                          style: blueButton(context),
-                          child: const Text('Yes'),
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(const Color(0xFF4F646F)),
+                            foregroundColor: MaterialStateProperty.all(const Color(0xFFFFFAF1)),
+                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                            ),
+                          ),
+                          child: const Text(
+                            'Yes',
+                            style: TextStyle(
+                              fontFamily: 'Georgia',
+                              fontSize: 20,
+                            ),
+                          ),
                         ),
                       ),                      
                       ElevatedButton(
                         onPressed: () {
                           Navigator.of(context, rootNavigator: true).pop();
                         },
-                        style: blueButton(context),
-                        child: const Text('No'),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(const Color(0xFF4F646F)),
+                          foregroundColor: MaterialStateProperty.all(const Color(0xFFFFFAF1)),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                          ),
+                        ),
+                        child: const Text(
+                          'No',
+                          style: TextStyle(
+                            fontFamily: 'Georgia',
+                            fontSize: 20,
+                          ),
+                        ),
                       )
                     ],
                   ),
@@ -706,12 +884,13 @@ class HistoryTable6Cols extends StatelessWidget {
 }
 
 // Represents the data shown in the history table when we only need 3 columns
-class RowData3Cols<T1, T2, T3> {
+class RowData3Cols<T1, T2, T3, T4> {
   T1 day;
   T2 time;
   T3 data;
+  T4 docId;
 
-  RowData3Cols(this.day, this.time, this.data);
+  RowData3Cols(this.day, this.time, this.data, this.docId);
 }
 
 // Represents the data shown in the history table when we need 4 columns

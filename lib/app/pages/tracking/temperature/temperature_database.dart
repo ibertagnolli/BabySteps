@@ -33,4 +33,18 @@ class TemperatureDatabaseMethods {
         .orderBy('date', descending: true)
         .get();
   }
+
+  // Deletes the temperature entry identified by docId
+  Future deleteTemperature(var docId, String babyDoc) async {
+    return await db
+        .collection('Babies')
+        .doc(babyDoc)
+        .collection('Temperature')
+        .doc(docId)
+        .delete()
+        .then(
+          (doc) => print("Document deleted"),
+          onError: (e) => print("Error deleting document $e"),
+        );
+  }
 }
