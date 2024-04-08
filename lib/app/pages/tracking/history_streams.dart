@@ -65,12 +65,12 @@ class _BreastfeedingHistoryStreamState
               transformMilliSeconds(doc['side']['right']['duration']);
 
           rows.add(RowData6Cols(
-              day, time, leftLength, rightLength, totalLength, lastSide));
+              day, time, leftLength, rightLength, totalLength, lastSide, doc.id));
           //rows.add(RowData4Cols(day, time, leftLength, rightLength));
         }
 
         // Make a table with the retrieved data
-        return HistoryTable6Cols(
+        return HistoryTable6Cols("Breastfeed",
             rows, "Left Length", "Right Length", "Total Time", "Ended On");
         //return HistoryTable4Cols(rows, "Left Length", "Right Length");
       },
