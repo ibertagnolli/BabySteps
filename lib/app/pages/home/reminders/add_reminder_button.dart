@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:babysteps/app/pages/home/reminders/reminders_database.dart';
 import 'package:babysteps/app/pages/home/reminders/reminders_widgets.dart';
+import 'package:babysteps/app/pages/calendar/notifications.dart';
 import 'dart:core';
 
 // The widget that adds a new reminder.
@@ -58,7 +61,6 @@ class _AddReminderButtonState extends State<AddReminderButton> {
 
   /// Saves a new reminder entry in the Firestore database.
   saveNewReminder() async {
-    
     DateTime reminderDT; 
     DateTime now = DateTime.now();
 
@@ -96,7 +98,17 @@ class _AddReminderButtonState extends State<AddReminderButton> {
       reminderDT = DateTime(reminderDate.year, reminderDate.month, reminderDate.day,
         reminderTime.hour, reminderTime.minute);
     }
-    
+
+    int notificationID = Random().nextInt(1000000);
+    // Schedule notification as long as reminder date is in the future
+    if(DateTime.now().isBefore(reminderDT)) {
+      NotificationService().scheduleNotification(
+              id: notificationID,
+              title: nameController.text,
+              body:
+                  DateFormat("h:mma").format(reminderDT),
+              scheduledNotificationDateTime: reminderDT);
+    }
     // Write reminder data to database
     Map<String, dynamic> uploaddata = {
       'remindAbout': nameController.text,
@@ -104,6 +116,7 @@ class _AddReminderButtonState extends State<AddReminderButton> {
       'dateTime': reminderDT,
       'timeLength': (howManyController.text.isNotEmpty) ? int.parse(howManyController.text) : -1,
       'timeUnit': (howManyController.text.isNotEmpty) ? timeUnit : "--",
+      'notificationID': notificationID,
     };
     await RemindersDatabaseMethods()
         .addReminder(uploaddata, currentUser.value!.userDoc);
@@ -139,7 +152,8 @@ class _AddReminderButtonState extends State<AddReminderButton> {
           // Populate the controllers
           dateController.text = DateFormat.yMd().format(DateTime.now());
           timeController.text = TimeOfDay.now().format(context);
-
+          _setTimeUnit("minutes");
+          _setReminderType(1);
           showDialog(
               context: context,
               builder: (context) {
@@ -152,9 +166,9 @@ class _AddReminderButtonState extends State<AddReminderButton> {
                           key: _formKey,
                           child: Column(
                             children: <Widget>[
-
+                              
                               NewReminderForm(nameController, howManyController, dateController, timeController, _setReminderType, _setTimeUnit, "minutes", 1),
-
+                              
                               // Submit button
                               Padding(
                                 padding: const EdgeInsets.only(top: 15),

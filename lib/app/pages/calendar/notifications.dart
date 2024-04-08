@@ -39,7 +39,7 @@ class NotificationService {
   }
 
   Future scheduleNotification(
-      {int id = 0,
+      {required int id,
       String? title,
       String? body,
       String? payLoad,
@@ -56,5 +56,11 @@ class NotificationService {
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime);
+            
   }
+
+  Future deleteNotification(int id) async {
+    await notificationsPlugin.cancel(id);
+  }
+
 }

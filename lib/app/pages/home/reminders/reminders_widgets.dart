@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 
@@ -10,6 +11,7 @@ class DateAndTime extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     DateTime initDate = DateFormat("MM/dd/yyyy").parse(dateController.text);
 
     List<String> splitTime = timeController.text.split(' '); // format 2:00 PM
@@ -49,7 +51,7 @@ class DateAndTime extends StatelessWidget {
               return null;
             },
             // Don't show the keyboard
-            showCursor: true,
+            showCursor: false,
             readOnly: true,
           ),
 
@@ -75,7 +77,7 @@ class DateAndTime extends StatelessWidget {
               return null;
             },
             // Don't show the keyboard
-            showCursor: true,
+            showCursor: false,
             readOnly: true,
           ),
       ]
@@ -99,21 +101,33 @@ class _TimeIntervalState extends State<TimeInterval> {
   String dropdownValue = list.first;
 
   @override
+  void initState() {
+    setState(() {
+      dropdownValue = widget.initUnitSelection;
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         TextFormField(
           controller: widget.howManyController,
+          keyboardType: TextInputType.number,
+          inputFormatters: <TextInputFormatter>[
+            FilteringTextInputFormatter.digitsOnly
+          ],
           maxLength: 30,
           decoration: const InputDecoration(
             labelText: "How many",
           ),
+          onTapOutside: (event) {
+                  FocusManager.instance.primaryFocus?.unfocus();
+          },
           validator: (value) {
             if (value == null || value.isEmpty) {
               return 'Please enter reminder timing';
-            }
-            if(int.tryParse(value) == null) {
-              return 'Please enter a number';
             }
             return null;
           },
@@ -140,6 +154,7 @@ class _TimeIntervalState extends State<TimeInterval> {
 class TimingSelection extends StatelessWidget {
   const TimingSelection(
       this.selectedOption, this.howManyController, this.dateController, this.timeController, this._setTimeUnit, this.initUnitSelection, {super.key});
+
   final int selectedOption;
   final TextEditingController howManyController;
   final TextEditingController dateController;
@@ -163,8 +178,8 @@ class TimingSelection extends StatelessWidget {
 
 
 class NewReminderForm extends StatefulWidget {
-  const NewReminderForm(this.nameController, this.howManyController, this.dateController, this.timeController, this._setReminderType, this._setTimeUnit, this.initUnitSelection, this.initRadioButton, {super.key});//this.setTypeFunction, 
-
+  const NewReminderForm(this.nameController, this.howManyController, this.dateController, this.timeController, this._setReminderType, this._setTimeUnit, this.initUnitSelection, this.initRadioButton, {super.key}); 
+  
   final TextEditingController nameController;
   final TextEditingController howManyController;
   final TextEditingController dateController;
@@ -201,6 +216,9 @@ class _NewReminderFormState extends State<NewReminderForm> {
             decoration: const InputDecoration(
               labelText: "Remind me about",
             ),
+            onTapOutside: (event) {
+                  FocusManager.instance.primaryFocus?.unfocus();
+            },
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter reminder content';
@@ -216,10 +234,12 @@ class _NewReminderFormState extends State<NewReminderForm> {
               value: 1,
               groupValue: selectedOption,
               onChanged: (value) {
-                setState(() {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  setState(() {
                   selectedOption = value!;
                 });
                 widget._setReminderType(1);
+                });
               },
             ),
           ),
@@ -229,17 +249,18 @@ class _NewReminderFormState extends State<NewReminderForm> {
               value: 2,
               groupValue: selectedOption,
               onChanged: (value) {
-                setState(() {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  setState(() {
                   selectedOption = value!;
                 });
                 widget._setReminderType(2);
+                });
               },
             ),
           ),
 
           // Set time 
           TimingSelection(selectedOption, widget.howManyController, widget.dateController, widget.timeController, widget._setTimeUnit, widget.initUnitSelection),
-
         ],
       )
     ],);

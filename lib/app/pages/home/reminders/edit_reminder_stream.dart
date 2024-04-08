@@ -1,5 +1,10 @@
+import 'dart:math';
+
 import 'package:babysteps/app/pages/home/reminders/reminders_database.dart';
 import 'package:babysteps/app/pages/home/reminders/reminders_widgets.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:babysteps/app/pages/calendar/notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:babysteps/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -60,7 +65,7 @@ class _EditReminderStreamState extends State<EditReminderStream> {
   }
 
   /// Saves a new reminder entry in the Firestore database.
-  updateReminder() async {
+  updateReminder(int notificationID) async {
     
     DateTime reminderDT; 
     DateTime now = DateTime.now();
@@ -99,6 +104,18 @@ class _EditReminderStreamState extends State<EditReminderStream> {
       reminderDT = DateTime(reminderDate.year, reminderDate.month, reminderDate.day,
         reminderTime.hour, reminderTime.minute);
     }
+    // Delete previous notification 
+    NotificationService().deleteNotification(notificationID);
+    // Schedule updated notification
+    int newNotificationID = Random().nextInt(1000000);
+    if(DateTime.now().isBefore(reminderDT)) {
+      NotificationService().scheduleNotification(
+            id: newNotificationID,
+            title: nameController.text,
+            body:
+                DateFormat("h:mma").format(reminderDT),
+            scheduledNotificationDateTime: reminderDT);
+    }
 
     // Write reminder data to database
     Map<String, dynamic> uploaddata = {
@@ -107,6 +124,7 @@ class _EditReminderStreamState extends State<EditReminderStream> {
       'dateTime': reminderDT,
       'timeLength': (howManyController.text.isNotEmpty) ? int.parse(howManyController.text) : -1,
       'timeUnit': (howManyController.text.isNotEmpty) ? timeUnit : "--",
+      'notificationID': newNotificationID,
     };
     await RemindersDatabaseMethods()
         .updateReminder( widget.docId, uploaddata, currentUser.value!.userDoc);
@@ -142,29 +160,37 @@ class _EditReminderStreamState extends State<EditReminderStream> {
         } else {
 
           Map<String, dynamic> data = reminderDoc.data()! as Map<String, dynamic>;
-
-          // Populate the controllers
-          nameController.text = data['remindAbout'];
-          int initRadioButton = 1;
-          String initUnitSelection = "minutes";
-          if(data['reminderType'] == "in") {
-            howManyController.text = data['timeLength'].toString();
-            initUnitSelection = data['timeUnit'];
-            dateController.text = DateFormat.yMd().format(DateTime.now());
-            timeController.text = TimeOfDay.now().format(context);
-          }
-          if(data['reminderType'] == "at") {
-            initRadioButton = 2;
-            DateTime reminderDate = DateTime.fromMillisecondsSinceEpoch(data['dateTime'].seconds * 1000);
-            dateController.text = DateFormat.yMd().format(reminderDate);
-            TimeOfDay initTimeOfDay = TimeOfDay(hour: reminderDate.hour, minute: reminderDate.minute);
-            timeController.text = initTimeOfDay.format(context); 
-          }
-
+          
           return IconButton(
               icon: const Icon(Icons.edit),
               // Dialog with reminder entry
               onPressed: () {
+
+                // Populate the controllers
+                nameController.text = data['remindAbout'];
+                int initRadioButton;
+                String initUnitSelection;
+                if(data['reminderType'] == "in") {
+                  _setReminderType(1);
+                  initRadioButton = 1;
+                  howManyController.text = data['timeLength'].toString();
+                  initUnitSelection = data['timeUnit'];
+                  _setTimeUnit(initUnitSelection);
+                  dateController.text = DateFormat.yMd().format(DateTime.now());
+                  timeController.text = TimeOfDay.now().format(context);
+                }
+                else { // "at" reminder
+                  _setReminderType(2);
+                  initRadioButton = 2;
+                  reminderType = 2;
+                  initUnitSelection = "minutes";
+                  _setTimeUnit("minutes");
+                  DateTime reminderDate = DateTime.fromMillisecondsSinceEpoch(data['dateTime'].seconds * 1000);
+                  dateController.text = DateFormat.yMd().format(reminderDate);
+                  TimeOfDay initTimeOfDay = TimeOfDay(hour: reminderDate.hour, minute: reminderDate.minute);
+                  timeController.text = initTimeOfDay.format(context); 
+                }
+
                 showDialog(
                     context: context,
                     builder: (context) {
@@ -186,7 +212,7 @@ class _EditReminderStreamState extends State<EditReminderStream> {
                                       child: ElevatedButton(
                                           onPressed: () {
                                             if (_formKey.currentState!.validate()) {
-                                              updateReminder();
+                                              updateReminder(data['notificationID']);
                                               Navigator.pop(context);
                                             }
                                           },
