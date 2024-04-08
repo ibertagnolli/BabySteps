@@ -107,4 +107,18 @@ class MedicalDatabaseMethods{
         .doc(docId)
         .set(updatedUserInfoMap);
   }
+
+  // Deletes a vaccine or medicine entry identified by docId
+  Future deleteMedicalEntry(var docId, String babyDoc) async {
+    return await db
+        .collection('Babies')
+        .doc(babyDoc)
+        .collection('Medical')
+        .doc(docId)
+        .delete()
+        .then(
+          (doc) => print("Document deleted"),
+          onError: (e) => print("Error deleting document $e"),
+        );
+  }
 }

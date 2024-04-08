@@ -111,6 +111,93 @@ class _VaccineStreamState extends State<VaccineStream> {
     );
   }
 
+  /// Deletes a row of a vaccine entry when the row is long pressed
+  void deleteRow(String docId) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            backgroundColor: const Color(0xFFB3BEB6),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 20),
+                    child: Text(
+                      "Do you want to delete this data entry?",
+                      style: TextStyle(
+                        fontFamily: 'Georgia',
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                  // Buttons
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 15),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            await MedicalDatabaseMethods().deleteMedicalEntry(
+                              docId,
+                              currentUser.value!.currentBaby.value!
+                                  .collectionId);
+                          
+                            Navigator.of(context, rootNavigator: true).pop();
+                          }, 
+                          // style is hard-coded blue button style
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(const Color(0xFF4F646F)),
+                            foregroundColor: MaterialStateProperty.all(const Color(0xFFFFFAF1)),
+                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                            ),
+                          ),
+                          child: const Text(
+                            'Yes',
+                            style: TextStyle(
+                              fontFamily: 'Georgia',
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context, rootNavigator: true).pop();
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(const Color(0xFF4F646F)),
+                          foregroundColor: MaterialStateProperty.all(const Color(0xFFFFFAF1)),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                          ),
+                        ),
+                        child: const Text(
+                          'No',
+                          style: TextStyle(
+                            fontFamily: 'Georgia',
+                            fontSize: 20,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ],)
+            )
+          );
+        }
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> vaccineStream = MedicalDatabaseMethods()
@@ -131,7 +218,10 @@ class _VaccineStreamState extends State<VaccineStream> {
         var allVaccineDocs = snapshot.data!.docs;
 
         if (allVaccineDocs.isEmpty) {
-          return const Text("No vaccines recorded.");
+          return const Padding(
+            padding: EdgeInsets.only(bottom: 10),
+            child: Text("No vaccines recorded."),
+          );
         } else {
           return ListView(
             shrinkWrap: true,
@@ -158,6 +248,9 @@ class _VaccineStreamState extends State<VaccineStream> {
                           Text(data['reaction']),
                         onTap: () {
                           editVaccDialog(data);
+                        },
+                        onLongPress: () {
+                          deleteRow(document.id);
                         },
                       );
                     })
