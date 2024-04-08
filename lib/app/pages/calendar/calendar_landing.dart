@@ -36,12 +36,12 @@ class _CalendarLandingPageState extends State<CalendarLandingPage> {
             if (value == null) {
               return const LoadingWidget();
             } else {
-              return currentUser.value!.socialOnly
-                  ? const SocialOnlyWidget()
-                  : ValueListenableBuilder(
+              return currentUser.value!.trackingView
+                  ? ValueListenableBuilder(
                       valueListenable: currentUser.value!.currentBaby,
                       builder: (context, value, child) => const CalendarPage(),
-                    );
+                    )
+                  : const SocialOnlyWidget();
             }
           },
         ));

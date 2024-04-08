@@ -4,6 +4,7 @@ import 'package:babysteps/app/widgets/styles.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class BabyBox extends StatelessWidget {
@@ -15,7 +16,6 @@ class BabyBox extends StatelessWidget {
     this.updateName,
     this.updateDOB,
     this.babyId,
-    this.socialUsers,
     this.isPrimaryCaregiver, {
     super.key,
   });
@@ -26,22 +26,15 @@ class BabyBox extends StatelessWidget {
   final Function(String? id, String newVal) updateName;
   final Function(String? id, String newVal) updateDOB;
   final String babyId;
-  final List<dynamic> socialUsers;
   final bool isPrimaryCaregiver;
 
   @override
   Widget build(BuildContext context) {
     // TextEditingController controller = TextEditingController();
     List<String> caregiverNames = [];
-    List<String> socialNames = [];
     for (Map<String, dynamic> caregiver in caregivers) {
       if (currentUser.value!.uid != caregiver['uid']) {
         caregiverNames.add(caregiver['name'] ?? '');
-      }
-    }
-    for (Map<String, dynamic> socialUser in socialUsers) {
-      if (currentUser.value!.uid != socialUser['uid']) {
-        socialNames.add(socialUser['name'] ?? '');
       }
     }
 
@@ -109,9 +102,6 @@ class BabyBox extends StatelessWidget {
           style: blueButton(context),
           child: const Text('Add Caregiver'),
         ),
-      if (socialNames.isNotEmpty || (editing && isPrimaryCaregiver))
-        BuildInfoField('Social only Users', socialNames,
-            const Icon(Icons.people), false, (unused, unused2) => {}),
       if (editing && isPrimaryCaregiver)
         ElevatedButton(
           onPressed: () {
@@ -144,6 +134,18 @@ class BabyBox extends StatelessWidget {
           },
           style: blueButton(context),
           child: const Text('Add Social User'),
+        ),
+      if (isPrimaryCaregiver && (caregivers.isNotEmpty))
+        Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: ElevatedButton(
+            onPressed: () {
+              context.goNamed('/profile/userconfig',
+                  queryParameters: {'babyId': babyId});
+            },
+            style: blueButton(context),
+            child: const Text('Edit user permissions'),
+          ),
         ),
     ]);
   }

@@ -9,7 +9,14 @@ class UserProfile {
   ValueNotifier<Baby?> currentBaby;
   // int currBabyIndex;
   List<Baby>? babies;
-  bool socialOnly;
+  //This is a map that looks like:
+  //{
+  //  docId: String
+  //  primaryCaregiver: bool
+  //  canPost: bool
+  //  caregiver: bool //True if they can have access to all of babys info
+  //}
+  bool trackingView; //This is true if one baby has tracking as true
 
   UserProfile(
       {required this.name,
@@ -18,7 +25,7 @@ class UserProfile {
       required this.userDoc,
       required this.currentBaby,
       this.babies,
-      this.socialOnly = false});
+      this.trackingView = true});
 
   updateName(String name) {
     this.name = name;

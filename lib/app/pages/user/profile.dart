@@ -7,7 +7,6 @@ import 'package:babysteps/main.dart';
 import 'package:babysteps/model/baby.dart';
 import 'package:babysteps/model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:go_router/go_router.dart';
@@ -76,7 +75,6 @@ class _ProfilePageState extends State<ProfilePage> {
       'Name': '',
       'Caregivers': [],
       'PrimaryCaregiverUID': currentUser.value!.uid,
-      'SocialUsers': []
     };
     DocumentReference babyRef = await UserDatabaseMethods().addBaby(uploaddata);
     setState(
@@ -88,7 +86,6 @@ class _ProfilePageState extends State<ProfilePage> {
             collectionId: babyRef.id,
             caregivers: [],
             primaryCaregiverUid: currentUser.value!.uid,
-            socialUsers: [],
           ),
         );
       },
@@ -96,7 +93,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   /// Creates a new caregiver user associated with an existing baby
-  uploadBabyToCaregiver(String babyCode) async {
+  uploadBabyToCaregiver(String babyCode, bool socialUser) async {
     try {
       // Add the caregiver user to the baby's list of caregivers
       DocumentSnapshot snapshot = await UserDatabaseMethods().getBaby(babyCode);
@@ -105,7 +102,9 @@ class _ProfilePageState extends State<ProfilePage> {
       caregivers.add({
         'name': currentUser.value!.name,
         'doc': currentUser.value!.userDoc,
-        'uid': currentUser.value!.uid
+        'uid': currentUser.value!.uid,
+        'canPost': true,
+        'trackingView': !socialUser
       });
       await UserDatabaseMethods().updateBabyCaregiver(babyCode, caregivers);
 
@@ -118,43 +117,13 @@ class _ProfilePageState extends State<ProfilePage> {
               collectionId: snapshot.id,
               caregivers: caregivers,
               primaryCaregiverUid: doc['PrimaryCaregiverUID'],
-              socialUsers: doc['socialUsers'],
             ),
           );
         },
       );
-    } catch (e) {
-      print('invalid code ${e.toString()}');
-    }
-  }
 
-  uploadBabyToSocialUser(String babyCode) async {
-    try {
-      // Add the caregiver user to the baby's list of social only users
-      DocumentSnapshot snapshot = await UserDatabaseMethods().getBaby(babyCode);
-      Map<String, dynamic> doc = snapshot.data()! as Map<String, dynamic>;
-      List<dynamic> socialUsers = doc['SocialUsers'] ?? [];
-      socialUsers.add({
-        'name': currentUser.value!.name,
-        'doc': currentUser.value!.userDoc,
-        'uid': currentUser.value!.uid
-      });
-      await UserDatabaseMethods().updateBabySocialUser(babyCode, socialUsers);
-
-      setState(
-        () {
-          updatedUser.addBaby(
-            Baby(
-              name: doc['Name'],
-              dob: (doc['DOB'] as Timestamp).toDate(),
-              collectionId: snapshot.id,
-              caregivers: doc['Caregivers'],
-              primaryCaregiverUid: doc['PrimaryCaregiverUID'],
-              socialUsers: socialUsers,
-            ),
-          );
-        },
-      );
+      currentUser.value!.trackingView =
+          currentUser.value!.trackingView && !socialUser;
     } catch (e) {
       print('invalid code ${e.toString()}');
     }
@@ -190,12 +159,13 @@ class _ProfilePageState extends State<ProfilePage> {
                               }
                             }
                           }
-
-                          if (newBabyForUser &&
-                              babyCode.text.endsWith("_SOU")) {
-                            uploadBabyToSocialUser(babyCodeText);
-                          } else if (newBabyForUser) {
-                            uploadBabyToCaregiver(babyCodeText);
+                          if (newBabyForUser) {
+                            bool socialOnly = babyCode.text.endsWith("_SOU");
+                            String babyCodeText = socialOnly
+                                ? babyCode.text
+                                    .substring(0, babyCode.text.length - 4)
+                                : babyCode.text;
+                            uploadBabyToCaregiver(babyCodeText, socialOnly);
                           }
 
                           Navigator.pop(context);
@@ -338,7 +308,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     updateBabyName,
                     updateBabyDOB,
                     element.collectionId,
-                    element.socialUsers ?? [],
                     element.primaryCaregiverUid == currentUser.value!.uid),
 
               if (editing)

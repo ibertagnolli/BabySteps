@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:babysteps/app/pages/social/social_database.dart';
 import 'package:babysteps/main.dart';
+import 'package:babysteps/model/baby.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
 import 'package:image_picker/image_picker.dart';
@@ -22,6 +23,8 @@ class _CreatePostState extends State<CreatePostPage> {
   TextEditingController caption = TextEditingController();
   File? _imgFile;
   bool error = false;
+  List<String> selectedBabyIds = [];
+  List<String> selectedBabyNames = [];
 
   void takeSnapshot(bool fromCamera) async {
     final ImagePicker picker = ImagePicker();
@@ -58,16 +61,16 @@ class _CreatePostState extends State<CreatePostPage> {
       'date': now,
       'title': title.text == '' ? null : title.text,
       'caption': caption.text == '' ? null : caption.text,
-      'child': [
-        currentUser.value!.currentBaby.value!.name
-      ], //TODO: update this to be the baby you're posting
+      'child': selectedBabyNames,
       'image': filePath,
       'likes': [],
       'comments': [],
     };
 
-    await SocialDatabaseMethods().addPost(
-        uploaddata, currentUser.value!.currentBaby.value!.collectionId);
+    for (String babyId in selectedBabyIds) {
+      await SocialDatabaseMethods().addPost(uploaddata, babyId);
+    }
+
     //once data has been added, update the card accordingly
   }
 
@@ -93,6 +96,22 @@ class _CreatePostState extends State<CreatePostPage> {
     final screenWidth = MediaQuery.of(context).size.width;
     final cardWidth = screenWidth * 0.95;
     final cardHeight = cardWidth * 0.75;
+    List<Baby> babies = [];
+
+    if (currentUser.value!.babies != null) {
+      List<Baby> allBabies = currentUser.value!.babies!;
+      for (Baby baby in allBabies) {
+        if (baby.primaryCaregiverUid == currentUser.value!.uid) {
+          babies.add(baby);
+        } else {
+          for (dynamic caregiver in baby.caregivers) {
+            if (caregiver['canPost']) {
+              babies.add(baby);
+            }
+          }
+        }
+      }
+    }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface,
@@ -165,6 +184,60 @@ class _CreatePostState extends State<CreatePostPage> {
                             ],
                           ),
                         ),
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
+                child: SizedBox(
+                  width: cardWidth,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).cardColor,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: DropdownButton<String>(
+                      dropdownColor: Theme.of(context).cardColor,
+                      isExpanded: true,
+                      items: [
+                        for (Baby baby in babies)
+                          DropdownMenuItem(
+                            value: baby.name,
+                            child: StatefulBuilder(
+                              builder: (context, _setState) => CheckboxListTile(
+                                tileColor: Theme.of(context).cardColor,
+                                title: Text(baby.name),
+                                onChanged: (bool? value) {
+                                  _setState(() {
+                                    if (value != null) {
+                                      if (value) {
+                                        selectedBabyIds.add(baby.collectionId);
+                                        selectedBabyNames.add(baby.name);
+                                      } else {
+                                        selectedBabyIds
+                                            .remove(baby.collectionId);
+                                        selectedBabyNames.remove(baby.name);
+                                      }
+                                    }
+                                  });
+                                  setState(() {
+                                    selectedBabyIds;
+                                    selectedBabyNames;
+                                  });
+                                },
+                                value:
+                                    selectedBabyIds.contains(baby.collectionId),
+                              ),
+                            ),
+                          ),
+                      ],
+                      onChanged: (value) {},
+                      hint: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: Text(selectedBabyIds.isEmpty
+                              ? 'Select children'
+                              : selectedBabyNames.join(", "))),
+                    ),
+                  ),
                 ),
               ),
               Padding(

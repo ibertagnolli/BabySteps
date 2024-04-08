@@ -17,6 +17,7 @@ import 'package:babysteps/app/pages/tracking/tracking_landing.dart';
 import 'package:babysteps/app/pages/tracking/weight/weight.dart';
 import 'package:babysteps/app/pages/user/add_baby.dart';
 import 'package:babysteps/app/pages/user/edit.dart';
+import 'package:babysteps/app/pages/user/edit_permissions.dart';
 import 'package:babysteps/app/pages/user/profile_loading_landing.dart';
 import 'package:babysteps/app/pages/user/user_database.dart';
 import 'package:babysteps/model/baby.dart';
@@ -69,6 +70,8 @@ void main() async {
       QuerySnapshot snapshot = await UserDatabaseMethods().getUser(user.uid);
       var doc = snapshot.docs;
       if (doc.isNotEmpty) {
+        bool trackingView = false;
+
         List<dynamic> babyList = doc[0]['baby'];
 
         for (String babyId in babyList) {
@@ -83,32 +86,36 @@ void main() async {
                 dob: (doc2['DOB'] as Timestamp).toDate(),
                 name: doc2['Name'],
                 caregivers: doc2['Caregivers'],
-                socialUsers: doc2['SocialUsers'],
                 primaryCaregiverUid: doc2['PrimaryCaregiverUID']));
+
+            List<dynamic> caregivers = doc2['Caregivers'];
+            trackingView = caregivers.firstWhere(
+                    (caregiver) => caregiver['uid'] == user.uid,
+                    orElse: () => {'trackingView': true})['trackingView'] ||
+                trackingView;
           }
         }
 
         hasBaby = babies.isNotEmpty;
 
-        try {
-          currentUser.value = UserProfile(
-              userDoc: doc[0].id,
-              uid: user.uid,
-              name: user.displayName ?? '',
-              email: user.email ?? '',
-              babies: babies,
-              currentBaby: ValueNotifier(babies.isNotEmpty ? babies[0] : null),
-              socialOnly: doc[0]['SocialOnly']);
-        } catch (e) {
-          currentUser.value = UserProfile(
+        Baby? currentBaby = babies
+            .where((baby) => baby.primaryCaregiverUid == user.uid)
+            .firstOrNull;
+
+        currentBaby ??= babies
+            .where((baby) => baby.caregivers
+                .where((caregiver) => caregiver['trackingView'] == true)
+                .firstOrNull)
+            .firstOrNull;
+
+        currentUser.value = UserProfile(
             userDoc: doc[0].id,
             uid: user.uid,
             name: user.displayName ?? '',
             email: user.email ?? '',
             babies: babies,
-            currentBaby: ValueNotifier(babies.isNotEmpty ? babies[0] : null),
-          );
-        }
+            currentBaby: ValueNotifier(currentBaby),
+            trackingView: trackingView);
       }
 
       print('User is signed in!');
@@ -230,6 +237,15 @@ final goRouter = GoRouter(
         GoRoute(
           path: 'edit',
           builder: (context, state) => const EditProfilePage(),
+        ),
+        GoRoute(
+          path: 'userconfig',
+          name: '/profile/userconfig',
+          builder: (context, state) {
+            return EditPermissionsPage(
+              state.uri.queryParameters['babyId'] ?? '',
+            );
+          },
         )
       ],
     ),
