@@ -1,10 +1,14 @@
 import 'package:babysteps/app/pages/tracking/additional_streams.dart';
+import 'package:babysteps/app/pages/tracking/diaper/diaper_database.dart';
+import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
+import 'package:babysteps/app/widgets/styles.dart';
+import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:babysteps/app/pages/tracking/history_streams.dart';
 import 'package:babysteps/app/pages/tracking/all_time_history_streams.dart';
+import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-
-
+import 'dart:core';
 
 // The history dropdown widget
 class HistoryDropdown extends StatelessWidget {
@@ -322,12 +326,73 @@ class HistoryTable3Cols extends StatelessWidget {
 }
 
 // Recent history table with 4 columns, column titles, and data filled in
-class HistoryTable4Cols extends StatelessWidget {
-  HistoryTable4Cols(this.rows, this.col1Name, this.col2Name, {super.key});
-
+class HistoryTable4Cols extends StatefulWidget {
+  String dataType;
   var rows;
   String col1Name;
   String col2Name;
+
+  HistoryTable4Cols(this.dataType, this.rows, this.col1Name, this.col2Name, {super.key});
+
+  @override
+  State<HistoryTable4Cols> createState() => _HistoryTable4Cols();
+}
+
+class _HistoryTable4Cols extends State<HistoryTable4Cols> {
+  void deleteRow(String dataType, String docId) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 15),
+                    child: Text(
+                      "Do you want to delete this data entry?"
+                    ),
+                  ),
+                  // Buttons
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 15),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            if(dataType == "Bottle") {
+                              await FeedingDatabaseMethods().deleteFeeding(
+                                docId,
+                                currentUser.value!.currentBaby.value!
+                                    .collectionId);
+                            } else {
+                              print("Error: Trying to delete the wrong dataType.");
+                            }
+                            Navigator.of(context, rootNavigator: true).pop();
+                          }, 
+                          style: blueButton(context),
+                          child: const Text('Yes'),
+                        ),
+                      ),                      
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context, rootNavigator: true).pop();
+                        },
+                        style: blueButton(context),
+                        child: const Text('No'),
+                      )
+                    ],
+                  ),
+                ],)
+            )
+          );
+        }
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -359,7 +424,7 @@ class HistoryTable4Cols extends StatelessWidget {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  col1Name,
+                  widget.col1Name,
                   style: const TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
@@ -367,7 +432,7 @@ class HistoryTable4Cols extends StatelessWidget {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  col2Name,
+                  widget.col2Name,
                   style: const TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
@@ -376,7 +441,7 @@ class HistoryTable4Cols extends StatelessWidget {
           // Table rows - dynamic - For each row we collected data for, create a DataCell for it
           // TODO: Some sort of "no history yet" message if there are no entries
           rows: <DataRow>[
-            for (var row in rows)
+            for (var row in widget.rows)
               DataRow(
                 cells: <DataCell>[
                   DataCell(Text(row.day)),
@@ -384,6 +449,9 @@ class HistoryTable4Cols extends StatelessWidget {
                   DataCell(Text(row.data1)),
                   DataCell(Text(row.data2))
                 ],
+                onLongPress: () {
+                  deleteRow(widget.dataType, row.docId);
+                },
               ),
           ],
         ),
@@ -498,13 +566,14 @@ class RowData3Cols<T1, T2, T3> {
 }
 
 // Represents the data shown in the history table when we need 4 columns
-class RowData4Cols<T1, T2, T3, T4> {
+class RowData4Cols<T1, T2, T3, T4, T5> {
   T1 day;
   T2 time;
   T3 data1;
   T4 data2;
+  T5 docId;
 
-  RowData4Cols(this.day, this.time, this.data1, this.data2);
+  RowData4Cols(this.day, this.time, this.data1, this.data2, this.docId);
 }
 
 // Represents the data shown in the history table when we need 6 columns

@@ -32,4 +32,18 @@ class DiaperDatabaseMethods {
         .orderBy('date', descending: true)
         .get();
   }
+
+  // Deletes the diaper entry identified by docId
+  Future deleteDiaper(var docId, String babyDoc) async {
+    return await db
+        .collection('Babies')
+        .doc(babyDoc)
+        .collection('Diaper')
+        .doc(docId)
+        .delete()
+        .then(
+          (doc) => print("Document deleted"),
+          onError: (e) => print("Error deleting document $e"),
+        );
+  }
 }

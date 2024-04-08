@@ -127,11 +127,11 @@ class _BottleHistoryStreamState extends State<BottleHistoryStream> {
           String bottleType = doc['bottleType'];
           String amount = doc['ounces'] + " oz";
 
-          rows.add(RowData4Cols(day, time, amount, bottleType));
+          rows.add(RowData4Cols(day, time, amount, bottleType, doc.id));
         }
 
         // Make a table with the retrieved data
-        return HistoryTable4Cols(rows, "Amount", "Bottle Type");
+        return HistoryTable4Cols("Bottle", rows, "Amount", "Bottle Type");
       },
     );
   }
@@ -360,11 +360,11 @@ class _DiaperHistoryStreamState extends State<DiaperHistoryStream> {
           bool diaperRashBool = doc['rash'];
           String diaperRash = diaperRashBool ? "Yes" : "No";
 
-          rows.add(RowData4Cols(day, time, diaperType, diaperRash));
+          rows.add(RowData4Cols(day, time, diaperType, diaperRash, doc.id));
         }
 
         // Make a table with the retrieved data
-        return HistoryTable4Cols(rows, "Diaper Type", "Diaper Rash?");
+        return HistoryTable4Cols("Diaper", rows, "Diaper Type", "Diaper Rash?");
       },
     );
   }
