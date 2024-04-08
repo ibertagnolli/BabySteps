@@ -42,7 +42,9 @@ class _AddBabyPageState extends State<AddBabyPage> {
 
     // Add the primary user to the DB (user is currently only in Auth)
     Map<String, dynamic> userData = {
-      'baby': [babyRef.id],
+      'baby': [
+        babyRef.id,
+      ],
       'UID': user?.uid,
     };
     await UserDatabaseMethods().addBabyToNewUser(userData);
@@ -70,7 +72,6 @@ class _AddBabyPageState extends State<AddBabyPage> {
               dob: (doc2['DOB'] as Timestamp).toDate(),
               name: doc2['Name'],
               caregivers: doc2['Caregivers'],
-              socialUsers: doc2['SocialUsers'],
               primaryCaregiverUid: doc2['PrimaryCaregiverUID'],
             ),
           );
@@ -89,77 +90,7 @@ class _AddBabyPageState extends State<AddBabyPage> {
   }
 
   /// Creates a new caregiver user associated with an existing baby
-  uploadBabyToCaregiver(TextEditingController babyCode) async {
-    // Update currentUser
-    // currentUser.name = user?.displayName ?? '';
-    // currentUser.uid = user!.uid;
-    // currentUser.email = user!.email;
-
-    try {
-      // Create the caregiver user associated with existing baby
-      Map<String, dynamic> userData = {
-        'baby': [babyCode.text],
-        'UID': user!.uid,
-        'SocialOnly': false,
-      };
-      UserDatabaseMethods().addBabyToNewUser(userData);
-
-      // Now that the caregiver user has been created, update currentUser's userDoc
-      QuerySnapshot userSnapshot =
-          await UserDatabaseMethods().getUser(user!.uid);
-      var userDoc = userSnapshot.docs;
-      String docId = userDoc[0].id;
-
-      // Add the caregiver user to the baby's list of caregivers
-      DocumentSnapshot snapshot =
-          await UserDatabaseMethods().getBaby(babyCode.text);
-      Map<String, dynamic> doc = snapshot.data()! as Map<String, dynamic>;
-      List<dynamic> caregivers = doc['Caregivers'];
-      caregivers.add(
-          {'name': user!.displayName ?? '', 'doc': docId, 'uid': user!.uid});
-      await UserDatabaseMethods()
-          .updateBabyCaregiver(babyCode.text, caregivers);
-
-      // Finish updating currentUser with their updated list of babies
-      List<Baby> babies = [];
-      if (userDoc.isNotEmpty) {
-        List<dynamic> babyIds = userDoc[0]['baby'];
-        for (String babyId in babyIds) {
-          if (babyId != '') {
-            DocumentSnapshot snapshot2 =
-                await UserDatabaseMethods().getBaby(babyId);
-            Map<String, dynamic> doc2 =
-                snapshot2.data()! as Map<String, dynamic>;
-
-            babies.add(
-              Baby(
-                  collectionId: babyId,
-                  dob: (doc2['DOB'] as Timestamp).toDate(),
-                  name: doc2['Name'],
-                  caregivers: doc2['Caregivers'],
-                  socialUsers: doc2['SocialUsers'],
-                  primaryCaregiverUid: doc2['PrimaryCaregiverUID']),
-            );
-          }
-        }
-
-        currentUser.value = UserProfile(
-          name: user?.displayName ?? '',
-          email: user!.email ?? '',
-          uid: user!.uid,
-          userDoc: docId,
-          babies: babies,
-          currentBaby: ValueNotifier(babies.isNotEmpty ? babies[0] : null),
-          socialOnly: false,
-        );
-      }
-    } catch (e) {
-      print('invalid code ${e.toString()}');
-    }
-  }
-
-  /// Creates a new caregiver user associated with an existing baby
-  uploadBabyToSocialUser(String babyCode) async {
+  uploadBabyToCaregiver(String babyCode, bool socialUser) async {
     // Update currentUser
     // currentUser.name = user?.displayName ?? '';
     // currentUser.uid = user!.uid;
@@ -170,7 +101,6 @@ class _AddBabyPageState extends State<AddBabyPage> {
       Map<String, dynamic> userData = {
         'baby': [babyCode],
         'UID': user!.uid,
-        'SocialOnly': true,
       };
       UserDatabaseMethods().addBabyToNewUser(userData);
 
@@ -180,13 +110,18 @@ class _AddBabyPageState extends State<AddBabyPage> {
       var userDoc = userSnapshot.docs;
       String docId = userDoc[0].id;
 
-      // Add the caregiver user to the baby's list of social only users
+      // Add the caregiver user to the baby's list of caregivers
       DocumentSnapshot snapshot = await UserDatabaseMethods().getBaby(babyCode);
       Map<String, dynamic> doc = snapshot.data()! as Map<String, dynamic>;
-      List<dynamic> socialUsers = doc['SocialUsers'] ?? [];
-      socialUsers.add(
-          {'name': user!.displayName ?? '', 'doc': docId, 'uid': user!.uid});
-      await UserDatabaseMethods().updateBabySocialUser(babyCode, socialUsers);
+      List<dynamic> caregivers = doc['Caregivers'];
+      caregivers.add({
+        'name': user!.displayName ?? '',
+        'doc': docId,
+        'uid': user!.uid,
+        'canPost': true,
+        'trackingView': !socialUser
+      });
+      await UserDatabaseMethods().updateBabyCaregiver(babyCode, caregivers);
 
       // Finish updating currentUser with their updated list of babies
       List<Baby> babies = [];
@@ -204,7 +139,6 @@ class _AddBabyPageState extends State<AddBabyPage> {
                   collectionId: babyId,
                   dob: (doc2['DOB'] as Timestamp).toDate(),
                   name: doc2['Name'],
-                  socialUsers: doc2['SocialUsers'],
                   caregivers: doc2['Caregivers'],
                   primaryCaregiverUid: doc2['PrimaryCaregiverUID']),
             );
@@ -218,7 +152,7 @@ class _AddBabyPageState extends State<AddBabyPage> {
           userDoc: docId,
           babies: babies,
           currentBaby: ValueNotifier(babies.isNotEmpty ? babies[0] : null),
-          socialOnly: true,
+          trackingView: !socialUser,
         );
       }
     } catch (e) {
@@ -244,13 +178,12 @@ class _AddBabyPageState extends State<AddBabyPage> {
                       const SizedBox(height: 8),
                       ElevatedButton(
                         onPressed: () {
-                          if (babyCode.text.endsWith("_SOU")) {
-                            String babyCodeText = babyCode.text
-                                .substring(0, babyCode.text.length - 4);
-                            uploadBabyToSocialUser(babyCodeText);
-                          } else {
-                            uploadBabyToCaregiver(babyCode);
-                          }
+                          bool socialOnly = babyCode.text.endsWith("_SOU");
+                          String babyCodeText = socialOnly
+                              ? babyCode.text
+                                  .substring(0, babyCode.text.length - 4)
+                              : babyCode.text;
+                          uploadBabyToCaregiver(babyCodeText, socialOnly);
                           context.go('/tracking');
                           // context.go('/home'); //TODO: add back in when home is interesting
                         },

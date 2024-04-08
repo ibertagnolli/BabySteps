@@ -1,12 +1,15 @@
 import 'package:babysteps/app/pages/social/social_database.dart';
 import 'package:babysteps/app/widgets/social_widgets.dart';
 import 'package:babysteps/main.dart';
+import 'package:babysteps/model/baby.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:pdf/pdf.dart';
+import 'package:async/async.dart' show StreamGroup, StreamZip;
+import 'package:rxdart/rxdart.dart';
 
 class SocialStream extends StatefulWidget {
   const SocialStream({super.key});
@@ -16,8 +19,6 @@ class SocialStream extends StatefulWidget {
 }
 
 class _SocialStreamState extends State<SocialStream> {
-  final Stream<QuerySnapshot> _socialStream = SocialDatabaseMethods()
-      .getStream(currentUser.value!.currentBaby.value!.collectionId);
   late var posts;
 
   Future<pw.Document> createMultiPdf(posts) async {
@@ -220,9 +221,21 @@ class _SocialStreamState extends State<SocialStream> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: _socialStream,
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+    List<Stream<QuerySnapshot>> socialStreams = [];
+    Stream<List<QuerySnapshot>> socialStream() {
+      if (currentUser.value!.babies != null) {
+        for (Baby baby in currentUser.value!.babies!) {
+          socialStreams
+              .add(SocialDatabaseMethods().getStream(baby.collectionId));
+        }
+      }
+      return ZipStream(socialStreams, (values) => [...values]);
+    }
+
+    return StreamBuilder<List<QuerySnapshot>>(
+      stream: socialStream(),
+      builder:
+          (BuildContext context, AsyncSnapshot<List<QuerySnapshot>> snapshot) {
         if (snapshot.hasError) {
           return const Text('Something went wrong');
         }
@@ -233,7 +246,20 @@ class _SocialStreamState extends State<SocialStream> {
         var postWidgets = List<Widget>.empty(growable: true);
 
         if (snapshot.data != null) {
-          posts = snapshot.data!.docs;
+          List<dynamic> postList = [];
+          for (dynamic data in snapshot.data!) {
+            postList.addAll(data.docs);
+            // postList.add(data);
+          }
+          // posts = snapshot.data;
+          // posts = snapshot.data!.docs;
+          postList.sort((a, b) {
+            return (b['date'] as Timestamp)
+                .toDate()
+                .compareTo((a['date'] as Timestamp).toDate());
+          });
+
+          posts = postList;
 
           for (QueryDocumentSnapshot post in posts) {
             String userName = post['usersName'];
@@ -247,7 +273,7 @@ class _SocialStreamState extends State<SocialStream> {
             postWidgets.add(Post(
               usersName: userName,
               timeStamp: date.toIso8601String(),
-              childName: child[0],
+              childName: child.join(", "),
               title: title,
               caption: caption,
               image: imagePath,

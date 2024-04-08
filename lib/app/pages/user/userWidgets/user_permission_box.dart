@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 
 class UserPermissionBox extends StatefulWidget {
-  UserPermissionBox(
+  const UserPermissionBox(
+    this.caregiverId,
     this.userName,
-    this.socialOnly,
+    this.trackingView,
     this.canPost,
-    this.userDoc, {
+    this.userDoc,
+    this.onChange, {
     super.key,
   });
+  final String caregiverId;
   final String userName;
-  bool socialOnly;
-  bool canPost;
+  final bool trackingView;
+  final bool canPost;
   final String userDoc;
+  final void Function(
+      String caregiverUid, bool trackingAccess, bool postingAccess) onChange;
 
   @override
   State<UserPermissionBox> createState() => _UserPermissionsBoxState();
@@ -24,7 +29,7 @@ class _UserPermissionsBoxState extends State<UserPermissionBox> {
   @override
   void initState() {
     super.initState();
-    trackingAccess = !widget.socialOnly;
+    trackingAccess = widget.trackingView;
     postingAccess = widget.canPost;
   }
 
@@ -62,9 +67,13 @@ class _UserPermissionsBoxState extends State<UserPermissionBox> {
                           return null; // All other states will use the default thumbIcon.
                         }),
                         value: trackingAccess,
-                        onChanged: (viewTracking) => setState(() {
-                              trackingAccess = !trackingAccess;
-                            }))
+                        onChanged: (trackingView) {
+                          setState(() {
+                            trackingAccess = trackingView;
+                          });
+                          widget.onChange(widget.caregiverId, trackingAccess,
+                              postingAccess);
+                        })
                   ],
                 ),
                 Row(
@@ -87,6 +96,8 @@ class _UserPermissionsBoxState extends State<UserPermissionBox> {
                           setState(() {
                             postingAccess = canPostPhotos;
                           });
+                          widget.onChange(widget.caregiverId, trackingAccess,
+                              postingAccess);
                         }),
                   ],
                 )

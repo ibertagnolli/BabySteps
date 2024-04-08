@@ -68,6 +68,8 @@ void main() async {
       QuerySnapshot snapshot = await UserDatabaseMethods().getUser(user.uid);
       var doc = snapshot.docs;
       if (doc.isNotEmpty) {
+        bool trackingView = false;
+
         List<dynamic> babyList = doc[0]['baby'];
 
         for (String babyId in babyList) {
@@ -82,32 +84,36 @@ void main() async {
                 dob: (doc2['DOB'] as Timestamp).toDate(),
                 name: doc2['Name'],
                 caregivers: doc2['Caregivers'],
-                socialUsers: doc2['SocialUsers'],
                 primaryCaregiverUid: doc2['PrimaryCaregiverUID']));
+
+            List<dynamic> caregivers = doc2['Caregivers'];
+            trackingView = caregivers.firstWhere(
+                    (caregiver) => caregiver['uid'] == user.uid,
+                    orElse: () => {'trackingView': true})['trackingView'] ||
+                trackingView;
           }
         }
 
         hasBaby = babies.isNotEmpty;
 
-        try {
-          currentUser.value = UserProfile(
-              userDoc: doc[0].id,
-              uid: user.uid,
-              name: user.displayName ?? '',
-              email: user.email ?? '',
-              babies: babies,
-              currentBaby: ValueNotifier(babies.isNotEmpty ? babies[0] : null),
-              socialOnly: doc[0]['SocialOnly']);
-        } catch (e) {
-          currentUser.value = UserProfile(
+        Baby? currentBaby = babies
+            .where((baby) => baby.primaryCaregiverUid == user.uid)
+            .firstOrNull;
+
+        currentBaby ??= babies
+            .where((baby) => baby.caregivers
+                .where((caregiver) => caregiver['trackingView'] == true)
+                .firstOrNull)
+            .firstOrNull;
+
+        currentUser.value = UserProfile(
             userDoc: doc[0].id,
             uid: user.uid,
             name: user.displayName ?? '',
             email: user.email ?? '',
             babies: babies,
-            currentBaby: ValueNotifier(babies.isNotEmpty ? babies[0] : null),
-          );
-        }
+            currentBaby: ValueNotifier(currentBaby),
+            trackingView: trackingView);
       }
 
       print('User is signed in!');

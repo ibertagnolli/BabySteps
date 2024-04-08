@@ -34,6 +34,23 @@ class _TrackingPageState extends State<TrackingPage> {
     Stream<QuerySnapshot> medicalStream =
         MedicalDatabaseMethods().getStream(babyDoc);
 
+    List<Baby> trackingBabies = [];
+    if (currentUser.value!.babies != null) {
+      List<Baby> babyList = currentUser.value!.babies!;
+      for (Baby baby in babyList) {
+        if (baby.primaryCaregiverUid == currentUser.value!.uid) {
+          trackingBabies.add(baby);
+        } else {
+          for (dynamic caregiver in baby.caregivers) {
+            if (caregiver['trackingView'] == true) {
+              trackingBabies.add(baby);
+            }
+          }
+        }
+      }
+    }
+    print(trackingBabies.length);
+
     // Clickable TrackingCards to each tracking page
     return SingleChildScrollView(
       child: Center(
@@ -42,38 +59,38 @@ class _TrackingPageState extends State<TrackingPage> {
           child: Column(
             children: [
               if (currentUser.value!.babies != null &&
-                  currentUser.value!.babies!.length > 1)
+                  trackingBabies.length > 1)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(right: 16),
                       child: DropdownMenu<Baby>(
-                          initialSelection:
-                              currentUser.value!.currentBaby.value,
-                          onSelected: (value) {
-                            if (value != null) {
-                              currentUser.value!.currentBaby.value = value;
-                            }
-                            setState(() {
-                              feedingStream = FeedingDatabaseMethods()
-                                  .getFeedingStream(babyDoc);
-                              sleepStream =
-                                  SleepDatabaseMethods().getStream(babyDoc);
-                              diaperStream =
-                                  DiaperDatabaseMethods().getStream(babyDoc);
-                              weightStream =
-                                  WeightDatabaseMethods().getStream(babyDoc);
-                              tempStream = TemperatureDatabaseMethods()
-                                  .getStream(babyDoc);
-                              medicalStream = MedicalDatabaseMethods().getStream(babyDoc);
-                            });
-                          },
-                          dropdownMenuEntries:
-                              currentUser.value!.babies!.map((baby) {
-                            return DropdownMenuEntry(
-                                value: baby, label: baby.name);
-                          }).toList()),
+                        initialSelection: currentUser.value!.currentBaby.value,
+                        onSelected: (value) {
+                          if (value != null) {
+                            currentUser.value!.currentBaby.value = value;
+                          }
+                          setState(() {
+                            feedingStream = FeedingDatabaseMethods()
+                                .getFeedingStream(babyDoc);
+                            sleepStream =
+                                SleepDatabaseMethods().getStream(babyDoc);
+                            diaperStream =
+                                DiaperDatabaseMethods().getStream(babyDoc);
+                            weightStream =
+                                WeightDatabaseMethods().getStream(babyDoc);
+                            tempStream =
+                                TemperatureDatabaseMethods().getStream(babyDoc);
+                            medicalStream =
+                                MedicalDatabaseMethods().getStream(babyDoc);
+                          });
+                        },
+                        dropdownMenuEntries: trackingBabies
+                            .map((baby) => DropdownMenuEntry(
+                                value: baby, label: baby.name))
+                            .toList(),
+                      ),
                     ),
                   ],
                 ),

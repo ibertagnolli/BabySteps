@@ -40,16 +40,16 @@ class _TrackingLandingPageState extends State<TrackingLandingPage> {
           if (value == null) {
             return const LoadingWidget();
           } else {
-            return currentUser.value!.socialOnly
-                ? const SocialOnlyWidget()
-                : SingleChildScrollView(
+            return currentUser.value!.trackingView
+                ? SingleChildScrollView(
                     child: ValueListenableBuilder(
                       valueListenable: currentUser.value!.currentBaby,
                       builder: (context, value, child) {
                         return const TrackingPage();
                       },
                     ),
-                  );
+                  )
+                : const SocialOnlyWidget();
           }
         },
       ),

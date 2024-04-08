@@ -1,4 +1,5 @@
 import 'package:babysteps/app/pages/user/userWidgets/user_permission_box.dart';
+import 'package:babysteps/app/pages/user/user_database.dart';
 import 'package:babysteps/main.dart';
 import 'package:babysteps/model/baby.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,19 @@ class _EditPermissionsPageState extends State<EditPermissionsPage> {
           .where((baby) => baby.collectionId == widget.babyId)
           .firstOrNull;
     }
+    void onChange(
+        String caregiverUid, bool trackingAccess, bool postingAccess) {
+      if (baby != null) {
+        baby.caregivers.firstWhere(
+                (caregiver) => caregiver['uid'] == caregiverUid)['canPost'] =
+            postingAccess;
+        baby.caregivers.firstWhere((caregiver) =>
+            caregiver['uid'] == caregiverUid)['trackingView'] = trackingAccess;
+        UserDatabaseMethods()
+            .updateBabyCaregiver(widget.babyId, baby.caregivers);
+      }
+    }
+
     return Scaffold(
         // Navigation Bar
         appBar: AppBar(
@@ -52,18 +66,12 @@ class _EditPermissionsPageState extends State<EditPermissionsPage> {
                     if (baby.caregivers.isNotEmpty)
                       for (dynamic user in baby.caregivers)
                         UserPermissionBox(
+                            user['uid'] ?? '',
                             user['name'] ?? '',
-                            user['social'] ?? false,
+                            user['trackingView'] ?? true,
                             user['canPost'] ?? true,
-                            user['doc'] ?? ''),
-                    if (baby.socialUsers != null &&
-                        baby.socialUsers!.isNotEmpty)
-                      for (dynamic user in baby.socialUsers!)
-                        UserPermissionBox(
-                            user['name'] ?? '',
-                            user['social'] ?? true,
-                            user['canPost'] ?? true,
-                            user['doc'] ?? ''),
+                            user['doc'] ?? '',
+                            onChange),
                   ],
                 ),
               ))
