@@ -339,6 +339,8 @@ class HistoryTable4Cols extends StatefulWidget {
 }
 
 class _HistoryTable4Cols extends State<HistoryTable4Cols> {
+
+  /// Deletes a row of the 4 column table when the row is long pressed
   void deleteRow(String dataType, String docId) {
     showDialog(
         context: context,
@@ -448,6 +450,153 @@ class _HistoryTable4Cols extends State<HistoryTable4Cols> {
                   DataCell(Text(row.time)),
                   DataCell(Text(row.data1)),
                   DataCell(Text(row.data2))
+                ],
+                onLongPress: () {
+                  deleteRow(widget.dataType, row.docId);
+                },
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Recent history table with 4 columns, column titles, and data filled in
+class HistoryTable5Cols extends StatefulWidget {
+  String dataType;
+  var rows;
+  String col1Name;
+  String col2Name;
+  String col3Name;
+
+  HistoryTable5Cols(this.dataType, this.rows, this.col1Name, this.col2Name, this.col3Name, {super.key});
+
+  @override
+  State<HistoryTable5Cols> createState() => _HistoryTable5Cols();
+}
+
+class _HistoryTable5Cols extends State<HistoryTable5Cols> {
+
+  /// Deletes a row of the 5 column table when the row is long pressed
+  void deleteRow(String dataType, String docId) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 15),
+                    child: Text(
+                      "Do you want to delete this data entry?"
+                    ),
+                  ),
+                  // Buttons
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 15),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            if(dataType == "Diaper") {
+                              await DiaperDatabaseMethods().deleteDiaper(
+                                docId,
+                                currentUser.value!.currentBaby.value!
+                                    .collectionId);
+                            } else {
+                              print("Error: Trying to delete the wrong dataType.");
+                            }
+                            Navigator.of(context, rootNavigator: true).pop();
+                          }, 
+                          style: blueButton(context),
+                          child: const Text('Yes'),
+                        ),
+                      ),                      
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context, rootNavigator: true).pop();
+                        },
+                        style: blueButton(context),
+                        child: const Text('No'),
+                      )
+                    ],
+                  ),
+                ],)
+            )
+          );
+        }
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Source: https://api.flutter.dev/flutter/material/DataTable-class.html
+    return Align(
+      alignment: Alignment.topCenter,
+      child: SingleChildScrollView( // shouldn't need to scroll but just in case of small screen
+        scrollDirection: Axis.horizontal,
+        child: DataTable(
+          columnSpacing: 20,
+          columns: <DataColumn>[
+            // Table column titles
+            const DataColumn(
+              label: Expanded(
+                child: Text(
+                  'Date',
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
+            ),
+            const DataColumn(
+              label: Expanded(
+                child: Text(
+                  'Time',
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
+            ),
+            DataColumn(
+              label: Expanded(
+                child: Text(
+                  widget.col1Name,
+                  style: const TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
+            ),
+            DataColumn(
+              label: Expanded(
+                child: Text(
+                  widget.col2Name,
+                  style: const TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
+            ),
+            DataColumn(
+              label: Expanded(
+                child: Text(
+                  widget.col3Name,
+                  style: const TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
+            ),
+          ],
+          // Table rows - dynamic - For each row we collected data for, create a DataCell for it
+          // TODO: Some sort of "no history yet" message if there are no entries
+          rows: <DataRow>[
+            for (var row in widget.rows)
+              DataRow(
+                cells: <DataCell>[
+                  DataCell(Text(row.day)),
+                  DataCell(Text(row.time)),
+                  DataCell(Text(row.data1)),
+                  DataCell(Text(row.data2)),
+                  DataCell(Text(row.data3)),
                 ],
                 onLongPress: () {
                   deleteRow(widget.dataType, row.docId);
@@ -574,6 +723,18 @@ class RowData4Cols<T1, T2, T3, T4, T5> {
   T5 docId;
 
   RowData4Cols(this.day, this.time, this.data1, this.data2, this.docId);
+}
+
+// Represents the data shown in the history table when we need 5 columns
+class RowData5Cols<T1, T2, T3, T4, T5, T6> {
+  T1 day;
+  T2 time;
+  T3 data1;
+  T4 data2;
+  T5 data3;
+  T6 docId;
+
+  RowData5Cols(this.day, this.time, this.data1, this.data2, this.data3, this.docId);
 }
 
 // Represents the data shown in the history table when we need 6 columns
