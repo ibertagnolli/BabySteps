@@ -158,6 +158,7 @@ class _BreastFeedingStopwatchesState extends State<BreastFeedingStopwatches> {
     var today = DateTime.now();
     var twoHours = today.hour + 2;
      NotificationService().scheduleNotification(
+            id: 0,
             title: "Breastfeeding Reminder",
             body: "Its been 2 hours since you last fed ${currentUser.value?.currentBaby.value?.name}"
                 '$twoHours:${today.minute}',

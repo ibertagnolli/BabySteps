@@ -85,6 +85,7 @@ class _SleepPageState extends State<SleepPage> {
     var today = DateTime.now();
     var twoHours = today.hour + 2;
      NotificationService().scheduleNotification(
+            id: 0,
             title: "Nap Reminder",
             body: "Its been 2 hours since ${currentUser.value?.currentBaby.value?.name} has had a Nap"
                 '$twoHours:${today.minute}',

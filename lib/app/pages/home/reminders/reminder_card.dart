@@ -4,6 +4,7 @@ import 'package:babysteps/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_time_patterns.dart';
+import 'package:babysteps/app/pages/calendar/notifications.dart';
 import 'package:intl/intl.dart';
 
 /// Each card shows a reminder on the home page
@@ -11,29 +12,26 @@ class ReminderCard extends StatelessWidget {
   final String name;
   final String reminderType;
   final Timestamp timestamp;
+  final int notificationID;
   final docId;
-  final context; // TODO if we make this a Stateful widget, we'll have access to context outside of build()
+  final context; 
 
-  const ReminderCard(this.name, this.reminderType, this.timestamp, this.docId,
+  const ReminderCard(this.name, this.reminderType, this.timestamp, this.notificationID, this.docId,
       {super.key, this.context}); // this.context
 
   /// Deletes the selected Reminder from the database
   Future<void> deleteReminder() async {
+    // Delete notification 
+    NotificationService().deleteNotification(notificationID);
+
     await RemindersDatabaseMethods()
         .deleteReminder(docId, currentUser.value!.userDoc);
   }
 
-  // /// Opens the Reminder for edits
-  // void editReminder() {
-  //   // Navigator.push(
-  //   //   context,
-  //   //   MaterialPageRoute(builder: (context) => EditRemindersStream(docId)),
-  //   // );
-  // }
-
   @override
   Widget build(BuildContext context) {
 
+    // Get all necessary info 
     DateTime reminderDate = DateTime.fromMillisecondsSinceEpoch(timestamp.seconds * 1000);
     String reminderTime = DateFormat.jm().format(reminderDate);
     String reminderDay = DateFormat.Md().format(reminderDate);
@@ -43,13 +41,12 @@ class ReminderCard extends StatelessWidget {
     int timeDifferenceMin = timeDifference.inMinutes.abs() % 60;
     String timeDiffString = (((timeDifferenceDays) > 0 ? " $timeDifferenceDays days" : '') 
               + ((timeDifferenceHours) > 0 ? " $timeDifferenceHours hr" : '') 
-              + ((timeDifferenceMin) > 0 ? " $timeDifferenceMin min" : '') );
+              + (" $timeDifferenceMin min" ) );
     String remindIn = (reminderDate.isBefore(DateTime.now()) ? timeDiffString + " ago" : "in" + timeDiffString);
 
     return Card(
       color: (reminderDate.isBefore(DateTime.now())) ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.surface,
       child: InkWell(
-        //onTap: () => editReminder(),
         splashColor: Theme.of(context).colorScheme.surface,
         child: SizedBox(
           width: 200,
@@ -114,7 +111,7 @@ class ReminderCard extends StatelessWidget {
                               }),
 
                       // Edit button
-                      EditReminderStream(docId),
+                     EditReminderStream(docId),
                     ],
                   ),
                 ),

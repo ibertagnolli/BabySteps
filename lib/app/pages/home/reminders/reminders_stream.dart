@@ -53,7 +53,7 @@ class _RemindersStreamState extends State<RemindersStream> {
                       document.data()! as Map<String, dynamic>;
                   var docId = document.id;
                   return 
-                    ReminderCard(data['remindAbout'], data['reminderType'], data['dateTime'], docId, context: context);
+                    ReminderCard(data['remindAbout'], data['reminderType'], data['dateTime'], data['notificationID'], docId, context: context);
                 })
                 .toList()
                 .cast(),

@@ -44,6 +44,7 @@ class _AddEventButtonState extends State<AddEventButton> {
         eventTime = selectedTime;
         timeController.text = selectedTime.format(context);
         NotificationService().scheduleNotification(
+            id: 0,
             title: eventName,
             body:
                 '${selectedTime.hour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}',
