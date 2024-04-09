@@ -36,7 +36,7 @@ class _HomeLandingPageState extends State<HomeLandingPage> {
             if (value == null) {
               return const LoadingWidget();
             } else {
-            return currentUser.value!.socialOnly
+            return !currentUser.value!.trackingView
                 ? const SocialOnlyWidget()
                 : SingleChildScrollView(
                     child: ValueListenableBuilder(
