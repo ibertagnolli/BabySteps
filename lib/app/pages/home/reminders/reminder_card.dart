@@ -21,6 +21,7 @@ class ReminderCard extends StatelessWidget {
 
   /// Deletes the selected Reminder from the database
   Future<void> deleteReminder() async {
+
     // Delete notification 
     NotificationService().deleteNotification(notificationID);
 
@@ -65,6 +66,7 @@ class ReminderCard extends StatelessWidget {
                       style: const TextStyle(
                           fontSize: 15, fontWeight: FontWeight.bold),
                     ),
+                    // Display timing info
                     Text(
                       ((reminderType == "in") ? remindIn
                       : "at $reminderDay, $reminderTime")

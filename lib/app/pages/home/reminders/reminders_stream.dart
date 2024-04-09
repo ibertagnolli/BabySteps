@@ -9,7 +9,7 @@ import 'dart:core';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 
-/// The widget that reads realtime Reminders updates.
+/// Displays list of reminder cards, or message stating there are no reminders
 class RemindersStream extends StatefulWidget {
   RemindersStream({super.key});
 
