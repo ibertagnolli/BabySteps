@@ -99,8 +99,8 @@ class _AddReminderButtonState extends State<AddReminderButton> {
         reminderTime.hour, reminderTime.minute);
     }
 
-    int notificationID = Random().nextInt(1000000);
     // Schedule notification as long as reminder date is in the future
+    int notificationID = Random().nextInt(1000000);
     if(DateTime.now().isBefore(reminderDT)) {
       NotificationService().scheduleNotification(
               id: notificationID,
@@ -154,6 +154,7 @@ class _AddReminderButtonState extends State<AddReminderButton> {
           timeController.text = TimeOfDay.now().format(context);
           _setTimeUnit("minutes");
           _setReminderType(1);
+          
           showDialog(
               context: context,
               builder: (context) {

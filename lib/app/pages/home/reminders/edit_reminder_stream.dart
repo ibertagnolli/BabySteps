@@ -46,6 +46,7 @@ class _EditReminderStreamState extends State<EditReminderStream> {
     super.dispose();
   }
 
+  // "in" reminder or "at" reminder, based on radio buttons
   _setReminderType(int selectedType)  {
     
     WidgetsBinding.instance.addPostFrameCallback((_){
@@ -55,6 +56,7 @@ class _EditReminderStreamState extends State<EditReminderStream> {
     });
   }
 
+  // minuts, hours, days, based on dropdown
   _setTimeUnit(String selectedUnit)  {
     
     WidgetsBinding.instance.addPostFrameCallback((_){
@@ -64,7 +66,7 @@ class _EditReminderStreamState extends State<EditReminderStream> {
     });
   }
 
-  /// Saves a new reminder entry in the Firestore database.
+  /// Updates a reminder entry in the Firestore database.
   updateReminder(int notificationID) async {
     
     DateTime reminderDT; 
