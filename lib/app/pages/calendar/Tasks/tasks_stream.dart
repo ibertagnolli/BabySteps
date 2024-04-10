@@ -9,7 +9,9 @@ FirebaseFirestore db = FirebaseFirestore.instance;
 
 /// Displays list of reminder cards, or message stating there are no reminders
 class TaskStream extends StatefulWidget {
-  TaskStream({super.key});
+  DateTime selectedDay;
+  TaskStream({required this.selectedDay, super.key});
+  
 
   @override
   _TaskStreamState createState() => _TaskStreamState();
@@ -19,7 +21,7 @@ class _TaskStreamState extends State<TaskStream> {
   @override
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> tasksStream = TasksDatabaseMethods()
-        .getTasksStream(currentUser.value!.userDoc ); 
+        .getTasksStream(currentUser.value!.userDoc, widget.selectedDay); 
 
     return StreamBuilder<QuerySnapshot>(
       stream: tasksStream,

@@ -65,6 +65,8 @@ class _CalendarPageState extends State<CalendarPage> {
                       _focusedDay = DateUtils.dateOnly(focusedDay);
                       monthsAlive =
                           (_selectedDay.difference(dob!).inDays / 30).floor();
+                      print("---dob: $dob");
+                      print("---monthsAlive: $monthsAlive");
                       int exactDay = _selectedDay.difference(dob!).inDays % 30;
                       if (exactDay == 0) {
                         showDialog(
@@ -172,7 +174,9 @@ class _CalendarPageState extends State<CalendarPage> {
                   // TaskStream(
                   //   selectedDay: _selectedDay,
                   // ),
-                  TaskStream(),
+                  TaskStream(
+                    selectedDay: _selectedDay,
+                  ),
 
                   // Add task button
                   Padding(
