@@ -1,51 +1,80 @@
 import 'package:babysteps/app/pages/calendar/calendar_database.dart';
+import 'package:babysteps/app/pages/calendar/Events/notifications.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
-/// The widget that adds a new task.
-class AddTaskButton extends StatefulWidget {
+/// The widget that adds a new event.
+class AddEventButton extends StatefulWidget {
   DateTime selectedDay;
-  AddTaskButton({required this.selectedDay, super.key});
+  AddEventButton({required this.selectedDay, super.key});
 
   @override
-  State<StatefulWidget> createState() => _AddTaskButtonState();
+  State<StatefulWidget> createState() => _AddEventButtonState();
 }
 
-/// Stores the mutable data that can change over the lifetime of the AddTaskButton.
-class _AddTaskButtonState extends State<AddTaskButton> {
-  // The global key uniquely identifies the Form widget and allows
-  // validation of the form.
+/// Stores the mutable data that can change over the lifetime of the AddEventButton.
+class _AddEventButtonState extends State<AddEventButton> {
+  // The global key uniquely identifies the Form widget and allows validation of the form.
   final _formKey = GlobalKey<FormState>();
-
   // Store user input for database upload
   TextEditingController nameController = TextEditingController();
+  TextEditingController timeController = TextEditingController();
   TextEditingController dateController = TextEditingController();
+  TimeOfDay eventTime = TimeOfDay.now();
 
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
     nameController.dispose();
+    timeController.dispose();
     dateController.dispose();
     super.dispose();
   }
 
-  /// Saves a new task entry in the Firestore database.
-  saveNewTask() async {
-    DateTime taskDate = DateFormat("MM/dd/yyyy").parse(dateController.text);
+  /// Gets the user's selected event time.
+  _selectTime(selectedDay, eventName) async {
+    final TimeOfDay? selectedTime = await showTimePicker(
+      initialTime: TimeOfDay.now(),
+      context: context,
+    );
 
-    // Write task data to database
+    if (selectedTime != null) {
+      setState(() {
+        eventTime = selectedTime;
+        timeController.text = selectedTime.format(context);
+        NotificationService().scheduleNotification(
+            id: 0,
+            title: eventName,
+            body:
+                '${selectedTime.hour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}',
+            scheduledNotificationDateTime: DateTime(
+                selectedDay.year,
+                selectedDay.month,
+                selectedDay.day,
+                selectedTime.hour,
+                selectedTime.minute));
+      });
+    }
+  }
+
+  /// Saves a new event entry in the Firestore database.
+  saveNewEvent() async {
+    DateTime eventDate = DateFormat("MM/dd/yyyy").parse(dateController.text);
+    DateTime eventDT = DateTime(eventDate.year, eventDate.month, eventDate.day,
+        eventTime.hour, eventTime.minute);
+
+    // Write event data to database
     Map<String, dynamic> uploaddata = {
       'name': nameController.text,
-      'dateTime': taskDate,
-      'completed': false,
+      'dateTime': eventDT, // Stores the event date and its start time
     };
     await CalendarDatabaseMethods()
-        .addTask(uploaddata, currentUser.value!.userDoc);
+        .addEvent(uploaddata, currentUser.value!.userDoc);
 
     // Clear fields for next entry (not date)
     nameController.clear();
+    timeController.clear();
   }
 
   @override
@@ -54,7 +83,7 @@ class _AddTaskButtonState extends State<AddTaskButton> {
     dateController.text = DateFormat.yMd().format(widget.selectedDay);
 
     return SizedBox(
-      // Add Task Button
+      // Add Event Button
       width: 170.0,
       height: 30.0,
       child: FilledButton(
@@ -62,49 +91,45 @@ class _AddTaskButtonState extends State<AddTaskButton> {
           backgroundColor:
               Theme.of(context).colorScheme.tertiary, // Background color
         ),
-        child: Text("Add task",
+        child: Text("Add event",
             style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
 
-        // Dialog with task entry
+        // Dialog with event entry
         onPressed: () {
           showDialog(
               context: context,
               builder: (context) {
                 return AlertDialog(
                     scrollable: true,
-                    title: const Text("New Task"),
+                    title: const Text("New Event"),
                     content: Padding(
                       padding: const EdgeInsets.all(8),
                       child: Form(
                           key: _formKey,
                           child: Column(
                             children: <Widget>[
-                              // Task Name
+                              // Event Name
                               TextFormField(
                                 controller: nameController,
                                 maxLength: 30,
                                 decoration: const InputDecoration(
-                                  labelText: "Task",
+                                  labelText: "Event",
                                 ),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please enter the task name';
+                                    return 'Please enter the event name';
                                   }
                                   return null;
                                 },
                               ),
 
-                              // Task Date
+                              // Event Date
                               TextFormField(
                                 controller: dateController,
                                 decoration: const InputDecoration(
                                   labelText: "Date",
                                 ),
                                 onTap: () async {
-                                  // Don't show keyboard
-                                  FocusScope.of(context)
-                                      .requestFocus(FocusNode());
-
                                   DateTime? pickeddate = await showDatePicker(
                                       context: context,
                                       initialDate: DateTime.now(),
@@ -112,12 +137,12 @@ class _AddTaskButtonState extends State<AddTaskButton> {
                                       lastDate: DateTime(2050));
 
                                   if (pickeddate != null) {
-                                    setState(() {
-                                      widget.selectedDay = pickeddate;
-                                      dateController.text = DateFormat.yMd()
-                                          .add_jm()
-                                          .format(pickeddate);
-                                    });
+                                    // setState(() {
+                                    widget.selectedDay = pickeddate;
+                                    dateController.text = DateFormat.yMd()
+                                        .add_jm()
+                                        .format(widget.selectedDay);
+                                    // });
                                   }
                                 },
                                 validator: (value) {
@@ -126,9 +151,31 @@ class _AddTaskButtonState extends State<AddTaskButton> {
                                   }
                                   return null;
                                 },
+                                // Don't show the keyboard
+                                showCursor: true,
+                                readOnly: true,
                               ),
 
-                              // TODO add start time for task notifications
+                              // Event Start Time
+                              TextFormField(
+                                controller: timeController,
+                                decoration: const InputDecoration(
+                                  labelText: "Start Time",
+                                ),
+                                onTap: () {
+                                  _selectTime(
+                                      widget.selectedDay, nameController.text);
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter the event start time';
+                                  }
+                                  return null;
+                                },
+                                // Don't show the keyboard
+                                showCursor: true,
+                                readOnly: true,
+                              ),
 
                               // Submit button
                               Padding(
@@ -136,12 +183,12 @@ class _AddTaskButtonState extends State<AddTaskButton> {
                                 child: ElevatedButton(
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
-                                      saveNewTask();
+                                      saveNewEvent();
                                       Navigator.pop(context);
                                     }
                                   },
                                   child: const Text("Submit")
-                                )
+                                ),
                               ),
                             ],
                           )),

@@ -51,18 +51,18 @@ class _HomePageState extends State<HomePage> {
               )
             ),
 
-            Padding(
-              padding: const EdgeInsets.only(left: 15, right: 15),
-              child: 
-                // List of events
-                RemindersStream()
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.only(left: 15, right: 15),
+            //   child: 
+            //     // List of events
+            //     RemindersStream()
+            // ),
 
-            // Add reminder button
-            Padding(
-              padding: const EdgeInsets.all(15),
-              child: AddReminderButton()
-            ),
+            // // Add reminder button
+            // Padding(
+            //   padding: const EdgeInsets.all(15),
+            //   child: AddReminderButton()
+            // ),
             
           ],
         ),

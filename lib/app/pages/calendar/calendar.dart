@@ -1,9 +1,11 @@
-import 'package:babysteps/app/pages/calendar/add_event_button.dart';
-import 'package:babysteps/app/pages/calendar/add_milestone_button.dart';
-import 'package:babysteps/app/pages/calendar/add_task_button.dart';
-import 'package:babysteps/app/pages/calendar/event_stream.dart';
-import 'package:babysteps/app/pages/calendar/milestone_stream.dart';
-import 'package:babysteps/app/pages/calendar/task_stream.dart';
+import 'package:babysteps/app/pages/calendar/Events/add_event_button.dart';
+import 'package:babysteps/app/pages/calendar/Milestones/add_milestone_button.dart';
+import 'package:babysteps/app/pages/calendar/Tasks/add_task_button.dart';
+import 'package:babysteps/app/pages/calendar/Tasks/tasks_stream.dart';
+import 'package:babysteps/app/pages/calendar/original%20tasks/add_task_button_orig.dart';
+import 'package:babysteps/app/pages/calendar/Events/event_stream.dart';
+import 'package:babysteps/app/pages/calendar/Milestones/milestone_stream.dart';
+import 'package:babysteps/app/pages/calendar/original%20tasks/task_stream_orig.dart';
 import 'package:babysteps/app/pages/home/reminders/add_reminder_button.dart';
 import 'package:babysteps/app/pages/home/reminders/reminders_stream.dart';
 import 'package:babysteps/main.dart';
@@ -174,13 +176,13 @@ class _CalendarPageState extends State<CalendarPage> {
                   // TaskStream(
                   //   selectedDay: _selectedDay,
                   // ),
-                  RemindersStream(),
+                  TaskStream(),
 
                   // Add task button
                   Padding(
                     padding: const EdgeInsets.all(15),
                     child: 
-                    AddReminderButton(),
+                    AddTaskButton(),
                     // AddTaskButton(
                     //   selectedDay: _selectedDay,
                     // ),

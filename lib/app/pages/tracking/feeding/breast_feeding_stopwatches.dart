@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:babysteps/app/pages/calendar/notifications.dart';
+import 'package:babysteps/app/pages/calendar/Events/notifications.dart';
 import 'package:babysteps/app/pages/styles/stopwatch_styles.dart';
 import 'package:babysteps/app/pages/tracking/feeding/feeding_database.dart';
 import 'package:babysteps/app/widgets/stopwatch.dart';
