@@ -151,10 +151,6 @@ class _EditTaskStreamState extends State<EditTaskStream> {
           return const Text("Something went wrong");
         }
 
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Text("Loading");
-        }
-
         // The Reminder document
         var reminderDoc = snapshot.data!;
         var docId = reminderDoc.id;

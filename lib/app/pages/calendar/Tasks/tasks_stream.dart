@@ -5,8 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
 
-
-
 FirebaseFirestore db = FirebaseFirestore.instance;
 
 /// Displays list of reminder cards, or message stating there are no reminders
@@ -53,7 +51,7 @@ class _TaskStreamState extends State<TaskStream> {
                       document.data()! as Map<String, dynamic>;
                   var docId = document.id;
                   return 
-                    TaskCard(data['remindAbout'], data['reminderType'], data['dateTime'], data['notificationID'], docId, context: context);
+                    TaskCard(data['remindAbout'], data['reminderType'], data['dateTime'], data['notificationID'], data['completed'], docId, context: context);
                 })
                 .toList()
                 .cast(),

@@ -63,63 +63,83 @@ class _AddTaskButtonState extends State<AddTaskButton> {
 
   /// Saves a new reminder entry in the Firestore database.
   saveNewTask() async {
-    DateTime reminderDT; 
+    DateTime reminderDT = DateTime.now(); 
     DateTime now = DateTime.now();
+    Map<String, dynamic> uploaddata = {};
 
-    // remind "in" a certain amount of time
-    if(reminderType == 1) {
-      int timeInterval = int.parse(howManyController.text);
-      if (timeUnit == "minutes") {
-        int minutes = now.minute + timeInterval;
-        reminderDT = DateTime(now.year, now.month, now.day,
-        now.hour, minutes);
-      }
-      else if (timeUnit == "hours") {
-        int hours = now.hour + timeInterval;
-        reminderDT = DateTime(now.year, now.month, now.day,
-        hours, now.minute);
-      }
-      else { // days
-        int days = now.day + timeInterval;
-        reminderDT = DateTime(now.year, now.month, days,
-        now.hour, now.minute);
-      }
+    // Task without a reminder
+    if (reminderType == 3) {
+      // Write reminder data to database
+      uploaddata = {
+        'remindAbout': nameController.text,
+        'reminderType': "none",
+        'dateTime': reminderDT,
+        'timeLength': null,
+        'timeUnit': "--",
+        'notificationID': -1,
+        'completed': false,
+      }; 
     }
-    // remind "at" certain time
     else {
-      DateTime reminderDate = DateFormat("MM/dd/yyyy").parse(dateController.text);
-      List<String> splitTime = timeController.text.split(' '); // format 2:00 PM
-      List<String> splitHrMin = splitTime[0].split(':');
-      String dayNight = splitTime[1];
-      int hr = int.parse(splitHrMin[0]);
-      if(dayNight == "PM") {
-        hr += 12;
+      // remind "in" a certain amount of time
+      if(reminderType == 1) {
+        int timeInterval = int.parse(howManyController.text);
+        if (timeUnit == "minutes") {
+          int minutes = now.minute + timeInterval;
+          reminderDT = DateTime(now.year, now.month, now.day,
+          now.hour, minutes);
+        }
+        else if (timeUnit == "hours") {
+          int hours = now.hour + timeInterval;
+          reminderDT = DateTime(now.year, now.month, now.day,
+          hours, now.minute);
+        }
+        else { // days
+          int days = now.day + timeInterval;
+          reminderDT = DateTime(now.year, now.month, days,
+          now.hour, now.minute);
+        }
       }
-      int min = int.parse(splitHrMin[1]);
-      TimeOfDay reminderTime = TimeOfDay(hour: hr, minute: min);
-      reminderDT = DateTime(reminderDate.year, reminderDate.month, reminderDate.day,
-        reminderTime.hour, reminderTime.minute);
+
+      // remind "at" certain time
+      else {
+        DateTime reminderDate = DateFormat("MM/dd/yyyy").parse(dateController.text);
+        List<String> splitTime = timeController.text.split(' '); // format 2:00 PM
+        List<String> splitHrMin = splitTime[0].split(':');
+        String dayNight = splitTime[1];
+        int hr = int.parse(splitHrMin[0]);
+        if(dayNight == "PM") {
+          hr += 12;
+        }
+        int min = int.parse(splitHrMin[1]);
+        TimeOfDay reminderTime = TimeOfDay(hour: hr, minute: min);
+        reminderDT = DateTime(reminderDate.year, reminderDate.month, reminderDate.day,
+          reminderTime.hour, reminderTime.minute);
+      }
+
+      // Schedule notification as long as reminder date is in the future
+      int notificationID = Random().nextInt(1000000);
+      if(DateTime.now().isBefore(reminderDT)) {
+        NotificationService().scheduleNotification(
+                id: notificationID,
+                title: nameController.text,
+                body:
+                    DateFormat("h:mma").format(reminderDT),
+                scheduledNotificationDateTime: reminderDT);
+      }
+
+      // Write reminder data to database
+      uploaddata = {
+        'remindAbout': nameController.text,
+        'reminderType': (reminderType == 1) ? "in" : "at",
+        'dateTime': reminderDT,
+        'timeLength': (howManyController.text.isNotEmpty) ? int.parse(howManyController.text) : -1,
+        'timeUnit': (howManyController.text.isNotEmpty) ? timeUnit : "--",
+        'notificationID': notificationID,
+        'completed': false,
+      };
     }
 
-    // Schedule notification as long as reminder date is in the future
-    int notificationID = Random().nextInt(1000000);
-    if(DateTime.now().isBefore(reminderDT)) {
-      NotificationService().scheduleNotification(
-              id: notificationID,
-              title: nameController.text,
-              body:
-                  DateFormat("h:mma").format(reminderDT),
-              scheduledNotificationDateTime: reminderDT);
-    }
-    // Write reminder data to database
-    Map<String, dynamic> uploaddata = {
-      'remindAbout': nameController.text,
-      'reminderType': (reminderType == 1) ? "in" : "at",
-      'dateTime': reminderDT,
-      'timeLength': (howManyController.text.isNotEmpty) ? int.parse(howManyController.text) : -1,
-      'timeUnit': (howManyController.text.isNotEmpty) ? timeUnit : "--",
-      'notificationID': notificationID,
-    };
     await TasksDatabaseMethods()
         .addTask(uploaddata, currentUser.value!.userDoc);
 

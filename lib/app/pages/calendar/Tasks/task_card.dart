@@ -13,11 +13,12 @@ class TaskCard extends StatelessWidget {
   final String name;
   final String reminderType;
   final Timestamp timestamp;
+  final bool completed;
   final int notificationID;
   final docId;
   final context; 
 
-  const TaskCard(this.name, this.reminderType, this.timestamp, this.notificationID, this.docId,
+  const TaskCard(this.name, this.reminderType, this.timestamp, this.notificationID, this.completed, this.docId,
       {super.key, this.context}); // this.context
 
   /// Deletes the selected Reminder from the database
@@ -33,8 +34,6 @@ class TaskCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    bool completed = false;
-
     // Get all necessary info 
     DateTime reminderDate = DateTime.fromMillisecondsSinceEpoch(timestamp.seconds * 1000);
     String reminderTime = DateFormat.jm().format(reminderDate);
@@ -48,8 +47,13 @@ class TaskCard extends StatelessWidget {
               + (" $timeDifferenceMin min" ) );
     String remindIn = (reminderDate.isBefore(DateTime.now()) ? timeDiffString + " ago" : "in" + timeDiffString);
 
+    bool colorTileRed = false;
+    if (reminderType != "none" && reminderDate.isBefore(DateTime.now()) && !completed) {
+      colorTileRed = true;
+    }
+
     return Card(
-      color: (reminderDate.isBefore(DateTime.now())) ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.surface,
+      color: (colorTileRed) ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.surface,
       child: InkWell(
         splashColor: Theme.of(context).colorScheme.surface,
         child: SizedBox(
@@ -70,10 +74,11 @@ class TaskCard extends StatelessWidget {
                           fontSize: 15, fontWeight: FontWeight.bold),
                     ),
                     // Display timing info
-                    Text(
-                      ((reminderType == "in") ? remindIn
-                      : "at $reminderDay, $reminderTime")
-                    ),
+                    if (reminderType != "none")
+                      Text(
+                        ((reminderType == "in") ? remindIn
+                        : "at $reminderDay, $reminderTime")
+                      ),
                   ],
                 ),
               ),
@@ -121,11 +126,20 @@ class TaskCard extends StatelessWidget {
                       // Check box
                       Checkbox(
                         value: completed, 
-                        onChanged: (bool? value) {
-                          // setState(() {
-                            completed = value!;
-                          // });
-                        }
+                        onChanged: (bool? value) async {
+                          // Write updated task data to database
+                          Map<String, dynamic> updateData = {
+                            'remindAbout': name,
+                            'reminderType': (reminderType == 1) ? "in" : "at",
+                            'dateTime': timestamp,
+                            'timeLength': -1,
+                            'timeUnit': "--",
+                            'notificationID': -1,
+                            'completed': !completed,
+                          };
+                          await TasksDatabaseMethods().updateTask(
+                              docId, updateData, currentUser.value!.userDoc);
+                        },
                       ),
                     ],
                   ),

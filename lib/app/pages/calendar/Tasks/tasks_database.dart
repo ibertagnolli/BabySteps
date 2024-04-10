@@ -16,7 +16,7 @@ class TasksDatabaseMethods {
   }
 
   // Marks a task as completed/uncompleted
-  Future updateReminder(var docId, Map<String, dynamic> updatedUserInfoMap, String userDoc) async {
+  Future updateTask(var docId, Map<String, dynamic> updatedUserInfoMap, String userDoc) async {
     return await db
         .collection('Users')
         .doc(userDoc)
