@@ -41,12 +41,15 @@ class TasksDatabaseMethods {
 
   // Returns a snapshot of all the Reminders, oldest reminder date first 
   Stream<QuerySnapshot> getTasksStream(String userDoc, DateTime selectedDate) {
+    DateTime lastTimestamp = DateTime(selectedDate.year, selectedDate.month, selectedDate.day, 23, 59, 59);
     return db
         .collection('Users')
         .doc(userDoc)
         .collection("Reminders")
         .where('dateTime',
             isGreaterThanOrEqualTo: Timestamp.fromDate(DateUtils.dateOnly(selectedDate)))
+        .where('dateTime',
+            isLessThanOrEqualTo: Timestamp.fromDate(lastTimestamp))
         .orderBy('dateTime')
         .snapshots();
   }

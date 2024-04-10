@@ -12,7 +12,8 @@ import 'dart:core';
 
 // The widget that adds a new reminder.
 class AddTaskButton extends StatefulWidget {
-  AddTaskButton({super.key});
+  DateTime selectedDay;
+  AddTaskButton({required this.selectedDay, super.key});
 
   @override
   State<StatefulWidget> createState() => _AddTaskButtonState();
@@ -63,7 +64,7 @@ class _AddTaskButtonState extends State<AddTaskButton> {
 
   /// Saves a new reminder entry in the Firestore database.
   saveNewTask() async {
-    DateTime reminderDT = DateTime.now(); 
+    DateTime reminderDT = widget.selectedDay; 
     DateTime now = DateTime.now();
     Map<String, dynamic> uploaddata = {};
 
@@ -171,7 +172,7 @@ class _AddTaskButtonState extends State<AddTaskButton> {
         // Dialog with reminder entry
         onPressed: () {
           // Populate the controllers
-          dateController.text = DateFormat.yMd().format(DateTime.now());
+          dateController.text = DateFormat.yMd().format(widget.selectedDay);
           timeController.text = TimeOfDay.now().format(context);
           _setTimeUnit("minutes");
           _setReminderType(1);

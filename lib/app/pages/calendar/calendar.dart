@@ -90,7 +90,7 @@ class _CalendarPageState extends State<CalendarPage> {
                           },
                         );
                       }
-                      if (monthsAlive <= 0) {
+                      if (monthsAlive < 0) {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
@@ -182,7 +182,9 @@ class _CalendarPageState extends State<CalendarPage> {
                   Padding(
                     padding: const EdgeInsets.all(15),
                     child: 
-                    AddTaskButton(),
+                    AddTaskButton(
+                      selectedDay: _selectedDay,
+                    ),
                     // AddTaskButton(
                     //   selectedDay: _selectedDay,
                     // ),
