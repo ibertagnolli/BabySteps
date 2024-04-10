@@ -69,12 +69,11 @@ class _AddTaskButtonState extends State<AddTaskButton> {
 
     // Task without a reminder
     if (reminderType == 3) {
-      // Write reminder data to database
       uploaddata = {
         'remindAbout': nameController.text,
         'reminderType': "none",
         'dateTime': reminderDT,
-        'timeLength': null,
+        'timeLength': 0,
         'timeUnit': "--",
         'notificationID': -1,
         'completed': false,

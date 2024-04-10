@@ -84,9 +84,9 @@ class TaskCard extends StatelessWidget {
               ),
               const Expanded(
                   child: SizedBox(
-                width: 30,
-                height: 80,
-              )),
+                    width: 30,
+                    height: 80,
+                  )),
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: Align(
