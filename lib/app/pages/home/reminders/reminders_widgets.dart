@@ -41,14 +41,14 @@ class _NewReminderFormState extends State<NewReminderForm> {
             controller: widget.nameController,
             maxLength: 30,
             decoration: const InputDecoration(
-              labelText: "Remind me about",
+              labelText: "Task",
             ),
             onTapOutside: (event) {
                   FocusManager.instance.primaryFocus?.unfocus();
             },
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter reminder content';
+                return 'Please enter the task.';
               }
               return null;
             },
@@ -56,7 +56,7 @@ class _NewReminderFormState extends State<NewReminderForm> {
 
           // Radio buttons 
           ListTile(
-            title: const Text('in'),
+            title: const Text('Remind me in'),
             leading: Radio<int>(
               value: 1,
               groupValue: selectedOption,
@@ -71,7 +71,7 @@ class _NewReminderFormState extends State<NewReminderForm> {
             ),
           ),
           ListTile(
-            title: const Text('at'),
+            title: const Text('Remind me on'),
             leading: Radio<int>(
               value: 2,
               groupValue: selectedOption,
@@ -81,6 +81,21 @@ class _NewReminderFormState extends State<NewReminderForm> {
                   selectedOption = value!;
                 });
                 widget._setReminderType(2);
+                });
+              },
+            ),
+          ),
+          ListTile(
+            title: const Text('Don\'t remind me'),
+            leading: Radio<int>(
+              value: 3,
+              groupValue: selectedOption,
+              onChanged: (value) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  setState(() {
+                  selectedOption = value!;
+                });
+                widget._setReminderType(3);
                 });
               },
             ),
@@ -115,8 +130,11 @@ class TimingSelection extends StatelessWidget {
     if (selectedOption == 2) {
       return DateAndTime(dateController, timeController);
     }
+    if (selectedOption == 3) {
+      return const Text("");
+    }
     else {
-      return Text("error with selection");
+      return const Text("error with selection");
     }
   }
 }

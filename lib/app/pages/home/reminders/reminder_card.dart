@@ -32,6 +32,8 @@ class ReminderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    bool completed = false;
+
     // Get all necessary info 
     DateTime reminderDate = DateTime.fromMillisecondsSinceEpoch(timestamp.seconds * 1000);
     String reminderTime = DateFormat.jm().format(reminderDate);
@@ -85,6 +87,9 @@ class ReminderCard extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
+                      // Edit button
+                      EditReminderStream(docId),
+
                       // Delete button
                       IconButton(
                           icon: const Icon(Icons.delete),
@@ -112,8 +117,15 @@ class ReminderCard extends StatelessWidget {
                                     })
                               }),
 
-                      // Edit button
-                     EditReminderStream(docId),
+                      // Check box
+                      Checkbox(
+                        value: completed, 
+                        onChanged: (bool? value) {
+                          // setState(() {
+                            completed = value!;
+                          // });
+                        }
+                      ),
                     ],
                   ),
                 ),

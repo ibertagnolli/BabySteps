@@ -40,7 +40,7 @@ class _RemindersStreamState extends State<RemindersStream> {
         if (reminderDocs.isEmpty) {
           return Padding(
             padding: const EdgeInsets.all(16.0),
-            child: const Text("No reminders set."),
+            child: const Text("No tasks today."),
           );
         } else {
           return ListView(

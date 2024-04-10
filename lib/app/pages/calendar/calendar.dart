@@ -4,6 +4,8 @@ import 'package:babysteps/app/pages/calendar/add_task_button.dart';
 import 'package:babysteps/app/pages/calendar/event_stream.dart';
 import 'package:babysteps/app/pages/calendar/milestone_stream.dart';
 import 'package:babysteps/app/pages/calendar/task_stream.dart';
+import 'package:babysteps/app/pages/home/reminders/add_reminder_button.dart';
+import 'package:babysteps/app/pages/home/reminders/reminders_stream.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -168,17 +170,20 @@ class _CalendarPageState extends State<CalendarPage> {
                         fontWeight: FontWeight.bold)),
                 initiallyExpanded: true,
                 children: <Widget>[
-                  // List of tasks
-                  TaskStream(
-                    selectedDay: _selectedDay,
-                  ),
+                  // // List of tasks
+                  // TaskStream(
+                  //   selectedDay: _selectedDay,
+                  // ),
+                  RemindersStream(),
 
                   // Add task button
                   Padding(
                     padding: const EdgeInsets.all(15),
-                    child: AddTaskButton(
-                      selectedDay: _selectedDay,
-                    ),
+                    child: 
+                    AddReminderButton(),
+                    // AddTaskButton(
+                    //   selectedDay: _selectedDay,
+                    // ),
                   ),
                 ],
               ),

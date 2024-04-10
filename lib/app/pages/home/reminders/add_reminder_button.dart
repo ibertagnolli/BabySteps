@@ -146,7 +146,7 @@ class _AddReminderButtonState extends State<AddReminderButton> {
             ),
           ),
         ),
-        child: const Text('Add Reminder'),
+        child: const Text('Add Task'),
         // Dialog with reminder entry
         onPressed: () {
           // Populate the controllers
@@ -160,7 +160,7 @@ class _AddReminderButtonState extends State<AddReminderButton> {
               builder: (context) {
                 return AlertDialog(
                     scrollable: true,
-                    title: const Text("New Reminder"),
+                    title: const Text("New Task"),
                     content: Padding(
                       padding: const EdgeInsets.all(8),
                       child: Form(
