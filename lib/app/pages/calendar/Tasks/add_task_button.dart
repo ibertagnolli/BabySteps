@@ -5,8 +5,6 @@ import 'package:babysteps/app/pages/calendar/Tasks/tasks_widgets.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:babysteps/app/pages/home/reminders/reminders_database.dart';
-import 'package:babysteps/app/pages/home/reminders/reminders_widgets.dart';
 import 'package:babysteps/app/pages/calendar/Events/notifications.dart';
 import 'dart:core';
 

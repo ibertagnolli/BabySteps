@@ -1,8 +1,7 @@
 import 'dart:math';
 
+import 'package:babysteps/app/pages/calendar/Tasks/tasks_database.dart';
 import 'package:babysteps/app/pages/calendar/Tasks/tasks_widgets.dart';
-import 'package:babysteps/app/pages/home/reminders/reminders_database.dart';
-import 'package:babysteps/app/pages/home/reminders/reminders_widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:babysteps/app/pages/calendar/Events/notifications.dart';
@@ -145,8 +144,8 @@ class _EditTaskStreamState extends State<EditTaskStream> {
         'completed': completed,
       };
     }
-    await RemindersDatabaseMethods()
-        .updateReminder( widget.docId, uploaddata, currentUser.value!.userDoc);
+    await TasksDatabaseMethods()
+        .updateTask( widget.docId, uploaddata, currentUser.value!.userDoc);
 
     // Clear fields for next entry (not date)
     nameController.clear();
@@ -156,7 +155,7 @@ class _EditTaskStreamState extends State<EditTaskStream> {
   @override
   Widget build(BuildContext context) {
     final Stream<DocumentSnapshot<Map<String, dynamic>>> reminderStream =
-        RemindersDatabaseMethods().getSpecificReminderStream(
+        TasksDatabaseMethods().getSpecificReminderStream(
             widget.docId, currentUser.value!.userDoc);
 
     return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
@@ -168,7 +167,7 @@ class _EditTaskStreamState extends State<EditTaskStream> {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Icon(Icons.edit);
+          return const Text("");
         }
 
         // The Reminder document

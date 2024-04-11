@@ -1,6 +1,5 @@
 import 'package:babysteps/app/pages/calendar/Tasks/edit_task_stream.dart';
 import 'package:babysteps/app/pages/calendar/Tasks/tasks_database.dart';
-import 'package:babysteps/app/pages/home/reminders/edit_reminder_stream.dart';
 import 'package:babysteps/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';

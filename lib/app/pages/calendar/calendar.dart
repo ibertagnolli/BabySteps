@@ -171,9 +171,6 @@ class _CalendarPageState extends State<CalendarPage> {
                 initiallyExpanded: true,
                 children: <Widget>[
                   // // List of tasks
-                  // TaskStream(
-                  //   selectedDay: _selectedDay,
-                  // ),
                   TaskStream(
                     selectedDay: _selectedDay,
                   ),
@@ -185,9 +182,6 @@ class _CalendarPageState extends State<CalendarPage> {
                     AddTaskButton(
                       selectedDay: _selectedDay,
                     ),
-                    // AddTaskButton(
-                    //   selectedDay: _selectedDay,
-                    // ),
                   ),
                 ],
               ),
