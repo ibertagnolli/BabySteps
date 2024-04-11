@@ -3,6 +3,7 @@ import 'package:babysteps/app/pages/calendar/Tasks/tasks_database.dart';
 import 'package:babysteps/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/date_time_patterns.dart';
 import 'package:babysteps/app/pages/calendar/Events/notifications.dart';
 import 'package:intl/intl.dart';
@@ -67,11 +68,15 @@ class TaskCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // Reminder name
-                    Text(
-                      name,
-                      style: const TextStyle(
-                          fontSize: 15, fontWeight: FontWeight.bold),
+                    SizedBox(
+                      width: 175,
+                      child: Text(
+                        name,
+                        style: const TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold),
+                      ),
                     ),
+
                     // Display timing info
                     if (reminderType != "none")
                       Text(
@@ -81,16 +86,12 @@ class TaskCard extends StatelessWidget {
                   ],
                 ),
               ),
-              const Expanded(
-                  child: SizedBox(
-                    width: 30,
-                    height: 80,
-                  )),
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: Align(
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
                       // Edit button
                       EditTaskStream(docId),
@@ -129,7 +130,7 @@ class TaskCard extends StatelessWidget {
                           // Write updated task data to database
                           Map<String, dynamic> updateData = {
                             'remindAbout': name,
-                            'reminderType': (reminderType == 1) ? "in" : "at",
+                            'reminderType': reminderType,
                             'dateTime': timestamp,
                             'timeLength': -1,
                             'timeUnit': "--",
