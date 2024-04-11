@@ -42,12 +42,12 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
       timeSoFarOnLeft = left['duration'];
       timeSoFarOnRight = right['duration'];
 
-      if (left['lastStart'] != null) {
+      if (left['lastStart'] != "") {
         timeSoFarOnLeft += DateTime.now()
             .difference((left['lastStart'] as Timestamp).toDate())
             .inMilliseconds;
       }
-      if (right['lastStart'] != null) {
+      if (right['lastStart'] != "") {
         timeSoFarOnRight += DateTime.now()
             .difference((right['lastStart'] as Timestamp).toDate())
             .inMilliseconds;
@@ -136,11 +136,10 @@ class _BreastFeedingPageState extends State<BreastFeedingPage> {
                     ),
                   ),
 
-                  
-
                   // Add Previous Breastfeed
                   const Padding(
-                    padding: EdgeInsets.only(top: 30, bottom: 15, left: 15, right: 15),
+                    padding: EdgeInsets.only(
+                        top: 30, bottom: 15, left: 15, right: 15),
                     child: AddPreviousBreastfeedCard(),
                   ),
 
