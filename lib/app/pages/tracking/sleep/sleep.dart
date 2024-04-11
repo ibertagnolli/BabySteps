@@ -1,4 +1,4 @@
-import 'package:babysteps/app/pages/calendar/notifications.dart';
+import 'package:babysteps/app/pages/calendar/Events/notifications.dart';
 import 'package:babysteps/app/pages/tracking/sleep/add_previous_sleep.dart';
 import 'package:babysteps/app/pages/tracking/sleep/sleep_database.dart';
 import 'package:babysteps/app/pages/tracking/sleep/sleep_stream.dart';

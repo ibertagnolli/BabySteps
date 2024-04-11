@@ -53,6 +53,7 @@ class _TaskStreamState extends State<TaskStream> {
                     //              Text(DateFormat('hh:mm').format(data['dateTime'].toDate()))]
                     // ),
                     title: Text(data['name']),
+                    subtitle: Text("reminder at 10:00"),
                     value: data['completed'],
                     onChanged: (bool? value) async {
                       // Write updated task data to database

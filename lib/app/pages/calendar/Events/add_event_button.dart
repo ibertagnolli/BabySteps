@@ -1,5 +1,5 @@
 import 'package:babysteps/app/pages/calendar/calendar_database.dart';
-import 'package:babysteps/app/pages/calendar/notifications.dart';
+import 'package:babysteps/app/pages/calendar/Events/notifications.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

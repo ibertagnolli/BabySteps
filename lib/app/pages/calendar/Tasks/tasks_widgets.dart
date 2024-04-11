@@ -4,8 +4,8 @@ import 'package:intl/intl.dart';
 
 
 // The form that pops up where the user can create a reminder
-class NewReminderForm extends StatefulWidget {
-  const NewReminderForm(this.nameController, this.howManyController, this.dateController, this.timeController, this._setReminderType, this._setTimeUnit, this.initUnitSelection, this.initRadioButton, {super.key}); 
+class NewTaskForm extends StatefulWidget {
+  const NewTaskForm(this.nameController, this.howManyController, this.dateController, this.timeController, this._setReminderType, this._setTimeUnit, this.initUnitSelection, this.initRadioButton, {super.key}); 
   
   final TextEditingController nameController;
   final TextEditingController howManyController;
@@ -17,10 +17,10 @@ class NewReminderForm extends StatefulWidget {
   final int initRadioButton;
 
   @override
-  State<NewReminderForm> createState() => _NewReminderFormState();
+  State<NewTaskForm> createState() => _NewTaskFormState();
 }
 
-class _NewReminderFormState extends State<NewReminderForm> {
+class _NewTaskFormState extends State<NewTaskForm> {
   int selectedOption = 1;
   
   @override
@@ -41,14 +41,14 @@ class _NewReminderFormState extends State<NewReminderForm> {
             controller: widget.nameController,
             maxLength: 30,
             decoration: const InputDecoration(
-              labelText: "Remind me about",
+              labelText: "Task",
             ),
             onTapOutside: (event) {
                   FocusManager.instance.primaryFocus?.unfocus();
             },
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter reminder content';
+                return 'Please enter the task.';
               }
               return null;
             },
@@ -56,7 +56,7 @@ class _NewReminderFormState extends State<NewReminderForm> {
 
           // Radio buttons 
           ListTile(
-            title: const Text('in'),
+            title: const Text('Remind me in'),
             leading: Radio<int>(
               value: 1,
               groupValue: selectedOption,
@@ -71,7 +71,7 @@ class _NewReminderFormState extends State<NewReminderForm> {
             ),
           ),
           ListTile(
-            title: const Text('at'),
+            title: const Text('Remind me on'),
             leading: Radio<int>(
               value: 2,
               groupValue: selectedOption,
@@ -81,6 +81,21 @@ class _NewReminderFormState extends State<NewReminderForm> {
                   selectedOption = value!;
                 });
                 widget._setReminderType(2);
+                });
+              },
+            ),
+          ),
+          ListTile(
+            title: const Text('Don\'t remind me'),
+            leading: Radio<int>(
+              value: 3,
+              groupValue: selectedOption,
+              onChanged: (value) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  setState(() {
+                  selectedOption = value!;
+                });
+                widget._setReminderType(3);
                 });
               },
             ),
@@ -115,8 +130,11 @@ class TimingSelection extends StatelessWidget {
     if (selectedOption == 2) {
       return DateAndTime(dateController, timeController);
     }
+    if (selectedOption == 3) {
+      return const Text("");
+    }
     else {
-      return Text("error with selection");
+      return const Text("error with selection");
     }
   }
 }

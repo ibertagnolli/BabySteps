@@ -1,6 +1,5 @@
 import 'package:babysteps/app/pages/calendar/calendar_landing.dart';
 import 'package:babysteps/app/pages/notes/notes.dart';
-import 'package:babysteps/app/pages/home/home_landing.dart';
 import 'package:babysteps/app/pages/notes/notes_home.dart';
 import 'package:babysteps/app/pages/social/comments.dart';
 import 'package:babysteps/app/pages/social/new_post.dart';
@@ -35,7 +34,7 @@ import 'package:babysteps/app/pages/user/login_landing.dart';
 import 'package:babysteps/app/pages/user/login.dart';
 import 'package:babysteps/app/pages/user/signup.dart';
 import 'package:timezone/data/latest.dart' as tz;
-import 'package:babysteps/app/pages/calendar/notifications.dart';
+import 'package:babysteps/app/pages/calendar/Events/notifications.dart';
 //import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 //Code for routing (most of this page) taken and adjusted from this tutorial and this github:
 //https://codewithandrea.com/articles/flutter-bottom-navigation-bar-nested-routes-gorouter/
@@ -173,7 +172,7 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
           selectedIndex: navigationShell.currentIndex,
           indicatorColor: Theme.of(context).colorScheme.secondary,
           destinations: const [
-            NavigationDestination(label: 'Home', icon: Icon(Icons.home)), //TODO: uncomment for home
+            // NavigationDestination(label: 'Home', icon: Icon(Icons.home)), //TODO: uncomment for home
             NavigationDestination(label: 'Tracking', icon: Icon(Icons.folder)),
             NavigationDestination(
                 label: 'Calendar', icon: Icon(Icons.calendar_month)),
@@ -203,11 +202,13 @@ final _shellNavigatorSocialKey =
 // the one and only GoRouter instance
 final goRouter = GoRouter(
   // initialLocation: loggedIn
-  //     ? hasBaby
+  //     ? (hasBaby
   //         ? '/tracking'
-  //         : '/login/signup/addBaby'
+  //         : '/login/signup/addBaby')
   //     : '/login',
-  initialLocation: loggedIn ? '/home' : '/login', // TODO: put this back in when home page is interesting
+
+  initialLocation: loggedIn ? '/tracking' : '/login', // Nested ternary isn't working. With this, user gets prompt to re-login and then add_baby.dart loads.
+  // initialLocation: loggedIn ? '/home' : '/login', // TODO: put this back in when home page is interesting
   navigatorKey: _rootNavigatorKey,
   routes: [
     GoRoute(
@@ -263,18 +264,18 @@ final goRouter = GoRouter(
       branches: [
         // first branch (Home) 
         //TODO: uncomment below code when home is interesting
-        StatefulShellBranch(
-          navigatorKey: _shellNavigatorHomeKey,
-          routes: [
-            // top route inside branch
-            GoRoute(
-              path: '/home',
-              pageBuilder: (context, state) => NoTransitionPage(
-                  child: HomeLandingPage() //(label: 'A', detailsPath: '/a/details'),
-                  ),
-            ),
-          ],
-        ),
+        // StatefulShellBranch(
+        //   navigatorKey: _shellNavigatorHomeKey,
+        //   routes: [
+        //     // top route inside branch
+        //     GoRoute(
+        //       path: '/home',
+        //       pageBuilder: (context, state) => NoTransitionPage(
+        //           child: HomeLandingPage() //(label: 'A', detailsPath: '/a/details'),
+        //           ),
+        //     ),
+        //   ],
+        // ),
         // second branch (Tracking)
         StatefulShellBranch(
           navigatorKey: _shellNavigatorTrackingKey,

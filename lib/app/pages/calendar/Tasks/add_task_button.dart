@@ -1,23 +1,24 @@
 import 'dart:math';
 
+import 'package:babysteps/app/pages/calendar/Tasks/tasks_database.dart';
+import 'package:babysteps/app/pages/calendar/Tasks/tasks_widgets.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:babysteps/app/pages/home/reminders/reminders_database.dart';
-import 'package:babysteps/app/pages/home/reminders/reminders_widgets.dart';
-import 'package:babysteps/app/pages/calendar/notifications.dart';
+import 'package:babysteps/app/pages/calendar/Events/notifications.dart';
 import 'dart:core';
 
 // The widget that adds a new reminder.
-class AddReminderButton extends StatefulWidget {
-  AddReminderButton({super.key});
+class AddTaskButton extends StatefulWidget {
+  DateTime selectedDay;
+  AddTaskButton({required this.selectedDay, super.key});
 
   @override
-  State<StatefulWidget> createState() => _AddReminderButtonState();
+  State<StatefulWidget> createState() => _AddTaskButtonState();
 }
 
 /// Stores the mutable data that can change over the lifetime of the AddReminderButton.
-class _AddReminderButtonState extends State<AddReminderButton> {
+class _AddTaskButtonState extends State<AddTaskButton> {
   // The global key uniquely identifies the Form widget and allows
   // validation of the form.
   final _formKey = GlobalKey<FormState>();
@@ -60,66 +61,85 @@ class _AddReminderButtonState extends State<AddReminderButton> {
   }
 
   /// Saves a new reminder entry in the Firestore database.
-  saveNewReminder() async {
-    DateTime reminderDT; 
+  saveNewTask() async {
+    DateTime reminderDT = widget.selectedDay; 
     DateTime now = DateTime.now();
+    Map<String, dynamic> uploaddata = {};
 
-    // remind "in" a certain amount of time
-    if(reminderType == 1) {
-      int timeInterval = int.parse(howManyController.text);
-      if (timeUnit == "minutes") {
-        int minutes = now.minute + timeInterval;
-        reminderDT = DateTime(now.year, now.month, now.day,
-        now.hour, minutes);
-      }
-      else if (timeUnit == "hours") {
-        int hours = now.hour + timeInterval;
-        reminderDT = DateTime(now.year, now.month, now.day,
-        hours, now.minute);
-      }
-      else { // days
-        int days = now.day + timeInterval;
-        reminderDT = DateTime(now.year, now.month, days,
-        now.hour, now.minute);
-      }
+    // Task without a reminder
+    if (reminderType == 3) {
+      uploaddata = {
+        'remindAbout': nameController.text,
+        'reminderType': "none",
+        'dateTime': reminderDT,
+        'timeLength': 0,
+        'timeUnit': "--",
+        'notificationID': -1,
+        'completed': false,
+      }; 
     }
-    // remind "at" certain time
     else {
-      DateTime reminderDate = DateFormat("MM/dd/yyyy").parse(dateController.text);
-      List<String> splitTime = timeController.text.split(' '); // format 2:00 PM
-      List<String> splitHrMin = splitTime[0].split(':');
-      String dayNight = splitTime[1];
-      int hr = int.parse(splitHrMin[0]);
-      if(dayNight == "PM") {
-        hr += 12;
+      // remind "in" a certain amount of time
+      if(reminderType == 1) {
+        int timeInterval = int.parse(howManyController.text);
+        if (timeUnit == "minutes") {
+          int minutes = now.minute + timeInterval;
+          reminderDT = DateTime(now.year, now.month, now.day,
+          now.hour, minutes);
+        }
+        else if (timeUnit == "hours") {
+          int hours = now.hour + timeInterval;
+          reminderDT = DateTime(now.year, now.month, now.day,
+          hours, now.minute);
+        }
+        else { // days
+          int days = now.day + timeInterval;
+          reminderDT = DateTime(now.year, now.month, days,
+          now.hour, now.minute);
+        }
       }
-      int min = int.parse(splitHrMin[1]);
-      TimeOfDay reminderTime = TimeOfDay(hour: hr, minute: min);
-      reminderDT = DateTime(reminderDate.year, reminderDate.month, reminderDate.day,
-        reminderTime.hour, reminderTime.minute);
+
+      // remind "at" certain time
+      else {
+        DateTime reminderDate = DateFormat("MM/dd/yyyy").parse(dateController.text);
+        List<String> splitTime = timeController.text.split(' '); // format 2:00 PM
+        List<String> splitHrMin = splitTime[0].split(':');
+        String dayNight = splitTime[1];
+        int hr = int.parse(splitHrMin[0]);
+        if(dayNight == "PM") {
+          hr += 12;
+        }
+        int min = int.parse(splitHrMin[1]);
+        TimeOfDay reminderTime = TimeOfDay(hour: hr, minute: min);
+        reminderDT = DateTime(reminderDate.year, reminderDate.month, reminderDate.day,
+          reminderTime.hour, reminderTime.minute);
+      }
+
+      // Schedule notification as long as reminder date is in the future
+      int notificationID = Random().nextInt(1000000);
+      if(DateTime.now().isBefore(reminderDT)) {
+        NotificationService().scheduleNotification(
+                id: notificationID,
+                title: nameController.text,
+                body:
+                    DateFormat("h:mma").format(reminderDT),
+                scheduledNotificationDateTime: reminderDT);
+      }
+
+      // Write reminder data to database
+      uploaddata = {
+        'remindAbout': nameController.text,
+        'reminderType': (reminderType == 1) ? "in" : "at",
+        'dateTime': reminderDT,
+        'timeLength': (howManyController.text.isNotEmpty) ? int.parse(howManyController.text) : -1,
+        'timeUnit': (howManyController.text.isNotEmpty) ? timeUnit : "--",
+        'notificationID': notificationID,
+        'completed': false,
+      };
     }
 
-    // Schedule notification as long as reminder date is in the future
-    int notificationID = Random().nextInt(1000000);
-    if(DateTime.now().isBefore(reminderDT)) {
-      NotificationService().scheduleNotification(
-              id: notificationID,
-              title: nameController.text,
-              body:
-                  DateFormat("h:mma").format(reminderDT),
-              scheduledNotificationDateTime: reminderDT);
-    }
-    // Write reminder data to database
-    Map<String, dynamic> uploaddata = {
-      'remindAbout': nameController.text,
-      'reminderType': (reminderType == 1) ? "in" : "at",
-      'dateTime': reminderDT,
-      'timeLength': (howManyController.text.isNotEmpty) ? int.parse(howManyController.text) : -1,
-      'timeUnit': (howManyController.text.isNotEmpty) ? timeUnit : "--",
-      'notificationID': notificationID,
-    };
-    await RemindersDatabaseMethods()
-        .addReminder(uploaddata, currentUser.value!.userDoc);
+    await TasksDatabaseMethods()
+        .addTask(uploaddata, currentUser.value!.userDoc);
 
     // Clear fields for next entry (not date)
     nameController.clear();
@@ -146,11 +166,11 @@ class _AddReminderButtonState extends State<AddReminderButton> {
             ),
           ),
         ),
-        child: const Text('Add Reminder'),
+        child: const Text('Add Task'),
         // Dialog with reminder entry
         onPressed: () {
           // Populate the controllers
-          dateController.text = DateFormat.yMd().format(DateTime.now());
+          dateController.text = DateFormat.yMd().format(widget.selectedDay);
           timeController.text = TimeOfDay.now().format(context);
           _setTimeUnit("minutes");
           _setReminderType(1);
@@ -160,7 +180,7 @@ class _AddReminderButtonState extends State<AddReminderButton> {
               builder: (context) {
                 return AlertDialog(
                     scrollable: true,
-                    title: const Text("New Reminder"),
+                    title: const Text("New Task"),
                     content: Padding(
                       padding: const EdgeInsets.all(8),
                       child: Form(
@@ -168,7 +188,7 @@ class _AddReminderButtonState extends State<AddReminderButton> {
                           child: Column(
                             children: <Widget>[
                               
-                              NewReminderForm(nameController, howManyController, dateController, timeController, _setReminderType, _setTimeUnit, "minutes", 1),
+                              NewTaskForm(nameController, howManyController, dateController, timeController, _setReminderType, _setTimeUnit, "minutes", 1),
                               
                               // Submit button
                               Padding(
@@ -176,7 +196,7 @@ class _AddReminderButtonState extends State<AddReminderButton> {
                                 child: ElevatedButton(
                                     onPressed: () {
                                       if (_formKey.currentState!.validate()) {
-                                        saveNewReminder();
+                                        saveNewTask();
                                         Navigator.pop(context);
                                       }
                                     },

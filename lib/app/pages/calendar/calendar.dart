@@ -1,9 +1,9 @@
-import 'package:babysteps/app/pages/calendar/add_event_button.dart';
-import 'package:babysteps/app/pages/calendar/add_milestone_button.dart';
-import 'package:babysteps/app/pages/calendar/add_task_button.dart';
-import 'package:babysteps/app/pages/calendar/event_stream.dart';
-import 'package:babysteps/app/pages/calendar/milestone_stream.dart';
-import 'package:babysteps/app/pages/calendar/task_stream.dart';
+import 'package:babysteps/app/pages/calendar/Events/add_event_button.dart';
+import 'package:babysteps/app/pages/calendar/Milestones/add_milestone_button.dart';
+import 'package:babysteps/app/pages/calendar/Tasks/add_task_button.dart';
+import 'package:babysteps/app/pages/calendar/Tasks/tasks_stream.dart';
+import 'package:babysteps/app/pages/calendar/Events/event_stream.dart';
+import 'package:babysteps/app/pages/calendar/Milestones/milestone_stream.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -65,6 +65,8 @@ class _CalendarPageState extends State<CalendarPage> {
                       _focusedDay = DateUtils.dateOnly(focusedDay);
                       monthsAlive =
                           (_selectedDay.difference(dob!).inDays / 30).floor();
+                      print("---dob: $dob");
+                      print("---monthsAlive: $monthsAlive");
                       int exactDay = _selectedDay.difference(dob!).inDays % 30;
                       if (exactDay == 0) {
                         showDialog(
@@ -88,7 +90,7 @@ class _CalendarPageState extends State<CalendarPage> {
                           },
                         );
                       }
-                      if (monthsAlive <= 0) {
+                      if (monthsAlive < 0) {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
@@ -168,7 +170,7 @@ class _CalendarPageState extends State<CalendarPage> {
                         fontWeight: FontWeight.bold)),
                 initiallyExpanded: true,
                 children: <Widget>[
-                  // List of tasks
+                  // // List of tasks
                   TaskStream(
                     selectedDay: _selectedDay,
                   ),
@@ -176,7 +178,8 @@ class _CalendarPageState extends State<CalendarPage> {
                   // Add task button
                   Padding(
                     padding: const EdgeInsets.all(15),
-                    child: AddTaskButton(
+                    child: 
+                    AddTaskButton(
                       selectedDay: _selectedDay,
                     ),
                   ),

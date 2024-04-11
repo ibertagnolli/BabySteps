@@ -1,32 +1,33 @@
-import 'package:babysteps/app/pages/home/reminders/reminders_database.dart';
-import 'package:babysteps/app/pages/home/reminders/edit_reminder_stream.dart';
+import 'package:babysteps/app/pages/calendar/Tasks/edit_task_stream.dart';
+import 'package:babysteps/app/pages/calendar/Tasks/tasks_database.dart';
 import 'package:babysteps/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_time_patterns.dart';
-import 'package:babysteps/app/pages/calendar/notifications.dart';
+import 'package:babysteps/app/pages/calendar/Events/notifications.dart';
 import 'package:intl/intl.dart';
 
 /// Each card shows a reminder on the home page
-class ReminderCard extends StatelessWidget {
+class TaskCard extends StatelessWidget {
   final String name;
   final String reminderType;
   final Timestamp timestamp;
+  final bool completed;
   final int notificationID;
   final docId;
   final context; 
 
-  const ReminderCard(this.name, this.reminderType, this.timestamp, this.notificationID, this.docId,
+  const TaskCard(this.name, this.reminderType, this.timestamp, this.notificationID, this.completed, this.docId,
       {super.key, this.context}); // this.context
 
   /// Deletes the selected Reminder from the database
-  Future<void> deleteReminder() async {
+  Future<void> deleteTask() async {
 
     // Delete notification 
     NotificationService().deleteNotification(notificationID);
 
-    await RemindersDatabaseMethods()
-        .deleteReminder(docId, currentUser.value!.userDoc);
+    await TasksDatabaseMethods()
+        .deleteTask(docId, currentUser.value!.userDoc);
   }
 
   @override
@@ -45,8 +46,13 @@ class ReminderCard extends StatelessWidget {
               + (" $timeDifferenceMin min" ) );
     String remindIn = (reminderDate.isBefore(DateTime.now()) ? timeDiffString + " ago" : "in" + timeDiffString);
 
+    bool colorTileRed = false;
+    if (reminderType != "none" && reminderDate.isBefore(DateTime.now()) && !completed) {
+      colorTileRed = true;
+    }
+
     return Card(
-      color: (reminderDate.isBefore(DateTime.now())) ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.surface,
+      color: (colorTileRed) ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.surface,
       child: InkWell(
         splashColor: Theme.of(context).colorScheme.surface,
         child: SizedBox(
@@ -67,24 +73,28 @@ class ReminderCard extends StatelessWidget {
                           fontSize: 15, fontWeight: FontWeight.bold),
                     ),
                     // Display timing info
-                    Text(
-                      ((reminderType == "in") ? remindIn
-                      : "at $reminderDay, $reminderTime")
-                    ),
+                    if (reminderType != "none")
+                      Text(
+                        ((reminderType == "in") ? remindIn
+                        : "at $reminderDay, $reminderTime")
+                      ),
                   ],
                 ),
               ),
               const Expanded(
                   child: SizedBox(
-                width: 30,
-                height: 80,
-              )),
+                    width: 30,
+                    height: 80,
+                  )),
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: Align(
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
+                      // Edit button
+                      EditTaskStream(docId),
+
                       // Delete button
                       IconButton(
                           icon: const Icon(Icons.delete),
@@ -100,7 +110,7 @@ class ReminderCard extends StatelessWidget {
                                             TextButton(
                                                 child: const Text('Yes'),
                                                 onPressed: () {
-                                                  deleteReminder();
+                                                  deleteTask();
                                                   Navigator.of(context).pop();
                                                 }),
                                             TextButton(
@@ -112,8 +122,24 @@ class ReminderCard extends StatelessWidget {
                                     })
                               }),
 
-                      // Edit button
-                     EditReminderStream(docId),
+                      // Check box
+                      Checkbox(
+                        value: completed, 
+                        onChanged: (bool? value) async {
+                          // Write updated task data to database
+                          Map<String, dynamic> updateData = {
+                            'remindAbout': name,
+                            'reminderType': (reminderType == 1) ? "in" : "at",
+                            'dateTime': timestamp,
+                            'timeLength': -1,
+                            'timeUnit': "--",
+                            'notificationID': -1,
+                            'completed': !completed,
+                          };
+                          await TasksDatabaseMethods().updateTask(
+                              docId, updateData, currentUser.value!.userDoc);
+                        },
+                      ),
                     ],
                   ),
                 ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:babysteps/app/pages/calendar/milestones.dart';
+import 'package:babysteps/app/pages/calendar/Milestones/milestones.dart';
 
 class MilestonesWidget extends StatelessWidget {
   final int monthsAlive;
