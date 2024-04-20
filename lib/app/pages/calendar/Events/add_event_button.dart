@@ -40,7 +40,7 @@ class _AddEventButtonState extends State<AddEventButton> {
     );
 
     if (selectedTime != null) {
-      // setState(() {
+      setState(() {
         eventTime = selectedTime;
         timeController.text = selectedTime.format(context);
         // NotificationService().scheduleNotification(
@@ -54,7 +54,7 @@ class _AddEventButtonState extends State<AddEventButton> {
         //         selectedDay.day,
         //         selectedTime.hour,
         //         selectedTime.minute));
-      // });
+      });
     }
   }
 
