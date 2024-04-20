@@ -111,12 +111,8 @@ class _AddTaskButtonState extends State<AddTaskButton> {
                                       lastDate: DateTime(2050));
 
                                   if (pickeddate != null) {
-                                    setState(() {
-                                      widget.selectedDay = pickeddate;
-                                      dateController.text = DateFormat.yMd()
-                                          .add_jm()
-                                          .format(pickeddate);
-                                    });
+                                    dateController.text =
+                                        DateFormat.yMd().format(pickeddate);
                                   }
                                 },
                                 validator: (value) {

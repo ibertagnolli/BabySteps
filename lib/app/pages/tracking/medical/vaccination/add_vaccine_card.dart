@@ -25,7 +25,8 @@ class _AddVaccineCardState extends State<AddVaccineCard> {
   saveNewVaccine() async {
     DateTime savedDate = DateFormat("MM/dd/yyyy").parse(date.text);
     // Add the time so Medical tracking card shows time of latest update
-    DateTime savedDateWithTime = DateTime(savedDate.year, savedDate.month, savedDate.day, DateTime.now().hour, DateTime.now().minute);
+    DateTime savedDateWithTime = DateTime(savedDate.year, savedDate.month,
+        savedDate.day, DateTime.now().hour, DateTime.now().minute);
 
     // Write vaccine data to database
     Map<String, dynamic> uploaddata = {
@@ -73,10 +74,10 @@ class _AddVaccineCardState extends State<AddVaccineCard> {
             child: Form(
               key: _formKey,
               child: Column(children: <Widget>[
-
                 // Date entry
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+                  padding:
+                      const EdgeInsets.only(bottom: 10, left: 10, right: 10),
                   child: TextFormField(
                     controller: date,
                     decoration: const InputDecoration(
@@ -91,10 +92,7 @@ class _AddVaccineCardState extends State<AddVaccineCard> {
                           lastDate: DateTime.now());
 
                       if (pickeddate != null) {
-                        setState(() {
-                          date.text =
-                              DateFormat.yMd().format(pickeddate);
-                        });
+                        date.text = DateFormat.yMd().format(pickeddate);
                       }
                     },
                     validator: (value) {
@@ -111,35 +109,32 @@ class _AddVaccineCardState extends State<AddVaccineCard> {
 
                 // Name of vaccine
                 Padding(
-                  padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                  child: TextFormField(
-                    controller: vaccName,
-                    maxLength: 50,
-                    decoration: const InputDecoration(
-                      hintText: 'Name of vaccine'
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter the vaccine name.';
-                      }
-                      return null;
-                    },
-                  )
-                ),
+                    padding:
+                        const EdgeInsets.only(top: 10, left: 10, right: 10),
+                    child: TextFormField(
+                      controller: vaccName,
+                      maxLength: 50,
+                      decoration:
+                          const InputDecoration(hintText: 'Name of vaccine'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter the vaccine name.';
+                        }
+                        return null;
+                      },
+                    )),
 
                 // Reactions
                 Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 10),
-                  child: TextFormField(
-                    controller: reaction,
-                    maxLength: 300,
-                    keyboardType: TextInputType.multiline,
-                    maxLines: null,
-                    decoration: const InputDecoration(
-                      hintText: 'Baby\'s reactions to the vaccine'
-                    ),
-                  )
-                ),
+                    padding: const EdgeInsets.only(left: 10, right: 10),
+                    child: TextFormField(
+                      controller: reaction,
+                      maxLength: 300,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
+                      decoration: const InputDecoration(
+                          hintText: 'Baby\'s reactions to the vaccine'),
+                    )),
 
                 // Third row: Submit button
                 Padding(
