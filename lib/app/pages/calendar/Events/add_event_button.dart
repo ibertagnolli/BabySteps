@@ -60,19 +60,26 @@ class _AddEventButtonState extends State<AddEventButton> {
     };
     await CalendarDatabaseMethods()
         .addEvent(uploaddata, currentUser.value!.userDoc);
-
-    NotificationService().scheduleNotification(
-        id: 0,
-        title: nameController.text,
-        body:
-            '${eventTime.hour.toString().padLeft(2, '0')}:${eventTime.minute.toString().padLeft(2, '0')}',
-        scheduledNotificationDateTime: DateTime(
-            widget.selectedDay.year,
-            widget.selectedDay.month,
-            widget.selectedDay.day,
-            eventTime.hour,
-            eventTime.minute));
-
+    DateTime eventDateTime = DateTime(
+        widget.selectedDay.year,
+        widget.selectedDay.month,
+        widget.selectedDay.day,
+        eventTime.hour,
+        eventTime.minute);
+    if (eventDateTime.isAfter(DateTime.now())) {
+      NotificationService().scheduleNotification(
+          id: 0,
+          title: nameController.text,
+          body:
+              '${eventTime.hour.toString().padLeft(2, '0')}:${eventTime.minute.toString().padLeft(2, '0')}',
+          scheduledNotificationDateTime: DateTime(
+              widget.selectedDay.year,
+              widget.selectedDay.month,
+              widget.selectedDay.day,
+              eventTime.hour,
+              eventTime.minute));
+    }
+    
     // Clear fields for next entry (not date)
     nameController.clear();
     timeController.clear();
