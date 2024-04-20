@@ -3,7 +3,6 @@ import 'package:babysteps/app/pages/calendar/Tasks/tasks_database.dart';
 import 'package:babysteps/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/date_time_patterns.dart';
 import 'package:babysteps/app/pages/calendar/Events/notifications.dart';
 import 'package:intl/intl.dart';
 
@@ -15,44 +14,51 @@ class TaskCard extends StatelessWidget {
   final bool completed;
   final int notificationID;
   final docId;
-  final context; 
+  final context;
 
-  const TaskCard(this.name, this.reminderType, this.timestamp, this.notificationID, this.completed, this.docId,
+  const TaskCard(this.name, this.reminderType, this.timestamp,
+      this.notificationID, this.completed, this.docId,
       {super.key, this.context}); // this.context
 
   /// Deletes the selected Reminder from the database
   Future<void> deleteTask() async {
-
-    // Delete notification 
+    // Delete notification
     NotificationService().deleteNotification(notificationID);
 
-    await TasksDatabaseMethods()
-        .deleteTask(docId, currentUser.value!.userDoc);
+    await TasksDatabaseMethods().deleteTask(docId, currentUser.value!.userDoc);
   }
 
   @override
   Widget build(BuildContext context) {
-
-    // Get all necessary info 
-    DateTime reminderDate = DateTime.fromMillisecondsSinceEpoch(timestamp.seconds * 1000);
+    // Get all necessary info
+    DateTime reminderDate =
+        DateTime.fromMillisecondsSinceEpoch(timestamp.seconds * 1000);
     String reminderTime = DateFormat.jm().format(reminderDate);
     String reminderDay = DateFormat.Md().format(reminderDate);
-    Duration timeDifference = reminderDate.difference(DateTime.now()); // reminderDate - now
+    Duration timeDifference =
+        reminderDate.difference(DateTime.now()); // reminderDate - now
     int timeDifferenceDays = timeDifference.inDays.abs();
     int timeDifferenceHours = timeDifference.inHours.abs() % 24;
     int timeDifferenceMin = timeDifference.inMinutes.abs() % 60;
-    String timeDiffString = (((timeDifferenceDays) > 0 ? " $timeDifferenceDays days" : '') 
-              + ((timeDifferenceHours) > 0 ? " $timeDifferenceHours hr" : '') 
-              + (" $timeDifferenceMin min" ) );
-    String remindIn = (reminderDate.isBefore(DateTime.now()) ? timeDiffString + " ago" : "in" + timeDiffString);
+    String timeDiffString =
+        (((timeDifferenceDays) > 0 ? " $timeDifferenceDays days" : '') +
+            ((timeDifferenceHours) > 0 ? " $timeDifferenceHours hr" : '') +
+            (" $timeDifferenceMin min"));
+    String remindIn = (reminderDate.isBefore(DateTime.now())
+        ? timeDiffString + " ago"
+        : "in" + timeDiffString);
 
     bool colorTileRed = false;
-    if (reminderType != "none" && reminderDate.isBefore(DateTime.now()) && !completed) {
+    if (reminderType != "none" &&
+        reminderDate.isBefore(DateTime.now()) &&
+        !completed) {
       colorTileRed = true;
     }
 
     return Card(
-      color: (colorTileRed) ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.surface,
+      color: (colorTileRed)
+          ? Theme.of(context).colorScheme.error
+          : Theme.of(context).colorScheme.surface,
       child: InkWell(
         splashColor: Theme.of(context).colorScheme.surface,
         child: SizedBox(
@@ -60,35 +66,34 @@ class TaskCard extends StatelessWidget {
           height: 80,
           child: Row(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Reminder name
-                    Text(
-                      name,
-                      style: const TextStyle(
-                          fontSize: 15, fontWeight: FontWeight.bold),
-                    ),
-                    // Display timing info
-                    if (reminderType != "none")
-                      Text(
-                        ((reminderType == "in") ? remindIn
-                        : "at $reminderDay, $reminderTime")
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // Reminder name
+                      Flexible(
+                        child: Text(
+                          name,
+                          style: const TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                        ),
                       ),
-                  ],
+                      // Display timing info
+                      if (reminderType != "none")
+                        Text(((reminderType == "in")
+                            ? remindIn
+                            : "at $reminderDay, $reminderTime")),
+                    ],
+                  ),
                 ),
               ),
-              const Expanded(
-                  child: SizedBox(
-                    width: 30,
-                    height: 80,
-                  )),
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: Align(
+              Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
@@ -124,7 +129,7 @@ class TaskCard extends StatelessWidget {
 
                       // Check box
                       Checkbox(
-                        value: completed, 
+                        value: completed,
                         onChanged: (bool? value) async {
                           // Write updated task data to database
                           Map<String, dynamic> updateData = {

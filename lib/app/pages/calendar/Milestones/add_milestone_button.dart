@@ -41,7 +41,8 @@ class _AddMilestoneButtonState extends State<AddMilestoneButton> {
       'dateTime': milestoneDate,
     };
 
-    await CalendarDatabaseMethods().addMilestone(uploaddata, currentUser.value!.userDoc);
+    await CalendarDatabaseMethods()
+        .addMilestone(uploaddata, currentUser.value!.userDoc);
 
     // Clear fields for next entry (not date)
     nameController.clear();
@@ -56,96 +57,96 @@ class _AddMilestoneButtonState extends State<AddMilestoneButton> {
       // Add Milestone Button
       width: 170.0,
       height: 30.0,
-      child:Padding( padding:const EdgeInsets.only(right: 10), 
-      child: FilledButton(
-        style: FilledButton.styleFrom(
-          backgroundColor:
-              Theme.of(context).colorScheme.tertiary, // Background color
-        ),
-        child:const Text("Add Milestone",
-            style: TextStyle(fontSize: 15,  color:Colors.white)),
+      child: Padding(
+        padding: const EdgeInsets.only(right: 10),
+        child: FilledButton(
+          style: FilledButton.styleFrom(
+            backgroundColor:
+                Theme.of(context).colorScheme.tertiary, // Background color
+          ),
+          child: const Text("Add Milestone",
+              style: TextStyle(fontSize: 15, color: Colors.white)),
 
-        // Dialog with Milestone entry
-        onPressed: () {
-          showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                    scrollable: true,
-                    title: const Text("New Milestone"),
-                    content: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Form(
-                          key: _formKey,
-                          child: Column(
-                            children: <Widget>[
-                              //Milestone Name/info
-                              TextFormField(
-                                controller: nameController,
-                                maxLength: 100,
-                                decoration: const InputDecoration(
-                                  labelText: "Milestone",
+          // Dialog with Milestone entry
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                      scrollable: true,
+                      title: const Text("New Milestone"),
+                      content: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Form(
+                            key: _formKey,
+                            child: Column(
+                              children: <Widget>[
+                                //Milestone Name/info
+                                TextFormField(
+                                  controller: nameController,
+                                  maxLength: 100,
+                                  decoration: const InputDecoration(
+                                    labelText: "Milestone",
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter the Milestone name';
+                                    }
+                                    return null;
+                                  },
                                 ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter the Milestone name';
-                                  }
-                                  return null;
-                                },
-                              ),
 
-                              // Milestone Date
-                              TextFormField(
-                                controller: dateController,
-                                decoration: const InputDecoration(
-                                  labelText: "Date",
-                                ),
-                                onTap: () async {
-                                  // Don't show keyboard
-                                  FocusScope.of(context)
-                                      .requestFocus(FocusNode());
+                                // Milestone Date
+                                TextFormField(
+                                  controller: dateController,
+                                  decoration: const InputDecoration(
+                                    labelText: "Date",
+                                  ),
+                                  onTap: () async {
+                                    // Don't show keyboard
+                                    FocusScope.of(context)
+                                        .requestFocus(FocusNode());
 
-                                  DateTime? pickeddate = await showDatePicker(
-                                      context: context,
-                                      initialDate: DateTime.now(),
-                                      firstDate: DateTime(2020),
-                                      lastDate: DateTime(2050));
+                                    DateTime? pickeddate = await showDatePicker(
+                                        context: context,
+                                        initialDate: DateTime.now(),
+                                        firstDate: DateTime(2020),
+                                        lastDate: DateTime(2050));
 
-                                  if (pickeddate != null) {
-                                    setState(() {
-                                      widget.selectedDay = pickeddate;
-                                      dateController.text = DateFormat.yMd()
-                                          .add_jm()
-                                          .format(pickeddate);
-                                    });
-                                  }
-                                },
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter a date';
-                                  }
-                                  return null;
-                                },
-                              ),
-
-                            
-
-                              // Submit button
-                              ElevatedButton(
-                                  onPressed: () {
-                                    if (_formKey.currentState!.validate()) {
-                                      //TODO change to save new milestone
-                                      saveNewMilestone();
-                                      Navigator.pop(context);
+                                    if (pickeddate != null) {
+                                      dateController.text =
+                                          DateFormat.yMd().format(pickeddate);
                                     }
                                   },
-                                  child: const Text("Submit", style:TextStyle(color:Colors.white)))
-                            ],
-                          )),
-                    ));
-              });
-        },
-      ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter a date';
+                                    }
+                                    return null;
+                                  },
+                                ),
+
+                                // Submit button
+                                ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor: Theme.of(context)
+                                            .colorScheme
+                                            .primary),
+                                    onPressed: () {
+                                      if (_formKey.currentState!.validate()) {
+                                        //TODO change to save new milestone
+                                        saveNewMilestone();
+                                        Navigator.pop(context);
+                                      }
+                                    },
+                                    child: const Text("Submit",
+                                        style: TextStyle(color: Colors.white)))
+                              ],
+                            )),
+                      ));
+                });
+          },
+        ),
       ),
     );
   }

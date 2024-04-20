@@ -8,14 +8,14 @@ FirebaseFirestore db = FirebaseFirestore.instance;
 
 /// The widget that reads realtime Event updates.
 class EventStream extends StatefulWidget {
-  DateTime selectedDay;
-  EventStream({required this.selectedDay, super.key});
+  final DateTime selectedDay;
+  const EventStream({required this.selectedDay, super.key});
 
   @override
-  _EventStreamState createState() => _EventStreamState();
+  EventStreamState createState() => EventStreamState();
 }
 
-class _EventStreamState extends State<EventStream> {
+class EventStreamState extends State<EventStream> {
   @override
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> eventStream = CalendarDatabaseMethods()
@@ -49,8 +49,8 @@ class _EventStreamState extends State<EventStream> {
                     title: Row(children: [
                       Text(data['name']),
                       const Text(" at "),
-                      Text(
-                          DateFormat('hh:mm a').format(data['dateTime'].toDate()))
+                      Text(DateFormat('hh:mm a')
+                          .format(data['dateTime'].toDate()))
                     ]),
                   );
                 })

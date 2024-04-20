@@ -290,10 +290,8 @@ class _AddBabyPageState extends State<AddBabyPage> {
                                     lastDate: DateTime(2101));
 
                                 if (pickeddate != null) {
-                                  setState(() {
-                                    date.text =
-                                        DateFormat.yMd().format(pickeddate);
-                                  });
+                                  date.text =
+                                      DateFormat.yMd().format(pickeddate);
                                 }
                               },
                               validator: (value) {

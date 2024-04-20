@@ -1,7 +1,6 @@
 import 'package:babysteps/app/pages/calendar/calendar_database.dart';
 import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
 /// The widget that adds a new task.
@@ -112,12 +111,8 @@ class _AddTaskButtonState extends State<AddTaskButton> {
                                       lastDate: DateTime(2050));
 
                                   if (pickeddate != null) {
-                                    setState(() {
-                                      widget.selectedDay = pickeddate;
-                                      dateController.text = DateFormat.yMd()
-                                          .add_jm()
-                                          .format(pickeddate);
-                                    });
+                                    dateController.text =
+                                        DateFormat.yMd().format(pickeddate);
                                   }
                                 },
                                 validator: (value) {
@@ -132,17 +127,15 @@ class _AddTaskButtonState extends State<AddTaskButton> {
 
                               // Submit button
                               Padding(
-                                padding: EdgeInsets.only(top: 15),
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    if (_formKey.currentState!.validate()) {
-                                      saveNewTask();
-                                      Navigator.pop(context);
-                                    }
-                                  },
-                                  child: const Text("Submit")
-                                )
-                              ),
+                                  padding: const EdgeInsets.only(top: 15),
+                                  child: ElevatedButton(
+                                      onPressed: () {
+                                        if (_formKey.currentState!.validate()) {
+                                          saveNewTask();
+                                          Navigator.pop(context);
+                                        }
+                                      },
+                                      child: const Text("Submit"))),
                             ],
                           )),
                     ));

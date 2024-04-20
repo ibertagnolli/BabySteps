@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class ProfileLoadingLanding extends StatefulWidget {
-  const ProfileLoadingLanding({super.key});
+  const ProfileLoadingLanding(this.lastPage, {super.key});
+  final String lastPage;
   @override
   State<ProfileLoadingLanding> createState() => _ProfileLoadingLandingState();
 }
@@ -18,7 +19,7 @@ class _ProfileLoadingLandingState extends State<ProfileLoadingLanding> {
         appBar: AppBar(
             title: const Text('Profile'),
             leading: BackButton(
-                onPressed: () => context.go('/tracking'),
+                onPressed: () => context.go('/${widget.lastPage}'),
                 // onPressed: () => context.go('/home'), //TODO: add back in when home is more interesting
                 color: Theme.of(context).colorScheme.onSurface)),
         body: ValueListenableBuilder(

@@ -104,7 +104,7 @@ void main() async {
         currentBaby ??= babies
             .where((baby) => baby.caregivers
                 .where((caregiver) => caregiver['trackingView'] == true)
-                .firstOrNull)
+                .isNotEmpty)
             .firstOrNull;
 
         currentUser.value = UserProfile(
@@ -186,10 +186,6 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
 
 // private navigators
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
-final _shellNavigatorLoginKey =
-    GlobalKey<NavigatorState>(debugLabel: 'shellLogin');
-final _shellNavigatorHomeKey =
-    GlobalKey<NavigatorState>(debugLabel: 'shellHome');
 final _shellNavigatorTrackingKey =
     GlobalKey<NavigatorState>(debugLabel: 'shellTracking');
 final _shellNavigatorCalendarKey =
@@ -207,7 +203,9 @@ final goRouter = GoRouter(
   //         : '/login/signup/addBaby')
   //     : '/login',
 
-  initialLocation: loggedIn ? '/tracking' : '/login', // Nested ternary isn't working. With this, user gets prompt to re-login and then add_baby.dart loads.
+  initialLocation: loggedIn
+      ? '/tracking'
+      : '/login', // Nested ternary isn't working. With this, user gets prompt to re-login and then add_baby.dart loads.
   // initialLocation: loggedIn ? '/home' : '/login', // TODO: put this back in when home page is interesting
   navigatorKey: _rootNavigatorKey,
   routes: [
@@ -232,8 +230,10 @@ final goRouter = GoRouter(
         ]),
     GoRoute(
       path: '/profile',
-      pageBuilder: (context, state) =>
-          const NoTransitionPage(child: ProfileLoadingLanding()),
+      name: '/profile',
+      pageBuilder: (context, state) => NoTransitionPage(
+          child: ProfileLoadingLanding(
+              state.uri.queryParameters['lastPage'] ?? 'tracking')),
       routes: [
         GoRoute(
           path: 'edit',
@@ -262,7 +262,7 @@ final goRouter = GoRouter(
         return ScaffoldWithNestedNavigation(navigationShell: navigationShell);
       },
       branches: [
-        // first branch (Home) 
+        // first branch (Home)
         //TODO: uncomment below code when home is interesting
         // StatefulShellBranch(
         //   navigatorKey: _shellNavigatorHomeKey,
@@ -317,17 +317,17 @@ final goRouter = GoRouter(
                 ),
                 // medical routes
                 GoRoute(
-                  path: 'medical',
-                  builder: (context, state) => const MedicalPage(),
-                  routes: [
-                    GoRoute(
-                        path: 'vaccinations',
-                        builder: (context, state) => const VaccinationsPage()),
-                    GoRoute(
-                        path: 'medications',
-                        builder: (context, state) => const MedicationsPage()),
-                  ]
-                ),
+                    path: 'medical',
+                    builder: (context, state) => const MedicalPage(),
+                    routes: [
+                      GoRoute(
+                          path: 'vaccinations',
+                          builder: (context, state) =>
+                              const VaccinationsPage()),
+                      GoRoute(
+                          path: 'medications',
+                          builder: (context, state) => const MedicationsPage()),
+                    ]),
               ],
             ),
           ],

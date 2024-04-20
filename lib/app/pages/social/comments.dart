@@ -33,19 +33,24 @@ class _CommentsPageState extends State<CommentsPage> {
             if (value == null) {
               return const LoadingWidget();
             } else {
-              return Column(
+              return Stack(
                 children: [
-                  const Divider(),
-                  SingleChildScrollView(
-                    child: CommentStream(widget.postId),
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: SingleChildScrollView(
+                        child: Column(children: [
+                      CommentStream(widget.postId),
+                    ])),
                   ),
-                  const Spacer(),
                   Padding(
                     padding: const EdgeInsets.all(8),
                     child: Align(
-                      // alignment: Alignment.bottomCenter,
+                      alignment: Alignment.bottomCenter,
                       child: TextField(
                         controller: controller,
+                        minLines: 1,
+                        maxLines: 5,
+                        keyboardType: TextInputType.multiline,
                         textInputAction: TextInputAction.done,
                         onSubmitted: (value) async {
                           controller.clear();

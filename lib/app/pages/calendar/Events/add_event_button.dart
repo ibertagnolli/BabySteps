@@ -43,17 +43,6 @@ class _AddEventButtonState extends State<AddEventButton> {
       setState(() {
         eventTime = selectedTime;
         timeController.text = selectedTime.format(context);
-        NotificationService().scheduleNotification(
-            id: 0,
-            title: eventName,
-            body:
-                '${selectedTime.hour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}',
-            scheduledNotificationDateTime: DateTime(
-                selectedDay.year,
-                selectedDay.month,
-                selectedDay.day,
-                selectedTime.hour,
-                selectedTime.minute));
       });
     }
   }
@@ -71,7 +60,26 @@ class _AddEventButtonState extends State<AddEventButton> {
     };
     await CalendarDatabaseMethods()
         .addEvent(uploaddata, currentUser.value!.userDoc);
-
+    DateTime eventDateTime = DateTime(
+        widget.selectedDay.year,
+        widget.selectedDay.month,
+        widget.selectedDay.day,
+        eventTime.hour,
+        eventTime.minute);
+    if (eventDateTime.isAfter(DateTime.now())) {
+      NotificationService().scheduleNotification(
+          id: 0,
+          title: nameController.text,
+          body:
+              '${eventTime.hour.toString().padLeft(2, '0')}:${eventTime.minute.toString().padLeft(2, '0')}',
+          scheduledNotificationDateTime: DateTime(
+              widget.selectedDay.year,
+              widget.selectedDay.month,
+              widget.selectedDay.day,
+              eventTime.hour,
+              eventTime.minute));
+    }
+    
     // Clear fields for next entry (not date)
     nameController.clear();
     timeController.clear();
@@ -137,12 +145,9 @@ class _AddEventButtonState extends State<AddEventButton> {
                                       lastDate: DateTime(2050));
 
                                   if (pickeddate != null) {
-                                    // setState(() {
                                     widget.selectedDay = pickeddate;
                                     dateController.text = DateFormat.yMd()
-                                        .add_jm()
                                         .format(widget.selectedDay);
-                                    // });
                                   }
                                 },
                                 validator: (value) {
@@ -179,16 +184,15 @@ class _AddEventButtonState extends State<AddEventButton> {
 
                               // Submit button
                               Padding(
-                                padding: EdgeInsets.only(top: 15),
+                                padding: const EdgeInsets.only(top: 15),
                                 child: ElevatedButton(
-                                  onPressed: () {
-                                    if (_formKey.currentState!.validate()) {
-                                      saveNewEvent();
-                                      Navigator.pop(context);
-                                    }
-                                  },
-                                  child: const Text("Submit")
-                                ),
+                                    onPressed: () {
+                                      if (_formKey.currentState!.validate()) {
+                                        saveNewEvent();
+                                        Navigator.pop(context);
+                                      }
+                                    },
+                                    child: const Text("Submit")),
                               ),
                             ],
                           )),

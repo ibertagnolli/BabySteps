@@ -7,18 +7,19 @@ import 'package:intl/intl.dart';
 FirebaseFirestore db = FirebaseFirestore.instance;
 
 /// The widget that reads realtime milestone updates.
-class MilestoneStream extends StatefulWidget{
+class MilestoneStream extends StatefulWidget {
   DateTime selectedDay;
   MilestoneStream({required this.selectedDay, super.key});
 
   @override
-  _MilestoneStreamState createState() => _MilestoneStreamState();
+  MilestoneStreamState createState() => MilestoneStreamState();
 }
 
-class _MilestoneStreamState extends State<MilestoneStream> {
+class MilestoneStreamState extends State<MilestoneStream> {
   @override
   Widget build(BuildContext context) {
-    final Stream<QuerySnapshot> milestoneStream = CalendarDatabaseMethods().getMilestoneStream(widget.selectedDay, currentUser.value!.userDoc);
+    final Stream<QuerySnapshot> milestoneStream = CalendarDatabaseMethods()
+        .getMilestoneStream(widget.selectedDay, currentUser.value!.userDoc);
 
     return StreamBuilder<QuerySnapshot>(
       stream: milestoneStream,
@@ -30,27 +31,28 @@ class _MilestoneStreamState extends State<MilestoneStream> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Text("Loading");
         }
-        
+
         // An array of milestone documents
         var milestoneDocs = snapshot.data!.docs;
 
-        if(milestoneDocs.isEmpty) {
+        if (milestoneDocs.isEmpty) {
           return const Text("No New Milestones today.");
-        } 
-        else {
-                  return ListView(
-            shrinkWrap: true, // TODO We can make this a SizedBox and it will scroll by default. But, the box is not obviously scrollable.
+        } else {
+          return ListView(
+            shrinkWrap:
+                true, // TODO We can make this a SizedBox and it will scroll by default. But, the box is not obviously scrollable.
             children: milestoneDocs
                 .map((DocumentSnapshot document) {
                   Map<String, dynamic> data =
                       document.data()! as Map<String, dynamic>;
-                  return ListTile(                      
-                      title: Row(
-                        children: [Text(data['name']), 
-                                   const Text(" on "), 
-                                   Text(DateFormat('MM/dd/yyyy').format(data['dateTime'].toDate()))]
-                      ),
-                    );
+                  return ListTile(
+                    title: Row(children: [
+                      Text(data['name']),
+                      const Text(" on "),
+                      Text(DateFormat('MM/dd/yyyy')
+                          .format(data['dateTime'].toDate()))
+                    ]),
+                  );
                 })
                 .toList()
                 .cast(),

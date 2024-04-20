@@ -38,8 +38,8 @@ class _NotesPageState extends State<NotesPage> {
 
     // Add a new note if the docId isn't specified. Else, update the existing Document.
     if (widget.docId == "") {
-      await NoteDatabaseMethods()
-          .addNote(uploaddata, currentUser.value!.currentBaby.value!.collectionId);
+      await NoteDatabaseMethods().addNote(
+          uploaddata, currentUser.value!.currentBaby.value!.collectionId);
     } else {
       await NoteDatabaseMethods().updateNote(widget.docId, uploaddata,
           currentUser.value!.currentBaby.value!.collectionId);
@@ -83,13 +83,13 @@ class _NotesPageState extends State<NotesPage> {
                     fontSize: 25,
                     color: Theme.of(context).colorScheme.onPrimary,
                     fontWeight: FontWeight.bold),
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: InputBorder.none,
                   hintText: "Note Title",
                   hintStyle: TextStyle(
-                      fontSize: 25,
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      fontWeight: FontWeight.bold),
+                    fontSize: 25,
+                    color: Colors.grey,
+                  ),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
