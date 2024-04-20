@@ -66,36 +66,34 @@ class TaskCard extends StatelessWidget {
           height: 80,
           child: Row(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Reminder name
-                    Flexible(
-                      child: Text(
-                        name,
-                        style: const TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // Reminder name
+                      Flexible(
+                        child: Text(
+                          name,
+                          style: const TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
-                    // Display timing info
-                    if (reminderType != "none")
-                      Text(((reminderType == "in")
-                          ? remindIn
-                          : "at $reminderDay, $reminderTime")),
-                  ],
+                      // Display timing info
+                      if (reminderType != "none")
+                        Text(((reminderType == "in")
+                            ? remindIn
+                            : "at $reminderDay, $reminderTime")),
+                    ],
+                  ),
                 ),
               ),
-              const Expanded(
-                  child: SizedBox(
-                width: 30,
-                height: 80,
-              )),
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: Align(
+              Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
