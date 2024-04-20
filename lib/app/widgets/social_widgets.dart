@@ -166,7 +166,6 @@ class _CommentState extends State<Comment> {
         ListTile(
           leading: CircleAvatar(
             backgroundColor: Theme.of(context).colorScheme.secondary,
-            //TODO: dynamic avatar with either image or initials
             child: Text(initials),
           ),
           title: Row(children: [
@@ -174,7 +173,7 @@ class _CommentState extends State<Comment> {
               "${widget.name}: ",
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            Text(widget.comment)
+            Flexible(child: Text(widget.comment))
           ]),
           subtitle: Text(widget.timeStamp.toString()),
         ),

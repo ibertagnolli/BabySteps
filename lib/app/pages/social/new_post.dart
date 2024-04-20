@@ -74,14 +74,6 @@ class _CreatePostState extends State<CreatePostPage> {
     //once data has been added, update the card accordingly
   }
 
-  //This is a temporary boolean for mocking data
-  bool photoAdded = false;
-  void addPhoto() {
-    setState(() {
-      photoAdded = true;
-    });
-  }
-
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
@@ -104,10 +96,11 @@ class _CreatePostState extends State<CreatePostPage> {
         if (baby.primaryCaregiverUid == currentUser.value!.uid) {
           babies.add(baby);
         } else {
-          for (dynamic caregiver in baby.caregivers) {
-            if (caregiver['canPost']) {
-              babies.add(baby);
-            }
+          dynamic babyCaregiver = baby.caregivers
+              .where((caregiver) => caregiver['uid'] == currentUser.value!.uid)
+              .firstOrNull;
+          if (babyCaregiver != null && babyCaregiver['canPost'] == true) {
+            babies.add(baby);
           }
         }
       }
@@ -178,7 +171,7 @@ class _CreatePostState extends State<CreatePostPage> {
                             children: [
                               Icon(Icons.add, size: 40),
                               Text(
-                                "Add a photo or video",
+                                "Add a photo",
                                 style: TextStyle(fontSize: 20.0),
                               ),
                             ],
@@ -257,6 +250,9 @@ class _CreatePostState extends State<CreatePostPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: TextField(
                   controller: caption,
+                  minLines: 1,
+                  maxLines: 5,
+                  keyboardType: TextInputType.multiline,
                   cursorColor: Theme.of(context).colorScheme.onSecondary,
                   decoration: InputDecoration(
                       filled: true,
@@ -268,7 +264,7 @@ class _CreatePostState extends State<CreatePostPage> {
               const SizedBox(height: 4),
               if (error)
                 Text(
-                  "Must add photo, enter a title, or enter a caption!",
+                  "A baby must be selected and either a photo, title, or caption must be added!",
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.error, fontSize: 15),
                   textAlign: TextAlign.center,
@@ -276,9 +272,10 @@ class _CreatePostState extends State<CreatePostPage> {
               const SizedBox(height: 4),
               FilledButton.tonal(
                 onPressed: () {
-                  if (_imgFile == null &&
-                      caption.text == '' &&
-                      title.text == '') {
+                  if (selectedBabyNames.isEmpty ||
+                      (_imgFile == null &&
+                          caption.text == '' &&
+                          title.text == '')) {
                     setState(() {
                       error = true;
                     });

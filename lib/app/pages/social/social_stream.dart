@@ -8,7 +8,6 @@ import 'package:flutter/services.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:pdf/pdf.dart';
-import 'package:async/async.dart' show StreamGroup, StreamZip;
 import 'package:rxdart/rxdart.dart';
 
 class SocialStream extends StatefulWidget {
@@ -38,7 +37,7 @@ class _SocialStreamState extends State<SocialStream> {
       date = post['date'].toDate();
       title = post['title'] ?? '';
       caption = post['caption'] ?? '';
-      child = post['child'];
+      child = (post['child'] as List).join(", ");
       imagePath = post['image'];
       //If there is no image since image is optional don't add it to pdf
       //annoying that I have to do this twice, may be able to clean up by making a widget?

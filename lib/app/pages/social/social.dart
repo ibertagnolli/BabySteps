@@ -26,6 +26,12 @@ class _SocialPageState extends State<SocialPage> {
               image: AssetImage('assets/BabyStepsLogo.png'),
             ),
           ),
+          actions: [
+            IconButton(
+                onPressed: () => context.goNamed('/profile',
+                    queryParameters: {'lastPage': 'social'}),
+                icon: const Icon(Icons.person))
+          ],
         ),
         body: ValueListenableBuilder(
           valueListenable: currentUser,

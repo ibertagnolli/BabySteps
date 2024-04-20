@@ -26,10 +26,10 @@ class _TrackingLandingPageState extends State<TrackingLandingPage> {
             image: AssetImage('assets/BabyStepsLogo.png'),
           ),
         ),
-        //TODO: remove when home is interesting
         actions: [
           IconButton(
-              onPressed: () => context.go('/profile'),
+              onPressed: () => context.goNamed('/profile',
+                  queryParameters: {'lastPage': 'tracking'}),
               icon: const Icon(Icons.person))
         ],
       ),

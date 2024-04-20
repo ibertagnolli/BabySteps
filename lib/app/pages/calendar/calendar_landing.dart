@@ -5,6 +5,8 @@ import 'package:babysteps/main.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
 
+import 'package:go_router/go_router.dart';
+
 class CalendarLandingPage extends StatefulWidget {
   const CalendarLandingPage({super.key});
 
@@ -27,6 +29,12 @@ class _CalendarLandingPageState extends State<CalendarLandingPage> {
               image: AssetImage('assets/BabyStepsLogo.png'),
             ),
           ),
+          actions: [
+            IconButton(
+                onPressed: () => context.goNamed('/profile',
+                    queryParameters: {'lastPage': 'calendar'}),
+                icon: const Icon(Icons.person))
+          ],
         ),
 
         // Widgets

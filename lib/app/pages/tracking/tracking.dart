@@ -41,10 +41,11 @@ class _TrackingPageState extends State<TrackingPage> {
         if (baby.primaryCaregiverUid == currentUser.value!.uid) {
           trackingBabies.add(baby);
         } else {
-          for (dynamic caregiver in baby.caregivers) {
-            if (caregiver['trackingView'] == true) {
-              trackingBabies.add(baby);
-            }
+          dynamic babyCaregiver = baby.caregivers
+              .where((caregiver) => caregiver['uid'] == currentUser.value!.uid)
+              .firstOrNull;
+          if (babyCaregiver != null && babyCaregiver['trackingView'] == true) {
+            trackingBabies.add(baby);
           }
         }
       }
